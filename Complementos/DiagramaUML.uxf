@@ -51,17 +51,12 @@
     <panel_attributes>Inventario
 --
 -id: int
--nombre: str
 -foto: img
--cantidad: int
--precio_dolar: int
--descripcion: str
 -stock_minimo: int
--codigo: str (opcional)
 -categoria:sub-categoria
 -responsable: profesor
 -lugar_compra: lugar_compra
-</panel_attributes>
+-stock: int</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -80,7 +75,7 @@
 -fecha_ingreso: date
 -estado: estado
 -fecha_devolucion: date
-</panel_attributes>
+-descripcion: str</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -115,6 +110,8 @@
 --
 -id: int
 -especialidad: especialidad
+-inventario
+-destino
 
 </panel_attributes>
     <additional_attributes/>
@@ -176,7 +173,7 @@
 --
 -id: int
 -nombre: str
-especialidad</panel_attributes>
+-especialidad: especialidad</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -408,29 +405,33 @@ m1=*</panel_attributes>
       <x>511</x>
       <y>210</y>
       <w>126</w>
-      <h>77</h>
+      <h>84</h>
     </coordinates>
     <panel_attributes>Detalle
 --
 -id: int
--descripcion: str
+-cantidad: int
 -prestamo: prestamo
--elemento: elemento</panel_attributes>
+-elemento: elemento
+-observacion: str</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>672</x>
-      <y>245</y>
+      <y>210</y>
       <w>140</w>
-      <h>91</h>
+      <h>126</h>
     </coordinates>
     <panel_attributes>Elemento
 --
 -id:int
--stock: inventario
--ubicacion: ubicacion</panel_attributes>
+-ubicacion: ubicacion
+-codigo: str (opcional)
+-precio_dolar: int
+-descripcion: str
+-nombre: str</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -509,5 +510,17 @@ m1=*</panel_attributes>
     <panel_attributes>lt=&lt;-
 m1=*</panel_attributes>
     <additional_attributes>10.0;10.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>315</x>
+      <y>301</y>
+      <w>819</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=*</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;60.0;1150.0;60.0;1150.0;10.0</additional_attributes>
   </element>
 </diagram>
