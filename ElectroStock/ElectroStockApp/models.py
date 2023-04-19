@@ -78,9 +78,14 @@ class Estado(models.Model):
         verbose_name_plural = "Estados"
         
 class Inventario(models.Model):
-    ubicacion = models.CharField(max_length=40)
-    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE)
+    nombre=models.CharField(max_length=30)
+    stock_minimo = models.IntegerField()
+    stock = models.IntegerField()
+    imagen=models.ImageField()
+    subcategoria = models.ForeignKey(SubCategoria, on_delete=models.CASCADE)
+    lugar_compra = models.ForeignKey(LugarCompra, on_delete=models.CASCADE)
+    #responsable = models.ForeignKey(¿Profesor?, on_delete=models.CASCADE)
     def __str__(self):
-        return (f"{self.laboratorio},{self.ubicacion}")
+        return self.nombre
     class Meta:
-        verbose_name_plural = "Laboratorios"
+        verbose_name_plural = "Inventario"
