@@ -81,7 +81,7 @@ class Inventario(models.Model):
     nombre=models.CharField(max_length=30)
     stock_minimo = models.IntegerField()
     stock = models.IntegerField()
-    imagen=models.ImageField()
+    imagen=models.ImageField(upload_to='productos/', blank=True) #hay que instalar pillow
     subcategoria = models.ForeignKey(SubCategoria, on_delete=models.CASCADE)
     lugar_compra = models.ForeignKey(LugarCompra, on_delete=models.CASCADE)
     #responsable = models.ForeignKey(¿Profesor?, on_delete=models.CASCADE)
