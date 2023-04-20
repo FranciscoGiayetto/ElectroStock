@@ -1,91 +1,106 @@
 from django.db import models
 
 # Create your models here.
-class Destino(models.Model):
-    destino = models.CharField(max_length=40)
-    PlataAsignada = models.IntegerField()
+class Destination(models.Model):
+    destination = models.CharField(max_length=40)
+    allocated_budget = models.IntegerField()
+
     def __str__(self):
-        return self.destino
+        return self.destination
 
     class Meta:
-        verbose_name_plural = "Destinos"
+        verbose_name_plural = "Destinations"
     
-class DetallePresupuesto(models.Model):
-    año = models.DateField(auto_now_add=True) #Esto lo que hace es poner el de este año ¿Lo necesitamos?
+class BudgetDetail(models.Model):
+    year = models.DateField(auto_now_add=True)
     total = models.IntegerField()
+
     def __str__(self):
-        return self.nombre
+        return self.name
 
     class Meta:
-        verbose_name_plural = "Detalles Productos"
+        verbose_name_plural = "Product Details"
 
-class Categoria(models.Model):
-    categoria = models.CharField(max_length=40)
-    descripcion = models.TextField(max_length=100, null=True, blank=True)
+class Category(models.Model):
+    category = models.CharField(max_length=40)
+    description = models.TextField(max_length=100, null=True, blank=True)
+
     def __str__(self):
-        return self.categoria
+        return self.category
 
     class Meta:
-        verbose_name_plural = "Categorias"
+        verbose_name_plural = "Categories"
 
-class SubCategoria(models.Model):
-    subcategoria = models.CharField(max_length=40)
-    descripcion = models.TextField(max_length=100, null=True, blank=True)
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+class SubCategory(models.Model):
+    subcategory = models.CharField(max_length=40)
+    description = models.TextField(max_length=100, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
     def __str__(self):
-        return self.subcategoria
+        return self.subcategory
 
     class Meta:
-        verbose_name_plural = "SubCategorias"
+        verbose_name_plural = "Subcategories"
 
-class LugarCompra(models.Model):
-    lugarcompra = models.CharField(max_length=40)
-    descripcion = models.TextField(max_length=100, null=True, blank=True)
-    def __str__(self):
-        return self.lugarcompra
-    class Meta:
-        verbose_name_plural = "Lugares de Compras"
-        verbose_name = "Lugar Compra"
+class PurchaseLocation(models.Model):
+    purchase_location = models.CharField(max_length=40)
+    description = models.TextField(max_length=100, null=True, blank=True)
 
-class Especialidad(models.Model):
-    especialidad = models.CharField(max_length=40)
     def __str__(self):
-        return self.especialidad
-    class Meta:
-        verbose_name_plural = "Especialidades"
+        return self.purchase_location
 
-class Laboratorio(models.Model):
-    laboratorio = models.CharField(max_length=40)
-    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
-    def __str__(self):
-        return self.laboratorio
     class Meta:
-        verbose_name_plural = "Laboratorios"
+        verbose_name_plural = "Purchase Locations"
+        verbose_name = "Purchase Location"
 
-class Ubicacion(models.Model):
-    ubicacion = models.CharField(max_length=40)
-    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE)
+class Specialty(models.Model):
+    specialty = models.CharField(max_length=40)
+
     def __str__(self):
-        return (f"{self.laboratorio},{self.ubicacion}")
+        return self.specialty
+
     class Meta:
-        verbose_name_plural = "Laboratorios"
+        verbose_name_plural = "Specialties"
+
+class Laboratory(models.Model):
+    laboratory = models.CharField(max_length=40)
+    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.laboratory
+
+    class Meta:
+        verbose_name_plural = "Laboratories"
+
+class Location(models.Model):
+    location = models.CharField(max_length=40)
+    laboratory = models.ForeignKey(Laboratory, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return (f"{self.laboratory}, {self.location}")
+
+    class Meta:
+        verbose_name_plural = "Locations"
     
-class Estado(models.Model):
-    estado = models.CharField(max_length=40)   
+class Status(models.Model):
+    status = models.CharField(max_length=40)   
+
     def __str__(self):
-        return self.estado
+        return self.status
+
     class Meta:
-        verbose_name_plural = "Estados"
+        verbose_name_plural = "Statuses"
         
-class Inventario(models.Model):
-    nombre=models.CharField(max_length=30)
-    stock_minimo = models.IntegerField()
+class Inventory(models.Model):
+    name = models.CharField(max_length=30)
+    minimum_stock = models.IntegerField()
     stock = models.IntegerField()
-    imagen=models.ImageField(upload_to='productos/', blank=True) #hay que instalar pillow
-    subcategoria = models.ForeignKey(SubCategoria, on_delete=models.CASCADE)
-    lugar_compra = models.ForeignKey(LugarCompra, on_delete=models.CASCADE)
-    #responsable = models.ForeignKey(¿Profesor?, on_delete=models.CASCADE)
+    #image = models.ImageField(upload_to='carpeta/', blank=True) #necesitamos instalar pillow
+    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
+    purchase_location = models.ForeignKey(PurchaseLocation, on_delete=models.CASCADE)
+
     def __str__(self):
-        return self.nombre
+        return self.name
+
     class Meta:
-        verbose_name_plural = "Inventario"
+        verbose_name_plural = "Inventories"
