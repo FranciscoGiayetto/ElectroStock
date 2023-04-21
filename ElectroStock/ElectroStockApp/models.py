@@ -13,8 +13,8 @@ class Specialty(models.Model):#✅
         verbose_name_plural = "Especialidades"
         verbose_name = "Especialidad"
 
-class CustomUser(AbstractUser):#✅
-    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
+#class CustomUser(AbstractUser):#✅
+    #specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
 
 class Budget(models.Model):#✅
     budget_name = models.CharField(max_length=40)
@@ -75,12 +75,27 @@ class SubCategory(models.Model):#✅
         verbose_name_plural = "SubCategorias"
         verbose_name = "SubCategoria"
 
+class Element(models.Model):#✅
+    name = models.CharField(max_length=30)
+    description = models.TextField(null=True,blank=True)
+    stock = models.IntegerField()
+    price_usd = models.DecimalField(max_digits=10, decimal_places=2)
+    image = models.ImageField(upload_to='img-prod/', blank=True) #we need to install pillow
+    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Elementos"
+        verbose_name = "Elemento"
+        
 class PurchaseLocation(models.Model):#✅
     purchase_location = models.CharField(max_length=40)
     description = models.TextField(null=True, blank=True)
     contact = models.CharField(max_length=40)
     # 🧑‍🔧 revisar esta relacion muchos a muchos 🧑‍🔧
-    elementos = models.ManyToManyField('Elemento', related_name='lugares_de_compra')
+    elementos = models.ManyToManyField(Element, related_name='lugares_de_compra')
 
     def __str__(self):
         return self.purchase_location
@@ -122,26 +137,11 @@ class Status(models.Model):#✅
         verbose_name_plural = "Estados"
         verbose_name = "Estado"
 
-class Element(models.Model):#✅
-    name = models.CharField(max_length=30)
-    description = models.TextField(null=True,blank=True)
-    stock = models.IntegerField()
-    price_usd = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='img-prod/', blank=True) #we need to install pillow
-    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = "Elementos"
-        verbose_name = "Elemento"
-
 class Inventory(models.Model):#✅
     name = models.CharField(max_length=30)
     minimum_stock = models.IntegerField()
     elemento = models.ForeignKey(Element, on_delete=models.CASCADE)
-    responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    #responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -170,8 +170,8 @@ class Loan(models.Model):#✅
     observations = models.TextField(null=True, blank=True)
 
     # esto no me gusta mucho
-    lender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='loans_lent')
-    borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='loans_borrowed')
+    #lender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='loans_lent')
+    #borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='loans_borrowed')
 
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
     #revisar que poner aca

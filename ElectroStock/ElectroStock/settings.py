@@ -81,7 +81,7 @@ DATABASES = {
 }
 
 #aca le digo a django que use de usuario la clase personalizada
-AUTH_USER_MODEL = 'usuarios.CustomUser'
+#AUTH_USER_MODEL = 'usuarios.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -121,19 +121,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "Villada Stock",
+    "site_title": "Villada",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "Villada Stock",
+    "site_header": "Villada",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "Villada Stock",
+    #"site_brand": "Villada",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "",
+    "site_logo": "logo.png",
+    
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": None,
+    "login_logo": "logo.png",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
     "login_logo_dark": None,
@@ -142,7 +143,7 @@ JAZZMIN_SETTINGS = {
     "site_logo_classes": "img-circle",
 
     # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    "site_icon": None,
+    "site_icon": "logo.png",
 
     # Welcome text on the login screen
     "welcome_sign": "BIENVENIDO ",
@@ -221,4 +222,8 @@ JAZZMIN_SETTINGS = {
     # override change forms on a per modeladmin basis
     "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
     
+}
+JAZZMIN_SETTINGS["show_ui_builder"] = True
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly"
 }
