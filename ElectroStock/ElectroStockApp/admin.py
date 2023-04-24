@@ -8,6 +8,7 @@ admin.site.site_title = "Stock"
 
 # analizar cuales sirven y cuales no
 admin.site.register(Element)
+admin.site.register(CustomUser)
 admin.site.register(Budget)
 admin.site.register(BudgetDetail)
 admin.site.register(Location)

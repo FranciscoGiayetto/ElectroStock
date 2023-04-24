@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
-
+#esta forma de usar usuarios da mas quilombos que soluciones hay que cambiarla
 class Specialty(models.Model):#✅
     specialty = models.CharField(max_length=40)
     
@@ -13,8 +13,22 @@ class Specialty(models.Model):#✅
         verbose_name_plural = "Especialidades"
         verbose_name = "Especialidad"
 
-#class CustomUser(AbstractUser):#✅
-    #specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
+class CustomUser(AbstractUser):#✅
+    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE, null=True, blank=True)
+    groups = models.ManyToManyField(
+        "auth.Group",
+        related_name="customuser_groups",
+        blank=True,
+        help_text="Los grupos a los que pertenece el usuario",
+        verbose_name="grupos de usuario",
+    )
+    user_permissions = models.ManyToManyField(
+        "auth.Permission",
+        related_name="customuser_permissions",
+        blank=True,
+        help_text="Los permisos específicos de este usuario",
+        verbose_name="permisos de usuario",
+    )
 
 class Budget(models.Model):#✅
     budget_name = models.CharField(max_length=40)
@@ -80,9 +94,9 @@ class Element(models.Model):#✅
     description = models.TextField(null=True,blank=True)
     stock = models.IntegerField()
     price_usd = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='img-prod/', blank=True) #we need to install pillow
+    image = models.ImageField(upload_to='img-prod/', blank=True) 
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
-
+    ecommerce= models.BooleanField()
     def __str__(self):
         return self.name
 

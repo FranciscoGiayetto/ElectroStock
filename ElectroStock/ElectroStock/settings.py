@@ -81,7 +81,7 @@ DATABASES = {
 }
 
 #aca le digo a django que use de usuario la clase personalizada
-#AUTH_USER_MODEL = 'usuarios.CustomUser'
+AUTH_USER_MODEL = 'ElectroStockApp.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
