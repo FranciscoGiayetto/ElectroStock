@@ -40,8 +40,29 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "api",
+    #'allauth',
+    #'allauth.account',
+]
+'''
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/accounts/profile/'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': 'YOUR_CLIENT_ID',
+            'secret': 'YOUR_SECRET_KEY',
+            'key': ''
+        }
+    }
+}
+'''
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -81,7 +102,7 @@ DATABASES = {
 }
 
 #aca le digo a django que use de usuario la clase personalizada
-AUTH_USER_MODEL = 'ElectroStockApp.CustomUser'
+#AUTH_USER_MODEL = 'ElectroStockApp.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
