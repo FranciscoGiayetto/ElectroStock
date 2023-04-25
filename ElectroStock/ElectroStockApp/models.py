@@ -1,8 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, PermissionsMixin, Group, Permission
 
 # Create your models here.
-#esta forma de usar usuarios da mas quilombos que soluciones hay que cambiarla
 class Specialty(models.Model):#✅
     specialty = models.CharField(max_length=40)
     
@@ -13,9 +12,29 @@ class Specialty(models.Model):#✅
         verbose_name_plural = "Especialidades"
         verbose_name = "Especialidad"
 
-class Usuarios(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE, null=True, blank=True)
+class Course(models.Model):
+    año = models.IntegerField()
+    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
+
+class CustomUser(AbstractUser, PermissionsMixin):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
+    speciality = models.ForeignKey(Specialty, on_delete=models.CASCADE, null=True, blank=True)
+
+    # Se agrega related_name a la clave foránea de groups
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name=('groups'),
+        blank=True,
+        related_name='custom_users'
+    )
+
+    # Se agrega related_name a la clave foránea de user_permissions
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name=('user permissions'),
+        blank=True,
+        related_name='custom_users'
+    )
 
 class Budget(models.Model):#✅
     budget_name = models.CharField(max_length=40)
