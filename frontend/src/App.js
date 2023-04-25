@@ -1,11 +1,28 @@
-
+import {
+  BrowserRouter as Router,
+  Routes,
+   Route
+}from "react-router-dom";
 import './App.css';
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
-    <div className="App">
-      <h1> MONO SE LA COME</h1>
+    <Router>
+      
+
+
+    <div className="container">
+      <div className="app">
+       
+        <Routes>
+        <Route path="/login" element={<LoginPage/>} />
+
+        </Routes>
+      </div>
     </div>
+    
+    </Router>
   );
 }
 
