@@ -1,14 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, Group, Permission
-'''
+
 if not Group.objects.filter(name='Alumno').exists():
     alumno_group = Group.objects.create(name='Alumno')
     alumno_group.permissions.add()
 
-if not Group.objects.create(name='Profesor').exists():
+if not Group.objects.filter(name='Profesor').exists():
     profesor_group = Group.objects.create(name='Profesor')  
     profesor_group.permissions.add()
-'''
+
 
 # Create your models here.
 class Specialty(models.Model):#✅
@@ -34,7 +34,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
         Group,
         verbose_name=('groups'),
         blank=True,
-        related_name='custom_users'
+        related_name='CustomUser'
     )
 
     # Se agrega related_name a la clave foránea de user_permissions
@@ -42,7 +42,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
         Permission,
         verbose_name=('user permissions'),
         blank=True,
-        related_name='custom_users'
+        related_name='CustomUser'
     )
 
 
