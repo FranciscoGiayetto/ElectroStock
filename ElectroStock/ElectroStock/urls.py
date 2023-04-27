@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from ElectroStockApp import views
 
 urlpatterns = [path("admin/", admin.site.urls),
                path("api/", include("api.urls")),
                #path('accounts/', include('allauth.urls')),
-
+               path('upload_csv/', views.upload_csv, name='upload_csv'),
                ]
