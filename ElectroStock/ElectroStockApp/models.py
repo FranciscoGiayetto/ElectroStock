@@ -124,7 +124,6 @@ class PurchaseLocation(models.Model):#✅
     purchase_location = models.CharField(max_length=40)
     description = models.TextField(null=True, blank=True)
     contact = models.CharField(max_length=40)
-    # 🧑‍🔧 revisar esta relacion muchos a muchos 🧑‍🔧
     elementos = models.ManyToManyField(Element, related_name='lugares_de_compra')
 
     def __str__(self):
@@ -171,7 +170,7 @@ class Inventory(models.Model):#✅
     name = models.CharField(max_length=30)
     minimum_stock = models.IntegerField()
     elemento = models.ForeignKey(Element, on_delete=models.CASCADE)
-    #responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -198,11 +197,8 @@ class Loan(models.Model):#✅
     date_in = models.DateField() #auto_now_add=True?
     date_return = models.DateField(null=True, blank=True)
     observations = models.TextField(null=True, blank=True)
-
-    # esto no me gusta mucho
-    #lender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='loans_lent')
-    #borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='loans_borrowed')
-
+    lender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='loans_lent')
+    borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='loans_borrowed')
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
     #revisar que poner aca
     def __str__(self):
