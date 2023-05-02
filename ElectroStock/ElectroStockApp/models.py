@@ -124,10 +124,10 @@ class Element(models.Model):#✅
     name = models.CharField(max_length=30)
     description = models.TextField(null=True,blank=True)
     stock = models.IntegerField()
-    price_usd = models.DecimalField(max_digits=10, decimal_places=2)
+    price_usd = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True)
     image = models.ImageField(upload_to='img-prod/', blank=True) 
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
-    ecommerce= models.BooleanField()
+    ecommerce= models.BooleanField(default=True)
     def __str__(self):
         return self.name
 
