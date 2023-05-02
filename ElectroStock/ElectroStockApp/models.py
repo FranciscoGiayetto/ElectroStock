@@ -21,8 +21,11 @@ class Specialty(models.Model):#✅
         verbose_name_plural = "Especialidades"
         verbose_name = "Especialidad"
 
+class Year(models.Model):
+    number = models.CharField()
+
 class Course(models.Model):
-    año = models.IntegerField()
+    number = models.ForeignKey(Year, on_delete=models.CASCADE)
     specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
 
 class CustomUser(AbstractUser, PermissionsMixin):
