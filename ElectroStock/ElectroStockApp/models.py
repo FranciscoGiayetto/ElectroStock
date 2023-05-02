@@ -26,6 +26,9 @@ class Year(models.Model):
 
     def __str__(self):
         return self.number
+    class Meta:
+        verbose_name_plural = "Años"
+        verbose_name = "Año"
 
 class Course(models.Model):
     number = models.ForeignKey(Year, on_delete=models.CASCADE)
@@ -33,6 +36,9 @@ class Course(models.Model):
 
     def __str__(self):
         return (f'{self.number}, {self.specialty}')
+    class Meta:
+        verbose_name_plural = "Cursos"
+        verbose_name = "Curso"
  
 class CustomUser(AbstractUser, PermissionsMixin):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
