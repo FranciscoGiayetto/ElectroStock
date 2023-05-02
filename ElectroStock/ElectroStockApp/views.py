@@ -1,6 +1,8 @@
 import csv
 from django.shortcuts import render
-from .models import CustomUser, Course, Specialty
+from .models import CustomUser, Course, Specialty, Year
+from django.contrib.auth.models import Group
+
 
 def upload_csv(request):
     if request.method == 'POST' and request.FILES['csv_file']:
@@ -15,7 +17,10 @@ def upload_csv(request):
                 continue  # Si la especialidad no existe en la base de datos, saltar a la siguiente fila
             
             # Buscar el curso correspondiente para la especialidad y el año 4
-            course = Course.objects.filter(specialty=specialty, año=4).first()
+            year = Year.objects.filter(number='4')
+           
+            #print('Year:',year)
+            course = Course.objects.filter(specialty=specialty, number=1).first()
             if not course:
                 continue  # Si no se encuentra un curso, saltar a la siguiente fila
             
@@ -24,10 +29,17 @@ def upload_csv(request):
                 first_name=row['Nombre'],
                 last_name=row['Apellido'],
                 email=row['Mail'],
-                username=row['DNI'],
+                username=row['Nombre']+ row['Apellido'],
+                password=row['DNI'],
                 course=course,
+                
                 speciality=specialty
             )
             user.save()
+
+            #asignar grupo
+            alumno_group = Group.objects.get(name='Alumno')
+            user.groups.add(alumno_group)
+
         return render(request, 'upload_csv.html', {'success': True})
     return render(request, 'upload_csv.html')
