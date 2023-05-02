@@ -21,10 +21,19 @@ class Specialty(models.Model):#✅
         verbose_name_plural = "Especialidades"
         verbose_name = "Especialidad"
 
+class Year(models.Model):
+    number = models.CharField(max_length=1)
+
+    def __str__(self):
+        return self.number
+
 class Course(models.Model):
-    año = models.IntegerField()
+    number = models.ForeignKey(Year, on_delete=models.CASCADE)
     specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return (f'{self.number}, {self.specialty}')
+ 
 class CustomUser(AbstractUser, PermissionsMixin):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
     speciality = models.ForeignKey(Specialty, on_delete=models.CASCADE, null=True, blank=True)

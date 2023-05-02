@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -110,6 +111,13 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
+# url para guardar los archivos .csv subidos por el profe   
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#En un servidor se veria asi:
+#MEDIA_ROOT = '/var/www/myproject/media/'
+MEDIA_URL = '/media/'
+
+
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
