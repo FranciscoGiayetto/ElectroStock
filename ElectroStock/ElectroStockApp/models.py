@@ -1,91 +1,256 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, PermissionsMixin, Group, Permission
+
+if not Group.objects.filter(name='Alumno').exists():
+    alumno_group = Group.objects.create(name='Alumno')
+    alumno_group.permissions.add()
+
+if not Group.objects.filter(name='Profesor').exists():
+    profesor_group = Group.objects.create(name='Profesor')  
+    profesor_group.permissions.add()
+
 
 # Create your models here.
-class Destino(models.Model):
-    destino = models.CharField(max_length=40)
-    PlataAsignada = models.IntegerField()
+class Specialty(models.Model):#✅
+    specialty = models.CharField(max_length=40)
+    
     def __str__(self):
-        return self.destino
+        return self.specialty
+
+    class Meta:
+        verbose_name_plural = "Especialidades"
+        verbose_name = "Especialidad"
+
+class Year(models.Model):
+    number = models.CharField(max_length=1)
+
+    def __str__(self):
+        return self.number
+    class Meta:
+        verbose_name_plural = "Años"
+        verbose_name = "Año"
+
+class Course(models.Model):
+    number = models.ForeignKey(Year, on_delete=models.CASCADE)
+    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return (f'{self.number}, {self.specialty}')
+    class Meta:
+        verbose_name_plural = "Cursos"
+        verbose_name = "Curso"
+ 
+class CustomUser(AbstractUser, PermissionsMixin):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
+    speciality = models.ForeignKey(Specialty, on_delete=models.CASCADE, null=True, blank=True)
+
+    # Se agrega related_name a la clave foránea de groups
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name=('groups'),
+        blank=True,
+        related_name='CustomUser'
+    )
+
+    # Se agrega related_name a la clave foránea de user_permissions
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name=('user permissions'),
+        blank=True,
+        related_name='CustomUser'
+    )
+
+
+class Budget(models.Model):#✅
+    budget_name = models.CharField(max_length=40)
+    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.budget_name
+
+    class Meta:
+        verbose_name_plural = "Presupuestos"
+        verbose_name = "Presupuesto"
+
+class Destination(models.Model):#✅
+    destination = models.CharField(max_length=40)
+    allocated_budget = models.IntegerField()
+    budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.destination
 
     class Meta:
         verbose_name_plural = "Destinos"
+        verbose_name = "Destino"
     
-class DetallePresupuesto(models.Model):
-    año = models.DateField(auto_now_add=True) #Esto lo que hace es poner el de este año ¿Lo necesitamos?
+class BudgetDetail(models.Model):#✅
+    year = models.DateField(auto_now_add=True)
     total = models.IntegerField()
-    def __str__(self):
-        return self.nombre
 
+    #revisar que poner aca
+    def __str__(self):
+        return self.year
+    
     class Meta:
-        verbose_name_plural = "Detalles Productos"
+        #revisar estos nombres
+        verbose_name_plural = "Detalles Elementos Prestamos"
+        verbose_name = "Detalle elemento prestamo"
 
-class Categoria(models.Model):
-    categoria = models.CharField(max_length=40)
-    descripcion = models.TextField(max_length=100, null=True, blank=True)
+class Category(models.Model):#✅
+    category = models.CharField(max_length=40)
+    description = models.TextField(null=True, blank=True)
+
     def __str__(self):
-        return self.categoria
+        return self.category
 
     class Meta:
         verbose_name_plural = "Categorias"
+        verbose_name = "Categoria"
 
-class SubCategoria(models.Model):
-    subcategoria = models.CharField(max_length=40)
-    descripcion = models.TextField(max_length=100, null=True, blank=True)
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+class SubCategory(models.Model):#✅
+    subcategory = models.CharField(max_length=40)
+    description = models.TextField(null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
     def __str__(self):
-        return self.subcategoria
+        return self.subcategory
 
     class Meta:
         verbose_name_plural = "SubCategorias"
+        verbose_name = "SubCategoria"
 
-class LugarCompra(models.Model):
-    lugarcompra = models.CharField(max_length=40)
-    descripcion = models.TextField(max_length=100, null=True, blank=True)
+class Element(models.Model):#✅
+    name = models.CharField(max_length=30)
+    description = models.TextField(null=True,blank=True)
+    stock = models.IntegerField()
+    price_usd = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True)
+    image = models.ImageField(upload_to='img-prod/', blank=True) 
+    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
+    ecommerce= models.BooleanField(default=True)
     def __str__(self):
-        return self.lugarcompra
+        return self.name
+
     class Meta:
-        verbose_name_plural = "Lugares de Compras"
-        verbose_name = "Lugar Compra"
+        verbose_name_plural = "Elementos"
+        verbose_name = "Elemento"
+        
+class PurchaseLocation(models.Model):#✅
+    purchase_location = models.CharField(max_length=40)
+    description = models.TextField(null=True, blank=True)
+    contact = models.CharField(max_length=40)
+    elementos = models.ManyToManyField(Element, related_name='lugares_de_compra')
 
-class Especialidad(models.Model):
-    especialidad = models.CharField(max_length=40)
     def __str__(self):
-        return self.especialidad
+        return self.purchase_location
+
     class Meta:
-        verbose_name_plural = "Especialidades"
+        verbose_name_plural = "Lugares de compra"
+        verbose_name = "Lugar de compra"
 
-class Laboratorio(models.Model):
-    laboratorio = models.CharField(max_length=40)
-    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+class Laboratory(models.Model):#✅
+    laboratory = models.CharField(max_length=40)
+    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
+
     def __str__(self):
-        return self.laboratorio
+        return self.laboratory
+
     class Meta:
         verbose_name_plural = "Laboratorios"
+        verbose_name = "Laboratorio"
 
-class Ubicacion(models.Model):
-    ubicacion = models.CharField(max_length=40)
-    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE)
+class Location(models.Model):#✅
+    location = models.CharField(max_length=40)
+    laboratory = models.ForeignKey(Laboratory, on_delete=models.CASCADE)
+
     def __str__(self):
-        return (f"{self.laboratorio},{self.ubicacion}")
+        return (f"{self.laboratory}, {self.location}")
+
     class Meta:
-        verbose_name_plural = "Laboratorios"
+        verbose_name_plural = "Ubicaciones"
+        verbose_name = "Ubicacion"
     
-class Estado(models.Model):
-    estado = models.CharField(max_length=40)   
+class Status(models.Model):#✅
+    status = models.CharField(max_length=40)   
+    description = models.TextField(null=True,blank=True)
+
     def __str__(self):
-        return self.estado
+        return self.status
+
     class Meta:
         verbose_name_plural = "Estados"
-        
-class Inventario(models.Model):
-    nombre=models.CharField(max_length=30)
-    stock_minimo = models.IntegerField()
-    stock = models.IntegerField()
-    imagen=models.ImageField(upload_to='productos/', blank=True) #hay que instalar pillow
-    subcategoria = models.ForeignKey(SubCategoria, on_delete=models.CASCADE)
-    lugar_compra = models.ForeignKey(LugarCompra, on_delete=models.CASCADE)
-    #responsable = models.ForeignKey(¿Profesor?, on_delete=models.CASCADE)
+        verbose_name = "Estado"
+
+class Inventory(models.Model):#✅
+    name = models.CharField(max_length=30)
+    minimum_stock = models.IntegerField()
+    elemento = models.ForeignKey(Element, on_delete=models.CASCADE)
+    responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
     def __str__(self):
-        return self.nombre
+        return self.name
+
     class Meta:
-        verbose_name_plural = "Inventario"
+        verbose_name_plural = "Inventarios"
+        verbose_name = "Inventario"
+
+class Details(models.Model):#✅
+    quantity = models.IntegerField()
+    elective_cycle = models.DateField() #auto_now_add=True?
+    budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
+    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+    #revisar que poner aca
+    def __str__(self):
+        return ''
+
+    class Meta:
+        #revisar estos nombres
+        verbose_name_plural = "Detalles Presupuesto Inventario"
+        verbose_name = "Detalles Presupuesto Inventario"
+
+class Loan(models.Model):#✅
+    date_in = models.DateField() #auto_now_add=True?
+    date_return = models.DateField(null=True, blank=True)
+    observations = models.TextField(null=True, blank=True)
+    lender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='loans_lent')
+    borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='loans_borrowed')
+    status = models.ForeignKey(Status, on_delete=models.CASCADE)
+    #revisar que poner aca
+    def __str__(self):
+        return ''
+
+    class Meta:
+        verbose_name_plural = "Prestamos"
+        verbose_name = "Prestamo"
+
+class HistoryLoan(models.Model):#✅
+    quantity = models.IntegerField()
+    date = models.DateField() #auto_now_add=True?
+    loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
+    status = models.ForeignKey(Status, on_delete=models.CASCADE)
+    #ver q poner aca
+    def __str__(self):
+        return ''
+
+    class Meta:
+        #ver estos nombres no me convencen
+        verbose_name_plural = "Historial Prestamos Estados"
+        verbose_name = "Historial Prestamos Estados"
+
+class HistoryInventory(models.Model):#✅
+    quantity = models.IntegerField()
+    date = models.DateField() #auto_now_add=True?
+    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    description = models.TextField(null=True,blank=True)
+    # ver q poner aca
+    def __str__(self):
+        return ''
+
+    class Meta:
+        #ver estos nombres no me convencen
+        verbose_name_plural = "Historial Iventario Ubicacion"
+        verbose_name = "Historial Iventario Ubicacion"
+
+
+
