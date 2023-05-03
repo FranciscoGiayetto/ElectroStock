@@ -3,7 +3,7 @@ import {
   Routes,
    Route
 }from "react-router-dom";
-import './App.css';
+import './assets/styles/App.css'
 import LoginPage from "./pages/LoginPage";
 
 function App() {
