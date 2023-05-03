@@ -1,8 +1,8 @@
 import React from 'react'
 
-function LoginPage() {
+const LoginPage = () => {
   return (
-    <div><h1>HOLA</h1></div>
+    <div>LoginPage</div>
   )
 }
 
