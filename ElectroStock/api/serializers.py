@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from ElectroStockApp import models
 
 
@@ -6,7 +6,7 @@ from ElectroStockApp import models
 """
 Ejemplo de como se ve un serializer
 """
-class ElementSerializer(ModelSerializer):
+class ElementSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Element
         fields = '__all__'
