@@ -5,16 +5,7 @@ from rest_framework.decorators import api_view
 #from rest_framework.serializers import Serializer
 from ElectroStockApp import models
 #from .serializers import NoteSerializer
-from .serializers import ElementSerializer
-
-'''
-#esto es lo que estaba antes
-@api_view(['GET'])
-def getElements(request):
-   elements = models.Element.objects.all()
-   return Response(elements)
-'''
-#agrego a ver que sale
+from .serializers import *
 from rest_framework import viewsets, permissions
 
 class ElementsViewSet(viewsets.ModelViewSet):
@@ -22,3 +13,8 @@ class ElementsViewSet(viewsets.ModelViewSet):
     #permisos de lo que pueden ver
     permission_classes = [permissions.AllowAny]
     serializer_class= ElementSerializer
+
+class ProductosEcommerceAPIView(viewsets.ModelViewSet):
+    queryset = models.Element.objects.filter(ecommerce=True)
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ElementEcommerceSerializer
