@@ -6,5 +6,8 @@ from .serializers import ElementSerializer
 
 router= routers.DefaultRouter()
 router.register('elements', ElementsViewSet, 'elements')
+router.register('elementsDetalle', ProductosDetalleAPIView, 'elementsDetalle')
 router.register('elementsEcommerce', ProductosEcommerceAPIView, 'elementsEcommerce')
+router.register('VerPrestamos', PrestamoVerAPIView, 'verprestamos')
+router.register('prestamos', PrestamoAPIView, 'prestamos')
 urlpatterns =router.urls
