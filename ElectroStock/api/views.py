@@ -2,14 +2,35 @@ from django.http import response, JsonResponse
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-#from rest_framework.serializers import Serializer
 from ElectroStockApp import models
-#from .serializers import NoteSerializer
-from api import serializers
+from .serializers import *
+from rest_framework import viewsets, permissions
+from .permissions import PermisoUsuarioActual
 
+class ElementsViewSet(viewsets.ModelViewSet):
+    queryset= models.Element.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class= ElementSerializer
 
+class ProductosEcommerceAPIView(viewsets.ModelViewSet):
+    queryset = models.Element.objects.filter(ecommerce=True)
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ElementEcommerceSerializer
 
-@api_view(['GET'])
-def getElements(request):
-   elements = models.Element.objects.all()
-   return Response(elements)
+class ProductosDetalleAPIView(viewsets.ModelViewSet):
+    queryset = models.Element.objects.filter(ecommerce=True)
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ElementDetalleSerializer
+
+class PrestamoVerAPIView(viewsets.ModelViewSet):
+    permission_classes = [PermisoUsuarioActual]
+    serializer_class = PrestamoVerSerializer
+    def get_queryset(self):
+        user = self.request.user
+        return models.Loan.objects.filter(borrower=user)
+    queryset= get_queryset
+
+class PrestamoAPIView(viewsets.ModelViewSet):
+    queryset = models.Loan.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PrestamoSerializer
