@@ -23,9 +23,12 @@ class ProductosDetalleAPIView(viewsets.ModelViewSet):
     serializer_class = ElementDetalleSerializer
 
 class PrestamoVerAPIView(viewsets.ModelViewSet):
-    queryset = models.Loan.objects.all()
     permission_classes = [PermisoUsuarioActual]
     serializer_class = PrestamoVerSerializer
+    def get_queryset(self):
+        user = self.request.user
+        return models.Loan.objects.filter(borrower=user)
+    queryset= get_queryset
 
 class PrestamoAPIView(viewsets.ModelViewSet):
     queryset = models.Loan.objects.all()
