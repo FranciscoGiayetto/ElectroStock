@@ -249,8 +249,8 @@ class HistoryInventory(models.Model):#✅
 
     class Meta:
         #ver estos nombres no me convencen
-        verbose_name_plural = "Historial Iventario Ubicacion"
-        verbose_name = "Historial Iventario Ubicacion"
+        verbose_name_plural = "Historial Inventario Ubicacion"
+        verbose_name = "Historial Inventario Ubicacion"
 
 
 

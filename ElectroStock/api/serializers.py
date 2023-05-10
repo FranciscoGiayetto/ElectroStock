@@ -36,5 +36,38 @@ class PrestamoSerializer(serializers.ModelSerializer):
             model = models.Loan
             fields = '__all__'
 
+#Para ver y editar todos los datos del inventario 
+class InventarioSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = models.Inventory
+            fields = '__all__'
 
-            
+#Para ver y editar todos los datos de la categoria 
+class CategoriaSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = models.Category
+            fields = '__all__'
+
+#Para ver y editar todos los datos de la sub-categoria 
+class SubcategoriaSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = models.SubCategory
+            fields = '__all__'        
+
+#Para ver y editar todos los datos de la historial del inventario 
+class HistoryInventorySerializer(serializers.ModelSerializer):
+        class Meta:
+            model = models.HistoryInventory
+            fields = '__all__'    
+
+#Para ver y editar todos los datos de la historial del prestamos 
+class HistoryLoanSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = models.HistoryLoan
+            fields = '__all__'  
+
+#Para ver y editar todos los datos de la detalles del presupuesto 
+class DetailsSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = models.Details
+            fields = '__all__'  
