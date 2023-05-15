@@ -2,45 +2,65 @@ from django.http import response, JsonResponse
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-#from rest_framework.serializers import Serializer
-#from .models import Note
-#from .serializers import NoteSerializer
-#from api import serializers
-#from .utils import updateNote, getNoteDetail, deleteNote, getNotesList, 
+from ElectroStockApp import models
+from .serializers import *
+from rest_framework import viewsets, permissions
+from .permissions import PermisoUsuarioActual
 
+class ElementsViewSet(viewsets.ModelViewSet):
+    queryset= models.Element.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class= ElementSerializer
 
-@api_view(['GET'])
-def getRoutes(request):
-    routes = [
-        {
-            'Endpoint': '/notes/',
-            'method': 'GET',
-            'body': None,
-            'description': 'Returns an array of notes'
-        },
-        {
-            'Endpoint': '/notes/id',
-            'method': 'GET',
-            'body': None,
-            'description': 'Returns a single note object'
-        },
-        {
-            'Endpoint': '/notes/create/',
-            'method': 'POST',
-            'body': {'body': ""},
-            'description': 'Creates new note with data sent in post request'
-        },
-        {
-            'Endpoint': '/notes/id/update/',
-            'method': 'PUT',
-            'body': {'body': ""},
-            'description': 'Creates an existing note with data sent in post request'
-        },
-        {
-            'Endpoint': '/notes/id/delete/',
-            'method': 'DELETE',
-            'body': None,
-            'description': 'Deletes and exiting note'
-        },
-    ]
-    return Response(routes)
+class ProductosEcommerceAPIView(viewsets.ModelViewSet):
+    queryset = models.Element.objects.filter(ecommerce=True)
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ElementEcommerceSerializer
+
+class ProductosDetalleAPIView(viewsets.ModelViewSet):
+    queryset = models.Element.objects.filter(ecommerce=True)
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ElementDetalleSerializer
+
+class PrestamoVerAPIView(viewsets.ModelViewSet):
+    permission_classes = [PermisoUsuarioActual]
+    serializer_class = PrestamoVerSerializer
+    def get_queryset(self):
+        user = self.request.user
+        return models.Loan.objects.filter(borrower=user)
+    queryset= get_queryset
+
+class PrestamoAPIView(viewsets.ModelViewSet):
+    queryset = models.Loan.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PrestamoSerializer
+
+class InventoryViewSet(viewsets.ModelViewSet):
+    queryset= models.Inventory.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class= InventarioSerializer
+
+class CategoriaViewSet(viewsets.ModelViewSet):
+    queryset= models.Category.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class= CategoriaSerializer
+
+class SubcategoriaViewSet(viewsets.ModelViewSet):
+    queryset= models.SubCategory.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class= SubcategoriaSerializer
+
+class HistoryInventoryViewSet(viewsets.ModelViewSet):
+    queryset= models.HistoryInventory.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class= HistoryInventorySerializer
+
+class HistoryLoanViewSet(viewsets.ModelViewSet):
+    queryset= models.HistoryLoan.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class= HistoryLoanSerializer
+
+class DetailsViewSet(viewsets.ModelViewSet):
+    queryset= models.Details.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class= DetailsSerializer

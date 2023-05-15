@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from ElectroStockApp import views
+from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [path("admin/", admin.site.urls),
                path("api/", include("api.urls")),
                #path('accounts/', include('allauth.urls')),
                path('upload_csv/', views.upload_csv, name='upload_csv'),
+               path('docs/', include_docs_urls(title="API DOCUMENTATION"))
                ]
