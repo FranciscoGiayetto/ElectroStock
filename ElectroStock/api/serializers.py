@@ -16,12 +16,6 @@ class ElementEcommerceSerializer(serializers.ModelSerializer):
             queryset = models.Element.objects.filter(ecommerce=True)
 
 #Para los detalles de los productos
-class ElementDetalleSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = models.Element
-            fields = ('id', 'name', 'description', 'image', 'subcategory', 'stock')
-            read_only_fields=('id', 'name', 'description', 'image', 'subcategory', 'stock')
-            queryset = models.Element.objects.filter(ecommerce=True)
 
 #Para los datos de los prestamos solo lectura
 class PrestamoVerSerializer(serializers.ModelSerializer):
@@ -53,7 +47,19 @@ class SubcategoriaSerializer(serializers.ModelSerializer):
         class Meta:
             model = models.SubCategory
             fields = '__all__'        
-
+class ElementDetalleSerializer(serializers.ModelSerializer):
+        #image = serializers.SerializerMethodField()
+        subcategory = SubcategoriaSerializer()
+        class Meta:
+            model = models.Element
+            fields = ('id', 'name', 'description', 'image', 'subcategory', 'stock')
+            read_only_fields=('id', 'name', 'description', 'image', 'subcategory', 'stock')
+            queryset = models.Element.objects.filter(ecommerce=True)
+"""
+        def get_image(self, instance):
+            image_url = instance.image.url
+            corrected_image_url = image_url.replace('/img-prod/img-prod/', '/img-prod/')
+            return corrected_image_url"""
 #Para ver y editar todos los datos de la historial del inventario 
 class HistoryInventorySerializer(serializers.ModelSerializer):
         class Meta:

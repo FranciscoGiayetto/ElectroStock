@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
+import DetalleProducto from "./pages/DetalleProducto";
 import Layout from "./components/Layout";
 import * as React from 'react';
 import  './assets/styles/App.css'
@@ -27,7 +28,9 @@ function LayoutWrapper() {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+      
+      <Route path="/" element={<HomePage />} />
+        <Route path="/detalleProducto/:id" element={<DetalleProducto />} />
       </Routes>
     </Layout>
   );
