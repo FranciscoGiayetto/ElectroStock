@@ -60,7 +60,6 @@ class CustomUser(AbstractUser, PermissionsMixin):
         related_name='CustomUser'
     )
 
-
 class Budget(models.Model):#✅
     budget_name = models.CharField(max_length=40)
     specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
