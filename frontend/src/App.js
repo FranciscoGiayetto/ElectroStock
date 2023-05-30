@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import Layout from "./components/Layout";
 import * as React from 'react';
 import  './assets/styles/App.css'
+
 function App() {
   return (
     <Router>
@@ -20,6 +21,7 @@ function App() {
         </div>
       </div>
     </Router>
+    
   );
 }
 

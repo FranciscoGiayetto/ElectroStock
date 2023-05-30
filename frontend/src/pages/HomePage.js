@@ -1,10 +1,12 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Sidebar } from "../components/Sidebar";
 
 function HomePage() {
   return (
     <div>
-      <h1>Welcome to the Home Page</h1>
-      <p>This is the main page of our website</p>
+      <Sidebar></Sidebar>
+      
     </div>
   );
 }
