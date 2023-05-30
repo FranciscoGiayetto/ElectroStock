@@ -21,6 +21,7 @@ import AllInboxIcon from '@mui/icons-material/AllInbox';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import HomeIcon from '@mui/icons-material/Home';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 
@@ -90,6 +91,7 @@ export function Sidebar() {
     { text: 'Préstamo', icon: <IosShareIcon /> },
     { text: 'Tienda', icon: <StoreIcon /> },
     { text: 'Página Principal', icon: <HomeIcon /> },
+    { text: 'Cerrar sesion', icon: <LogoutIcon /> }
   ];
 
   return (
@@ -115,6 +117,7 @@ export function Sidebar() {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
+            backgroundColor: '#EBEBEB',
           },
         }}
         variant="persistent"
