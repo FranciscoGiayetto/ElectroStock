@@ -1,6 +1,6 @@
 import csv
 from django.shortcuts import render
-from .models import CustomUser, Course, Specialty, Year
+from .newmodels import CustomUser, Course, Specialty, Year
 from django.contrib.auth.models import Group
 
 
