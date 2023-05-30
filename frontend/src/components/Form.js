@@ -14,23 +14,26 @@ export function Logo() {
 
 
 export function Login() {
+  const containerStyle = {
+    marginTop: '20px', // Adjust the top margin as needed
+  };
   return (
     <Form>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label className='color'>Email address*</Form.Label>
-        <Form.Control type="email" placeholder="" />
+        <Form.Control type="email" placeholder="" style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266'}} className="rounded-3 shadow form-control-lg"/>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label className='color'>Password*</Form.Label>
-        <Form.Control type="password" placeholder="" />
+        <Form.Control type="password" placeholder="" style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266'}} className="rounded-3 shadow form-control-lg" />
       </Form.Group>
       <div>
           <div className='text-center'>
               <a href="#" className="link-dark text-decoration-none">Olvidaste tu contraseña?</a>
             </div>
-          <div className='text-center'>
-              <Button className='text-center' variant="primary" type="submit">
+          <div className='text-center' style={containerStyle}>
+              <Button className='text-center rounded-3' size='lg' variant="primary" type="submit">
                 Ingresar
           </Button>
         </div>

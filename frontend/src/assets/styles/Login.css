@@ -1,17 +1,32 @@
-body{
-    background: EBEBEB;
+button{
+    width: 200px;
+    margin-top: 500px;
 }
 
+.login-heading{
+    text-align: center;
+}
 .logo{
-    width: 10%;
-    position:fixed; 
+    width: 150px;
+    height: auto;
+    max-width: 100%;
 	top:0; 
 	left:0; 
     }
+
+.color{
+    color: #2E5266;
+}
+.top-left-image{
+    position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+}
 .centered-form{
     display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
   min-height: 100vh;
 }
