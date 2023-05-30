@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import '../assets/styles/Login.css'
 
-
 export function Logo() {
   return (
     <div style={{ display: "block", width: 300, padding: 20 }}>
@@ -11,7 +10,6 @@ export function Logo() {
     </div>
   );
 }
-
 
 export function Login() {
   const containerStyle = {
@@ -33,7 +31,7 @@ export function Login() {
               <a href="#" className="link-dark text-decoration-none">Olvidaste tu contraseña?</a>
             </div>
           <div className='text-center' style={containerStyle}>
-              <Button className='text-center rounded-3' size='lg' variant="primary" type="submit">
+              <Button className='text-center rounded-5 ' size='lg' style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0'}} variant="primary" type="submit">
                 Ingresar
           </Button>
         </div>
