@@ -2,7 +2,7 @@ import csv
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
-from .newmodels import Specialty
+from .models import Specialty
 
 User = get_user_model()
 
