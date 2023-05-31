@@ -8,7 +8,8 @@ import HomePage from "./pages/HomePage";
 import DetalleProducto from "./pages/DetalleProducto";
 import Layout from "./components/Layout";
 import * as React from 'react';
-import  './assets/styles/App.css'
+import Ecommerce from "./pages/Ecommerce/Ecommerce.jsx";
+import  './assets/styles/App.css';
 function App() {
   return (
     <Router>
@@ -30,6 +31,7 @@ function LayoutWrapper() {
       <Routes>
       
       <Route path="/" element={<HomePage />} />
+        <Route path= "/tienda" element={<Ecommerce/>}/>
         <Route path="/detalleProducto/:id" element={<DetalleProducto />} />
       </Routes>
     </Layout>
