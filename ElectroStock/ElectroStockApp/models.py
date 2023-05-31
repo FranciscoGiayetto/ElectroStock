@@ -49,7 +49,7 @@ class Category(models.Model):  # ✅
     category = models.ForeignKey('self', on_delete=models.CASCADE, related_name='child_categories',null=True, blank=True)
 
     def __str__(self):
-        return self.category
+        return self.name
 
     class Meta:
         verbose_name_plural = "Categorias"
