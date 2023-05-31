@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "api.apps.ApiConfig",
     "coreapi",
     'corsheaders',
+    'import_export',
     "rest_framework",
 ]
 
