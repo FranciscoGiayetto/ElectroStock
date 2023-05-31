@@ -57,4 +57,9 @@ class BoxViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = BoxSerializer
 
+class SpecialityViewSet(viewsets.ModelViewSet):
+    queryset = models.Speciality.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = SpecialitySerializer
+
     

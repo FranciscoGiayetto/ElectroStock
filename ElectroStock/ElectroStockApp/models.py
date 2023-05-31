@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, Group, Permission
 from .especialidad import *
-
+from django.forms import MultipleChoiceField
 
 if not Group.objects.filter(name="Alumno").exists():
     alumno_group = Group.objects.create(name="Alumno")
@@ -13,21 +13,27 @@ if not Group.objects.filter(name="Profesor").exists():
 
 
 class Course(models.Model):
-    number = models.IntegerField()
+    grade = models.IntegerField()
 
     def __str__(self):
-        return str(self.number)
+        return str(self.grade)
 
     class Meta:
         verbose_name_plural = "Cursos"
         verbose_name = "Curso"
 
+class Speciality(models.Model): 
+    Speciality = models.CharField(max_length=40)
+    def __str__(self):
+        return self.Speciality
 
+    class Meta:
+        verbose_name_plural = "Especialidades"
+        verbose_name = "Especialidad"
+        
 class CustomUser(AbstractUser, PermissionsMixin):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    specialty = models.CharField(
-        "Especialidad", max_length=30, choices=especialidad, default="Electronica" , null=True, blank=True
-    )
+    specialties = models.ManyToManyField(Speciality, null=True, blank=True)
 
     # Se agrega related_name a la clave foránea de groups
     groups = models.ManyToManyField(
@@ -59,7 +65,6 @@ class Category(models.Model):  # ✅
 class Element(models.Model):  
     name = models.CharField(max_length=30)
     description = models.TextField(null=True, blank=True)
-    initialStock = models.IntegerField()
     price_usd = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True
     )
@@ -76,9 +81,7 @@ class Element(models.Model):
 
 class Laboratory(models.Model):
     name = models.CharField(max_length=30)
-    specialty = models.CharField(
-        "Especialidad", max_length=30, choices=especialidad, default="Electronica"
-    )
+    specialties = models.ManyToManyField(Speciality, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -129,13 +132,11 @@ class Log(models.Model):
     borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='borrowed_logs')
     lender = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='lender_logs')
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
-    observation = models.CharField(max_length=100)
+    observation = models.CharField(max_length=100, null=True, blank=True)
     dateIn = models.DateTimeField(null=True)
-    dateOut = models.DateTimeField(null=True)
+    dateOut = models.DateTimeField(null=True, blank=True)
 
-    #No se que poner aca
-    def __str__(self):
-        pass
+    
 
     class Meta:
         verbose_name_plural = "Prestamos"

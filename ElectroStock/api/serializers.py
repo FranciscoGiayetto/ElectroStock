@@ -48,6 +48,12 @@ class LaboratorySerializer(serializers.ModelSerializer):
             model = models.Laboratory
             fields = '__all__' 
 
+#Para ver y editar todos los datos del especialidad
+class SpecialitySerializer(serializers.ModelSerializer):
+        class Meta:
+            model = models.Speciality
+            fields = '__all__' 
+
 #Para ver y editar todos los datos de la location
 class LocationSerializer(serializers.ModelSerializer):
         laboratory = LaboratorySerializer()

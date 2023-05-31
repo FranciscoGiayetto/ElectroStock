@@ -16,6 +16,7 @@ router.register('laboratory', LaboratorioViewSet, 'laboratory')
 router.register('location', LocationViewSet, 'location')
 router.register('box', BoxViewSet, 'box')
 router.register('prestamos', PrestamoVerAPIView, 'prestamos')
+router.register('especialidad', SpecialityViewSet, 'especialidad')
 
 
 urlpatterns = router.urls
