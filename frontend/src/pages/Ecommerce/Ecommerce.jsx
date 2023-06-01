@@ -10,7 +10,7 @@ function Ecommerce() {
     <div className='container'>
       <div className='row'>
         <div className='col-4'>
-        <CardExample title="Hola"></CardExample>
+        <CardExample title="Resistencia" text="Una resistencia muy nashe" image="."></CardExample>
         </div>
         </div>
 
