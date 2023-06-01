@@ -1,9 +1,10 @@
-import Navbar from "./Navbar";
+import React from 'react';
+import Sidebar from './Sidebar/Sidebar';
 
 function Layout(props) {
   return (
     <div className="container">
-      <Navbar />
+      <Sidebar />
       {props.children}
     </div>
   );
