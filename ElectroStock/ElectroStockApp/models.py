@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, Group, Permission
 from .especialidad import *
-from django.forms import MultipleChoiceField
 
 if not Group.objects.filter(name="Alumno").exists():
     alumno_group = Group.objects.create(name="Alumno")
@@ -66,7 +65,7 @@ class Element(models.Model):
     name = models.CharField(max_length=30)
     description = models.TextField(null=True, blank=True)
     price_usd = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True
+        max_digits=10, decimal_places=2, null=True, blank=True, help_text='Ingrese el precio en dolares'
     )
     image = models.ImageField(upload_to="img-prod/", blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True, blank=True)
@@ -104,6 +103,7 @@ class Location(models.Model):
 
 
 class Box(models.Model):
+    icon = 'fas fa-user'
     responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     minimumStock = models.IntegerField()
     name = models.CharField(max_length=30)

@@ -32,7 +32,22 @@ class CategoryAdmin(ImportExportActionModelAdmin):
     resource_classes = [CategoryResource]
 
 class ElementAdmin(ImportExportActionModelAdmin):
-    pass
+    list_display = (
+        "name",
+        "price_usd",
+        "category",
+        'ecommerce',
+        )
+    list_filter = (
+        "category",
+        'ecommerce',
+    )
+    search_fields = [
+        "name",
+        "price_usd",
+        "category",
+        'ecommerce',
+    ]
 
 class CustomUserAdmin(ImportExportActionModelAdmin,UserAdmin):
     list_display = (
@@ -53,15 +68,13 @@ class CustomUserAdmin(ImportExportActionModelAdmin,UserAdmin):
         'course__grade',
         "specialties__Speciality",
     )
-    
-class SpecialityAdmin(ImportExportActionModelAdmin):
-    pass
+
 
 class LaboratoryAdmin(ImportExportActionModelAdmin):
     list_display = ("name", 'get_specialties')
     search_fields = [
        "name",
-        "get_specialties",
+        "specialities",
     ]
     def get_specialties(self, obj):
         return ", ".join([str(specialty) for specialty in obj.specialties.all()])
@@ -98,23 +111,23 @@ class BoxAdmin(ImportExportActionModelAdmin):
         "name",
         "minimumStock",
         "responsable",
-        'Elemento',
-        'Ubicacion',
-        
+        'element',
+        'location',
         )
+    list_filter = (
+        "location",
+        "responsable",
+    )
     search_fields = [
         "get_responsable_username",
         "minimumStock",
         "name",
-        "Elemento",
-        "Ubicacion",
+        "element",
+        "location",
     ]
     def responsable(self, obj):
         return obj.responsable.username
-    def Elemento(self, obj):
-        return obj.element.name
-    def Ubicacion(self, obj):
-        return obj.location.name
+
 
 class CourseAdmin(ImportExportActionModelAdmin):
     pass
@@ -123,12 +136,12 @@ class LocationAdmin(ImportExportActionModelAdmin):
     list_display = ("name", "laboratoy")
     search_fields = [
         "name",
-        "laboratoy__name",
+        "laboratoy",
     ]
 
 
 # analizar cuales sirven y cuales no
-admin.site.register(Element)
+admin.site.register(Element,ElementAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Location,LocationAdmin)
 admin.site.register(Laboratory, LaboratoryAdmin)
@@ -136,5 +149,5 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Course,CourseAdmin)
 admin.site.register(Box,BoxAdmin)
 admin.site.register(Log,LogyAdmin)
-admin.site.register(Speciality, SpecialityAdmin)
+admin.site.register(Speciality)
 
