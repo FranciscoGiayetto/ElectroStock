@@ -103,19 +103,18 @@ class Location(models.Model):
 
 
 class Box(models.Model):
-    icon = 'fas fa-user'
     responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     minimumStock = models.IntegerField()
     name = models.CharField(max_length=30)
     element = models.ForeignKey(Element, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
-
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name_plural = "Boxes"
         verbose_name = "Box"
+        
 
 
 class Log(models.Model):

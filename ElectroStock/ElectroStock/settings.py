@@ -139,11 +139,11 @@ JAZZMIN_SETTINGS = {
     #"site_brand": "Villada",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "ElectroStock/img-prod/logo.png",
+    "site_logo": "logo.png",
     
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "ElectroStock/img-prod/logo.png",
+    "login_logo": "logo.png",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
     "login_logo_dark": None,
@@ -152,7 +152,7 @@ JAZZMIN_SETTINGS = {
     "site_logo_classes": "img-circle",
 
     # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    "site_icon": "ElectroStock/img-prod/logo.png",
+    "site_icon": "logo.png",
 
     # Welcome text on the login screen
     "welcome_sign": "BIENVENIDO ",
@@ -198,6 +198,15 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
+        "ElectroStockApp.Box":"fas fa-box",
+        "ElectroStockApp.Location":"fas fa-map-marker-alt",
+        "ElectroStockApp.CustomUser":"fas fa-user",
+        "ElectroStockApp.Category":"fas fa-ellipsis-h",
+        "ElectroStockApp.Element":"fas fa-hammer",
+        "ElectroStockApp.Log":"fas fa-exchange-alt",
+        "ElectroStockApp.Laboratory":"fas fa-flask",
+        "ElectroStockApp.Speciality":"fas fa-hard-hat",
+        "ElectroStockApp.Course":"fas fa-graduation-cap",
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",

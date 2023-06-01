@@ -105,8 +105,8 @@ class LogyAdmin(ImportExportActionModelAdmin):
         "borrower__username",
         'lender__username',
     ]
-
-class BoxAdmin(ImportExportActionModelAdmin):
+from django.contrib import admin
+class BoxAdmin(ImportExportActionModelAdmin,admin.ModelAdmin):
     list_display = (
         "name",
         "minimumStock",
