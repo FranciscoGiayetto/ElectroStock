@@ -80,7 +80,7 @@ class Element(models.Model):
 
 class Laboratory(models.Model):
     name = models.CharField(max_length=30)
-    specialties = models.ManyToManyField(Speciality, null=True, blank=True)
+    speciality = models.ForeignKey(Speciality, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
