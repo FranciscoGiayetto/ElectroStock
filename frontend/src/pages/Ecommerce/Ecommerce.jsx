@@ -6,6 +6,7 @@ function Ecommerce() {
   const [cards, setCards] = useState([]);
   const [visibleCards, setVisibleCards] = useState([]);
   const loadMoreRef = useRef(null);
+  const [loadMore, setLoadMore] = useState(false);
 
   useEffect(() => {
     getElement();
@@ -15,30 +16,12 @@ function Ecommerce() {
     setVisibleCards(cards.slice(0, 9));
   }, [cards]);
 
-  useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 1.0,
-    };
+  const handleLoadMore = () => {
+    const nextCards = cards.slice(visibleCards.length, visibleCards.length + 9);
+    setVisibleCards(prevVisibleCards => [...prevVisibleCards, ...nextCards]);
 
-    const observer = new IntersectionObserver(handleObserver, options);
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
-    }
-
-    return () => {
-      if (loadMoreRef.current) {
-        observer.unobserve(loadMoreRef.current);
-      }
-    };
-  }, [cards]);
-
-  const handleObserver = (entries) => {
-    const target = entries[0];
-    if (target.isIntersecting && visibleCards.length < cards.length) {
-      const nextCards = cards.slice(visibleCards.length, visibleCards.length + 3);
-      setVisibleCards(prevVisibleCards => [...prevVisibleCards, ...nextCards]);
+    if (visibleCards.length + 9 >= cards.length) {
+      setLoadMore(false);
     }
   };
 
@@ -47,6 +30,10 @@ function Ecommerce() {
     let response = await fetch(`${proxyUrl}/api/elementsEcommerce/`);
     let data = await response.json();
     setCards(data);
+
+    if (data.length > 9) {
+      setLoadMore(true);
+    }
   };
 
   return (
@@ -59,7 +46,15 @@ function Ecommerce() {
         ))}
       </div>
 
-      {visibleCards.length < cards.length && <div ref={loadMoreRef}></div>}
+      {loadMore && (
+        <div className='row'>
+          <div className='col-12 text-center'>
+            <button className='btn btn-primary' onClick={handleLoadMore}>
+              Cargar más
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
