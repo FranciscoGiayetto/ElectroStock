@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Ecommerce.css';
 import CardExample from '../../components/card/CardExample';
+import defaultpicture from '../../assets/images/defaultpicture.png';
 
 function Ecommerce() {
   const [cards, setCards] = useState([]);
@@ -29,9 +30,16 @@ function Ecommerce() {
     const proxyUrl = 'http://127.0.0.1:8000';
     let response = await fetch(`${proxyUrl}/api/elementsEcommerce/`);
     let data = await response.json();
-    setCards(data);
 
-    if (data.length > 9) {
+    // Reemplazar las imágenes nulas o vacías por la imagen por defecto
+    const updatedData = data.map(card => ({
+      ...card,
+      image: card.image || defaultpicture,
+    }));
+
+    setCards(updatedData);
+
+    if (updatedData.length > 9) {
       setLoadMore(true);
     }
   };
@@ -40,7 +48,7 @@ function Ecommerce() {
     <div className='container'>
       <div className='row'>
         {visibleCards.map((card, index) => (
-          <div key={index} className='col-4'>
+          <div key={index} className='col-12 col-sm-6 col-md-4 col-lg-3 mb-4'>
             <CardExample title={card.name} text={card.description} image={card.image} />
           </div>
         ))}
@@ -49,7 +57,7 @@ function Ecommerce() {
       {loadMore && (
         <div className='row'>
           <div className='col-12 text-center'>
-            <button className='btn btn-primary' onClick={handleLoadMore}>
+            <button className='btn btn-primary cargarMas' onClick={handleLoadMore}>
               Cargar más
             </button>
           </div>
