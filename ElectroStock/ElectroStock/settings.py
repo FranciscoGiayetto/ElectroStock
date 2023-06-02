@@ -139,11 +139,11 @@ JAZZMIN_SETTINGS = {
     #"site_brand": "Villada",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "logo.png",
+    "site_logo": "logo1.png",
     
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "logo.png",
+    "login_logo": "logo1.png",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
     "login_logo_dark": None,
@@ -152,7 +152,7 @@ JAZZMIN_SETTINGS = {
     "site_logo_classes": "img-circle",
 
     # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    "site_icon": "logo.png",
+    "site_icon": "logo1.png",
 
     # Welcome text on the login screen
     "welcome_sign": "BIENVENIDO ",
@@ -182,6 +182,24 @@ JAZZMIN_SETTINGS = {
     # List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
     "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
 
+    #aca van los del desplegable
+    "usermenu_links": [
+        {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+        {"model": "auth.user"}
+    ],
+    #aca van los de la navar
+    "topmenu_links": [
+
+        # Url that gets reversed (Permissions can be added)
+        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+
+        # external url that opens in a new window (Permissions can be added)
+        {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+
+        # model admin to link to (Permissions checked against model)
+        {"model": "auth.User"},
+
+    ],
     # Custom links to append to app groups, keyed on app name
     "custom_links": {
         "books": [{
@@ -246,22 +264,21 @@ JAZZMIN_SETTINGS["show_ui_builder"] = True
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
     "footer_small_text": False,
-    "body_small_text": True,
+    "body_small_text": False,
     "brand_small_text": False,
     "brand_colour": False,
     "accent": "accent-primary",
     "navbar": "navbar-dark",
-    "navbar_fixed": True,
     "no_navbar_border": False,
     "navbar_fixed": False,
     "layout_boxed": False,
     "footer_fixed": False,
-    "sidebar_fixed": False,
+    "sidebar_fixed": True,
     "sidebar": "sidebar-dark-info",
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": False,
-    "sidebar_nav_compact_style": True,
+    "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
     "theme": "yeti",

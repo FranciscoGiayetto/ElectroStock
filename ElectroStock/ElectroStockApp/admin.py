@@ -10,12 +10,13 @@ admin.site.site_header = "Stock"
 admin.site.index_title = "Stock"
 admin.site.site_title = "Stock"
 
-#Las clases pra importar y exportar
+
+# Las clases pra importar y exportar
 class CategoryResource(resources.ModelResource):
     class Meta:
         model = Category
         fields = (
-            'id',
+            "id",
             "name",
             "description",
             "category",
@@ -27,36 +28,40 @@ class CategoryResource(resources.ModelResource):
             "category",
         )
 
-#Los filtros y busquedas
+
+# Los filtros y busquedas
 class CategoryAdmin(ImportExportActionModelAdmin):
     resource_classes = [CategoryResource]
+
 
 class ElementAdmin(ImportExportActionModelAdmin):
     list_display = (
         "name",
         "price_usd",
         "category",
-        'ecommerce',
-        )
+        "ecommerce",
+    )
     list_filter = (
         "category",
-        'ecommerce',
+        "ecommerce",
     )
     search_fields = [
         "name",
         "price_usd",
         "category",
-        'ecommerce',
+        "ecommerce",
     ]
 
-class CustomUserAdmin(ImportExportActionModelAdmin,UserAdmin):
+
+class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
     list_display = (
         "username",
         "email",
-        'course',
-        'grupo', 
+        "course",
+        "grupo",
         "especialidad",
-        )
+    )
+
     def especialidad(self, obj):
         return ", ".join([specialty.specialties for specialty in obj.specialties.all()])
 
@@ -64,56 +69,62 @@ class CustomUserAdmin(ImportExportActionModelAdmin,UserAdmin):
         return ", ".join([group.name for group in obj.groups.all()])
 
     list_filter = (
-        'groups', 
-        'course__grade',
+        "groups",
+        "course__grade",
         "specialties__Speciality",
     )
 
 
 class LaboratoryAdmin(ImportExportActionModelAdmin):
-    list_display = ("name", 'get_specialties')
+    list_display = ("name", "get_specialties")
     search_fields = [
-       "name",
+        "name",
         "specialities",
     ]
     def get_specialties(self, obj):
         return ", ".join([str(specialty) for specialty in obj.specialties.all()])
 
+
+
 class LogyAdmin(ImportExportActionModelAdmin):
+
     list_display = (
         "status",
         "quantity",
         "observation",
-        'dateIn',
-        'dateOut',
-        "borrower",
-        'lender',
-        'box',
-        )
-    list_filter = (
-        "status",
-        "borrower__username",
         "dateIn",
-        "dateOut"
+        "dateOut",
+        "borrower",
+        "lender",
+        "box",
     )
+    list_filter = ("status", "borrower__username", "dateIn", "dateOut")
     search_fields = [
         "status",
         "quantity",
         "observation",
-        'dateIn',
-        'dateOut',
+        "dateIn",
+        "dateOut",
         "borrower__username",
-        'lender__username',
+        "lender__username",
     ]
+
+
 from django.contrib import admin
-class BoxAdmin(ImportExportActionModelAdmin,admin.ModelAdmin):
+
+
+class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     list_display = (
         "name",
         "minimumStock",
         "responsable",
-        'element',
-        'location',
-        )
+        "element",
+        "location",
+        "get_logs",
+        "get_approved_element_count",
+        "get_pendient",
+        "current_stock",
+    )
     list_filter = (
         "location",
         "responsable",
@@ -125,12 +136,60 @@ class BoxAdmin(ImportExportActionModelAdmin,admin.ModelAdmin):
         "element",
         "location",
     ]
+
     def responsable(self, obj):
         return obj.responsable.username
+
+    def get_logs(self, obj):
+        approved_element_count = Log.objects.filter(box=obj, status="COM").aggregate(
+            total=models.Sum("quantity")
+        )["total"]
+        return approved_element_count if approved_element_count is not None else 0
+
+    get_logs.short_description = "Stock"
+
+    def get_pendient(self, obj):
+        approved_element_count = Log.objects.filter(box=obj, status="PED").aggregate(
+            total=models.Sum("quantity")
+        )["total"]
+        return approved_element_count if approved_element_count is not None else 0
+
+    get_pendient.short_description = "Pedidos"
+
+    def get_approved_element_count(self, obj):
+        approved_element_count = Log.objects.filter(box=obj, status="AP").aggregate(
+            total=models.Sum("quantity")
+        )["total"]
+        return approved_element_count if approved_element_count is not None else 0
+
+    get_approved_element_count.short_description = "Prestados"
+
+    def current_stock(self, obj):
+        total_com = Log.objects.filter(box=obj, status="COM").aggregate(
+            total=models.Sum("quantity")
+        )["total"]
+        total_ar = Log.objects.filter(box=obj, status="AP").aggregate(
+            total=models.Sum("quantity")
+        )["total"]
+        total_ped = Log.objects.filter(box=obj, status="PED").aggregate(
+            total=models.Sum("quantity")
+        )["total"]
+        if total_com is None:
+            total_com = 0
+        if total_ar is None:
+            total_ar = 0
+        if total_ped is None:
+            total_ped = 0
+
+        current_stock = total_com - total_ar - total_ped
+        return current_stock
+
+    current_stock.short_description = "Stock Actual"
 
 
 class CourseAdmin(ImportExportActionModelAdmin):
     pass
+
 
 class LocationAdmin(ImportExportActionModelAdmin):
     list_display = ("name", "laboratoy")
@@ -141,13 +200,12 @@ class LocationAdmin(ImportExportActionModelAdmin):
 
 
 # analizar cuales sirven y cuales no
-admin.site.register(Element,ElementAdmin)
+admin.site.register(Element, ElementAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(Location,LocationAdmin)
+admin.site.register(Location, LocationAdmin)
 admin.site.register(Laboratory, LaboratoryAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Course,CourseAdmin)
-admin.site.register(Box,BoxAdmin)
-admin.site.register(Log,LogyAdmin)
+admin.site.register(Course, CourseAdmin)
+admin.site.register(Box, BoxAdmin)
+admin.site.register(Log, LogyAdmin)
 admin.site.register(Speciality)
-

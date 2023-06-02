@@ -123,13 +123,15 @@ class Log(models.Model):
         DESAPROBADO = "DAP", "Desaprobado"
         CARRITO = "CAR", "Carrito"
         PEDIDO = "PED", "Pedido"
+        COMPRADO= 'COM', 'Comprado'
+        DEVUELTO= 'DEV', 'Devuelto'
 
     status = models.CharField(
         max_length=30, choices=Status.choices, default=Status.DESAPROBADO
     )
     quantity = models.IntegerField()
-    borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='borrowed_logs')
-    lender = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='lender_logs')
+    borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='borrowed_logs', null=True, blank=True)
+    lender = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='lender_logs', null=True, blank=True)
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
     observation = models.CharField(max_length=100, null=True, blank=True)
     dateIn = models.DateTimeField(null=True)
