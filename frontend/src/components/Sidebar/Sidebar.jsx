@@ -37,6 +37,7 @@ const App = () => {
           left: 0,
           height: '100vh',
           background: '#2E5266',
+          zIndex : 10,
         }}
       >
         <div className="demo-logo-vertical" />
