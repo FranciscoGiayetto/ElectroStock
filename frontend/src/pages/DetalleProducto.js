@@ -15,7 +15,7 @@ function DetalleProducto() {
 
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
-    let response = await fetch(`${proxyUrl}/api/elementsDetalle/${elementId.id}/`);
+    let response = await fetch(`${proxyUrl}/api/elements/${elementId.id}/`);
     let data = await response.json();
     setElement(data);
     console.log(data)
@@ -26,12 +26,12 @@ function DetalleProducto() {
 
  
   return (
-    <div>
+    <div className='container'>
       {element && (
         <>
           <h1>Nombre: {element.name}</h1>
           <h1>Descripción: {element.description}</h1>
-          <h1>Subcategoria: {element.subcategory["subcategory"]}</h1>
+          <h1>Categoria: {element.category}</h1>
           <h1>Stock: {element.stock}</h1>
           <img
             src={element.image}

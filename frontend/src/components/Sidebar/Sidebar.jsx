@@ -12,7 +12,6 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import './Sidebar.css';
 
 const { Header, Sider } = Layout;
-
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -22,13 +21,13 @@ const App = () => {
 
   const handleSearch = (event) => {
     event.preventDefault();
-    const searchQuery = event.target.elements.searchQuery.value;
+    const searchQuery = event.target.elements.searchBar.value;
     // Handle search logic here
     console.log('Search query:', searchQuery);
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <div>
       <Sider
         trigger={null}
         collapsible
@@ -76,24 +75,33 @@ const App = () => {
             right: 0,
             left: collapsed ? 80 : 200,
             zIndex: 1,
+            
           }}
         >
-
           <form onSubmit={handleSearch}>
             <InputGroup>
-              <FormControl type="text" name="searchBar" placeholder="Buscar productos" 
-                           style={{backgroundColor: '#203d4d', borderColor:'#2E5266' ,borderRadius:'20px', 
-                           }} 
+              <FormControl
+                type="text"
+                name="searchBar"
+                placeholder="Buscar productos"
+                style={{
+                  backgroundColor: '#203d4d',
+                  borderColor: '#2E5266',
+                  borderRadius: '20px',
+                }}
               />
-              <Button variant="primary" type="submit" style={{backgroundColor: '#2E5266', borderColor: '#2E5266'}}>
-              <SearchRoundedIcon />
+              <Button
+                variant="primary"
+                type="submit"
+                style={{ backgroundColor: '#2E5266', borderColor: '#2E5266' }}
+              >
+                <SearchRoundedIcon />
               </Button>
             </InputGroup>
           </form>
-
         </Header>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 

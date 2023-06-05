@@ -45,11 +45,11 @@ function Ecommerce() {
   };
 
   return (
-    <div className='container'>
+    <div className='container' id='ecommerce'>
       <div className='row'>
         {visibleCards.map((card, index) => (
           <div key={index} className='col-12 col-sm-6 col-md-4 col-lg-3 mb-4'>
-            <CardExample title={card.name} text={card.description} image={card.image} />
+            <CardExample title={card.name} text={card.description} image={card.image} id={card.id} />
           </div>
         ))}
       </div>
