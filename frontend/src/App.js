@@ -10,6 +10,7 @@ import Layout from "./components/Layout";
 import * as React from 'react';
 import Ecommerce from "./pages/Ecommerce/Ecommerce.jsx";
 import  './assets/styles/App.css';
+
 function App() {
   return (
     <Router>
@@ -22,6 +23,7 @@ function App() {
         </div>
       </div>
     </Router>
+    
   );
 }
 
