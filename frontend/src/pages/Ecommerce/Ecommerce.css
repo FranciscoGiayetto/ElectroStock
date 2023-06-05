@@ -30,3 +30,20 @@ body {
     margin-left: 4rem;
     align-items: center;
   }
+
+  .mb-4 {
+    margin-bottom: 1.5rem; /* Espacio entre las tarjetas */
+  }
+  
+  /* Ajustar el margen según el tamaño de la pantalla */
+  @media (max-width: 767px) {
+    .mb-4 {
+      margin-bottom: 1rem; /* Espacio más pequeño en pantallas pequeñas */
+    }
+  }
+  
+  @media (max-width: 575px) {
+    .mb-4 {
+      margin-bottom: 0.5rem; /* Espacio aún más pequeño en pantallas más pequeñas */
+    }
+  }
