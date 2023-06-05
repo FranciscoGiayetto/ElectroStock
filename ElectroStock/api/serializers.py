@@ -38,8 +38,8 @@ class UsersSerializer(serializers.ModelSerializer):
 class ElementEcommerceSerializer(serializers.ModelSerializer):
         class Meta:
             model = models.Element
-            fields = ('name', 'description', 'image', 'category')
-            read_only_fields=('name', 'description', 'image', 'category')
+            fields = ('id','name', 'description', 'image', 'category')
+            read_only_fields=('id','name', 'description', 'image', 'category')
             queryset = models.Element.objects.filter(ecommerce=True)
 
 #Para ver y editar todos los datos del laboratorio
