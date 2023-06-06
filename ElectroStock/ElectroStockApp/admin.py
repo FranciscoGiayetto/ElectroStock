@@ -70,7 +70,7 @@ class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
     list_filter = (
         "groups",
         "course__grade",
-        "specialties__Speciality",
+        "specialties__name",
     )
 
 
