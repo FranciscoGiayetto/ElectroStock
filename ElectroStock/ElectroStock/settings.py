@@ -139,20 +139,20 @@ JAZZMIN_SETTINGS = {
     #"site_brand": "Villada",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "logo1.png",
+    #"site_logo": "",
     
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "logo1.png",
+    #"login_logo": "",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
-    "login_logo_dark": None,
+    #"login_logo_dark": None,
 
     # CSS classes that are applied to the logo above
-    "site_logo_classes": "img-circle",
+    #"site_logo_classes": "img-circle",
 
     # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    "site_icon": "logo1.png",
+    #"site_icon": "",
 
     # Welcome text on the login screen
     "welcome_sign": "BIENVENIDO ",
@@ -182,22 +182,20 @@ JAZZMIN_SETTINGS = {
     # List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
     "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
 
-    #aca van los del desplegable
-    "usermenu_links": [
-        {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
-        {"model": "auth.user"}
-    ],
+
     #aca van los de la navar
     "topmenu_links": [
 
-        # Url that gets reversed (Permissions can be added)
-        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        # external url that opens in a new window (Permissions can be added)
+        {"name": "Tienda ", "url": "http://127.0.0.1:3000", "new_window": True},
 
         # external url that opens in a new window (Permissions can be added)
-        {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+        {"name": "Presupuesto", "url": "http://127.0.0.1:3000", "new_window": True},
 
-        # model admin to link to (Permissions checked against model)
-        {"model": "auth.User"},
+        # external url that opens in a new window (Permissions can be added)
+        {"name": "Prestamo", "url": "http://127.0.0.1:3000", "new_window": True},
+
+        
 
     ],
     # Custom links to append to app groups, keyed on app name

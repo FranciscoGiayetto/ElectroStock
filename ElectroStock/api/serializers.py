@@ -32,7 +32,7 @@ class UsersSerializer(serializers.ModelSerializer):
     course = CourseSerializer()
     class Meta:
         model = models.CustomUser
-        fields = ('username','first_name','last_name','email','is_active','course','groups','last_login','specialty')
+        fields = ('username','first_name','last_name','email','is_active','course','groups','last_login','specialties')
 
 #Solo para la previsualizacion de los elementos en el ecommerce
 class ElementEcommerceSerializer(serializers.ModelSerializer):
@@ -56,7 +56,7 @@ class SpecialitySerializer(serializers.ModelSerializer):
 
 #Para ver y editar todos los datos de la location
 class LocationSerializer(serializers.ModelSerializer):
-        laboratory = LaboratorySerializer()
+        laboratoy = LaboratorySerializer()
         class Meta:
             model = models.Location
             fields = '__all__' 
@@ -73,6 +73,12 @@ class LogSerializer (serializers.ModelSerializer):
         borrower = UsersSerializer()
         class Meta:
             model = models.Log
-            fields = '__all__'
+            fields = ('box', 'borrower', 'lender', 'status','quantity', 'observation', 'dateIn', 'dateOut')
 
+#Se pasa el stock actual de los productos
+class StockSerializer(serializers.Serializer):
+    current_stock = serializers.IntegerField()
+    class Meta:
+        model = models.Log
+        fields = ('current_stock')
 
