@@ -49,16 +49,17 @@ class ElementAdmin(ImportExportActionModelAdmin):
         'ecommerce',
     ]
 
-class CustomUserAdmin(ImportExportActionModelAdmin,UserAdmin):
+class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
     list_display = (
         "username",
         "email",
         'course',
         'grupo', 
         "especialidad",
-        )
+    )
+
     def especialidad(self, obj):
-        return ", ".join([specialty.specialties for specialty in obj.specialties.all()])
+        return ", ".join([specialty.name for specialty in obj.specialties.all()])
 
     def grupo(self, obj):
         return ", ".join([group.name for group in obj.groups.all()])
@@ -66,8 +67,9 @@ class CustomUserAdmin(ImportExportActionModelAdmin,UserAdmin):
     list_filter = (
         'groups', 
         'course__grade',
-        "specialties__Speciality",
+        "specialties__name",
     )
+
 
 
 class LaboratoryAdmin(ImportExportActionModelAdmin):

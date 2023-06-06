@@ -22,7 +22,7 @@ class Course(models.Model):
         verbose_name = "Curso"
 
 class Speciality(models.Model): 
-    Speciality = models.CharField(max_length=40)
+    name = models.CharField(max_length=40)
     def __str__(self):
         return self.Speciality
 
