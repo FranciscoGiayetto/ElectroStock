@@ -2,16 +2,22 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import './CardExample.css';
 export default function CardExample(props) {
-  const {id, name, title, image, text}=props;
+  const { id, name, title, image, text } = props;
   return (
-    <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={image} />
+    <Card className="mx-auto mb-3" style={{ width: '18rem' }}>
+      <div className="image-container">
+      <Card.Img 
+        variant="top"
+        src={"/imagen.jpeg"}
+        className="imagencss"
+        style={{ margin: '10px auto', maxHeight: '200px', width: '90%', display: 'block' }}
+      />
+        <Button variant="primary" className="my-button">+</Button>
+      </div>
+      <hr className="separator" />
       <Card.Body>
         <Card.Title>{title}</Card.Title>
-        <Card.Text>
-          {text}
-        </Card.Text>
-        <Button variant="primary">Agregar Al carrito</Button>
+        
       </Card.Body>
     </Card>
   );

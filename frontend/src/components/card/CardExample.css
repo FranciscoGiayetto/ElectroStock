@@ -1,0 +1,29 @@
+.image-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .my-button {
+    position: absolute;
+    right:19px ;
+    bottom: 15px;
+    background-color: #58A4B0;
+    border: none;
+    font-size: 1,5rem;
+
+        }
+
+.imagencss {
+    margin: '10px auto';
+    max-height: 300px;
+    max-width: 300px;
+    width: '90%';
+    
+}
+  
+.separator {
+    
+    margin: 10px 0;
+  }
+  
+  
