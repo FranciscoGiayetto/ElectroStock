@@ -14,7 +14,7 @@ export default function CardExample(props) {
       />
         <Button variant="primary" className="my-button">+</Button>
       </div>
-      <hr className="separator" />
+      
       <Card.Body>
         <Card.Title>{title}</Card.Title>
         

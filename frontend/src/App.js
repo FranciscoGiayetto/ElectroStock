@@ -5,11 +5,12 @@ import {
 } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
-import DetalleProducto from "./pages/DetalleProducto";
+import DetalleProducto from "./pages/DetalleProducto/DetalleProducto";
 import Layout from "./components/Layout";
 import * as React from 'react';
 import Ecommerce from "./pages/Ecommerce/Ecommerce.jsx";
 import  './assets/styles/App.css';
+
 function App() {
   return (
     <Router>
@@ -22,6 +23,7 @@ function App() {
         </div>
       </div>
     </Router>
+    
   );
 }
 
