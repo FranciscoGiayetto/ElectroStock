@@ -8,7 +8,7 @@
 
 .product-details__title {
   font-size: 35px;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   background-image: linear-gradient(to right, #135183, #000000);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -23,13 +23,13 @@
 }
 
 .product-details__category {
-  font-size: 15px;
+  font-size: 20px;
   margin-bottom: 10px;
   font-family: "Arial", "Helvetica Neue", Helvetica, sans-serif;
 }
 
 .product-details__stock {
-  font-size: 15px;
+  font-size: 20px;
   margin-bottom: 20px;
   font-family: "Arial", "Helvetica Neue", Helvetica, sans-serif;
 }
@@ -41,6 +41,10 @@
   margin: 20px 0;
 }
 
+.botonCarrito:hover {
+  transform: scale(1.001);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 .product-details__image-container {
   max-width: 100%;
   height: auto;
