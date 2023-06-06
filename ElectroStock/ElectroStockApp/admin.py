@@ -53,8 +53,6 @@ class ElementAdmin(ImportExportActionModelAdmin):
     ]
 
 class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
-
-class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
     list_display = (
         "username",
         "email",
