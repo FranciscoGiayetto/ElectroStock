@@ -6,6 +6,8 @@ from ElectroStockApp import models
 from .serializers import *
 from rest_framework import viewsets, permissions
 from .permissions import PermisoUsuarioActual
+from django.db.models import Sum, Value, IntegerField
+from rest_framework import viewsets
 
 class ElementsViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.all()
@@ -62,4 +64,34 @@ class SpecialityViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = SpecialitySerializer
 
-    
+@api_view(["GET", "POST"])
+def get_stock(request, box_number):
+    if request.method == "GET":
+        if box_number is not None:
+            total_com = models.Log.objects.filter(box=box_number, status="COM").aggregate(
+                total=Sum("quantity")
+            )["total"]
+            total_ar = models.Log.objects.filter(box=box_number, status="AP").aggregate(
+                total=Sum("quantity")
+            )["total"]
+            total_ped = models.Log.objects.filter(box=box_number, status="PED").aggregate(
+                total=Sum("quantity")
+            )["total"]
+            if total_com is None:
+                total_com = 0
+            if total_ar is None:
+                total_ar = 0
+            if total_ped is None:
+                total_ped = 0
+
+            current_stock = total_com - total_ar - total_ped
+
+            queryset = models.Log.objects.filter(box=box_number, status="COM")
+            queryset = queryset.annotate(current_stock=Value(current_stock, output_field=IntegerField()))
+
+            serializer = StockSerializer(queryset, many=True)  # Serializar los datos
+
+            return Response(serializer.data)  # Devolver la respuesta serializada
+
+        return Response([])  # Si no se proporciona el parámetro 'box_number', devolver una lista vacía como respuesta
+

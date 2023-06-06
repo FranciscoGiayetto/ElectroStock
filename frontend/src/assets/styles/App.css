@@ -1,3 +1,8 @@
 body{
-    background-color: rgb(220, 230, 230);
+    background-color: #ebebeb;
+    font-family: 'Sebino', sans-serif;
 }
+@font-face {
+    font-family: 'Sebino';
+    src: url('fonts/Sebino-Regular.ttf') format('truetype');
+  }
