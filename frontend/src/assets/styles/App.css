@@ -1,8 +1,9 @@
 body{
-    background-color: #ebebeb;
-    font-family: 'Sebino', sans-serif;
+    background-color: rgb(220, 230, 230);
 }
-@font-face {
-    font-family: 'Sebino';
-    src: url('fonts/Sebino-Regular.ttf') format('truetype');
-  }
+
+.container .pagecontainer{
+    margin-top: 6rem;
+    margin-left: 4rem;
+    align-items: center;
+}
