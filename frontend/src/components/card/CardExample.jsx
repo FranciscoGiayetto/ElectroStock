@@ -7,7 +7,7 @@ export default function CardExample(props) {
   return (
     <Card style={{ width: '18rem' }}>
       <Link to={`/detalleProducto/${id}`}>
-    <Card.Img variant="top" src={image} />
+    <Card.Img variant="top" src={image} className="card-image" />
     </Link>
       <Card.Body>
         <Card.Title>{title}</Card.Title>

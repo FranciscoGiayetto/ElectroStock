@@ -1,0 +1,6 @@
+.card-image {
+    width: 100%;
+    height: 300px; /* Define el tamaño deseado para la imagen */
+    object-fit: cover; /* Ajusta la imagen dentro del contenedor sin deformarla */
+  }
+  
