@@ -36,6 +36,7 @@ class CategoryAdmin(ImportExportActionModelAdmin):
 
 class ElementAdmin(ImportExportActionModelAdmin):
     list_display = (
+        'id',
         "name",
         "price_usd",
         "category",

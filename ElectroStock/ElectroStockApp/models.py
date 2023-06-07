@@ -137,7 +137,7 @@ class Log(models.Model):
     dateIn = models.DateTimeField(null=True)
     dateOut = models.DateTimeField(null=True, blank=True)
     def __str__(self):
-        return self.observation
+        return self.status
     
 
     class Meta:

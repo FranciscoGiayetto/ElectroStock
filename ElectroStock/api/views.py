@@ -65,33 +65,37 @@ class SpecialityViewSet(viewsets.ModelViewSet):
     serializer_class = SpecialitySerializer
 
 @api_view(["GET", "POST"])
-def get_stock(request, box_number):
+def get_stock(request, element_id):
     if request.method == "GET":
-        if box_number is not None:
-            total_com = models.Log.objects.filter(box=box_number, status="COM").aggregate(
+        if element_id is not None:
+            boxes = models.Box.objects.filter(element__id=element_id)
+            box_ids = [box.id for box in boxes]
+            
+            total_com = models.Log.objects.filter(box__id__in=box_ids, status="COM").aggregate(
                 total=Sum("quantity")
             )["total"]
-            total_ar = models.Log.objects.filter(box=box_number, status="AP").aggregate(
+            total_ped = models.Log.objects.filter(box__id__in=box_ids, status="PED").aggregate(
                 total=Sum("quantity")
             )["total"]
-            total_ped = models.Log.objects.filter(box=box_number, status="PED").aggregate(
+            total_ap = models.Log.objects.filter(box__id__in=box_ids, status="AP").aggregate(
                 total=Sum("quantity")
             )["total"]
+
             if total_com is None:
                 total_com = 0
-            if total_ar is None:
-                total_ar = 0
             if total_ped is None:
                 total_ped = 0
+            if total_ap is None:
+                total_ap = 0
 
-            current_stock = total_com - total_ar - total_ped
+            current_stock = total_com - total_ped - total_ap
 
-            queryset = models.Log.objects.filter(box=box_number, status="COM")
+            queryset = models.Log.objects.filter(box__id__in=box_ids, status="COM")
             queryset = queryset.annotate(current_stock=Value(current_stock, output_field=IntegerField()))
 
             serializer = StockSerializer(queryset, many=True)  # Serializar los datos
 
             return Response(serializer.data)  # Devolver la respuesta serializada
 
-        return Response([])  # Si no se proporciona el parámetro 'box_number', devolver una lista vacía como respuesta
+        return Response([])  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 

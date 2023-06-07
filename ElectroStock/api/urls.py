@@ -19,7 +19,7 @@ router.register('prestamos', PrestamoVerAPIView, 'prestamos')
 router.register('especialidad', SpecialityViewSet, 'especialidad')
 
 urlpatterns= [
-     path("stock/<int:box_number>/", get_stock, name="stock"),
+     path("stock/<int:element_id>/", get_stock, name="stock"),
 ] + router.urls
 
 
