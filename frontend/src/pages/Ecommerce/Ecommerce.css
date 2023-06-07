@@ -1,7 +1,27 @@
-body{
+body {
     background-color: rgb(4, 54, 54);
-}
-
-h1{
-    font-size: 60;
-}
+  }
+  
+  h1 {
+    font-size: 60px;
+  }
+  
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .col-4 {
+    padding-top: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: calc(33.33% - 2rem);
+    margin: 1rem;
+  }
+  
+  .cargarMas {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+  
