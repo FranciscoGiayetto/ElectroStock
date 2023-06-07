@@ -6,7 +6,6 @@ import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import { UploadOutlined } from '@ant-design/icons';
 import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import './Sidebar.css';
@@ -31,74 +30,86 @@ const App = () => {
   return (
     <div>
       <Sider
-          trigger={null}
-          collapsible
-          collapsed={collapsed}
-          style={{
-            height: '100vh',
-            background: '#EBEBEB',
-            position: 'fixed',
-            left: 0,
-            top: 64,
-            zIndex:10,
-            boxShadow: '2px 0 4px rgba(0, 0, 0, 0.2)', // Aplica sombra a la sidebar
-          }}
-        >
-          <Menu
-            theme="light"
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            style={{ background: '#EBEBEB' }}
-            items={[
-              {
-                key: '0',
-                icon: collapsed ? <MenuUnfoldOutlined style={{ fontSize: '20px' }} /> : <MenuFoldOutlined style={{ fontSize: '20px' }} />,
-                onClick: handleToggleSidebar,
-                style: { color: 'black' },
-                alignItems: 'center',
-              },
-              <divider />,
-              { key: '1', icon: <StoreRoundedIcon style={{ fontSize: '20px' }} />, label: 'Tienda' },
-              { key: '2', icon: <CachedRoundedIcon style={{ fontSize: '20px' }} />, label: 'Préstamo' },
-              { key: '3', icon: <PaidRoundedIcon style={{ fontSize: '20px' }} />, label: 'Presupuesto' },
-              { key: '4', icon: <StorageRoundedIcon style={{ fontSize: '20px' }} />, label: 'Stock' },
-              { key: '5', icon: <AddModeratorRoundedIcon style={{ fontSize: '20px' }} />, label: 'Admin' },
-              <divider />,
-              { key: '6', icon: <LogoutRoundedIcon style={{ fontSize: '20px' }} />, label: 'Cerrar sesión' },
-            ]}
-          />
-        </Sider>
-
-      <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
-      <Header
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          padding: 0,
-          background: '#2E5266',
+          height: '100vh',
+          background: '#EBEBEB',
           position: 'fixed',
-          right: 0,
           left: 0,
-          zIndex: 1,
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', // Aplica sombra a la navbar
+          top: 64,
+          zIndex: 10,
+          boxShadow: '2px 0 4px rgba(0, 0, 0, 0.2)', // Aplica sombra a la sidebar
         }}
       >
-        <img src={its} alt="its" style={{ width: '100px', marginRight: '10px' }} />
+        <Menu
+          theme="light"
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          style={{ background: '#EBEBEB' }}
+        >
+          <Menu.Item
+            key="0"
+            icon={collapsed ? <MenuUnfoldOutlined style={{ fontSize: '20px' }} /> : <MenuFoldOutlined style={{ fontSize: '20px' }} />}
+            onClick={handleToggleSidebar}
+            style={{ color: 'black', alignItems: 'center' }}
+          />
+          <Menu.Divider />
+          <Menu.Item key="1" icon={<StoreRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/tienda' }}>
+            Tienda
+          </Menu.Item>
+          <Menu.Item key="2" icon={<CachedRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/prestamo' }}>
+            Préstamo
+          </Menu.Item>
+          <Menu.Item key="3" icon={<PaidRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/presupuesto' }}>
+            Presupuesto
+          </Menu.Item>
+          <Menu.Item key="4" icon={<StorageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/stock' }}>
+            Stock
+          </Menu.Item>
+          <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
+            Admin
+          </Menu.Item>
+          <Menu.Divider />
+          <Menu.Item key="6" icon={<LogoutRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/logout' }}>
+            Cerrar sesión
+          </Menu.Item>
+        </Menu>
+      </Sider>
 
-        <form onSubmit={handleSearch}>
-          <InputGroup>
-            <FormControl
-              type="text"
-              name="searchBar"
-              placeholder="Buscar productos"
-              style={{ backgroundColor: '#203d4d', borderColor: '#2E5266', borderRadius: '20px' }}
-            />
-            <Button variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266' }}>
-              <SearchRoundedIcon />
-            </Button>
-          </InputGroup>
-        </form>
-      </Header>
+      <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
+        <Header
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: 0,
+            background: '#2E5266',
+            position: 'fixed',
+            right: 0,
+            left: 0,
+            zIndex: 1,
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', // Aplica sombra a la navbar
+          }}
+        >
+          <a href="/">
+          <img src={its} alt="its" style={{ width: '100px', marginRight: '10px' }} />
+        </a>
+
+          <form onSubmit={handleSearch}>
+            <InputGroup>
+              <FormControl
+                type="text"
+                name="searchBar"
+                placeholder="Buscar productos"
+                style={{ backgroundColor: '#203d4d', borderColor: '#2E5266', borderRadius: '20px' }}
+              />
+              <Button variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266' }}>
+                <SearchRoundedIcon />
+              </Button>
+            </InputGroup>
+          </form>
+        </Header>
       </Layout>
     </div>
   );
