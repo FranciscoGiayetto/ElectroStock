@@ -187,13 +187,13 @@ JAZZMIN_SETTINGS = {
     "topmenu_links": [
 
         # external url that opens in a new window (Permissions can be added)
-        {"name": "Tienda ", "url": "http://127.0.0.1:3000", "new_window": True},
+        {"name": "Tienda ", "url": "http://127.0.0.1:3000/tienda", "new_window": False},
 
         # external url that opens in a new window (Permissions can be added)
-        {"name": "Presupuesto", "url": "http://127.0.0.1:3000", "new_window": True},
+        {"name": "Presupuesto", "url": "http://127.0.0.1:3000/presupuesto", "new_window": False},
 
         # external url that opens in a new window (Permissions can be added)
-        {"name": "Prestamo", "url": "http://127.0.0.1:3000", "new_window": True},
+        {"name": "Prestamo", "url": "http://127.0.0.1:3000/prestamo", "new_window": False},
 
         
 
