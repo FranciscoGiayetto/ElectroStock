@@ -77,13 +77,11 @@ class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
 
 
 class LaboratoryAdmin(ImportExportActionModelAdmin):
-    list_display = ("name", "get_specialties")
+    list_display = ("name", "speciality")
     search_fields = [
         "name",
-        "specialities",
+        "speciality",
     ]
-    def get_specialties(self, obj):
-        return ", ".join([str(specialty) for specialty in obj.specialties.all()])
 
 
 
