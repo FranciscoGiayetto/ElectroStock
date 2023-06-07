@@ -3,7 +3,8 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-
+  margin-top: 10rem;
+  
 }
 
 .product-details__title {
@@ -12,6 +13,7 @@
   background-image: linear-gradient(to right, #135183, #000000);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  max-width: max-content;
   
 
 }
@@ -46,6 +48,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 .product-details__image-container {
+  margin-top: 2rem;
   max-width: 100%;
   height: auto;
   margin-bottom: 20px;
@@ -94,7 +97,7 @@ transform: scale(1.05); /* Aumenta el tamaño de la imagen al pasar el cursor so
   .product-details__separator {
       margin: 3rem;
       width: 1px;
-      height: calc(100% + 6rem);
+      height: 100%;
       background-color: #cdc0c0;
       position: absolute;
       top: -3rem;
