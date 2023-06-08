@@ -10,7 +10,7 @@ export default function CardExample(props) {
       <div className="image-container">
       <Card.Img 
         variant="top"
-        src={"/imagen.jpeg"}
+        src={image}
         className="imagencss"
         style={{ margin: '10px auto', maxHeight: '200px', width: '90%', display: 'block' }}
       />
