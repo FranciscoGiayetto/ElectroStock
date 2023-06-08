@@ -6,6 +6,12 @@ h1 {
   font-size: 60px;
 }
 
+.card:hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
 .container {
   display: flex;
   flex-wrap: wrap;
