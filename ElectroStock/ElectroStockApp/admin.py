@@ -108,6 +108,7 @@ class LogyAdmin(ImportExportActionModelAdmin):
     ]
 
 
+
 from django.contrib import admin
 
 
