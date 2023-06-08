@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import '../assets/styles/Login.css';
-import { Logo, Login } from '../components/Form';
+import '../../assets/styles/Login.css';
+import { Logo, Login } from '../../components/Form';
 
 const LoginPage = () => {
   return (

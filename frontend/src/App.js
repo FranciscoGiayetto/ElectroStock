@@ -3,10 +3,10 @@ import {
   Routes,
   Route
 } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/Login/LoginPage";
+import HomePage from "./pages/Home/HomePage";
 import DetalleProducto from "./pages/DetalleProducto/DetalleProducto";
-import Layout from "./components/Layout";
+import Layout from "./layout/Layout";
 import * as React from 'react';
 import Ecommerce from "./pages/Ecommerce/Ecommerce.jsx";
 import  './assets/styles/App.css';

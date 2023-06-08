@@ -8,12 +8,12 @@ import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import './Sidebar.css';
+import './LayoutComponents.css';
 import its from '../../assets/its.png';
 import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
 
 const { Header, Sider } = Layout;
-const App = () => {
+const LayoutComponents = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const handleToggleSidebar = () => {
@@ -79,40 +79,48 @@ const App = () => {
       </Sider>
 
       <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
-        <Header
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: 0,
-            background: '#2E5266',
-            position: 'fixed',
-            right: 0,
-            left: 0,
-            zIndex: 1,
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', // Aplica sombra a la navbar
-          }}
-        >
-          <a href="/">
-          <img src={its} alt="its" style={{ width: '100px', marginRight: '10px' }} />
-        </a>
+      <Header
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    background: '#2E5266',
+    position: 'fixed',
+    right: 0,
+    left: 0,
+    zIndex: 1,
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', // Aplica sombra a la navbar
+  }}
+>
+  <a href="/" style={{ marginRight: 'auto' }}>
+    <img src={its} alt="its" style={{ width: '100px' }} />
+  </a>
 
-          <form onSubmit={handleSearch}>
-            <InputGroup>
-              <FormControl
-                type="text"
-                name="searchBar"
-                placeholder="Buscar productos"
-                style={{ backgroundColor: '#203d4d', borderColor: '#2E5266', borderRadius: '20px' }}
-              />
-              <Button variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266' }}>
-                <SearchRoundedIcon />
-              </Button>
-            </InputGroup>
-          </form>
-        </Header>
+  <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center' }}>
+    <InputGroup>
+      <FormControl
+        type="text"
+        name="searchBar"
+        placeholder="Buscar productos"
+        style={{
+          backgroundColor: '#203d4d',
+          borderColor: '#2E5266',
+          borderRadius: '20px',
+          marginRight: '10px',
+        }}
+      />
+      <Button variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266' }}>
+        <SearchRoundedIcon />
+      </Button>
+    </InputGroup>
+  </form>
+</Header>
+
+
       </Layout>
     </div>
   );
 };
 
-export default App;
+export default LayoutComponents;

@@ -1,11 +1,11 @@
 import React from 'react';
-import App from './Sidebar/Sidebar';
+import LayoutComponents from './LayoutComponents/LayoutComponents';
 
 
 function Layout(props) {
   return (
     <div className="container">
-      <App />
+      <LayoutComponents />
       {props.children}
     </div>
   );
