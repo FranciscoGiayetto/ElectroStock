@@ -144,38 +144,7 @@ class Log(models.Model):
     class Meta:
         verbose_name_plural = "Prestamos y movimientos"
         verbose_name = "Prestamo y movimientos"
-    
-    def current_stock(self, obj):
-        total_com = Log.objects.filter(box=obj, status="COM").aggregate(
-            total=models.Sum("quantity")
-        )["total"]
-        total_ar = Log.objects.filter(box=obj, status="AP").aggregate(
-            total=models.Sum("quantity")
-        )["total"]
-        total_ped = Log.objects.filter(box=obj, status="PED").aggregate(
-            total=models.Sum("quantity")
-        )["total"]
-        if total_com is None:
-            total_com = 0
-        if total_ar is None:
-            total_ar = 0
-        if total_ped is None:
-            total_ped = 0
 
-        current_stock = total_com - total_ar - total_ped
-        return current_stock
-    #falata solo mandar la notificacion al admin de django
-    def save(self, *args, **kwargs):
-        request = kwargs.get('request')
-        if self.status == self.Status.APROBADO or self.status == self.Status.PEDIDO  :
-            # Verificar si el box tiene suficiente stock
-            stock = self.current_stock(self.box)
-            print('stock: ',stock)
-            print('pedido: ',self.quantity)
-            if self.quantity > stock:
-                return print('sotock insuficiente')
-        super().save(*args, **kwargs)
-        
 
         
 

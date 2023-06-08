@@ -106,6 +106,17 @@ class LogyAdmin(ImportExportActionModelAdmin):
         "borrower__username",
         "lender__username",
     ]
+    
+    def save_model(self, request, obj, form, change):
+        if obj.status == obj.Status.APROBADO or obj.status == obj.Status.PEDIDO:
+            # Verificar si el box tiene suficiente stock
+            #solo falta saber el stock actual
+            stock = BoxAdmin.current_stock(self,obj.box.id)  # Pasar obj.box como argumento
+            if obj.quantity > 0:
+                messages.error(request, "No se puede ejecutar la acción debido a falta de stock.")
+                return
+
+        super().save_model(request, obj, form, change)
 
 
 
