@@ -1,19 +1,26 @@
 from django.urls import path
-from . import views
 from .views import *
 from rest_framework import routers
-from .serializers import ElementSerializer
 
-router= routers.DefaultRouter()
-router.register('elements', ElementsViewSet, 'elements')
-router.register('elementsDetalle', ProductosDetalleAPIView, 'elementsDetalle')
-router.register('elementsEcommerce', ProductosEcommerceAPIView, 'elementsEcommerce')
-router.register('VerPrestamos', PrestamoVerAPIView, 'verprestamos')
-router.register('prestamos', PrestamoAPIView, 'prestamos')
-router.register('inventario', InventoryViewSet, 'inventario')
-router.register('categoria', CategoriaViewSet, 'categoria')
-router.register('subcategoria', SubcategoriaViewSet, 'subcategoria')
-router.register('historialinventario', HistoryInventoryViewSet, 'historialinventario')
-router.register('historialprestamo', HistoryLoanViewSet, 'historialprestamo')
-router.register('detallespresupuesto', DetailsViewSet, 'detallepresupuesto')
-urlpatterns =router.urls
+
+
+router = routers.DefaultRouter()
+
+#Registro todas las urls
+router.register("elements", ElementsViewSet, "elements")
+router.register("elementsEcommerce", ProductosEcommerceAPIView, "elementsEcommerce")
+router.register("category", CategoriaViewSet, "category")
+router.register('users', UsersViewSet, 'users')
+router.register('course', CourseViewSet, 'course')
+router.register('laboratory', LaboratorioViewSet, 'laboratory')
+router.register('location', LocationViewSet, 'location')
+router.register('box', BoxViewSet, 'box')
+router.register('prestamos', PrestamoVerAPIView, 'prestamos')
+router.register('especialidad', SpecialityViewSet, 'especialidad')
+
+urlpatterns= [
+     path("stock/<int:element_id>/", get_stock, name="stock"),
+] + router.urls
+
+
+
