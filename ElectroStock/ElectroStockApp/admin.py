@@ -36,7 +36,6 @@ class CategoryAdmin(ImportExportActionModelAdmin):
 
 class ElementAdmin(ImportExportActionModelAdmin):
     list_display = (
-        'id',
         "name",
         "price_usd",
         "category",
@@ -49,8 +48,8 @@ class ElementAdmin(ImportExportActionModelAdmin):
     search_fields = [
         "name",
         "price_usd",
-        "category",
         "ecommerce",
+        "category__name"
     ]
 
 class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
@@ -80,7 +79,7 @@ class LaboratoryAdmin(ImportExportActionModelAdmin):
     list_display = ("name", "speciality")
     search_fields = [
         "name",
-        "speciality",
+        "speciality__name",
     ]
 
 
@@ -129,11 +128,11 @@ class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
         "responsable",
     )
     search_fields = [
-        "get_responsable_username",
+        "responsable__username",
         "minimumStock",
         "name",
-        "element",
-        "location",
+        "element__name",
+        "location__name",
     ]
 
     def responsable(self, obj):
@@ -194,7 +193,7 @@ class LocationAdmin(ImportExportActionModelAdmin):
     list_display = ("name", "laboratoy")
     search_fields = [
         "name",
-        "laboratoy",
+        "laboratoy__name",
     ]
 
 

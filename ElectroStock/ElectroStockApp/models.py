@@ -130,19 +130,19 @@ class Log(models.Model):
         max_length=30, choices=Status.choices, default=Status.DESAPROBADO
     )
     quantity = models.IntegerField()
-    borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='borrowed_logs', null=True, blank=True)
+    borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='borrowed_logs', help_text='Si se ingresa como comprado poner nombre de tu usuario')
     lender = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='lender_logs', null=True, blank=True)
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
     observation = models.CharField(max_length=100, null=True, blank=True)
-    dateIn = models.DateTimeField(null=True)
+    dateIn = models.DateTimeField(auto_now=True)
     dateOut = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return self.status
     
 
     class Meta:
-        verbose_name_plural = "Prestamos"
-        verbose_name = "Prestamo"
+        verbose_name_plural = "Prestamos y movimientos"
+        verbose_name = "Prestamo y movimientos"
 
 
 
