@@ -167,7 +167,7 @@ class Log(models.Model):
     #falata solo mandar la notificacion al admin de django
     def save(self, *args, **kwargs):
         request = kwargs.get('request')
-        if self.status == self.Status.APROBADO:
+        if self.status == self.Status.APROBADO or self.status == self.Status.PEDIDO  :
             # Verificar si el box tiene suficiente stock
             stock = self.current_stock(self.box)
             print('stock: ',stock)
