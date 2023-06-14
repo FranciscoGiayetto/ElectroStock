@@ -99,3 +99,18 @@ def get_stock(request, element_id):
 
         return Response([])  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
+class CarritoAPIView(viewsets.ModelViewSet):
+    serializer_class = LogSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.Log.objects.filter(lender=user, status=models.Log.Status.CARRITO)
+
+class VencidosAPIView(viewsets.ModelViewSet):
+    serializer_class = LogSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.Log.objects.filter(lender=user, status=models.Log.Status.VENCIDO)

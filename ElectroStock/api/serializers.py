@@ -1,12 +1,17 @@
 from rest_framework import serializers
 from ElectroStockApp import models
 
-
-#Para ver y editar categorias
-class CategoriaSerializer(serializers.ModelSerializer):
+class CategoriaPadreSerializer(serializers.ModelSerializer):
         class Meta:
             model = models.Category
             fields = '__all__'
+#Para ver y editar categorias
+class CategoriaSerializer(serializers.ModelSerializer):
+        category= CategoriaPadreSerializer()
+        class Meta:
+            model = models.Category
+            fields = '__all__'
+
 
 #Para ver y editar todos los elementos
 class ElementSerializer(serializers.ModelSerializer):

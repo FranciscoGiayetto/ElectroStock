@@ -119,11 +119,10 @@ class LogyAdmin(ImportExportActionModelAdmin):
         super().save_model(request, obj, form, change)
 
 
-
 from django.contrib import admin
+from import_export.admin import ExportActionModelAdmin
 
-
-class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+class BoxAdmin(ExportActionModelAdmin,admin.ModelAdmin):
     list_display = (
         "name",
         "minimumStock",

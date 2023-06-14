@@ -126,6 +126,7 @@ class Log(models.Model):
         PEDIDO = "PED", "Pedido"
         COMPRADO= 'COM', 'Comprado'
         DEVUELTO= 'DEV', 'Devuelto'
+        VENCIDO= 'VEN', 'Vencido'
 
     status = models.CharField(
         max_length=30, choices=Status.choices, default=Status.DESAPROBADO
@@ -139,7 +140,6 @@ class Log(models.Model):
     dateOut = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return self.status
-    
 
     class Meta:
         verbose_name_plural = "Prestamos y movimientos"
