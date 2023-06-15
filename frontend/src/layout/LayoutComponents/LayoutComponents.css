@@ -1,8 +1,7 @@
 html, body {
-    background-color: whitesmoke !important;
+    background-color: #ebebeb !important;
   }
 
 .search-input::placeholder {
-    color: white;
+    color: rgba(235, 235, 235, 0.5);
 }
-
