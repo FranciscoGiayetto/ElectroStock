@@ -4,8 +4,9 @@ from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 from django.contrib.auth.admin import UserAdmin
 
-# Register your models here.
+#Para arreglar el erro del export tenes que cambiar de la funcion ExportActionMixin- export_action_action ---> export_format = 1
 
+# Register your models here.
 admin.site.site_header = "Stock"
 admin.site.index_title = "Stock"
 admin.site.site_title = "Stock"
