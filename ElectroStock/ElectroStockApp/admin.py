@@ -19,22 +19,41 @@ class CategoryResource(resources.ModelResource):
             "id",
             "name",
             "description",
-            "category",
+            "category__name",
         )
         export_order = (
             "id",
             "name",
             "description",
-            "category",
+            "category__name",
         )
-
 
 # Los filtros y busquedas
 class CategoryAdmin(ImportExportActionModelAdmin):
-    resource_classes = [CategoryResource]
+    resource_class = CategoryResource
+    list_display = ['name', 'category']
 
+
+class ElementResource(resources.ModelResource):
+    class Meta:
+        model = Element
+        fields = (
+            "id",
+            "name",
+            "description",
+            "price_usd",
+            "category__name",
+        )
+        export_order = (
+            "id",
+            "name",
+            "description",
+            "price_usd",
+            "category__name",
+        )
 
 class ElementAdmin(ImportExportActionModelAdmin):
+    resource_class = ElementResource
     list_display = (
         "name",
         "price_usd",
@@ -52,7 +71,32 @@ class ElementAdmin(ImportExportActionModelAdmin):
         "category__name"
     ]
 
+class UserResource(resources.ModelResource):
+    class Meta:
+        model = CustomUser
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "course",
+            "specialties",
+            "groups__name"
+        )
+        export_order = (
+            "id",
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "course",
+            "specialties",
+            "groups__name"
+        )
+
 class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
+    resource_class = UserResource
     list_display = (
         "username",
         "email",
@@ -83,9 +127,34 @@ class LaboratoryAdmin(ImportExportActionModelAdmin):
     ]
 
 
+class LogResource(resources.ModelResource):
+    class Meta:
+        model = Log
+        fields = (
+            "id",
+            "status",
+            "quantity",
+            "borrower__username",
+            "lender__username",
+            "box__name",
+            "observation",
+            "dateIn",
+            "dateOut",
+        )
+        export_order = (
+             "id",
+            "status",
+            "quantity",
+            "borrower__username",
+            "lender__username",
+            "box__name",
+            "observation",
+            "dateIn",
+            "dateOut",
+        )
 
 class LogyAdmin(ImportExportActionModelAdmin):
-
+    resource_class = LogResource
     list_display = (
         "status",
         "quantity",
@@ -120,9 +189,29 @@ class LogyAdmin(ImportExportActionModelAdmin):
 
 
 from django.contrib import admin
-from import_export.admin import ExportActionModelAdmin
 
-class BoxAdmin(ExportActionModelAdmin,admin.ModelAdmin):
+class BoxResource(resources.ModelResource):
+    class Meta:
+        model = Box
+        fields = (
+            "id",
+            "name",
+            "responsable__username",
+            "minimumStock",
+            "element__name",
+            "location__name",
+        )
+        export_order = (
+            "id",
+            "name",
+            "responsable__username",
+            "minimumStock",
+            "element__name",
+            "location__name",
+        )
+
+class BoxAdmin(ImportExportActionModelAdmin,admin.ModelAdmin):
+    resource_class = BoxResource
     list_display = (
         "name",
         "minimumStock",
