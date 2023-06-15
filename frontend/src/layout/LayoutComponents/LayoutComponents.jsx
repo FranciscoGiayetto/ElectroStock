@@ -8,9 +8,13 @@ import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import './LayoutComponents.css';
 import its from '../../assets/its.png';
-import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
+
 
 const { Header, Sider } = Layout;
 const LayoutComponents = () => {
@@ -83,6 +87,7 @@ const LayoutComponents = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            margin:0,
             padding: 0,
             background: '#2E5266',
             position: 'fixed',
@@ -92,15 +97,12 @@ const LayoutComponents = () => {
             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
           }}
         >
-
-          <a href="/" style={{ marginRight: 'auto' }}>
-            <img src={its} alt="its" style={{ width: '100px' }} />
-          </a>
-
-          
-
+        
+        <a href="/" >
+          <img src={its} alt="its" style={{ width: '100px' }} />
+        </a>          
+                      
           <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center' }}>
-            <InputGroup>
               <FormControl
                 type="text"
                 name="searchBar"
@@ -114,17 +116,22 @@ const LayoutComponents = () => {
                   marginLeft: '10px',
                   flex: 1,
                   maxWidth: '400px'
-
                 }}
               />
-              <InputGroup.Text style={{backgroundColor: 'transparent', border: 'none'}}>
-                <Button variant="primary" type="submit" style={{ backgroundColor: 'transparent', borderColor: 'transparent' }}>
+              <Button variant="primary" type="submit" className='button hover' >
                   <SearchRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
-                </Button>
-              </InputGroup.Text>
-            </InputGroup>
+              </Button>
           </form>
-
+          
+          <Button variant="primary" type="submit" className='button hover'>
+            <ShoppingCartOutlinedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+          </Button>
+          <Button variant="primary" type="submit" className='button hover'>
+            <NotificationsRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+          </Button>
+          <Button variant="primary" type="submit" className='button hover'>
+            <AccountCircleRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+          </Button>
         </Header>
       </Layout>
 
