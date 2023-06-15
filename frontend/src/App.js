@@ -6,7 +6,7 @@ import {
 import LoginPage from "./pages/Login/LoginPage";
 import HomePage from "./pages/Home/HomePage";
 import DetalleProducto from "./pages/DetalleProducto/DetalleProducto";
-import Layout from "./layout/Layout";
+import Layout from "./BaseLayout/Layout";
 import * as React from 'react';
 import Ecommerce from "./pages/Ecommerce/Ecommerce.jsx";
 import  './assets/styles/App.css';
