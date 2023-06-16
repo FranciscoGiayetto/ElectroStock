@@ -1,3 +1,5 @@
+//USEN ESTO COMO EJEMPLO DE COMO HANDLEAR EL USER Y DEMAS
+
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 
@@ -34,9 +36,7 @@ export const LoggedOutView = ({ title = 'Home' }) => {
             <Link to="/login">
                 <button>Login</button>
             </Link>
-            <Link to="/register">
-                <button>Register</button>
-            </Link>
+           
         </div>
     );
 };

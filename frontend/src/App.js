@@ -3,8 +3,9 @@ import {
   Routes,
   Route
 } from "react-router-dom";
-import LoginPage from "./pages/Login/LoginPage";
+
 import HomePage from "./pages/Home/HomePage";
+import DetalleCuenta from "./pages/DetalleCuenta/DetalleCuenta";
 import DetalleProducto from "./pages/DetalleProducto/DetalleProducto";
 import Layout from "./BaseLayout/Layout";
 import * as React from 'react';
@@ -33,7 +34,7 @@ function App() {
                           </PrivateRoute>
                       }
                   />
-                  <Route path="/" element={<Home />} />
+                  
                   <Route path="/login" element={<Login />} />
         
                   <Route path="/logout" element={<Logout />} />
@@ -52,9 +53,18 @@ function LayoutWrapper() {
     <Layout>
       <Routes>
       
-      <Route path="/" element={<HomePage />} />
-        <Route path= "/tienda" element={<Ecommerce/>}/>
-        <Route path="/detalleProducto/:id" element={<DetalleProducto />} />
+      <Route path="/" element={<PrivateRoute>
+                              <HomePage />
+                          </PrivateRoute>} />
+        <Route path= "/tienda" element={<PrivateRoute>
+                              <Ecommerce />
+                          </PrivateRoute>}/>
+        <Route path="/detalleProducto/:id" element={<PrivateRoute>
+                              <DetalleProducto />
+                          </PrivateRoute>} />
+      <Route path="/detalleCuenta" element={<PrivateRoute>
+        <DetalleCuenta />
+     </PrivateRoute>} />
       </Routes>
     </Layout>
   );

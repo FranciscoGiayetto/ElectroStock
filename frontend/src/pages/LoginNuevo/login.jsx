@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { login } from '../../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
-
+import { Container, Row, Col } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import './login.css';
 const Login = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
@@ -32,32 +35,68 @@ const Login = () => {
     };
     return (
         <section>
-            <h1>Login</h1>
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label htmlFor="username">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Login</button>
-            </form>
+             <div>
+      <Container>
+        <Row>
+          
+          <Col xs={12} className="text-xs-center">
+            <div className='top-left-image'><Logo/></div>
+          
+          </Col>
+          <Col className="centered-form">
+            <div className="login-container">
+              <p className="login-heading"><b>Ingresá tus datos para<br/>iniciar sesión</b></p>
+              <div className="login-form">
+              <Form onSubmit={handleLogin}>
+      <Form.Group  className="mb-3" controlId="formBasicEmail">
+        <Form.Label className='color'>Username</Form.Label>
+        <Form.Control
+        id="username"
+        name="username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        type="text" placeholder="" style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266'}} className="rounded-3 shadow form-control-lg"/>
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label className='color'>Password*</Form.Label>
+        <Form.Control 
+         type="password"
+         id="password"
+         name="password"
+         value={password}
+         onChange={(e) => setPassword(e.target.value)}
+        placeholder="" style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266'}} className="rounded-3 shadow form-control-lg" />
+      </Form.Group>
+      <div>
+         
+          <div className='text-center'>
+              <Button className='text-center rounded-5 ' size='lg' style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0'}} variant="primary" type="submit">
+                Ingresar
+          </Button>
+        </div>
+      </div>
+    </Form>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+            
         </section>
     );
 };
 
+
+
+
+function Logo() {
+    return (
+      <div style={{ display: "block", width: 300, padding: 20 }}>
+        <img src={require('../../assets/img-prod/logo.png')} className='img-fluid logo' alt='...' />
+      </div>
+    );
+  }
+  
 export default Login;
