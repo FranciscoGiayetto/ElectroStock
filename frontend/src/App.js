@@ -10,18 +10,38 @@ import Layout from "./BaseLayout/Layout";
 import * as React from 'react';
 import Ecommerce from "./pages/Ecommerce/Ecommerce.jsx";
 import  './assets/styles/App.css';
+import Home from './pages/LoginNuevo/home';
+import MainWrapper from './layouts/MainWrapper';
+import Login from './pages/LoginNuevo/login';
+import PrivateRoute from './layouts/PrivateRoute';
+import Logout from './pages/LoginNuevo/logout';
+import Private from './pages/LoginNuevo/private';
+
 
 function App() {
   return (
     <Router>
+      <MainWrapper>
       <div className="container">
         <div className="app">
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
+          <Route
+                      path="/private"
+                      element={
+                          <PrivateRoute>
+                              <Private />
+                          </PrivateRoute>
+                      }
+                  />
+                  <Route path="/" element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+        
+                  <Route path="/logout" element={<Logout />} />
             <Route path="/*" element={<LayoutWrapper />} />
           </Routes>
         </div>
       </div>
+      </MainWrapper>
     </Router>
     
   );
@@ -39,5 +59,8 @@ function LayoutWrapper() {
     </Layout>
   );
 }
+
+
+
 
 export default App;
