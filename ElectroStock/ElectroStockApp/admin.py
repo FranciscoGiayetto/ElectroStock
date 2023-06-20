@@ -153,8 +153,35 @@ class LogResource(resources.ModelResource):
             "dateIn",
             "dateOut",
         )
+'''
+from django.utils import timezone
+def check_expired_logs(modeladmin, request, queryset):
+    now = timezone.now()
+    approved_logs = queryset.filter(status='AP')
 
+    for log in approved_logs:
+        lender=None
+        if log.dateOut < now:
+            log.status = 'VEN'
+            log.save()
+            lender=log.lender
+            if log.lender is not None:
+                send_notification_email(lender.email)
+
+
+check_expired_logs.short_description = "Check and update expired logs"
+from django.core.mail import send_mail
+
+def send_notification_email(mail):
+    subject = 'Tu prestamo se ha vencido'
+    message = 'Estimado alumno,\n\nTu préstamo ha vencido. Por favor, devuélvelo a la brevedad.\n\nSaludos,\nInstituto Tecnico Salesiano Villada'
+    sender_email = 'deniva4297@anwarb.com'  # Dirección de correo electrónico del remitente
+
+    send_mail(subject, message, sender_email, [mail])
+'''
+from .task import run_check_expired_logs
 class LogyAdmin(ImportExportActionModelAdmin):
+    #actions = [check_expired_logs]
     resource_class = LogResource
     list_display = (
         "status",

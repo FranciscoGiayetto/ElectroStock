@@ -306,5 +306,29 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
 
+# settings.py
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST= 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'electrostock.noreplay@gmail.com'
+EMAIL_HOST_PASSWORD = 'exjvovbiofvrbgej' #NO BORRAR ESTO NUNCA, also, Pepe1234
+EMAIL_USE_TLS = True
+
+
+
+
+# Redis configuration 
+from datetime import timedelta
+
+CELERY_BROKER_URL = 'redis://default:hU7ZgQnaKpTDOliOy0Vt@containers-us-west-40.railway.app:6872'  # Ejemplo: 'amqp://guest:guest@localhost:5672/'
+CELERY_ACCEPT_CONTENT=['json']
+CELERY_TASK_SERIALIZER= 'json'
+CELERY_IMPORTS = ('ElectroStockApp.task',)
+CELERY_BEAT_SCHEDULE = {
+    'run_check_expired_logs': {
+        'task': 'ElectroStockApp.task.run_check_expired_logs',
+        'schedule': timedelta(days=1),  # Ejecutar cada 1 día
+    },
+}
 
