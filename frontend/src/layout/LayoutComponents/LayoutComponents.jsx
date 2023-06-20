@@ -106,8 +106,8 @@ const LayoutComponents = () => {
               <FormControl
                 type="text"
                 name="searchBar"
-                placeholder="Buscar productos"
-                className='searchbar-input search-input'
+                placeholder="Buscar productos..."
+                className='search-input'
                 style={{
                   backgroundColor: '#2E5266',
                   borderColor: 'rgba(235, 235, 235, 0.5)',
@@ -115,14 +115,14 @@ const LayoutComponents = () => {
                   marginRight: 'auto',
                   marginLeft: '10px',
                   flex: 1,
-                  maxWidth: '400px'
+                  maxWidth: '400px',
                 }}
               />
-              <Button variant="primary" type="submit" className='button hover' >
-                  <SearchRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
-              </Button>
           </form>
           
+          <Button variant="primary" type="submit" className='button hover' >
+            <SearchRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+          </Button>
           <Button variant="primary" type="submit" className='button hover'>
             <ShoppingCartOutlinedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
           </Button>

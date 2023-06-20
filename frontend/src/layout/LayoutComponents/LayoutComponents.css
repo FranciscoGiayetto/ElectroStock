@@ -2,11 +2,13 @@ html, body {
     background-color: #ebebeb !important;
   }
 
-.search-input::placeholder {
+.search-input::placeholder:: {
     color: rgba(235, 235, 235, 0.5);
 }
 
 .button {
+  display: flex;
+  justify-content: center;
   background-color: transparent; 
   border: none;
   color: transparent;
@@ -14,7 +16,6 @@ html, body {
   align-items: center;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
   font-size: 16px;
   margin: 4px 2px;
   transition-duration: 0.4s;
@@ -26,3 +27,4 @@ html, body {
 .button:hover {
   background-color: rgba(64, 107, 131);
 }
+
