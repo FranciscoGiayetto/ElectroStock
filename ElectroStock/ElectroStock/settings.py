@@ -317,7 +317,7 @@ EMAIL_USE_TLS = True
 
 
 
-
+# celery -A ElectroStock worker --beat --loglevel=info
 # Redis configuration 
 from datetime import timedelta
 

@@ -19,6 +19,7 @@ router.register('prestamos', PrestamoVerAPIView, 'prestamos')
 router.register('especialidad', SpecialityViewSet, 'especialidad')
 router.register('carrito', CarritoAPIView, 'carrito')
 router.register('vencidos', VencidosAPIView, 'vencidos')
+router.register('prestamosdetalle', PrestamosAPIView, 'prestamosdetalle')
 
 urlpatterns= [
      path("stock/<int:element_id>/", get_stock, name="stock"),

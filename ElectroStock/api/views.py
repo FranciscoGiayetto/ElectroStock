@@ -114,3 +114,11 @@ class VencidosAPIView(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return models.Log.objects.filter(lender=user, status=models.Log.Status.VENCIDO)
+    
+class PrestamosAPIView(viewsets.ModelViewSet):
+    serializer_class = LogSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.Log.objects.filter(lender=user)
