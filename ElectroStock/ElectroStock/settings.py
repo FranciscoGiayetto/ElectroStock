@@ -225,7 +225,10 @@ JAZZMIN_SETTINGS = {
         "ElectroStockApp.Laboratory":"fas fa-flask",
         "ElectroStockApp.Speciality":"fas fa-hard-hat",
         "ElectroStockApp.Course":"fas fa-graduation-cap",
+        "token_blacklist.blacklistedtoken":"fas fa-lock",
+        "token_blacklist.outstandingtoken":"fas fa-lock",
     },
+
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",

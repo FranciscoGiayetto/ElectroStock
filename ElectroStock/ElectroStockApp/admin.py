@@ -4,7 +4,7 @@ from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 from django.contrib.auth.admin import UserAdmin
 
-#Para arreglar el erro del export tenes que cambiar de la funcion ExportActionMixin- export_action_action ---> export_format = 1
+# Para arreglar el erro del export tenes que cambiar de la funcion ExportActionMixin- export_action_action ---> export_format = 1
 
 # Register your models here.
 admin.site.site_header = "Stock"
@@ -12,7 +12,7 @@ admin.site.index_title = "Stock"
 admin.site.site_title = "Stock"
 
 
-# Las clases pra importar y exportar
+# Clase para export-import de categoria
 class CategoryResource(resources.ModelResource):
     class Meta:
         model = Category
@@ -29,12 +29,14 @@ class CategoryResource(resources.ModelResource):
             "category__name",
         )
 
-# Los filtros y busquedas
+
+# Clase de filtros y busqueda de Categoria
 class CategoryAdmin(ImportExportActionModelAdmin):
     resource_class = CategoryResource
-    list_display = ['name', 'category']
+    list_display = ["name", "category"]
 
 
+# Clase para export-import de elementos
 class ElementResource(resources.ModelResource):
     class Meta:
         model = Element
@@ -53,6 +55,8 @@ class ElementResource(resources.ModelResource):
             "category__name",
         )
 
+
+# Clase de filtros y busqueda de elementos
 class ElementAdmin(ImportExportActionModelAdmin):
     resource_class = ElementResource
     list_display = (
@@ -65,13 +69,10 @@ class ElementAdmin(ImportExportActionModelAdmin):
         "category",
         "ecommerce",
     )
-    search_fields = [
-        "name",
-        "price_usd",
-        "ecommerce",
-        "category__name"
-    ]
+    search_fields = ["name", "price_usd", "ecommerce", "category__name"]
 
+
+# Clase para export-import de usuarios
 class UserResource(resources.ModelResource):
     class Meta:
         model = CustomUser
@@ -83,7 +84,7 @@ class UserResource(resources.ModelResource):
             "email",
             "course",
             "specialties",
-            "groups__name"
+            "groups__name",
         )
         export_order = (
             "id",
@@ -93,9 +94,11 @@ class UserResource(resources.ModelResource):
             "email",
             "course",
             "specialties",
-            "groups__name"
+            "groups__name",
         )
 
+
+# Clase de filtros y busqueda de usuarios
 class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
     resource_class = UserResource
     list_display = (
@@ -106,9 +109,11 @@ class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
         "especialidad",
     )
 
+    # Traigo cual es su especialidad
     def especialidad(self, obj):
         return ", ".join([specialty.name for specialty in obj.specialties.all()])
 
+    # Busco cual es su grupo (Profesor,Alumno)
     def grupo(self, obj):
         return ", ".join([group.name for group in obj.groups.all()])
 
@@ -119,7 +124,7 @@ class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
     )
 
 
-
+# Clase de filtros y busqueda de laboratorios
 class LaboratoryAdmin(ImportExportActionModelAdmin):
     list_display = ("name", "speciality")
     search_fields = [
@@ -128,6 +133,7 @@ class LaboratoryAdmin(ImportExportActionModelAdmin):
     ]
 
 
+# Clase para export-import de los prestamos
 class LogResource(resources.ModelResource):
     class Meta:
         model = Log
@@ -143,7 +149,7 @@ class LogResource(resources.ModelResource):
             "dateOut",
         )
         export_order = (
-             "id",
+            "id",
             "status",
             "quantity",
             "borrower__username",
@@ -154,7 +160,8 @@ class LogResource(resources.ModelResource):
             "dateOut",
         )
 
-from .task import run_check_expired_logs
+
+# Clase de filtros y busqueda de los prestamos
 class LogyAdmin(ImportExportActionModelAdmin):
     resource_class = LogResource
     list_display = (
@@ -177,21 +184,24 @@ class LogyAdmin(ImportExportActionModelAdmin):
         "borrower__username",
         "lender__username",
     ]
-    
+
+    # Esta funcion busca si antes de querer cargar el producto tenes el stock suficiente
     def save_model(self, request, obj, form, change):
         if obj.status == obj.Status.APROBADO or obj.status == obj.Status.PEDIDO:
             # Verificar si el box tiene suficiente stock
-            #solo falta saber el stock actual
-            stock = BoxAdmin.current_stock(self,obj.box.id)  # Pasar obj.box como argumento
-            if obj.quantity > 0:
-                messages.error(request, "No se puede ejecutar la acción debido a falta de stock.")
+            stock = BoxAdmin.current_stock(
+                self, obj.box
+            )  # Llamar a current_stock con obj.box como argumento
+            if obj.quantity > stock:
+                messages.error(
+                    request, "No se puede ejecutar la acción debido a falta de stock."
+                )  # Te tira el error en una notificacion
                 return
 
         super().save_model(request, obj, form, change)
 
 
-from django.contrib import admin
-
+# Clase para export-import de boxes
 class BoxResource(resources.ModelResource):
     class Meta:
         model = Box
@@ -212,7 +222,9 @@ class BoxResource(resources.ModelResource):
             "location__name",
         )
 
-class BoxAdmin(ImportExportActionModelAdmin,admin.ModelAdmin):
+
+# Clase de filtros y busqueda de box
+class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = BoxResource
     list_display = (
         "name",
@@ -237,33 +249,41 @@ class BoxAdmin(ImportExportActionModelAdmin,admin.ModelAdmin):
         "location__name",
     ]
 
+    # Busco cual es el responsale
     def responsable(self, obj):
         return obj.responsable.username
 
+    # Muestro una nueva fila el stock
     def get_logs(self, obj):
         approved_element_count = Log.objects.filter(box=obj, status="COM").aggregate(
             total=models.Sum("quantity")
         )["total"]
         return approved_element_count if approved_element_count is not None else 0
 
+    # El nombre que aparece de la fila
     get_logs.short_description = "Stock"
 
+    # Cuantos son los prestamos que estan en la fila de espera para pedir
     def get_pendient(self, obj):
         approved_element_count = Log.objects.filter(box=obj, status="PED").aggregate(
             total=models.Sum("quantity")
         )["total"]
         return approved_element_count if approved_element_count is not None else 0
 
+    # El nombre que aparece de la fila
     get_pendient.short_description = "Pedidos"
 
+    # Cuantos son los prestamos que estan en curso
     def get_approved_element_count(self, obj):
         approved_element_count = Log.objects.filter(box=obj, status="AP").aggregate(
             total=models.Sum("quantity")
         )["total"]
         return approved_element_count if approved_element_count is not None else 0
 
+    # El nombre que aparece de la fila
     get_approved_element_count.short_description = "Prestados"
 
+    # Calcula cual es stock actual
     def current_stock(self, obj):
         total_com = Log.objects.filter(box=obj, status="COM").aggregate(
             total=models.Sum("quantity")
@@ -284,13 +304,16 @@ class BoxAdmin(ImportExportActionModelAdmin,admin.ModelAdmin):
         current_stock = total_com - total_ar - total_ped
         return current_stock
 
+    # El nombre que aparece de la fila
     current_stock.short_description = "Stock Actual"
 
 
+# Clase de import-export de curso
 class CourseAdmin(ImportExportActionModelAdmin):
     pass
 
 
+# Clase de filtros y busqueda de las ubicaciones
 class LocationAdmin(ImportExportActionModelAdmin):
     list_display = ("name", "laboratoy")
     search_fields = [
@@ -299,7 +322,7 @@ class LocationAdmin(ImportExportActionModelAdmin):
     ]
 
 
-# analizar cuales sirven y cuales no
+# Registramos los filtros y busquedas de las clases
 admin.site.register(Element, ElementAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Location, LocationAdmin)
