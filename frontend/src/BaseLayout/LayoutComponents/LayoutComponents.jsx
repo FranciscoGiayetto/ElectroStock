@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import AddModeratorRoundedIcon from '@mui/icons-material/AddModeratorRounded';
@@ -11,22 +11,47 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import './LayoutComponents.css';
 import its from '../../assets/its.png';
 import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
-
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
 const { Header, Sider } = Layout;
 const LayoutComponents = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [data, setData] = useState([]); // Estado para almacenar los datos obtenidos del fetch
+  const [filteredOptions, setFilteredOptions] = useState([]); // Estado para almacenar las opciones filtradas del autocompletado
+  const [selectedOption, setSelectedOption] = useState(null); // Estado para almacenar el valor seleccionado del autocompletado
 
-  const handleToggleSidebar = () => {
-    setCollapsed(!collapsed);
+  const [myOptions, setMyOptions] = useState([])
+
+  useEffect(() => {
+    getElement();
+  }, []);
+
+  const getElement = async () => {
+    const proxyUrl = 'http://127.0.0.1:8000';
+    let response = await fetch(`${proxyUrl}/api/elementsEcommerce/`);
+    let data = await response.json();
+    setData(data);
+    for (var i = 0; i < data.length; i++) {
+      myOptions.push(data[i].name)
+    }
+    setMyOptions(myOptions)
   };
 
   const handleSearch = (event) => {
     event.preventDefault();
     const searchQuery = event.target.elements.searchBar.value;
-    // Handle search logic here
-    console.log('Search query:', searchQuery);
+    const filteredOptions = data.filter((option) =>
+      option.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredOptions(filteredOptions);
+  };
+  
+
+  const handleToggleSidebar = () => {
+    setCollapsed(!collapsed);
   };
 
+ 
   return (
     <div>
       <Sider
@@ -98,22 +123,25 @@ const LayoutComponents = () => {
   </a>
 
   <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center' }}>
-    <InputGroup>
-      <FormControl
-        type="text"
-        name="searchBar"
-        placeholder="Buscar productos"
-        style={{
-          backgroundColor: '#203d4d',
-          borderColor: '#2E5266',
-          borderRadius: '20px',
-          marginRight: '10px',
-        }}
-      />
+  <Autocomplete
+  options={myOptions}
+  getOptionLabel={(option) => option}
+  value={selectedOption}
+  onChange={(event, newValue) => setSelectedOption(newValue)}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Buscar productos"
+      variant="outlined"
+      fullWidth
+    />
+  )}
+/>
+
       <Button variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266' }}>
         <SearchRoundedIcon />
       </Button>
-    </InputGroup>
+    
   </form>
 </Header>
 
