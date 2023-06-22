@@ -26,10 +26,10 @@ function Ecommerce() {
     }
   };
 
-  const getElement = async () => {
-    const proxyUrl = 'http://127.0.0.1:8000';
-    let response = await fetch(`${proxyUrl}/api/elementsEcommerce/`);
-    let data = await response.json();
+    const getElement = async () => {
+      const proxyUrl = 'http://127.0.0.1:8000';
+      let response = await fetch(`${proxyUrl}/api/elementsEcommerce/`);
+      let data = await response.json();
 
     // Reemplazar las imágenes nulas o vacías por la imagen por defecto
     const updatedData = data.map(card => ({
