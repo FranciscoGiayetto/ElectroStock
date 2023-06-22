@@ -1,9 +1,67 @@
 html, body {
     background-color: #ebebeb !important;
-  }
+}
 
-.search-input::placeholder:: {
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  background: #2E5266;
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar {
+  height: 100vh;
+  background: #EBEBEB;
+  position: fixed;
+  left: 0;
+  top: 64px;
+  z-index: 10;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+  
+}
+
+.search-input {
+  background-color: #2E5266;
+  border-color: rgba(235, 235, 235, 0.5);
+  border-radius: 20px;
+  margin-right: auto;
+  margin-left: 10px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-input::placeholder {
     color: rgba(235, 235, 235, 0.5);
+}
+
+.search-input:focus {
+  background: #2E5266;
+  color: rgba(235, 235, 235, 0.5);
+}
+
+.div-logo {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 3rem;
+}
+
+.div-form {
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+}
+
+.div-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
 }
 
 .button {
@@ -27,4 +85,11 @@ html, body {
 .button:hover {
   background-color: rgba(64, 107, 131);
 }
+
+
+
+.logo-img{
+  width: 100px;
+}
+
 

@@ -32,24 +32,10 @@ const LayoutComponents = () => {
 
   return (
     <div>
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        style={{
-          height: '100vh',
-          background: '#EBEBEB',
-          position: 'fixed',
-          left: 0,
-          top: 64,
-          zIndex: 10,
-          boxShadow: '2px 0 4px rgba(0, 0, 0, 0.2)'
-        }}
-      >
+      <Sider trigger={null} collapsible collapsed={collapsed} className='sidebar'>
         <Menu
           theme="light"
           mode="inline"
-          defaultSelectedKeys={['1']}
           style={{ background: '#EBEBEB' }}
         >
           <Menu.Item
@@ -80,58 +66,38 @@ const LayoutComponents = () => {
           </Menu.Item>
         </Menu>
       </Sider>
-
+      
       <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
-        <Header
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin:0,
-            padding: 0,
-            background: '#2E5266',
-            position: 'fixed',
-            right: 0,
-            left: 0,
-            zIndex: 1,
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
-          }}
-        >
-        
-        <a href="/" >
-          <img src={its} alt="its" style={{ width: '100px' }} />
-        </a>          
-                      
-          <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center' }}>
-              <FormControl
-                type="text"
-                name="searchBar"
-                placeholder="Buscar productos..."
-                className='search-input'
-                style={{
-                  backgroundColor: '#2E5266',
-                  borderColor: 'rgba(235, 235, 235, 0.5)',
-                  borderRadius: '20px',
-                  marginRight: 'auto',
-                  marginLeft: '10px',
-                  flex: 1,
-                  maxWidth: '400px',
-                }}
-              />
-          </form>
+        <Header className='navbar'>
+
+          <div className='div-logo'>
+            <a href="/" >
+              <img src={its} alt="its" className='logo-img'/>
+            </a>
+          </div>          
+
+          <div className='div-form'>
+            <form onSubmit={handleSearch}>
+                <FormControl type="text" name="searchBar" placeholder="Buscar productos..." className='search-input'/>
+            </form>            
+          </div>            
           
-          <Button variant="primary" type="submit" className='button hover' >
-            <SearchRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
-          </Button>
-          <Button variant="primary" type="submit" className='button hover'>
-            <ShoppingCartOutlinedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
-          </Button>
-          <Button variant="primary" type="submit" className='button hover'>
-            <NotificationsRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
-          </Button>
-          <Button variant="primary" type="submit" className='button hover'>
-            <AccountCircleRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
-          </Button>
+          <div className='div-buttons'> 
+            <Button variant="primary" type="submit" className='button hover' >
+              <SearchRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+            </Button>
+            <Button variant="primary" type="submit" className='button hover'>
+              <ShoppingCartOutlinedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+            </Button>
+            <Button variant="primary" type="submit" className='button hover'>
+              <NotificationsRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+            </Button>
+            <Button variant="primary" type="submit" className='button hover'>
+              <AccountCircleRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+            </Button>
+          </div>
+          
+
         </Header>
       </Layout>
 
