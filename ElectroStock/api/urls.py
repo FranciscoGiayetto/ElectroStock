@@ -32,4 +32,6 @@ urlpatterns = [
     path("estadisticas/borrower/", BorrowerStatisticsView.as_view(), name="borrower"),
     path("estadisticas/date/", DateStatisticsView.as_view(), name="date"),
     path("estadisticas/vencidos/", VencidoStatisticsView.as_view(), name="vencido"),
+    path("estadisticas/mayordeudor/", LenderVencidosStatisticsView.as_view(), name="mayordeudor"),
+    
 ] + router.urls

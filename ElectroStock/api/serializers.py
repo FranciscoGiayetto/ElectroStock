@@ -193,3 +193,8 @@ class VencidoStatisticsSerializer(serializers.Serializer):
                 else 1
             )
         return 0
+
+#Serializer estadistica deudor
+class LenderVencidosStatisticsSerializer(serializers.Serializer):
+    lender__username = serializers.CharField()
+    vencidos_count = serializers.IntegerField()
