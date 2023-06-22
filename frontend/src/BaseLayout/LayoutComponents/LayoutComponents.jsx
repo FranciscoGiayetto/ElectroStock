@@ -33,17 +33,17 @@ const LayoutComponents = () => {
     setData(data);
     for (var i = 0; i < data.length; i++) {
       myOptions.push(data[i].name)
+      
     }
     setMyOptions(myOptions)
+    console.log(myOptions)
+    
   };
 
   const handleSearch = (event) => {
     event.preventDefault();
     const searchQuery = event.target.elements.searchBar.value;
-    const filteredOptions = data.filter((option) =>
-      option.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredOptions(filteredOptions);
+    console.log(searchQuery)
   };
   
 
@@ -122,7 +122,7 @@ const LayoutComponents = () => {
     <img src={its} alt="its" style={{ width: '100px' }} />
   </a>
 
-  <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center' }}>
+  <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '10rem' }}>
   <Autocomplete
   options={myOptions}
   getOptionLabel={(option) => option}
@@ -144,7 +144,7 @@ const LayoutComponents = () => {
     
   </form>
 </Header>
-
+    
 
       </Layout>
     </div>
