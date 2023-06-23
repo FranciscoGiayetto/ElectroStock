@@ -28,15 +28,23 @@ html, body {
 }
 
 .search-input {
+
   background-color: #2E5266;
   border-color: rgba(235, 235, 235, 0.5);
   border-radius: 20px;
   margin-right: auto;
   margin-left: 10px;
   flex: 1;
-  max-width: 400px;
+  width: 8rem;
+
 }
 
+.MuiFormControl-fullWidth  {
+
+  width: 20rem!important;
+ margin-right: 2rem;
+ padding-right: 2rem!important;
+}
 .search-input::placeholder {
     color: rgba(235, 235, 235, 0.5);
 }
@@ -56,6 +64,7 @@ html, body {
   display: flex;
   justify-content: center;
   margin-left: auto;
+  width: 10rem;
 }
 
 .div-buttons {

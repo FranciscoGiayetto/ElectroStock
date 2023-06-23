@@ -2,20 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Ecommerce.css';
 import CardExample from '../../components/card/CardExample';
 import defaultpicture from '../../assets/images/defaultpicture.png';
+import { useSearchParams } from 'react-router-dom';
 
 function Ecommerce() {
   const [cards, setCards] = useState([]);
   const [visibleCards, setVisibleCards] = useState([]);
   const loadMoreRef = useRef(null);
   const [loadMore, setLoadMore] = useState(false);
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('searchQuery');
 
   useEffect(() => {
     getElement();
   }, []);
 
   useEffect(() => {
-    setVisibleCards(cards.slice(0, 9));
-  }, [cards]);
+    filterCards();
+  }, [searchQuery]);
 
   const handleLoadMore = () => {
     const nextCards = cards.slice(visibleCards.length, visibleCards.length + 9);
@@ -26,10 +29,10 @@ function Ecommerce() {
     }
   };
 
-    const getElement = async () => {
-      const proxyUrl = 'http://127.0.0.1:8000';
-      let response = await fetch(`${proxyUrl}/api/elementsEcommerce/`);
-      let data = await response.json();
+  const getElement = async () => {
+    const proxyUrl = 'http://127.0.0.1:8000';
+    let response = await fetch(`${proxyUrl}/api/elementsEcommerce/`);
+    let data = await response.json();
 
     // Reemplazar las imágenes nulas o vacías por la imagen por defecto
     const updatedData = data.map(card => ({
@@ -38,11 +41,22 @@ function Ecommerce() {
     }));
 
     setCards(updatedData);
+    setLoadMore(updatedData.length > 9);
+  };
 
-    if (updatedData.length > 9) {
-      setLoadMore(true);
+  const filterCards = () => {
+    if (!searchQuery || searchQuery.trim == '') {
+      setVisibleCards(cards.slice(0, 9));
+      setLoadMore(cards.length > 9);
+    } else {
+      const filteredCards = cards.filter(card =>
+        card.name.toLowerCase() == searchQuery.toLowerCase()
+      );
+      setVisibleCards(filteredCards.slice(0, 9));
+      setLoadMore(filteredCards.length > 9);
     }
   };
+  
 
   return (
     <div className='container' id='ecommerce'>
