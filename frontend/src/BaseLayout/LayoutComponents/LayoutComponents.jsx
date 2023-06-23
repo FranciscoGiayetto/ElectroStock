@@ -8,9 +8,13 @@ import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import './LayoutComponents.css';
 import its from '../../assets/its.png';
-import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
+
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 const { Header, Sider } = Layout;
@@ -54,31 +58,17 @@ const LayoutComponents = () => {
  
   return (
     <div>
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        style={{
-          height: '100vh',
-          background: '#EBEBEB',
-          position: 'fixed',
-          left: 0,
-          top: 64,
-          zIndex: 10,
-          boxShadow: '2px 0 4px rgba(0, 0, 0, 0.2)', // Aplica sombra a la sidebar
-        }}
-      >
+      <Sider trigger={null} collapsible collapsed={collapsed} className='sidebar'>
         <Menu
           theme="light"
           mode="inline"
-          defaultSelectedKeys={['1']}
           style={{ background: '#EBEBEB' }}
         >
           <Menu.Item
             key="0"
             icon={collapsed ? <MenuUnfoldOutlined style={{ fontSize: '20px' }} /> : <MenuFoldOutlined style={{ fontSize: '20px' }} />}
             onClick={handleToggleSidebar}
-            style={{ color: 'black', alignItems: 'center' }}
+            style={{ color: 'black'}}
           />
           <Menu.Divider />
           <Menu.Item key="1" icon={<StoreRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/tienda' }}>
@@ -102,27 +92,20 @@ const LayoutComponents = () => {
           </Menu.Item>
         </Menu>
       </Sider>
-
+      
       <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
-      <Header
-  style={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0,
-    background: '#2E5266',
-    position: 'fixed',
-    right: 0,
-    left: 0,
-    zIndex: 1,
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', // Aplica sombra a la navbar
-  }}
->
-  <a href="/" style={{ marginRight: 'auto' }}>
-    <img src={its} alt="its" style={{ width: '100px' }} />
-  </a>
+        <Header className='navbar'>
 
-  <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '10rem' }}>
+
+
+          <div className='div-logo'>
+            <a href="/" >
+              <img src={its} alt="its" className='logo-img'/>
+            </a>
+          </div>          
+
+          <div className='div-form'>
+          <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '10rem' }}>
   <Autocomplete
   options={myOptions}
   getOptionLabel={(option) => option}
@@ -142,11 +125,28 @@ const LayoutComponents = () => {
         <SearchRoundedIcon />
       </Button>
     
-  </form>
-</Header>
-    
+  </form>   
+          </div>            
+          
+          <div className='div-buttons'> 
+            <Button variant="primary" type="submit" className='button hover' >
+              <SearchRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+            </Button>
+            <Button variant="primary" type="submit" className='button hover'>
+              <ShoppingCartOutlinedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+            </Button>
+            <Button variant="primary" type="submit" className='button hover'>
+              <NotificationsRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+            </Button>
+            <Button variant="primary" type="submit" className='button hover'>
+              <AccountCircleRoundedIcon style={{color: 'rgba(235, 235, 235, 0.5)'}}/>
+            </Button>
+          </div>
+          
 
+        </Header>
       </Layout>
+
     </div>
   );
 };
