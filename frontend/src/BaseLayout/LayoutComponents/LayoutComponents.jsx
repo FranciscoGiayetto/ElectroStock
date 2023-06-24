@@ -117,12 +117,12 @@ const LayoutComponents = ({ onSearch }) => {
                     label="Buscar productos"
                     variant="outlined"
                     fullWidth
-                    className=''
+                    className='search-inpu'
                   />
                 )}
               />
 
-              <Button variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266' }}>
+              <Button className='button hover' variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
                 <SearchRoundedIcon />
               </Button>
             </form>

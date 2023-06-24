@@ -18,7 +18,7 @@ function Ecommerce() {
 
   useEffect(() => {
     filterCards();
-  }, [searchQuery]);
+  }, [searchQuery, loadMore]);
 
   const handleLoadMore = () => {
     const nextCards = cards.slice(visibleCards.length, visibleCards.length + 9);
@@ -39,23 +39,26 @@ function Ecommerce() {
       ...card,
       image: card.image || defaultpicture,
     }));
-
+    console.log(updatedData);
     setCards(updatedData);
     setLoadMore(updatedData.length > 9);
+   // console.log(updatedData.length > 9)
   };
 
   const filterCards = () => {
-    if (!searchQuery || searchQuery.trim == '') {
+    if (!searchQuery || searchQuery.trim() === '') {
       setVisibleCards(cards.slice(0, 9));
       setLoadMore(cards.length > 9);
     } else {
       const filteredCards = cards.filter(card =>
-        card.name.toLowerCase() == searchQuery.toLowerCase()
+        card.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
+      console.log(visibleCards)
       setVisibleCards(filteredCards.slice(0, 9));
       setLoadMore(filteredCards.length > 9);
     }
   };
+  
   
 
   return (
