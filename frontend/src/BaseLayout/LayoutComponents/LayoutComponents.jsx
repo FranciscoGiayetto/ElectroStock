@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Layout, Menu, Dropdown, Button } from 'antd';
+import { Layout, Menu } from 'antd';
 import AddModeratorRoundedIcon from '@mui/icons-material/AddModeratorRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import { InputGroup, FormControl } from 'react-bootstrap';
+import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
@@ -21,22 +21,16 @@ import TextField from '@material-ui/core/TextField';
 const { Header, Sider } = Layout;
 
 const LayoutComponents = ({ onSearch }) => {
-
+ 
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [data, setData] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [myOptions, setMyOptions] = useState([]);
-  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     getElement();
-    handleWindowResize(); // Detect initial window size
-    window.addEventListener('resize', handleWindowResize); // Add event listener for window resize
-    return () => {
-      window.removeEventListener('resize', handleWindowResize); // Clean up on unmount
-    };
   }, []);
 
   const getElement = async () => {
@@ -56,57 +50,15 @@ const LayoutComponents = ({ onSearch }) => {
   };
 
   const handleSearch = (event) => {
-    console.log('LLEGE A BUSCAR')
     event.preventDefault();
     const searchQuery = event.target.elements.searchBar.value;
     onSearch(searchQuery);
     navigate(`/tienda?searchQuery=${searchQuery}`);
+   // console.log(searchQuery)  
   };
 
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);
-  };
-
-  const handleWindowResize = () => {
-    setIsDesktop(window.innerWidth >= 1000); // Update isDesktop state based on window width
-  };
-
-  const handleDesktopButtons = () => {
-    return (
-      <>
-        <Button variant="primary" type="submit" className='button hover'>
-          <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-        </Button>
-        <Button variant="primary" type="submit" className='button hover'>
-          <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-        </Button>
-        <Button variant="primary" type="submit" className='button hover'>
-          <AccountCircleRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-        </Button>
-      </>
-    );
-  };
-
-  const handleMobileDropdown = () => {
-    return (
-      <Menu>
-        <Menu.Item key="0">
-          <Button variant="primary" type="submit" className='button hover'>
-            <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-          </Button>
-        </Menu.Item>
-        <Menu.Item key="1">
-          <Button variant="primary" type="submit" className='button hover'>
-            <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-          </Button>
-        </Menu.Item>
-        <Menu.Item key="2">
-          <Button variant="primary" type="submit" className='button hover'>
-            <AccountCircleRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-          </Button>
-        </Menu.Item>
-      </Menu>
-    );
   };
 
   return (
@@ -154,41 +106,41 @@ const LayoutComponents = ({ onSearch }) => {
             <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '10rem' }}>
               <div className='div-autocomplete'>
                 <Autocomplete
-                  className='search-autocomplete'
-                  options={myOptions}
-                  getOptionLabel={(option) => option}
-                  value={selectedOption}
-                  onChange={(event, newValue) => setSelectedOption(newValue)}
-                  renderInput={(params) => (
-                    <TextField
-                      
-                      
-                      
-                      name='searchBar'
-                      {...params}
-                      label="Buscar productos"
-                      
-                      className='search-input'
-                    />
-                  )}
-                />
-              </div>
-              <div>
+                className='search-autocomplete'
+                options={myOptions}
+                getOptionLabel={(option) => option}
+                value={selectedOption}
+                onChange={(event, newValue) => setSelectedOption(newValue)}
+                renderInput={(params) => (
+                  <TextField
+                  
+                    name='searchBar'
+                    {...params}
+                    label="Buscar productos"
+                    
+                    
+                    className='search-input'
+                  />
+                )}
+              />
+            </div>
               <Button className='button hover' variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
                 <SearchRoundedIcon />
               </Button>
-              </div>
             </form>
           </div>
 
           <div className='div-buttons'>
-            {isDesktop ? handleDesktopButtons() : (
-              <Dropdown overlay={handleMobileDropdown()} placement="bottomRight" trigger={['click']}>
-                <Button variant="primary" type="submit" className='button hover'>
-                  <MenuFoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                </Button>
-              </Dropdown>
-            )}
+           
+            <Button variant="primary" type="submit" className='button hover'>
+              <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+            </Button>
+            <Button variant="primary" type="submit" className='button hover'>
+              <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+            </Button>
+            <Button variant="primary" type="submit" className='button hover'>
+              <AccountCircleRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+            </Button>
           </div>
         </Header>
       </Layout>
