@@ -138,8 +138,8 @@ const LayoutComponents = ({ onSearch }) => {
             <Button variant="primary" type="submit" className='button hover'>
               <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
             </Button>
-            <Button variant="primary" type="submit" className='button hover'>
-              <AccountCircleRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+            <Button variant="primary" type="submit" className='button hover' onClick={() => { window.location.href = '/detalleCuenta' }}>
+              <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
             </Button>
           </div>
         </Header>
