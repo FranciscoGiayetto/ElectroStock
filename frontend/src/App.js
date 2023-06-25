@@ -10,6 +10,7 @@ import DetalleProducto from "./pages/DetalleProducto/DetalleProducto";
 import Layout from "./BaseLayout/Layout";
 import * as React from 'react';
 import Ecommerce from "./pages/Ecommerce/Ecommerce.jsx";
+import Carrito from './pages/Carrito/Carrito.jsx';
 import  './assets/styles/App.css';
 import Home from './pages/LoginNuevo/home';
 import MainWrapper from './layouts/MainWrapper';
@@ -34,9 +35,8 @@ function App() {
                           </PrivateRoute>
                       }
                   />
-                  
                   <Route path="/login" element={<Login />} />
-        
+
                   <Route path="/logout" element={<Logout />} />
             <Route path="/*" element={<LayoutWrapper />} />
           </Routes>
@@ -58,6 +58,9 @@ function LayoutWrapper() {
                           </PrivateRoute>} />
         <Route path= "/tienda" element={<PrivateRoute>
                               <Ecommerce />
+                          </PrivateRoute>}/>
+        <Route path= "/carrito" element={<PrivateRoute>
+                              <Carrito />
                           </PrivateRoute>}/>
         <Route path="/detalleProducto/:id" element={<PrivateRoute>
                               <DetalleProducto />
