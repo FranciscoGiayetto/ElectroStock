@@ -30,14 +30,63 @@ class Command(BaseCommand):
             {'name': 'Laboratorio 2', 'speciality': 'electronica'}
         ]
         for data in lab_data:
-            speciality = speciality = Speciality.objects.get(name=data['speciality'])
+            speciality = Speciality.objects.get(name=data['speciality'])
             lab, created = Laboratory.objects.get_or_create(name=data['name'], speciality=speciality)
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Laboratorio '{data['name']}' creado exitosamente."))
             else:
                 self.stdout.write(f"Dato ya existente")
 
-        
+
+        # Categorias
+        equipos = Category.objects.get(name='equipos')
+        sensores = Category.objects.get_or_create(name='sensores', category=equipos)
+
+        componentes = Category.objects.get(name='componentes')
+        categorias_componentes = [
+            'resistencias',
+            'lamparas e indicadores',
+            'diodos y rectificadores',
+            'opticos y displays',
+            'transistores',
+            'tiristores',
+            'parlantes y microfonos',
+            'inductancias, nucleos y transformadores',
+            'capacitores',
+            'interruptores, pulsadores y reles',
+            'buffers',
+            'ci digitales',
+            'cristales y osciladores',
+            'zocalos',
+            'ci transmisores, receptores y modulos',
+            'reguladores de tension y protecciones',
+            'ci analogicos',
+            'conectores, borneras, terminales y fichas',
+            'elementos disipadores y aisladores',
+            'fusibles y portafusibles',
+            'elementos de montaje',
+            'motores y servomecanismos',
+            'cables varios'
+        ]
+        for categoria in categorias_componentes:
+            Category.objects.get_or_create(name=categoria, category=componentes)
+
+        insumos = Category.objects.get(name='insumos')
+        categorias_insumos = [
+            'informatica',
+            'electricidad/electronica',
+            'ferreteria',
+            'libreria',
+            'impresión 3d',
+            'drogueria - quimica',
+            'proceso fabricacion circuitos impresos'
+        ]
+        for categoria in categorias_insumos:
+            Category.objects.get_or_create(name=categoria, category=insumos)
+
+        self.stdout.write(self.style.SUCCESS('Categorías cargadas exitosamente.'))
+
+
         #DATOS DE EJEMPLO:
         # Check if the first element exists
         if not Element.objects.filter(name="Elemento 1").exists():
