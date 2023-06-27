@@ -4,9 +4,16 @@ import React, { useEffect, useState } from 'react';
 import defaultpicture from '../../assets/images/defaultpicture.png';
 import './DetalleProducto.css';
 import Button from 'react-bootstrap/Button';
+import { useAuthStore } from '../../store/auth';
+
 
 
 function DetalleProducto() {
+  const [user] = useAuthStore((state) => [
+    state.user,
+  ]);
+  const userData = user()
+  console.log(userData)
   const elementId = useParams();
   const [element, setElement] = useState(null);
   const [isVerticalLayout, setIsVerticalLayout] = useState(false);
