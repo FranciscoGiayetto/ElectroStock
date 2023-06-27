@@ -18,8 +18,7 @@ h1 {
 .container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; /* Alineación a la izquierda */
-
+  justify-content: center;
 }
 
 
