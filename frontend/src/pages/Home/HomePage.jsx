@@ -13,11 +13,15 @@ function HomePage() {
 
   const token = getCurrentToken()
   const userData = user()
+<<<<<<< HEAD
   console.log(token.PromiseResult)
 
 
 
   
+=======
+ // console.log(userData)
+>>>>>>> Develop
   return (
     <div className='container pagecontainer'>
       <div>

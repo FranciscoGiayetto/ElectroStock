@@ -2,10 +2,12 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, Group, Permission
 from .especialidad import *
 
+#Creo el grupo alumno
 if not Group.objects.filter(name="Alumno").exists():
     alumno_group = Group.objects.create(name="Alumno")
     alumno_group.permissions.add()
 
+#Creo el grupo profesor
 if not Group.objects.filter(name="Profesor").exists():
     profesor_group = Group.objects.create(name="Profesor")
     profesor_group.permissions.add()
@@ -135,6 +137,9 @@ class Box(models.Model):
         verbose_name = "Box"
 
 
+from django.contrib import messages
+
+
 class Log(models.Model):
     class Status(models.TextChoices):
         APROBADO = "AP", "Aprobado"
@@ -143,6 +148,8 @@ class Log(models.Model):
         PEDIDO = "PED", "Pedido"
         COMPRADO = "COM", "Comprado"
         DEVUELTO = "DEV", "Devuelto"
+        VENCIDO = "VEN", "Vencido"
+        DEVUELTOTARDIO = "TAR", "Tardio"
 
     status = models.CharField(
         max_length=30, choices=Status.choices, default=Status.CARRITO
@@ -152,8 +159,7 @@ class Log(models.Model):
         CustomUser,
         on_delete=models.CASCADE,
         related_name="borrowed_logs",
-        null=True,
-        blank=True,
+        help_text="Si se ingresa como comprado poner nombre de tu usuario",
     )
     lender = models.ForeignKey(
         CustomUser,
@@ -164,12 +170,12 @@ class Log(models.Model):
     )
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
     observation = models.CharField(max_length=100, null=True, blank=True)
-    dateIn = models.DateTimeField(null=True)
+    dateIn = models.DateField(auto_now=True)
     dateOut = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.status
 
     class Meta:
-        verbose_name_plural = "Prestamos"
-        verbose_name = "Prestamo"
+        verbose_name_plural = "Prestamos y movimientos"
+        verbose_name = "Prestamo y movimientos"

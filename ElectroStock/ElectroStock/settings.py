@@ -225,7 +225,10 @@ JAZZMIN_SETTINGS = {
         "ElectroStockApp.Laboratory":"fas fa-flask",
         "ElectroStockApp.Speciality":"fas fa-hard-hat",
         "ElectroStockApp.Course":"fas fa-graduation-cap",
+        "token_blacklist.blacklistedtoken":"fas fa-lock",
+        "token_blacklist.outstandingtoken":"fas fa-lock",
     },
+
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
@@ -281,7 +284,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
-    "theme": "yeti",
+    "theme": "litera",
     "dark_mode_theme": None,
     "button_classes": {
         "primary": "btn-outline-primary",
@@ -345,3 +348,30 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST= 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'electrostock.noreplay@gmail.com'
+EMAIL_HOST_PASSWORD = 'exjvovbiofvrbgej' #NO BORRAR ESTO NUNCA, also, Pepe1234
+EMAIL_USE_TLS = True
+
+
+
+# celery -A ElectroStock worker --beat --loglevel=info
+# Redis configuration 
+from datetime import timedelta
+
+CELERY_BROKER_URL = 'redis://default:hU7ZgQnaKpTDOliOy0Vt@containers-us-west-40.railway.app:6872'  # Ejemplo: 'amqp://guest:guest@localhost:5672/'
+CELERY_ACCEPT_CONTENT=['json']
+CELERY_TASK_SERIALIZER= 'json'
+CELERY_IMPORTS = ('ElectroStockApp.task',)
+CELERY_BEAT_SCHEDULE = {
+    'run_check_expired_logs': {
+        'task': 'ElectroStockApp.task.run_check_expired_logs',
+        'schedule': timedelta(days=1),  # Ejecutar cada 1 día
+    },
+}
+

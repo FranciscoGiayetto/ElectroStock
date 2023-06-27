@@ -1,13 +1,17 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-
+import Cookies from 'js-cookie';
 const useAuthStore = create((set, get) => ({
     allUserData: null, // Use this to store all user data
     loading: false,
     user: () => ({
         user_id: get().allUserData?.user_id || null,
         username: get().allUserData?.username || null,
+<<<<<<< HEAD
         token: get().allUserData?.token || null,
+=======
+        token: Cookies.get('refresh_token') || null,
+>>>>>>> Develop
     }),
     setUser: (user) => set({ allUserData: user }),
     setLoading: (loading) => set({ loading }),
