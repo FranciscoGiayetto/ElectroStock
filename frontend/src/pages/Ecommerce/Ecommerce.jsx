@@ -85,7 +85,7 @@ function Ecommerce() {
     <div className='container' id='ecommerce'>
       <div className='row'>
         {visibleCards.map((card, index) => (
-          <div key={index} className='col-10 col-sm-7 col-md-6 col-lg-4 mb-2'>
+          <div key={index} className='col-10 col-sm-7 col-md-6 col-lg-3 mb-2'>
             <CardExample title={card.name} text={card.description} image={card.image} id={card.id} />
           </div>
         ))}
