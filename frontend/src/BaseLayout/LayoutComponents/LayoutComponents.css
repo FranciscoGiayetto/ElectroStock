@@ -1,8 +1,120 @@
 html, body {
-    background-color: whitesmoke !important;
-  }
-
-.search-input::placeholder {
-    color: white;
+  background-color: #ebebeb !important;
 }
 
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  background: #2E5266;
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.div-autocomplete {
+  height: 20px;
+  margin-bottom: 2rem;
+}
+
+.sidebar {
+  height: 100vh;
+  background: #EBEBEB;
+  position: fixed;
+  left: 0;
+  top: 64px;
+  z-index: 10;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.search-input {
+  background-color: #2E5266;
+  border-color: rgba(235, 235, 235, 0.5);
+  border-radius: 20px;
+  margin-right: auto;
+  margin-left: 10px;
+  flex: 1;
+  width: 11rem !important;
+  height: 2rem;
+}
+
+.MuiFormControl-fullWidth {
+  width: 8rem !important;
+  margin-right: 2rem;
+  
+}
+
+@media (max-width: 576px) {
+  .search-input {
+    width: 6rem;
+    height: 1.5rem;
+  }
+
+  .MuiFormControl-fullWidth {
+    width: 12rem !important;
+  }
+}
+
+.MuiFormControl-fullWidth {
+  width: 20rem !important;
+  margin-right: 2rem;
+  padding-right: 2rem !important;
+}
+
+.search-input::placeholder {
+  color: rgba(235, 235, 235, 0.5);
+}
+
+.search-input:focus {
+  background: #2E5266;
+  color: rgba(235, 235, 235, 0.5);
+}
+
+.div-logo {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 3rem;
+}
+
+.div-form {
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  width: 10rem;
+}
+
+.div-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  color: transparent;
+  padding: 16px 32px;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  width: 10px;
+  height: auto;
+}
+
+.button:hover {
+  background-color: rgba(64, 107, 131);
+}
+
+.logo-img {
+  width: 100px;
+}
