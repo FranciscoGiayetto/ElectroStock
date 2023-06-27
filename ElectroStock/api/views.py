@@ -276,7 +276,7 @@ class VencidoStatisticsView(generics.ListAPIView):
         )
         return [statistics]
 
-#View mandar mayores deudores
+#View mandar mayores deudoreszz
 class LenderVencidosStatisticsView(generics.ListAPIView):
     queryset = models.Log.objects.filter(Q(status='VEN') | Q(status='TAR')).values('lender__username').annotate(vencidos_count=Count('lender')).order_by('-vencidos_count')    
     serializer_class = LenderVencidosStatisticsSerializer
