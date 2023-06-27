@@ -10,6 +10,7 @@ const Private = () => {
             try {
                 const response = await api.get('/test/');
                 setRes(response.data.response);
+                console.log(response.data.response)
             } catch (error) {
                 setPostRes(error.response.data);
             }
