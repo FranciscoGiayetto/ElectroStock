@@ -4,7 +4,9 @@ import './Carrito.css'
 
 function Carrito() {
   return (
-    <div>Carrito</div>
+    <div className='container pagecontainer'>
+      <h1>hola</h1>
+      </div>
   )
 }
 export default Carrito;

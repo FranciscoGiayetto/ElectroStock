@@ -7,6 +7,7 @@ const useAuthStore = create((set, get) => ({
     user: () => ({
         user_id: get().allUserData?.user_id || null,
         username: get().allUserData?.username || null,
+        token: get().allUserData?.token || null,
     }),
     setUser: (user) => set({ allUserData: user }),
     setLoading: (loading) => set({ loading }),
