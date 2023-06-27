@@ -43,6 +43,7 @@ function Ecommerce() {
       setLoadMore(true);
     }
   };
+  
 
   return (
     <div className='container' id='ecommerce'>
