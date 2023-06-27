@@ -1,5 +1,5 @@
 html, body {
-    background-color: #ebebeb !important;
+  background-color: #ebebeb !important;
 }
 
 .navbar {
@@ -16,6 +16,11 @@ html, body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.div-autocomplete {
+  height: 20px;
+  margin-bottom: 2rem;
+}
+
 .sidebar {
   height: 100vh;
   background: #EBEBEB;
@@ -24,7 +29,6 @@ html, body {
   top: 64px;
   z-index: 10;
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
-  
 }
 
 .search-input {
@@ -34,11 +38,35 @@ html, body {
   margin-right: auto;
   margin-left: 10px;
   flex: 1;
-  max-width: 400px;
+  width: 11rem !important;
+  height: 2rem;
+}
+
+.MuiFormControl-fullWidth {
+  width: 8rem !important;
+  margin-right: 2rem;
+  
+}
+
+@media (max-width: 576px) {
+  .search-input {
+    width: 6rem;
+    height: 1.5rem;
+  }
+
+  .MuiFormControl-fullWidth {
+    width: 12rem !important;
+  }
+}
+
+.MuiFormControl-fullWidth {
+  width: 20rem !important;
+  margin-right: 2rem;
+  padding-right: 2rem !important;
 }
 
 .search-input::placeholder {
-    color: rgba(235, 235, 235, 0.5);
+  color: rgba(235, 235, 235, 0.5);
 }
 
 .search-input:focus {
@@ -56,6 +84,7 @@ html, body {
   display: flex;
   justify-content: center;
   margin-left: auto;
+  width: 10rem;
 }
 
 .div-buttons {
@@ -67,7 +96,7 @@ html, body {
 .button {
   display: flex;
   justify-content: center;
-  background-color: transparent; 
+  background-color: transparent;
   border: none;
   color: transparent;
   padding: 16px 32px;
@@ -86,10 +115,6 @@ html, body {
   background-color: rgba(64, 107, 131);
 }
 
-
-
-.logo-img{
+.logo-img {
   width: 100px;
 }
-
-

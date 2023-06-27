@@ -6,11 +6,14 @@ h1 {
   font-size: 60px;
 }
 
-.card:hover {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  transform: scale(1.05);
-  transition: box-shadow 0.3s, transform 0.3s;
+.col-4 {
+  padding-top: 3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: calc(33,33% );
+  margin: 1rem;
 }
+
 
 .container {
   display: flex;
@@ -18,11 +21,12 @@ h1 {
   justify-content: center;
 }
 
+
 .col-4 {
   padding-top: 3rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  width: calc(33.33% - 2rem);
+  width: calc(33,33% );
   margin: 1rem;
 }
 
@@ -31,6 +35,7 @@ h1 {
   margin-bottom: 2rem;
 }
 
+
 #ecommerce{
   margin-top: 6rem;
   margin-left: 4rem;
@@ -38,7 +43,7 @@ h1 {
 }
 
 .mb-4 {
-  margin-bottom: 1.5rem; /* Espacio entre las tarjetas */
+  margin-bottom: 1,5rem; /* Espacio entre las tarjetas */
 }
 
 /* Ajustar el margen según el tamaño de la pantalla */
