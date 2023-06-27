@@ -16,12 +16,6 @@ router.register("location", LocationViewSet, "location")
 router.register("box", BoxViewSet, "box")
 router.register("prestamos", PrestamoVerAPIView, "prestamos")
 router.register("especialidad", SpecialityViewSet, "especialidad")
-<<<<<<< HEAD
-router.register("log", LogViewSet, "log")
-
-urlpatterns = [
-    path("stock/<int:element_id>/", get_stock, name="stock"),
-=======
 router.register("carrito", CarritoAPIView, "carrito")
 router.register("vencidos", VencidosAPIView, "vencidos")
 router.register("prestamosdetalle", PrestamosAPIView, "prestamosdetalle")
@@ -40,5 +34,4 @@ urlpatterns = [
     path("estadisticas/vencidos/", VencidoStatisticsView.as_view(), name="vencido"),
     path("estadisticas/mayordeudor/", LenderVencidosStatisticsView.as_view(), name="mayordeudor"),
     
->>>>>>> Develop
 ] + router.urls

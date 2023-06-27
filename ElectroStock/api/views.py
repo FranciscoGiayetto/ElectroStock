@@ -14,20 +14,14 @@ class ElementsViewSet(viewsets.ModelViewSet):
     serializer_class = ElementSerializer
 
 
-<<<<<<< HEAD
-=======
 # View para los elementos que estan en el ecommerce
->>>>>>> Develop
 class ProductosEcommerceAPIView(viewsets.ModelViewSet):
     queryset = models.Element.objects.filter(ecommerce=True)
     permission_classes = [permissions.AllowAny]
     serializer_class = ElementEcommerceSerializer
 
 
-<<<<<<< HEAD
-=======
 # View para los prestamos con el usuario actual
->>>>>>> Develop
 class PrestamoVerAPIView(viewsets.ModelViewSet):
     permission_classes = [PermisoUsuarioActual]
     serializer_class = LogSerializer
@@ -39,20 +33,14 @@ class PrestamoVerAPIView(viewsets.ModelViewSet):
     queryset = get_queryset
 
 
-<<<<<<< HEAD
-=======
 # View para las categorias
->>>>>>> Develop
 class CategoriaViewSet(viewsets.ModelViewSet):
     queryset = models.Category.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = CategoriaSerializer
 
 
-<<<<<<< HEAD
-=======
 # View para los usuarios
->>>>>>> Develop
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = models.CustomUser.objects.all()
     permission_classes = [permissions.AllowAny]
@@ -66,56 +54,35 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
 
 
-<<<<<<< HEAD
-=======
 # View para los laboratorios
->>>>>>> Develop
 class LaboratorioViewSet(viewsets.ModelViewSet):
     queryset = models.Laboratory.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = LaboratorySerializer
 
 
-<<<<<<< HEAD
-=======
 # View para las ubicaciones
->>>>>>> Develop
 class LocationViewSet(viewsets.ModelViewSet):
     queryset = models.Location.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = LocationSerializer
 
 
-<<<<<<< HEAD
-=======
 # View para los boxes
->>>>>>> Develop
 class BoxViewSet(viewsets.ModelViewSet):
     queryset = models.Box.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = BoxSerializer
 
 
-<<<<<<< HEAD
-=======
 # View para las especialidades
->>>>>>> Develop
 class SpecialityViewSet(viewsets.ModelViewSet):
     queryset = models.Speciality.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = SpecialitySerializer
 
 
-<<<<<<< HEAD
-class LogViewSet(viewsets.ModelViewSet):
-    queryset = models.Log.objects.all()
-    permission_classes = [permissions.AllowAny]
-    serializer_class = LogSerializer
-
-
-=======
 # View para tomar el stock actual segun el id que mandas por la url
->>>>>>> Develop
 @api_view(["GET", "POST"])
 def get_stock(request, element_id):
     if request.method == "GET":
@@ -154,8 +121,6 @@ def get_stock(request, element_id):
         return Response(
             []
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
-<<<<<<< HEAD
-=======
 
 
 # View para todos los logs con el estado carrito y que el usuario haya pedido
@@ -321,4 +286,3 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         lender_statistics = serializer.data if serializer.data else None
         return Response(lender_statistics)
->>>>>>> Develop

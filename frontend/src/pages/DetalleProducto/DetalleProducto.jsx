@@ -5,7 +5,6 @@ import defaultpicture from '../../assets/images/defaultpicture.png';
 import './DetalleProducto.css';
 import Button from 'react-bootstrap/Button';
 import { useAuthStore } from '../../store/auth';
-<<<<<<< HEAD
 
 function DetalleProducto() {
   
@@ -21,17 +20,6 @@ function DetalleProducto() {
 
 
 
-=======
-
-
-
-function DetalleProducto() {
-  const [user] = useAuthStore((state) => [
-    state.user,
-  ]);
-  const userData = user()
-  console.log(userData)
->>>>>>> Develop
   const elementId = useParams();
   const [element, setElement] = useState(null);
   const [isVerticalLayout, setIsVerticalLayout] = useState(false);
