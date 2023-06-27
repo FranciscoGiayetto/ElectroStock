@@ -82,25 +82,7 @@ function Ecommerce() {
   
 
   return (
-    <div className='container' id='ecommerce'>
-      <div className='row'>
-        {visibleCards.map((card, index) => (
-          <div key={index} className='col-10 col-sm-7 col-md-6 col-lg-4 mb-2'>
-            <CardExample title={card.name} text={card.description} image={card.image} id={card.id} />
-          </div>
-        ))}
-      </div>
-
-      {showLoadMoreButton && (
-        <div className='row'>
-          <div className='col-12 text-center'>
-            <button className='btn btn-primary cargarMas' onClick={handleLoadMore}>
-              Cargar más
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    <div></div>
   );
 }
 
