@@ -3,6 +3,7 @@ from .models import *
 from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 # Para arreglar el erro del export tenes que cambiar de la funcion ExportActionMixin- export_action_action ---> export_format = 1
 
@@ -71,25 +72,28 @@ class ElementAdmin(ImportExportActionModelAdmin):
     )
     search_fields = ["name", "price_usd", "ecommerce", "category__name"]
 
+
 from django.contrib.auth.hashers import make_password
+
+
 # Clase para export-import de usuarios
 class UserResource(resources.ModelResource):
-    nombre = resources.Field(column_name='nombre', attribute='first_name')
-    apellido = resources.Field(column_name='apellido', attribute='last_name')
-    username = resources.Field(column_name='username', attribute='username')
-    contraseña = resources.Field(column_name='contraseña', attribute='password')
-    email = resources.Field(column_name='email', attribute='email')
+    nombre = resources.Field(column_name="nombre", attribute="first_name")
+    apellido = resources.Field(column_name="apellido", attribute="last_name")
+    username = resources.Field(column_name="username", attribute="username")
+    contraseña = resources.Field(column_name="contraseña", attribute="password")
+    email = resources.Field(column_name="email", attribute="email")
     curso = resources.Field(
-        column_name='curso',
-        attribute='course__grade',
+        column_name="curso",
+        attribute="course__grade",
     )
     especialidades = resources.Field(
-        column_name='especialidades',
-        attribute='specialties__name',
+        column_name="especialidades",
+        attribute="specialties__name",
     )
     grupos = resources.Field(
-        column_name='grupos',
-        attribute='groups__name',
+        column_name="grupos",
+        attribute="groups__name",
     )
 
     class Meta:
@@ -114,10 +118,10 @@ class UserResource(resources.ModelResource):
 
     def import_users(self, dataset, using_transactions, dry_run, **kwargs):
         for row in dataset:
-            username = row['username']
-            password = row['contraseña']
-            course_name = row['curso']
-            specialties_names = row['especialidades'].split(';')
+            username = row["username"]
+            password = row["contraseña"]
+            course_name = row["curso"]
+            specialties_names = row["especialidades"].split(";")
 
             # Cifrar la contraseña
             hashed_password = make_password(password)
@@ -140,6 +144,13 @@ class UserResource(resources.ModelResource):
             # Asociar las especialidades al usuario
             specialties = Speciality.objects.filter(name__in=specialties_names)
             user.specialties.set(specialties)
+
+
+class CustomUserAdminForm(UserChangeForm):
+    class Meta(UserChangeForm.Meta):
+        model = CustomUser
+        fields = "__all__"
+
 
 # Clase de filtros y busqueda de usuarios
 class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
@@ -164,6 +175,30 @@ class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
         "groups",
         "course__grade",
         "specialties__name",
+    )
+
+    form = CustomUserAdminForm
+    add_form = UserCreationForm
+
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        (
+            "Personal info",
+            {"fields": ("first_name", "last_name", "email", "course", "specialties")},
+        ),
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                )
+            },
+        ),
+        ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
 
 
@@ -243,6 +278,16 @@ class LogyAdmin(ImportExportActionModelAdmin):
 
         super().save_model(request, obj, form, change)
 
+    def get_exclude(self, request, obj=None):
+        exclude = super().get_exclude(request, obj)
+        if obj and obj.status in [Log.Status.COMPRADO, Log.Status.ROTO]:
+            exclude = exclude or ()
+            exclude += (
+                "lender",
+                "dateOut",
+            )
+        return exclude
+
 
 # Clase para export-import de boxes
 class BoxResource(resources.ModelResource):
@@ -301,7 +346,15 @@ class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
         approved_element_count = Log.objects.filter(box=obj, status="COM").aggregate(
             total=models.Sum("quantity")
         )["total"]
-        return approved_element_count if approved_element_count is not None else 0
+        rotos = Log.objects.filter(box=obj, status="ROT").aggregate(
+            total=models.Sum("quantity")
+        )["total"]
+        if rotos is None:
+            rotos = 0
+        if approved_element_count is None:
+            approved_element_count = 0
+        stock = approved_element_count - rotos
+        return stock
 
     # El nombre que aparece de la fila
     get_logs.short_description = "Stock"
@@ -334,6 +387,9 @@ class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
         total_ar = Log.objects.filter(box=obj, status="AP").aggregate(
             total=models.Sum("quantity")
         )["total"]
+        total_rot = Log.objects.filter(box=obj, status="ROT").aggregate(
+            total=models.Sum("quantity")
+        )["total"]
         total_ped = Log.objects.filter(box=obj, status="PED").aggregate(
             total=models.Sum("quantity")
         )["total"]
@@ -343,8 +399,10 @@ class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
             total_ar = 0
         if total_ped is None:
             total_ped = 0
+        if total_rot is None:
+            total_rot = 0
 
-        current_stock = total_com - total_ar - total_ped
+        current_stock = total_com - total_ar - total_ped - total_rot
         return current_stock
 
     # El nombre que aparece de la fila
