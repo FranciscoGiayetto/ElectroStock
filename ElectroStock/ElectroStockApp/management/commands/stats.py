@@ -6,6 +6,12 @@ class Command(BaseCommand):
     help = 'Carga de datos iniciales en la base de datos'
 
     def handle(self, *args, **options):
+        # Categorias padre
+        equipos, _ = Category.objects.get_or_create(name='equipos')
+        componentes, _ = Category.objects.get_or_create(name='componentes')
+        insumos, _ = Category.objects.get_or_create(name='insumos')
+        maletines_componentes, _ = Category.objects.get_or_create(name='maletines componentes')
+        
         # Agregar cursos
         grades = [4, 5, 6, 7]
         for grade in grades:
@@ -13,7 +19,7 @@ class Command(BaseCommand):
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Curso {grade} creado exitosamente."))
             else:
-                self.stdout.write(f"Dato ya existente")
+                self.stdout.write(f"Dato curso ya existente")
 
         # Agregar especialidades
         specialities = ['electronica', 'programacion', 'electromecanica']
@@ -22,7 +28,7 @@ class Command(BaseCommand):
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Especialidad {speciality} creada exitosamente."))
             else:
-                self.stdout.write(f"Dato ya existente")
+                self.stdout.write(f"Dato especialidad ya existente")
 
         # Agregar laboratorios
         lab_data = [
@@ -35,14 +41,11 @@ class Command(BaseCommand):
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Laboratorio '{data['name']}' creado exitosamente."))
             else:
-                self.stdout.write(f"Dato ya existente")
+                self.stdout.write(f"Dato laboratorio ya existente")
 
-
-        # Categorias
-        equipos = Category.objects.get(name='equipos')
-        sensores = Category.objects.get_or_create(name='sensores', category=equipos)
-
-        componentes = Category.objects.get(name='componentes')
+        # Categorias hijas
+        sensores, _ = Category.objects.get_or_create(name='sensores', category=equipos)
+        
         categorias_componentes = [
             'resistencias',
             'lamparas e indicadores',
@@ -71,7 +74,6 @@ class Command(BaseCommand):
         for categoria in categorias_componentes:
             Category.objects.get_or_create(name=categoria, category=componentes)
 
-        insumos = Category.objects.get(name='insumos')
         categorias_insumos = [
             'informatica',
             'electricidad/electronica',
@@ -84,7 +86,21 @@ class Command(BaseCommand):
         for categoria in categorias_insumos:
             Category.objects.get_or_create(name=categoria, category=insumos)
 
-        self.stdout.write(self.style.SUCCESS('Categorías cargadas exitosamente.'))
+        categorias_maletines_componentes = [
+            'cables',
+            'potenciómetros',
+            'varios',
+            'diodos',
+            'resistencias',
+            'capacitores electrolíticos',
+            'capacitores varios'
+        ]
+
+        for categoria in categorias_maletines_componentes:
+            Category.objects.get_or_create(name=categoria, category=maletines_componentes)
+
+
+        self.stdout.write(self.style.SUCCESS('Datos categorias ya creados'))
 
 
         #DATOS DE EJEMPLO:
