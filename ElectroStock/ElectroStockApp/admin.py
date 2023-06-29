@@ -72,36 +72,83 @@ class ElementAdmin(ImportExportActionModelAdmin):
     search_fields = ["name", "price_usd", "ecommerce", "category__name"]
 
 
+from django.contrib.auth.hashers import make_password
 # Clase para export-import de usuarios
 class UserResource(resources.ModelResource):
+    nombre = resources.Field(column_name='nombre', attribute='first_name')
+    apellido = resources.Field(column_name='apellido', attribute='last_name')
+    username = resources.Field(column_name='username', attribute='username')
+    contraseña = resources.Field(column_name='contraseña', attribute='password')
+    email = resources.Field(column_name='email', attribute='email')
+    curso = resources.Field(
+        column_name='curso',
+        attribute='course__grade',
+    )
+    especialidades = resources.Field(
+        column_name='especialidades',
+        attribute='specialties__name',
+    )
+    grupos = resources.Field(
+        column_name='grupos',
+        attribute='groups__name',
+    )
+
     class Meta:
         model = CustomUser
         fields = (
             "id",
-            "first_name",
-            "last_name",
+            "nombre",
+            "apellido",
             "username",
+            "contraseña",
             "email",
-            "course",
-            "specialties",
-            "groups__name",
+            "curso",
+            "especialidades",
+            "grupos",
         )
-        export_order = (
-            "id",
-            "first_name",
-            "last_name",
-            "username",
-            "email",
-            "course",
-            "specialties",
-            "groups__name",
-        )
+        export_order = fields
+    def before_save_instance(self, instance, using_transactions, dry_run):
+        password = instance.password
+        hashed_password = make_password(password)
+        instance.password = hashed_password
+
+    def import_users(self, dataset, using_transactions, dry_run, **kwargs):
+        for row in dataset:
+            username = row['username']
+            password = row['contraseña']
+            course_name = row['curso']
+            specialties_names = row['especialidades'].split(';')
+
+            # Cifrar la contraseña
+            hashed_password = make_password(password)
+
+            # Crear un nuevo usuario
+            user = CustomUser.objects.create(username=username, password=hashed_password)
+
+            # Asociar el curso al usuario
+            try:
+                course = Course.objects.get(name=course_name)
+                user.course = course
+                print('El curso existe ', course, ' ', course_name )
+            except Course.DoesNotExist:
+                # Manejar el caso cuando el curso no existe
+                # Puedes mostrar un mensaje de error o realizar alguna acción apropiada
+                print(f"El curso '{course_name}' no existe")
+
+            # Asociar las especialidades al usuario
+            specialties = Speciality.objects.filter(name__in=specialties_names)
+            user.specialties.set(specialties)
+
+            # Guardar el usuario
+            user.save()
+
 
 
 # Clase de filtros y busqueda de usuarios
 class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
     resource_class = UserResource
     list_display = (
+        "id",
         "username",
         "email",
         "course",

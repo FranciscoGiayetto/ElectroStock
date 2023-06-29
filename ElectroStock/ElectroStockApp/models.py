@@ -36,8 +36,8 @@ class Speciality(models.Model):
 
 
 class CustomUser(AbstractUser, PermissionsMixin):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    specialties = models.ManyToManyField(Speciality, null=True, blank=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,null=True, blank=True)
+    specialties = models.ManyToManyField(Speciality, blank=True)
 
     # Se agrega related_name a la clave foránea de groups
     groups = models.ManyToManyField(
