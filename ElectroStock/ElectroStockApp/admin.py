@@ -99,7 +99,6 @@ class UserResource(resources.ModelResource):
     class Meta:
         model = CustomUser
         fields = (
-            "id",
             "nombre",
             "apellido",
             "username",
@@ -147,6 +146,25 @@ class UserResource(resources.ModelResource):
 
 
 class CustomUserAdminForm(UserChangeForm):
+
+    def get_next_id(self):
+        # Obtener el ID más alto actualmente utilizado
+        max_id = CustomUser.objects.aggregate(models.Max('id'))['id__max']
+        next_id = max_id + 1 if max_id else 1
+        return next_id
+
+    def before_import_row(self, row, **kwargs):
+        # Asignar automáticamente el siguiente ID disponible
+        row['id'] = self.get_next_id()
+
+        # Resto del código para generar el nombre de usuario
+        first_name = row.get('first_name', '')
+        last_name = row.get('last_name', '')
+        username = f"{first_name}{last_name}"
+        row['username'] = username
+
+        super().before_import_row(row, **kwargs)
+
     class Meta(UserChangeForm.Meta):
         model = CustomUser
         fields = "__all__"
@@ -238,9 +256,27 @@ class LogResource(resources.ModelResource):
             "dateOut",
         )
 
+from django import forms
+class LogForm(forms.ModelForm):
+    class Meta:
+        model = Log
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        pass
+
+
 
 # Clase de filtros y busqueda de los prestamos
 class LogyAdmin(ImportExportActionModelAdmin):
+
+    form = LogForm
+    class Media:
+        js = ('admin/js/log_admin.js',)
+
+
+    
     resource_class = LogResource
     list_display = (
         "status",
@@ -277,7 +313,7 @@ class LogyAdmin(ImportExportActionModelAdmin):
                 return
 
         super().save_model(request, obj, form, change)
-
+    
     def get_exclude(self, request, obj=None):
         exclude = super().get_exclude(request, obj)
         if obj and obj.status in [Log.Status.COMPRADO, Log.Status.ROTO]:
@@ -287,7 +323,7 @@ class LogyAdmin(ImportExportActionModelAdmin):
                 "dateOut",
             )
         return exclude
-
+    
 
 # Clase para export-import de boxes
 class BoxResource(resources.ModelResource):
