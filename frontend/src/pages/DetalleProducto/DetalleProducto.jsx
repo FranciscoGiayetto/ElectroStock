@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { useAuthStore } from '../../store/auth';
 import { getRefreshToken } from '../../utils/auth';
+import useAxios from '../../utils/useAxios'; // Import the useAxios hook
 
 import defaultpicture from '../../assets/images/defaultpicture.png';
 import './DetalleProducto.css';
@@ -10,14 +11,14 @@ import './DetalleProducto.css';
 function DetalleProducto() {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
-  console.log(userData);
-
+  //console.log(userData);
+  const [posRes, setPostRes] = useState('');
   const [element, setElement] = useState(null);
   const [isVerticalLayout, setIsVerticalLayout] = useState(false);
   const numeroAleatorio = Math.floor(Math.random() * 21) + 5;
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
-
+  const api = useAxios(); 
   const { id } = useParams();
 
   useEffect(() => {
@@ -32,13 +33,13 @@ function DetalleProducto() {
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
     try {
-      const response = await fetch(`${proxyUrl}/api/elements/${id}/`);
-      if (response.ok) {
-        const data = await response.json();
+      const response = await api.get(`/elements/${id}/`);
+       console.log(response)
+        let data = await response.data;
         setElement(data);
-      } else {
-        throw new Error('Error al obtener el elemento');
-      }
+        console.log(element)
+        
+      
     } catch (error) {
       console.error(error);
     }
@@ -59,48 +60,33 @@ function DetalleProducto() {
     }
   };
 
-  const handleCarrito = () => {
+
+
+
+  const handleSubmit = async (e) => {
+
     const logData = {
       box: element.box,
-      borrower: null,
+      borrower: user,
       lender: null,
       status: 'CAR',
-      quantity: quantity,
+      quantity: 15,
       observation: null,
       dateIn: null,
       dateOut: null,
     };
 
-    const token = userData.token
-    if (token) {
-      const headers = {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${token}`,
-      };
-
-      fetch('http://127.0.0.1:8000/auth/test/', {
-        method: 'GET',
-        headers: headers,
-       // body: JSON.stringify(logData),
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Error al crear el log');
-          }
-        })
-        .then((data) => {
-          console.log('Log creado:', data);
-          navigate('/carrito');
-        })
-        .catch((error) => {
-          console.error('Error al crear el log:', error);
+    e.preventDefault();
+    try {
+        const response = await api.post('/prestamos/', {
+            body: logData,
         });
-    } else {
-      console.error('Las credenciales de autenticación no se proveyeron.');
+        setPostRes(response.data.response);
+      } catch (error) {
+          setPostRes(error.response.data);
+      
     }
-  };
+};
 
   return (
     <div className='container pagecontainer'>
@@ -135,7 +121,7 @@ function DetalleProducto() {
               style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0' }}
               variant='primary'
               type='submit'
-              onClick={handleCarrito}
+              onClick={handleSubmit}
             >
               Agregar al carrito
             </Button>
