@@ -78,9 +78,9 @@ from django.contrib.auth.hashers import make_password
 
 # Clase para export-import de usuarios
 class UserResource(resources.ModelResource):
+    id = resources.Field(column_name="id", attribute="id")
     nombre = resources.Field(column_name="nombre", attribute="first_name")
     apellido = resources.Field(column_name="apellido", attribute="last_name")
-    username = resources.Field(column_name="username", attribute="username")
     contraseña = resources.Field(column_name="contraseña", attribute="password")
     email = resources.Field(column_name="email", attribute="email")
     curso = resources.Field(
@@ -98,7 +98,9 @@ class UserResource(resources.ModelResource):
 
     class Meta:
         model = CustomUser
+        #exclude = ('id',) 
         fields = (
+            "id",
             "nombre",
             "apellido",
             "username",
@@ -111,40 +113,51 @@ class UserResource(resources.ModelResource):
         export_order = fields
 
     def before_save_instance(self, instance, using_transactions, dry_run):
-        password = instance.password
-        hashed_password = make_password(password)
-        instance.password = hashed_password
+        # Generar el nombre de usuario en función de "first_name" y "last_name"
+        first_name = instance.first_name
+        last_name = instance.last_name
+        username = f"{first_name}{last_name}"
 
-    def import_users(self, dataset, using_transactions, dry_run, **kwargs):
-        for row in dataset:
-            username = row["username"]
-            password = row["contraseña"]
-            course_name = row["curso"]
-            specialties_names = row["especialidades"].split(";")
+        # Asignar el nombre de usuario generado al campo "username"
+        instance.username = username
 
-            # Cifrar la contraseña
+        # Obtener o crear el objeto "curso" con nombre '4'
+        try:
+            course = Course.objects.get(grade='4')
+        except Course.DoesNotExist:
+            # Si el objeto "curso" con nombre '4' no existe, puedes crearlo aquí
+            course = Course.objects.create(grade='4')
+
+        # Asignar el objeto "curso" al campo "course" del usuario
+        instance.course = course
+
+        # Obtener el objeto del grupo "Alumno"
+        try:
+            alumno_group = Group.objects.get(name='Alumno')
+            print('HERE!!')
+        except Group.DoesNotExist:
+            # Si el grupo "Alumno" no existe, puedes crearlo aquí
+            alumno_group = Group.objects.create(name='Alumno')
+
+        # Asignar el grupo "Alumno" al usuario
+        instance.groups.add(alumno_group)
+
+        # Obtener las especialidades del archivo de importación y asignarlas al usuario
+        specialities_names = [specialty.name for specialty in instance.specialties.all()]
+        specialities = Speciality.objects.filter(name__in=specialities_names)
+        instance.specialties.set(specialities)
+
+        # Cifrar la contraseña si es necesario
+        if not dry_run:
+            password = instance.password
             hashed_password = make_password(password)
+            instance.password = hashed_password
 
-            # Crear un nuevo usuario
-            user = CustomUser(username=username, password=hashed_password)
+        super().before_save_instance(instance, using_transactions, dry_run)
 
-            # Asociar el curso al usuario
-            try:
-                course = Course.objects.get(name=course_name)
-                user.course = course
-            except Course.DoesNotExist:
-                # Manejar el caso cuando el curso no existe
-                # Puedes mostrar un mensaje de error o realizar alguna acción apropiada
-                print(f"El curso '{course_name}' no existe")
+    
 
-            # Guardar el usuario
-            user.save()
-
-            # Asociar las especialidades al usuario
-            specialties = Speciality.objects.filter(name__in=specialties_names)
-            user.specialties.set(specialties)
-
-
+'''
 class CustomUserAdminForm(UserChangeForm):
 
     def get_next_id(self):
@@ -168,7 +181,7 @@ class CustomUserAdminForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = CustomUser
         fields = "__all__"
-
+'''
 
 # Clase de filtros y busqueda de usuarios
 class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
@@ -195,7 +208,7 @@ class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
         "specialties__name",
     )
 
-    form = CustomUserAdminForm
+    #form = CustomUserAdminForm
     add_form = UserCreationForm
 
     fieldsets = (
@@ -218,6 +231,9 @@ class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
         ),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
+
+
+
 
 
 # Clase de filtros y busqueda de laboratorios
