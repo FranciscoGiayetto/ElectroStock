@@ -141,7 +141,7 @@ class UserResource(resources.ModelResource):
 
         # Asignar el grupo "Alumno" al usuario
         instance.groups.add(alumno_group)
-
+                #Q solo sea una especialidad
         # Obtener las especialidades del archivo de importación y asignarlas al usuario
         specialities_names = [specialty.name for specialty in instance.specialties.all()]
         specialities = Speciality.objects.filter(name__in=specialities_names)

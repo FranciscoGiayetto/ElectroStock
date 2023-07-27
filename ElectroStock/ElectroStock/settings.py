@@ -364,7 +364,7 @@ EMAIL_USE_TLS = True
 # Redis configuration 
 from datetime import timedelta
 
-CELERY_BROKER_URL = 'redis://default:hU7ZgQnaKpTDOliOy0Vt@containers-us-west-40.railway.app:6872'  # Ejemplo: 'amqp://guest:guest@localhost:5672/'
+CELERY_BROKER_URL = CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/'  # Ejemplo para RabbitMQ
 CELERY_ACCEPT_CONTENT=['json']
 CELERY_TASK_SERIALIZER= 'json'
 CELERY_IMPORTS = ('ElectroStockApp.task',)
