@@ -22,6 +22,8 @@ function DetalleProducto() {
   const { id } = useParams();
 
   useEffect(() => {
+    console.log(userData)
+    
     getElement();
     handleLayoutChange();
     window.addEventListener('resize', handleLayoutChange);
@@ -64,10 +66,10 @@ function DetalleProducto() {
 
 
   const handleSubmit = async (e) => {
-
-    const logData = {
-      box: element.box,
-      borrower: user,
+  
+    let body = {
+      box: 1,
+      borrower: 1,
       lender: null,
       status: 'CAR',
       quantity: 15,
@@ -79,7 +81,7 @@ function DetalleProducto() {
     e.preventDefault();
     try {
         const response = await api.post('/prestamos/', {
-            body: logData,
+            body 
         });
         setPostRes(response.data.response);
       } catch (error) {
