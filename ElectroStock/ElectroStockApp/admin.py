@@ -72,22 +72,25 @@ class ElementAdmin(ImportExportActionModelAdmin):
     )
     search_fields = ["name", "price_usd", "ecommerce", "category__name"]
 
+
 from django.db.models import Max
 from django.contrib.auth.hashers import make_password
 from import_export import resources, fields
 from import_export.widgets import ManyToManyWidget
 
+
 def obtener_siguiente_id_usuario():
-    ultimo_id = CustomUser.objects.aggregate(Max('id'))['id__max']
+    ultimo_id = CustomUser.objects.aggregate(Max("id"))["id__max"]
     siguiente_id = ultimo_id + 1 if ultimo_id is not None else 1
     return siguiente_id
+
 
 # Clase para export-import de usuarios
 class UserResource(resources.ModelResource):
     id = resources.Field(column_name="id", attribute="id")
     nombre = resources.Field(column_name="nombre", attribute="first_name")
     apellido = resources.Field(column_name="apellido", attribute="last_name")
-    contraseña = resources.Field(column_name="contraseña", attribute="password")
+    contraseña = resources.Field(column_name="dni", attribute="password")
     email = resources.Field(column_name="email", attribute="email")
     curso = resources.Field(
         column_name="curso",
@@ -96,11 +99,12 @@ class UserResource(resources.ModelResource):
     especialidades = fields.Field(
         column_name="especialidades",
         attribute="specialties",
-        widget=ManyToManyWidget(Speciality, field='name')
+        widget=ManyToManyWidget(Speciality, field="name"),
     )
-    grupos = resources.Field(
+    grupos = fields.Field(
         column_name="grupos",
-        attribute="groups__name",
+        attribute="groups",
+        widget=ManyToManyWidget(Group, field="name"),
     )
 
     class Meta:
@@ -129,10 +133,10 @@ class UserResource(resources.ModelResource):
 
         # Obtener o crear el objeto "curso" con nombre '4'
         try:
-            course = Course.objects.get(grade='4')
+            course = Course.objects.get(grade="4")
         except Course.DoesNotExist:
             # Si el objeto "curso" con nombre '4' no existe, puedes crearlo aquí
-            course = Course.objects.create(grade='4')
+            course = Course.objects.create(grade="4")
 
         # Asignar el objeto "curso" al campo "course" del usuario
         instance.course = course
@@ -147,38 +151,8 @@ class UserResource(resources.ModelResource):
 
         # Obtener el próximo ID y asignarlo a la instancia
         siguiente_id = obtener_siguiente_id_usuario()
-        print(siguiente_id)
         instance.id = siguiente_id
 
-        
-
-    
-
-'''
-class CustomUserAdminForm(UserChangeForm):
-
-    def get_next_id(self):
-        # Obtener el ID más alto actualmente utilizado
-        max_id = CustomUser.objects.aggregate(models.Max('id'))['id__max']
-        next_id = max_id + 1 if max_id else 1
-        return next_id
-
-    def before_import_row(self, row, **kwargs):
-        # Asignar automáticamente el siguiente ID disponible
-        row['id'] = self.get_next_id()
-
-        # Resto del código para generar el nombre de usuario
-        first_name = row.get('first_name', '')
-        last_name = row.get('last_name', '')
-        username = f"{first_name}{last_name}"
-        row['username'] = username
-
-        super().before_import_row(row, **kwargs)
-
-    class Meta(UserChangeForm.Meta):
-        model = CustomUser
-        fields = "__all__"
-'''
 
 # Clase de filtros y busqueda de usuarios
 class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
@@ -205,7 +179,7 @@ class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
         "specialties__name",
     )
 
-    #form = CustomUserAdminForm
+    # form = CustomUserAdminForm
     add_form = UserCreationForm
 
     fieldsets = (
@@ -228,9 +202,6 @@ class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
         ),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
-
-
-
 
 
 # Clase de filtros y busqueda de laboratorios
@@ -269,27 +240,27 @@ class LogResource(resources.ModelResource):
             "dateOut",
         )
 
+
 from django import forms
+
+
 class LogForm(forms.ModelForm):
     class Meta:
         model = Log
-        fields = '__all__'
+        fields = "__all__"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         pass
 
 
-
 # Clase de filtros y busqueda de los prestamos
 class LogyAdmin(ImportExportActionModelAdmin):
-
     form = LogForm
+
     class Media:
-        js = ('admin/js/log_admin.js',)
+        js = ("admin/js/log_admin.js",)
 
-
-    
     resource_class = LogResource
     list_display = (
         "status",
@@ -326,7 +297,7 @@ class LogyAdmin(ImportExportActionModelAdmin):
                 return
 
         super().save_model(request, obj, form, change)
-    
+
     def get_exclude(self, request, obj=None):
         exclude = super().get_exclude(request, obj)
         if obj and obj.status in [Log.Status.COMPRADO, Log.Status.ROTO]:
@@ -336,7 +307,7 @@ class LogyAdmin(ImportExportActionModelAdmin):
                 "dateOut",
             )
         return exclude
-    
+
 
 # Clase para export-import de boxes
 class BoxResource(resources.ModelResource):
