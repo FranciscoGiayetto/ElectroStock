@@ -155,7 +155,7 @@ class Log(models.Model):
         max_length=30, choices=Status.choices, default=Status.DESAPROBADO
     )
     quantity = models.IntegerField()
-    borrower = models.ForeignKey(
+    borrower = models.ForeignKey( #si este campo da error revisar en el init
         CustomUser,
         on_delete=models.CASCADE,
         related_name="borrowed_logs",
@@ -170,7 +170,7 @@ class Log(models.Model):
     )
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
     observation = models.CharField(max_length=100, null=True, blank=True)
-    dateIn = models.DateField(auto_now=True)
+    dateIn = models.DateField(auto_now=True) #si este campo da error revisar en la init 
     dateOut = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
