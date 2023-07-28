@@ -72,9 +72,15 @@ class ElementAdmin(ImportExportActionModelAdmin):
     )
     search_fields = ["name", "price_usd", "ecommerce", "category__name"]
 
-
+from django.db.models import Max
 from django.contrib.auth.hashers import make_password
+from import_export import resources, fields
+from import_export.widgets import ManyToManyWidget
 
+def obtener_siguiente_id_usuario():
+    ultimo_id = CustomUser.objects.aggregate(Max('id'))['id__max']
+    siguiente_id = ultimo_id + 1 if ultimo_id is not None else 1
+    return siguiente_id
 
 # Clase para export-import de usuarios
 class UserResource(resources.ModelResource):
@@ -87,9 +93,10 @@ class UserResource(resources.ModelResource):
         column_name="curso",
         attribute="course__grade",
     )
-    especialidades = resources.Field(
+    especialidades = fields.Field(
         column_name="especialidades",
-        attribute="specialties__name",
+        attribute="specialties",
+        widget=ManyToManyWidget(Speciality, field='name')
     )
     grupos = resources.Field(
         column_name="grupos",
@@ -98,7 +105,6 @@ class UserResource(resources.ModelResource):
 
     class Meta:
         model = CustomUser
-        #exclude = ('id',) 
         fields = (
             "id",
             "nombre",
@@ -131,22 +137,6 @@ class UserResource(resources.ModelResource):
         # Asignar el objeto "curso" al campo "course" del usuario
         instance.course = course
 
-        # Obtener el objeto del grupo "Alumno"
-        try:
-            alumno_group = Group.objects.get(name='Alumno')
-            print('HERE!!')
-        except Group.DoesNotExist:
-            # Si el grupo "Alumno" no existe, puedes crearlo aquí
-            alumno_group = Group.objects.create(name='Alumno')
-
-        # Asignar el grupo "Alumno" al usuario
-        instance.groups.add(alumno_group)
-                #Q solo sea una especialidad
-        # Obtener las especialidades del archivo de importación y asignarlas al usuario
-        specialities_names = [specialty.name for specialty in instance.specialties.all()]
-        specialities = Speciality.objects.filter(name__in=specialities_names)
-        instance.specialties.set(specialities)
-
         # Cifrar la contraseña si es necesario
         if not dry_run:
             password = instance.password
@@ -154,6 +144,13 @@ class UserResource(resources.ModelResource):
             instance.password = hashed_password
 
         super().before_save_instance(instance, using_transactions, dry_run)
+
+        # Obtener el próximo ID y asignarlo a la instancia
+        siguiente_id = obtener_siguiente_id_usuario()
+        print(siguiente_id)
+        instance.id = siguiente_id
+
+        
 
     
 
