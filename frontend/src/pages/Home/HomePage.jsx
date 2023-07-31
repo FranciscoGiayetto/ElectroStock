@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import officeImage from './office.jpg';
 import './HomePage.css'
+import AdminCard from './AdminCard';
 import { useAuthStore } from '../../store/auth';
 import { getCurrentToken } from '../../utils/auth';
 function HomePage() {
@@ -20,12 +21,12 @@ function HomePage() {
   
   return (
     <div className='container pagecontainer'>
-      <div>
-        <h1>Bienvenido a Scrumtonstock</h1>
+      <div className='bienvenido col-6'>
+        
         <h1>Bienvenido {userData.username} </h1>
       </div>
-      <div>
-      <img src={officeImage} className="img-fluid" alt="" />
+      <div style={{'paddingTop': '5rem'}}>
+      <AdminCard></AdminCard>
     </div>
     </div>
   );

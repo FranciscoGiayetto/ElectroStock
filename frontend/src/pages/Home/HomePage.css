@@ -3,3 +3,9 @@
     z-index: 100;
   }
  */
+
+ .bienvenido{
+  align-items: center;
+  color: black;
+  padding-top: 5rem;
+}
