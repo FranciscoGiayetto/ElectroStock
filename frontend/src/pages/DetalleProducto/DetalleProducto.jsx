@@ -3,15 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { useAuthStore } from '../../store/auth';
 import { getRefreshToken } from '../../utils/auth';
-import useAxios from '../../utils/useAxios'; // Import the useAxios hook
-
+import useAxios from '../../utils/useAxios';
 import defaultpicture from '../../assets/images/defaultpicture.png';
 import './DetalleProducto.css';
 
 function DetalleProducto() {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
-  //console.log(userData);
   const [posRes, setPostRes] = useState('');
   const [element, setElement] = useState(null);
   const [isVerticalLayout, setIsVerticalLayout] = useState(false);
@@ -22,8 +20,7 @@ function DetalleProducto() {
   const { id } = useParams();
 
   useEffect(() => {
-    console.log(userData)
-    
+    console.log(userData);
     getElement();
     handleLayoutChange();
     window.addEventListener('resize', handleLayoutChange);
@@ -33,15 +30,12 @@ function DetalleProducto() {
   }, [id]);
 
   const getElement = async () => {
-    const proxyUrl = 'http://127.0.0.1:8000';
     try {
       const response = await api.get(`/elements/${id}/`);
-       console.log(response)
-        let data = await response.data;
-        setElement(data);
-        console.log(element)
-        
-      
+      console.log(response);
+      let data = await response.data;
+      setElement(data);
+      console.log(element);
     } catch (error) {
       console.error(error);
     }
@@ -62,11 +56,9 @@ function DetalleProducto() {
     }
   };
 
-
-
-
   const handleSubmit = async (e) => {
-  
+    e.preventDefault();
+
     let body = {
       box: 1,
       borrower: 1,
@@ -78,17 +70,13 @@ function DetalleProducto() {
       dateOut: null,
     };
 
-    e.preventDefault();
     try {
-        const response = await api.post('/prestamos/', {
-            body 
-        });
-        setPostRes(response.data.response);
-      } catch (error) {
-          setPostRes(error.response.data);
-      
+      const response = await api.post('/prestamos/', body);
+      setPostRes(response.data.response);
+    } catch (error) {
+      setPostRes(error.response.data);
     }
-};
+  };
 
   return (
     <div className='container pagecontainer'>
