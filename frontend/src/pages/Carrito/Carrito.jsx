@@ -7,7 +7,7 @@ function Carrito() {
   return (
     <div>
       <div className='container container-background'>
-          <h1>{CartCard}</h1>
+          <CartCard/>
         </div>
       </div>
   )

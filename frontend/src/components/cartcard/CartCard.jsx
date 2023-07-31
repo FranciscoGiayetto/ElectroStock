@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default function CartCard(props) {
+export default function CartCard() {
   return (
-    <h1>soy un elemento del carrito</h1>
+    <p>soy un elemento del carrito</p>
   )
 }
