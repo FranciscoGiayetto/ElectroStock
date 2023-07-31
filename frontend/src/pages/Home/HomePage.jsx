@@ -23,7 +23,7 @@ function HomePage() {
     <div className='container pagecontainer'>
       <div className='bienvenido col-6'>
         
-        <h1>Bienvenido {userData.username} </h1>
+        <h1 id='labelBienvenido'>Bienvenido {userData.username} </h1>
       </div>
       <div style={{'paddingTop': '5rem'}}>
       <AdminCard></AdminCard>
