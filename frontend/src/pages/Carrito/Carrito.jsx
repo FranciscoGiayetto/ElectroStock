@@ -4,8 +4,10 @@ import './Carrito.css'
 
 function Carrito() {
   return (
-    <div className='container pagecontainer'>
-      <h1>hola</h1>
+    <div>
+      <div className='container container-background'>
+          <h1>a</h1>
+        </div>
       </div>
   )
 }
