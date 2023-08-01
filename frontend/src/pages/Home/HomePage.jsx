@@ -9,7 +9,7 @@ function HomePage() {
     state.user,
 ]);
   const userData = user()
-  console.log(userData)
+ // console.log(userData)
   return (
     <div className='container pagecontainer'>
       <div>
