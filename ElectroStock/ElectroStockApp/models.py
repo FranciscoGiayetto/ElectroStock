@@ -36,13 +36,8 @@ class Speciality(models.Model):
 
 
 class CustomUser(AbstractUser, PermissionsMixin):
-<<<<<<< HEAD
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True,verbose_name='Curso')
-    specialties = models.ManyToManyField(Speciality, null=True, blank=True,verbose_name='Especialidades')
-=======
     course = models.ForeignKey(Course, on_delete=models.CASCADE,null=True, blank=True)
     specialties = models.ManyToManyField(Speciality, blank=True)
->>>>>>> 3da3be8366f15787cfde6073356a717354e86ea0
 
     # Se agrega related_name a la clave foránea de groups
     groups = models.ManyToManyField(
@@ -162,13 +157,8 @@ class Log(models.Model):
     status = models.CharField(
         max_length=30, choices=Status.choices, default=Status.COMPRADO, verbose_name='Estado',help_text="Para cambiar al modo prestamos, elegir el estado aprobado",
     )
-<<<<<<< HEAD
-    quantity = models.IntegerField(verbose_name='Cantidad')
-    borrower = models.ForeignKey(
-=======
     quantity = models.IntegerField()
     borrower = models.ForeignKey( #si este campo da error revisar en el init
->>>>>>> 3da3be8366f15787cfde6073356a717354e86ea0
         CustomUser,
         on_delete=models.CASCADE,
         related_name="borrowed_logs",
@@ -183,17 +173,10 @@ class Log(models.Model):
         blank=True,
         verbose_name='Prestatario'
     )
-<<<<<<< HEAD
-    box = models.ForeignKey(Box, on_delete=models.CASCADE,verbose_name='Elemento')
-    observation = models.CharField(max_length=100, null=True, blank=True,verbose_name='Observaciones')
-    dateIn = models.DateField(auto_now=True)
-    dateOut = models.DateTimeField(null=True, blank=True,verbose_name='Fecha de devolucion')
-=======
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
     observation = models.CharField(max_length=100, null=True, blank=True)
     dateIn = models.DateField(auto_now=True) #si este campo da error revisar en la init 
     dateOut = models.DateTimeField(null=True, blank=True)
->>>>>>> 3da3be8366f15787cfde6073356a717354e86ea0
 
     def __str__(self):
         return self.status

@@ -73,7 +73,6 @@ class ElementAdmin(ImportExportActionModelAdmin):
     search_fields = ["name", "price_usd", "ecommerce", "category__name"]
 
 
-<<<<<<< HEAD
 from django.db.models import Max
 from django.contrib.auth.hashers import make_password
 from import_export import resources, fields
@@ -106,27 +105,6 @@ class UserResource(resources.ModelResource):
         column_name="grupos",
         attribute="groups",
         widget=ManyToManyWidget(Group, field="name"),
-=======
-from django.contrib.auth.hashers import make_password
-# Clase para export-import de usuarios
-class UserResource(resources.ModelResource):
-    nombre = resources.Field(column_name='nombre', attribute='first_name')
-    apellido = resources.Field(column_name='apellido', attribute='last_name')
-    username = resources.Field(column_name='username', attribute='username')
-    contraseña = resources.Field(column_name='contraseña', attribute='password')
-    email = resources.Field(column_name='email', attribute='email')
-    curso = resources.Field(
-        column_name='curso',
-        attribute='course__grade',
-    )
-    especialidades = resources.Field(
-        column_name='especialidades',
-        attribute='specialties__name',
-    )
-    grupos = resources.Field(
-        column_name='grupos',
-        attribute='groups__name',
->>>>>>> 3da3be8366f15787cfde6073356a717354e86ea0
     )
 
     class Meta:
@@ -143,7 +121,6 @@ class UserResource(resources.ModelResource):
             "grupos",
         )
         export_order = fields
-<<<<<<< HEAD
 
     def before_save_instance(self, instance, using_transactions, dry_run):
         # Generar el nombre de usuario en función de "first_name" y "last_name"
@@ -175,43 +152,6 @@ class UserResource(resources.ModelResource):
         # Obtener el próximo ID y asignarlo a la instancia
         siguiente_id = obtener_siguiente_id_usuario()
         instance.id = siguiente_id
-=======
-    def before_save_instance(self, instance, using_transactions, dry_run):
-        password = instance.password
-        hashed_password = make_password(password)
-        instance.password = hashed_password
-
-    def import_users(self, dataset, using_transactions, dry_run, **kwargs):
-        for row in dataset:
-            username = row['username']
-            password = row['contraseña']
-            course_name = row['curso']
-            specialties_names = row['especialidades'].split(';')
-
-            # Cifrar la contraseña
-            hashed_password = make_password(password)
-
-            # Crear un nuevo usuario
-            user = CustomUser.objects.create(username=username, password=hashed_password)
-
-            # Asociar el curso al usuario
-            try:
-                course = Course.objects.get(name=course_name)
-                user.course = course
-                print('El curso existe ', course, ' ', course_name )
-            except Course.DoesNotExist:
-                # Manejar el caso cuando el curso no existe
-                # Puedes mostrar un mensaje de error o realizar alguna acción apropiada
-                print(f"El curso '{course_name}' no existe")
-
-            # Asociar las especialidades al usuario
-            specialties = Speciality.objects.filter(name__in=specialties_names)
-            user.specialties.set(specialties)
-
-            # Guardar el usuario
-            user.save()
-
->>>>>>> 3da3be8366f15787cfde6073356a717354e86ea0
 
 
 # Clase de filtros y busqueda de usuarios
