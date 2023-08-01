@@ -26,7 +26,7 @@ function HomePage() {
         <h1 id='labelBienvenido'>Bienvenido {userData.username} </h1>
       </div>
       <div style={{'paddingTop': '5rem'}}>
-      <AdminCard></AdminCard>
+      <AdminCard ></AdminCard>
     </div>
     </div>
   );

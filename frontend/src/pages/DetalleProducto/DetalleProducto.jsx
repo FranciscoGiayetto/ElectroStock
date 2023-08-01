@@ -64,7 +64,7 @@ function DetalleProducto() {
       borrower: 1,
       lender: null,
       status: 'CAR',
-      quantity: 15,
+      quantity: null,
       observation: null,
       dateIn: null,
       dateOut: null,
@@ -92,19 +92,7 @@ function DetalleProducto() {
             <h1 className='product-details__category'>Categoría: {element.category}</h1>
             <h1 className='product-details__stock'>Stock: 20</h1>
 
-            <div className='input-group input-group-sm'>
-              <span className='input-group-btn'>
-                <Button variant='secondary' size='sm' onClick={handleDecrement}>
-                  -
-                </Button>
-              </span>
-              <input type='number' className='form-control form-control-sm' value={quantity} readOnly />
-              <span className='input-group-btn'>
-                <Button variant='secondary' size='sm' onClick={handleIncrement}>
-                  +
-                </Button>
-              </span>
-            </div>
+           
             <Button
               className='botonCarrito'
               size='lg'
