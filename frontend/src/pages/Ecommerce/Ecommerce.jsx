@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Ecommerce.css';
 import CardExample from '../../components/card/CardExample';
+import WordList from '../../components/card/filtros';
 import defaultpicture from '../../assets/images/defaultpicture.png';
 import { useSearchParams } from 'react-router-dom';
+
 
 function Ecommerce() {
   const [cards, setCards] = useState([]);
@@ -83,9 +85,10 @@ function Ecommerce() {
 
   return (
     <div className='container' id='ecommerce'>
+      <WordList></WordList>
       <div className='row'>
         {visibleCards.map((card, index) => (
-          <div key={index} className='col-10 col-sm-7 col-md-6 col-lg-3 mb-2'>
+          <div key={index} className='col-10 col-sm-7 col-md-6 col-lg-4 mb-2'>
             <CardExample title={card.name} text={card.description} image={card.image} id={card.id} />
           </div>
         ))}
@@ -101,6 +104,7 @@ function Ecommerce() {
         </div>
       )}
     </div>
+    
   );
 }
 
