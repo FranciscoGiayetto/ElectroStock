@@ -1,14 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import useAxios from '../../utils/useAxios';
+import { useParams } from 'react-router-dom';
 
 const WordList = () => {
-  const words = ["Palabra1", "Palabra2", "Palabra3", "Palabra4", "Palabra5"];
+  const api = useAxios();
+  const { id } = useParams();
+  const [element, setElement] = useState([]);
+  
+  useEffect(() => {
+    getElement();
+  }, []);
 
+  const getElement = async () => {
+    try {
+      const response = await api.get(`/category/`);
+      const data = response.data;
+      setElement(data);
+      console.log(data)
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   return (
     <div className="word-list">
       <h2>Categorias</h2>
       <ul>
-        {words.map((word, index) => (
-          <li key={index}>{word}</li>
+        {element.map((item, i) => (
+          <li key={i}>{item.name}</li>
+    
         ))}
       </ul>
     </div>
