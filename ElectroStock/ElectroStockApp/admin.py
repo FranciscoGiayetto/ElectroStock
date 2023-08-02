@@ -45,16 +45,27 @@ class ElementResource(resources.ModelResource):
             "id",
             "name",
             "description",
-            "price_usd",
-            "category__name",
+            "category",
+            "ecommerce",
         )
         export_order = (
             "id",
             "name",
             "description",
-            "price_usd",
-            "category__name",
+            "category",
+            "ecommerce",
         )
+
+    def before_import_row(self, row, **kwargs):
+        # Buscar la categoría en la base de datos por su nombre
+        category_name = row.get("category")
+        try:
+            category = Category.objects.get(name=category_name)
+        except Category.DoesNotExist:
+            category = None
+
+        # Asignar la categoría encontrada al campo "category" del modelo Element
+        row["category"] = category.pk if category else None
 
 
 # Clase de filtros y busqueda de elementos
@@ -62,6 +73,7 @@ class ElementAdmin(ImportExportActionModelAdmin):
     resource_class = ElementResource
     list_display = (
         "name",
+        "description",
         "price_usd",
         "category",
         "ecommerce",
@@ -70,7 +82,7 @@ class ElementAdmin(ImportExportActionModelAdmin):
         "category",
         "ecommerce",
     )
-    search_fields = ["name", "price_usd", "ecommerce", "category__name"]
+    search_fields = ["name", "price_usd", "ecommerce", "category"]
 
 
 from django.db.models import Max
