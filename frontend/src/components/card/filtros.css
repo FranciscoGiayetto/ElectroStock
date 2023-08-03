@@ -1,23 +1,42 @@
 .word-list {
-    background-color: #f0f0f0;
-    padding: 1rem;
-    width: 200px;
-    position: fixed;
-    top: 100px;
-    left: 20px;
-  }
-  
-  .word-list h2 {
-    margin-top: 0;
-  }
-  
-  .word-list ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .word-list li {
-    margin-bottom: 8px;
-  }
-  
+  background-color: #f9fafb;
+  padding: 2rem;
+  width: 300px;
+  position: fixed;
+  top: 100px;
+  left: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.word-list h2 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.word-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.word-list li {
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+  color: #555;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.word-list li:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.word-list li:hover {
+  background-color: #f0f0f0;
+}
+
+

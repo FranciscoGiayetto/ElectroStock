@@ -81,12 +81,10 @@ function Ecommerce() {
   };
   
   
-  
-
   return (
     <div className='container' id='ecommerce'>
       <div className='row'>
-        <div className='col-md-3 filtros'>
+        <div className='col-md-3' id='filtros'>
           <WordList></WordList>
         </div>
         <div className='col-md-9'>
@@ -114,3 +112,5 @@ function Ecommerce() {
 }
 
 export default Ecommerce;
+
+

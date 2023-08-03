@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useAxios from '../../utils/useAxios';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const WordList = () => {
   const api = useAxios();
@@ -11,10 +12,21 @@ const WordList = () => {
     getElement();
   }, []);
 
+  const handleFilter = () => {
+    console.log('funcionan los links!!')    
+  };
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   const getElement = async () => {
     try {
       const response = await api.get(`/category/`);
-      const data = response.data;
+      const data = response.data.map(category => ({
+        ...category,
+        name: capitalizeFirstLetter(category.name)
+      }));
       setElement(data);
       console.log(data)
     } catch (error) {
@@ -23,12 +35,11 @@ const WordList = () => {
   };
   
   return (
-    <div className="word-list">
+    <div className="word-list" >
       <h2>Categorias</h2>
       <ul>
         {element.map((item, i) => (
-          <li key={i}>{item.name}</li>
-    
+          <li key={i}><Link onClick={handleFilter}>{item.name}</Link></li>
         ))}
       </ul>
     </div>
