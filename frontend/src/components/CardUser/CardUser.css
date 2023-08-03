@@ -1,0 +1,13 @@
+.card {
+    width: 1067px;
+    height: 118px;
+    border: none;
+    background-color: #FFFFFF;
+    text-align: center;
+}
+
+.div {
+    height: auto;
+    width: auto;
+    align-content: center;
+}
