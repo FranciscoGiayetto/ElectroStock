@@ -152,7 +152,7 @@ class Log(models.Model):
         DEVUELTOTARDIO = "TAR", "Tardio"
 
     status = models.CharField(
-        max_length=30, choices=Status.choices, default=Status.DESAPROBADO
+        max_length=30, choices=Status.choices, default=Status.CARRITO
     )
     quantity = models.IntegerField()
     borrower = models.ForeignKey(
@@ -160,6 +160,8 @@ class Log(models.Model):
         on_delete=models.CASCADE,
         related_name="borrowed_logs",
         help_text="Si se ingresa como comprado poner nombre de tu usuario",
+        null=True,
+        blank=True,
     )
     lender = models.ForeignKey(
         CustomUser,
@@ -168,7 +170,8 @@ class Log(models.Model):
         null=True,
         blank=True,
     )
-    box = models.ForeignKey(Box, on_delete=models.CASCADE)
+    box = models.ForeignKey(Box, on_delete=models.CASCADE, null=True,
+        blank=True,)
     observation = models.CharField(max_length=100, null=True, blank=True)
     dateIn = models.DateField(auto_now=True)
     dateOut = models.DateTimeField(null=True, blank=True)

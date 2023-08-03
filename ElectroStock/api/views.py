@@ -5,6 +5,8 @@ from .serializers import *
 from rest_framework import viewsets, permissions, generics
 from .permissions import PermisoUsuarioActual
 from django.db.models import Sum, Value, IntegerField, Q, Count, Case, When
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 # View para los elementos
@@ -144,13 +146,16 @@ class VencidosAPIView(viewsets.ModelViewSet):
 
 
 # View para todos los logs del usuario actual
+
 class PrestamosAPIView(viewsets.ModelViewSet):
     serializer_class = LogSerializer
-    permission_classes = [permissions.AllowAny]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
         return models.Log.objects.filter(lender=user)
+
 
 
 # View para las estadisticas de los productos mas pedidos
