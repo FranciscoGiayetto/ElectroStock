@@ -1,6 +1,7 @@
 import React from 'react';
 
-
+import CardUser from '../../components/CardUser/CardUser.jsx';
+import ListTable from '../../components/ListTable/ListTable.jsx';
 import './DetalleCuenta.css'
 import { useAuthStore } from '../../store/auth';
 
@@ -15,12 +16,12 @@ function DetalleCuenta() {
   return (
     <div className='container pagecontainer'>
       <div>
-        <h1>Informacion de tu cuenta</h1>
-        <h1>{userData.username} </h1>
+        <CardUser></CardUser>
+        <p>Mis Datos</p>
+        <ListTable></ListTable>
+        <p>Mis Prestamos</p>
+        <CardUser></CardUser>
       </div>
-      <div>
-      
-    </div>
     </div>
   );
 }
