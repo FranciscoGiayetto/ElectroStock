@@ -98,6 +98,9 @@ def get_stock(request, element_id):
             total_ped = models.Log.objects.filter(
                 box__id__in=box_ids, status="PED"
             ).aggregate(total=Sum("quantity"))["total"]
+            total_rot = models.Log.objects.filter(
+                box__id__in=box_ids, status="ROT"
+            ).aggregate(total=Sum("quantity"))["total"]
             total_ap = models.Log.objects.filter(
                 box__id__in=box_ids, status="AP"
             ).aggregate(total=Sum("quantity"))["total"]
@@ -108,8 +111,10 @@ def get_stock(request, element_id):
                 total_ped = 0
             if total_ap is None:
                 total_ap = 0
+            if total_rot is None:
+                total_rot = 0
 
-            current_stock = total_com - total_ped - total_ap
+            current_stock = total_com - total_ped - total_ap - total_rot
 
             queryset = models.Log.objects.filter(box__id__in=box_ids, status="COM")
             queryset = queryset.annotate(
