@@ -1,10 +1,11 @@
 .container-background{
-  width: 500px;
-  height: 250px;
+  width: 700px;
+  height: 500px;
   margin: 50px;
   margin-top: 100px;
   border-radius: 20px;
   background-color: white;
+  overflow: auto;
 }
 
 .div-btn{
@@ -12,5 +13,6 @@
 }
 
 .boton{
-  display: table-cell; vertical-align: bottom;
+  position: absolute;
+  bottom: 0;
 }

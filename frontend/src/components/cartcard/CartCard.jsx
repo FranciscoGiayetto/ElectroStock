@@ -13,42 +13,45 @@ import {
 import React from 'react'
 
 export default function CartCard(props) {
-  return (<section>
-    <MDBCard className="mb-3">
-    <MDBCardBody>
-      <div className="d-flex justify-content-between">
-        <div className="d-flex flex-row align-items-center">
-          <div>
-            <MDBCardImage
-              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
-              fluid className="rounded-3" style={{ width: "65px" }}
-              alt="Shopping item" />
-          </div>
-          <div className="ms-3">
-            <MDBTypography tag="h5">
-              Iphone 11 pro
-            </MDBTypography>
-            <p className="small mb-0">256GB, Navy Blue</p>
-          </div>
-        </div>
-        <div className="d-flex flex-row align-items-center">
-          <div style={{ width: "50px" }}>
-            <MDBTypography tag="h5" className="fw-normal mb-0">
-              2
-            </MDBTypography>
-          </div>
-          <div style={{ width: "80px" }}>
-            <MDBTypography tag="h5" className="mb-0">
-              $900
-            </MDBTypography>
-          </div>
-          <a href="#!" style={{ color: "#cecece" }}>
-            <MDBIcon fas icon="trash-alt" />
-          </a>
-        </div>
-      </div>
-    </MDBCardBody>
-  </MDBCard>
-  </section>
+  return (<MDBCard className="rounded-3 mb-4">
+  <MDBCardBody className="p-4">
+    <MDBRow className="justify-content-between align-items-center">
+      <MDBCol md="2" lg="2" xl="2">
+        <MDBCardImage className="rounded-3" fluid
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0T_zFrqWlLoJUpQnghlwjpAsw5PzmPsNSPybjLA_QUA1F83IUz9IN9KRR8dJ-efkXG-k&usqp=CAU"
+          alt="Cotton T-shirt" />
+      </MDBCol>
+      <MDBCol md="3" lg="3" xl="3">
+        <p className="lead fw-normal mb-2">Basic T-shirt</p>
+        <p>
+          <span className="text-muted">Size: </span>M{" "}
+          <span className="text-muted">Color: </span>Grey
+        </p>
+      </MDBCol>
+      <MDBCol md="3" lg="3" xl="2"
+        className="d-flex align-items-center justify-content-around">
+        <MDBBtn color="link" className="px-2">
+          <MDBIcon fas icon="minus" />
+        </MDBBtn>
+
+        <MDBInput min={0} defaultValue={2} type="number" size="sm" />
+
+        <MDBBtn color="link" className="px-2">
+          <MDBIcon fas icon="plus" />
+        </MDBBtn>
+      </MDBCol>
+      <MDBCol md="3" lg="2" xl="2" className="offset-lg-1">
+        <MDBTypography tag="h5" className="mb-0">
+          $499.00
+        </MDBTypography>
+      </MDBCol>
+      <MDBCol md="1" lg="1" xl="1" className="text-end">
+        <a href="#!" className="text-danger">
+          <MDBIcon fas icon="trash text-danger" size="lg" />
+        </a>
+      </MDBCol>
+    </MDBRow>
+  </MDBCardBody>
+</MDBCard>
   )
 }
