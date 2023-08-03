@@ -1,0 +1,27 @@
+/* PrestamosCard.css */
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Agrega otros estilos según tus preferencias */
+
+  /* Ajustar el tamaño del contenedor de la card */
+  width: 400px;
+  /* Ajustar el padding interno para dar más espacio entre los elementos */
+  padding: 20px;
+}
+
+.card h3 {
+  font-size: 20px; /* Aumentar el tamaño de fuente del título */
+  margin-bottom: 12px; /* Aumentar el espacio entre el título y los párrafos */
+}
+
+.card p {
+  font-size: 16px; /* Aumentar el tamaño de fuente de los párrafos */
+  margin-bottom: 8px; /* Aumentar el espacio entre los párrafos */
+}
+
+  

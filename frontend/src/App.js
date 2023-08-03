@@ -17,6 +17,7 @@ import Login from './pages/LoginNuevo/login';
 import PrivateRoute from './layouts/PrivateRoute';
 import Logout from './pages/LoginNuevo/logout';
 import Private from './pages/LoginNuevo/private';
+import MyComponent from './pages/Prestamos/Prestamos';
 
 
 function App() {
@@ -64,6 +65,9 @@ function LayoutWrapper() {
                           </PrivateRoute>} />
       <Route path="/detalleCuenta" element={<PrivateRoute>
         <DetalleCuenta />
+     </PrivateRoute>} />
+     <Route path="/Prestamos" element={<PrivateRoute>
+        <MyComponent />
      </PrivateRoute>} />
       </Routes>
     </Layout>
