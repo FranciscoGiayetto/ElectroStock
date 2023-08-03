@@ -92,7 +92,7 @@ class Command(BaseCommand):
             'potenciómetros',
             'varios',
             'diodos',
-            'resistencias',
+            'resistencias maletines componentes',
             'capacitores electrolíticos',
             'capacitores varios'
         ]
