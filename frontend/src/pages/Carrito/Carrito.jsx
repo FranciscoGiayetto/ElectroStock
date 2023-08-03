@@ -17,7 +17,6 @@ function Carrito() {
           <MDBCol>
             <p>
               <span className="h2">Shopping Cart </span>
-              <span className="h4">(1 item in your cart)</span>
             </p>
 
             <CartCard/>
