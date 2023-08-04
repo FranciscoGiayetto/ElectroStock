@@ -159,7 +159,7 @@ class Log(models.Model):
         ROTO="ROT","Roto"
 
     status = models.CharField(
-        max_length=30, choices=Status.choices, default=Status.COMPRADO, verbose_name='Estado',help_text="Para cambiar al modo prestamos, elegir el estado aprobado",
+        max_length=30, choices=Status.choices, default=Status.CARRITO
     )
     quantity = models.IntegerField(verbose_name='Cantidad')
     borrower = models.ForeignKey( #si este campo da error revisar en el init
@@ -167,7 +167,8 @@ class Log(models.Model):
         on_delete=models.CASCADE,
         related_name="borrowed_logs",
         help_text="Si se ingresa como comprado poner nombre de tu usuario",
-        verbose_name='Profesor'
+        null=True,
+        blank=True,
     )
     lender = models.ForeignKey(
         CustomUser,

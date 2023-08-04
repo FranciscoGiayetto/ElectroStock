@@ -11,6 +11,7 @@ export const login = async (username, password) => {
         });
         if (status === 200) {
             setAuthUser(data.access, data.refresh);
+            console.log(data)
         }
         return { data, error: null };
     } catch (error) {
@@ -64,6 +65,7 @@ export const setAuthUser = (access_token, refresh_token) => {
         expires: 1,
         secure: true,
     });
+    
 
     Cookies.set('refresh_token', refresh_token, {
         expires: 7,
@@ -93,4 +95,11 @@ export const isAccessTokenExpired = (accessToken) => {
     } catch (err) {
         return true; // Token is invalid or expired
     }
+};
+
+
+export const getCurrentToken = async () => {
+    const refresh_token = Cookies.get('refresh_token');
+    
+    return refresh_token;
 };
