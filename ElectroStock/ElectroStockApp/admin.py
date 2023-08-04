@@ -140,7 +140,7 @@ class UserResource(resources.ModelResource):
 
         # Asignar el objeto "curso" al campo "course" del usuario
         instance.course = course
-
+        instance.is_staff= False
         # Cifrar la contraseña si es necesario
         if not dry_run:
             password = instance.password
@@ -244,6 +244,7 @@ class LogResource(resources.ModelResource):
 
 from django import forms
 
+from django.contrib.admin.filters import ChoicesFieldListFilter
 
 class LogForm(forms.ModelForm):
     class Meta:
@@ -253,6 +254,7 @@ class LogForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         pass
+
 
 
 # Clase de filtros y busqueda de los prestamos
@@ -308,6 +310,7 @@ class LogyAdmin(ImportExportActionModelAdmin):
                 "dateOut",
             )
         return exclude
+
 
 
 # Clase para export-import de boxes

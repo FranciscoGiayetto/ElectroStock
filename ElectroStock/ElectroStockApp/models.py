@@ -12,6 +12,10 @@ if not Group.objects.filter(name="Profesor").exists():
     profesor_group = Group.objects.create(name="Profesor")
     profesor_group.permissions.add()
 
+if not Group.objects.filter(name="Jefe de area").exists():
+    profesor_group = Group.objects.create(name="Jefe de area")
+    profesor_group.permissions.add()
+
 
 class Course(models.Model):
     grade = models.IntegerField(verbose_name='Año')
@@ -157,7 +161,7 @@ class Log(models.Model):
     status = models.CharField(
         max_length=30, choices=Status.choices, default=Status.COMPRADO, verbose_name='Estado',help_text="Para cambiar al modo prestamos, elegir el estado aprobado",
     )
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(verbose_name='Cantidad')
     borrower = models.ForeignKey( #si este campo da error revisar en el init
         CustomUser,
         on_delete=models.CASCADE,
@@ -174,9 +178,9 @@ class Log(models.Model):
         verbose_name='Prestatario'
     )
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
-    observation = models.CharField(max_length=100, null=True, blank=True)
+    observation = models.CharField(max_length=100, null=True, blank=True,verbose_name='Observaciones')
     dateIn = models.DateField(auto_now=True) #si este campo da error revisar en la init 
-    dateOut = models.DateTimeField(null=True, blank=True)
+    dateOut = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de devolucion')
 
     def __str__(self):
         return self.status

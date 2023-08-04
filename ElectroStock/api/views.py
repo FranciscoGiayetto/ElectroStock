@@ -291,3 +291,26 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         lender_statistics = serializer.data if serializer.data else None
         return Response(lender_statistics)
+
+from rest_framework import status
+#View elementos mas rotos
+class BoxMasLogsRotos(generics.ListAPIView):
+    def get(self, request):
+        # Utiliza annotate para contar los logs con status="ROTO" en cada Box
+        boxes_con_logs_rotos = models.Box.objects.annotate(num_logs_rotos=Count('log', filter=models.Log.objects.filter(status='ROTO')))
+
+        # Ordena los boxes de mayor a menor cantidad de logs roto
+        boxes_ordenados = boxes_con_logs_rotos.order_by('-num_logs_rotos')
+
+        # Obtén el box con más logs roto (el primero de la lista)
+        box_mas_logs_rotos = boxes_ordenados.first()
+
+        # Puedes devolver solo el nombre o cualquier otro dato que necesites
+        if box_mas_logs_rotos:
+            response_data = {
+                'box_nombre': box_mas_logs_rotos.name,
+                'cantidad_logs_rotos': box_mas_logs_rotos.num_logs_rotos,
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'No hay logs con status "ROTO".'}, status=status.HTTP_404_NOT_FOUND)
