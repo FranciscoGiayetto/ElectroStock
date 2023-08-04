@@ -12,6 +12,10 @@ class Command(BaseCommand):
         insumos, _ = Category.objects.get_or_create(name='insumos')
         maletines_componentes, _ = Category.objects.get_or_create(name='maletines componentes')
         kits_arduino, _ = Category.objects.get_or_create(name='kits arduino')
+        maletines, _ = Category.objects.get_or_create(name='maletines')
+        lockers, _ = Category.objects.get_or_create(name='lockers')
+        armario, _ = Category.objects.get_or_create(name='armario')
+        
         
         # Agregar cursos
         grades = [4, 5, 6, 7]
