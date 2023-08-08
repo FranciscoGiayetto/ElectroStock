@@ -32,10 +32,7 @@ function Carrito() {
             <CartCard/>
 
         <div className="d-flex justify-content-end">
-              <MDBBtn color="light" size="lg" className="me-2">
-                Continue shopping
-              </MDBBtn>
-              <MDBBtn size="lg">Add to cart</MDBBtn>
+              <button className="btn btn-primary btn-sm">Continuar</button>
             </div>
           </MDBCol>
         </MDBRow>
