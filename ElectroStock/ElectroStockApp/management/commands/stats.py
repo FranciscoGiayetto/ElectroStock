@@ -15,6 +15,7 @@ class Command(BaseCommand):
         maletines, _ = Category.objects.get_or_create(name='maletines')
         lockers, _ = Category.objects.get_or_create(name='lockers')
         armario, _ = Category.objects.get_or_create(name='armario')
+        repuestos, _ = Category.objects.get_or_create(name='repuestos')
         
         
         # Agregar cursos
