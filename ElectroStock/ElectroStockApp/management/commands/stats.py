@@ -1,11 +1,33 @@
 from django.core.management.base import BaseCommand
 from ElectroStockApp.models import Speciality, Laboratory, Course, Category, Element
+from django.contrib.auth import get_user_model
 
-
+User = get_user_model()
 class Command(BaseCommand):
     help = 'Carga de datos iniciales en la base de datos'
 
     def handle(self, *args, **options):
+
+        #users
+        especialidad_electronica = Speciality.objects.get(name='electronica')
+        usuarios_data = [
+            {'username': 'Michalik', 'especialidad': especialidad_electronica},
+            {'username': 'Vettorello', 'especialidad': especialidad_electronica},
+            {'username': 'Córdoba', 'especialidad': especialidad_electronica},
+            {'username': 'Remedi', 'especialidad': especialidad_electronica},
+        ]
+
+        for usuario_data in usuarios_data:
+            username = usuario_data['username']
+            especialidad = usuario_data['especialidad']
+
+            if not User.objects.filter(username=username).exists():
+                user = User.objects.create_user(username=username)
+                user.specialties.add(especialidad)
+                user.save()
+                print('Usuario creado')
+
+
         # Categorias padre
         equipos, _ = Category.objects.get_or_create(name='equipos')
         componentes, _ = Category.objects.get_or_create(name='componentes')
