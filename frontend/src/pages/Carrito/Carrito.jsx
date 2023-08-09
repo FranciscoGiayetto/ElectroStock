@@ -1,15 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Carrito.css';
 import CartCard from '../../components/cartcard/CartCard';
 import {
-  MDBBtn,
   MDBCol,
   MDBContainer,
   MDBRow,
   } from "mdb-react-ui-kit";
+import useAxios from "../../utils/useAxios";
 
 function Carrito() {
+  const api = useAxios(); 
+  const [carrito, setCarrito] = useState(null);
+
+  useEffect(() => {
+    getCarrito();
+  }, []);
+
+  const getCarrito = async () => {
+    try {
+      const response = await api.get(`/carrito/`);
+      let data = await response.data;
+      setCarrito(data);
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <section className="container-bg" style={{ backgroundColor: "white"}}>
       <MDBContainer className="h-100">
