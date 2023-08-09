@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import *
 from rest_framework import routers
+from rest_framework.authtoken.views import obtain_auth_token
 
 
 router = routers.DefaultRouter()
@@ -14,13 +15,13 @@ router.register("course", CourseViewSet, "course")
 router.register("laboratory", LaboratorioViewSet, "laboratory")
 router.register("location", LocationViewSet, "location")
 router.register("box", BoxViewSet, "box")
-router.register("prestamos", PrestamoVerAPIView, "prestamos")
 router.register("especialidad", SpecialityViewSet, "especialidad")
-router.register("carrito", CarritoAPIView, "carrito")
-router.register("vencidos", VencidosAPIView, "vencidos")
-router.register("prestamosdetalle", PrestamosAPIView, "prestamosdetalle")
 
 urlpatterns = [
+    path("carrito/<int:user_id>/", carrito, name="carrito"),
+    path("vencidos/<int:user_id>/", VencidosAPIView, name="vencidos"),
+    path("presatmosActuales/<int:user_id>/", PrestamosActualesView, name="prestamosActuales"),
+    path("prestamosHistorial/<int:user_id>/", PrestamoVerAPIView, name="prestamosHistorial"),
     path("stock/<int:element_id>/", get_stock, name="stock"),
     path(
         "estadisticas/maspedido/",
@@ -36,3 +37,5 @@ urlpatterns = [
     path('estadisticas/box_mas_logs_rotos/', BoxMasLogsRotos.as_view(), name='box_mas_logs_rotos'),
     
 ] + router.urls
+
+

@@ -23,17 +23,29 @@ class ProductosEcommerceAPIView(viewsets.ModelViewSet):
     serializer_class = ElementEcommerceSerializer
 
 
-# View para los prestamos con el usuario actual
-class PrestamoVerAPIView(viewsets.ModelViewSet):
-    permission_classes = [PermisoUsuarioActual]
-    serializer_class = LogSerializer
+@api_view(["GET", "POST"])
+def PrestamoVerAPIView(request, user_id):
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.PEDIDO,
+            models.Log.Status.DESAPROBADO,
+            models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTOTARDIO
+        ]
+        
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
-    def get_queryset(self):
-        user = self.request.user
-        return models.Log.objects.filter(borrower=user)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
 
-    queryset = get_queryset
-
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
 
 # View para las categorias
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -130,24 +142,36 @@ def get_stock(request, element_id):
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
 
-# View para todos los logs con el estado carrito y que el usuario haya pedido
-class CarritoAPIView(viewsets.ModelViewSet):
-    serializer_class = LogSerializer
-    permission_classes = [permissions.AllowAny]
+@api_view(["GET", "POST"])
+def carrito(request, user_id):
+    if request.method == "GET":
+        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.CARRITO)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
 
-    def get_queryset(self):
-        user = self.request.user
-        return models.Log.objects.filter(lender=user, status=models.Log.Status.CARRITO)
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
 
+@api_view(["GET", "POST"])
+def VencidosAPIView(request, user_id):
+    if request.method == "GET":
+        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.VENCIDO)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
 
-# View para todos los logs con el estado vencido y que el usuario haya pedido
-class VencidosAPIView(viewsets.ModelViewSet):
-    serializer_class = LogSerializer
-    permission_classes = [permissions.AllowAny]
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
 
-    def get_queryset(self):
-        user = self.request.user
-        return models.Log.objects.filter(lender=user, status=models.Log.Status.VENCIDO)
 
 
 # View para todos los logs del usuario actual
@@ -162,6 +186,26 @@ class PrestamosAPIView(viewsets.ModelViewSet):
         return models.Log.objects.filter(lender=user)
 
 
+@api_view(["GET", "POST"])
+def PrestamosActualesView(request, user_id):
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.VENCIDO,
+        ]
+        
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
 
 # View para las estadisticas de los productos mas pedidos
 class MostRequestedElementView(generics.ListAPIView):
