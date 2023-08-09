@@ -1,7 +1,7 @@
 #  <p align="center">🔧 PROYECTO FINAL 2023 🔧</p>
 ***
 
-## 🖊️ INTRODUCCION 🖊️
+## 🖊️ INTRODUCCION 🖊️.
 
 ## FUNCIONALIDADES 
 
