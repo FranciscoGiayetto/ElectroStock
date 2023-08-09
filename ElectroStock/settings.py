@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-ff=y)c_ri$c_l3)#zz#%)8&gffn85+^5vo)+enx*6t1jov8*ok
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'fatg2-2023-villada-v4h9-dev.fl0.io'
+    '*'
 ]
 
 
