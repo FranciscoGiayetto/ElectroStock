@@ -25,9 +25,8 @@ SECRET_KEY = "django-insecure-ff=y)c_ri$c_l3)#zz#%)8&gffn85+^5vo)+enx*6t1jov8*ok
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '*'
-]
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://fatg2-2023-villada-v4h9-dev.fl0.io','https://*.127.0.0.1']
 
 
 # Application definition
