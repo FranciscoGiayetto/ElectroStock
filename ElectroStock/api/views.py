@@ -150,9 +150,6 @@ def carrito(request, user_id):
         return Response(serializer.data)
     
     if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-
         return Response({"message": "Elemento agregado al carrito"})
     
     return Response(status=405)
@@ -163,12 +160,7 @@ def VencidosAPIView(request, user_id):
         queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.VENCIDO)
         serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data)
-    
-    if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
 
-        return Response({"message": "Elemento agregado al carrito"})
     
     return Response(status=405)
 
@@ -179,13 +171,7 @@ def PendientesAPIView(request, user_id):
         queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.PEDIDO)
         serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data)
-    
-    if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
 
-        return Response({"message": "Elemento agregado al carrito"})
-    
     return Response(status=405)
 
 # View para todos los logs del usuario actual
@@ -212,13 +198,6 @@ def PrestamosActualesView(request, user_id):
 
         serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data)
-    
-    if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-
-        return Response({"message": "Elemento agregado al carrito"})
-    
     return Response(status=405)
 
 # View para las estadisticas de los productos mas pedidos
