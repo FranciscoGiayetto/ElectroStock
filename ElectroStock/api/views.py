@@ -23,6 +23,7 @@ class ProductosEcommerceAPIView(viewsets.ModelViewSet):
     serializer_class = ElementEcommerceSerializer
 
 
+
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
     if request.method == "GET":
@@ -214,9 +215,6 @@ def PrestamosActualesView(request, user_id):
         return Response(serializer.data)
     
     if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-
         return Response({"message": "Elemento agregado al carrito"})
     
     return Response(status=405)
