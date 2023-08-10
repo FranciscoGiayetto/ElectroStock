@@ -6,6 +6,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import './login.css';
+import Logo from './logo';
 const Login = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
@@ -74,6 +75,9 @@ const Login = () => {
               <Button className='text-center rounded-5 ' size='lg' style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0'}} variant="primary" type="submit">
                 Ingresar
           </Button>
+          <Button className='text-center rounded-5 ' size='lg' style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0'}} variant="primary" href='/signup'>
+                Registrarse
+          </Button>
         </div>
       </div>
     </Form>
@@ -91,12 +95,6 @@ const Login = () => {
 
 
 
-function Logo() {
-    return (
-      <div style={{ display: "block", width: 300, padding: 20 }}>
-        <img src={require('../../assets/img-prod/logo.png')} className='img-fluid logo' alt='...' />
-      </div>
-    );
-  }
+
   
 export default Login;
