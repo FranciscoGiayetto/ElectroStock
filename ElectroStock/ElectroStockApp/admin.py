@@ -3,6 +3,7 @@ from .models import *
 from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 # Para arreglar el erro del export tenes que cambiar de la funcion ExportActionMixin- export_action_action ---> export_format = 1
 
@@ -72,36 +73,92 @@ class ElementAdmin(ImportExportActionModelAdmin):
     search_fields = ["name", "price_usd", "ecommerce", "category__name"]
 
 
+from django.db.models import Max
+from django.contrib.auth.hashers import make_password
+from import_export import resources, fields
+from import_export.widgets import ManyToManyWidget
+
+
+def obtener_siguiente_id_usuario():
+    ultimo_id = CustomUser.objects.aggregate(Max("id"))["id__max"]
+    siguiente_id = ultimo_id + 1 if ultimo_id is not None else 1
+    return siguiente_id
+
+
 # Clase para export-import de usuarios
 class UserResource(resources.ModelResource):
+    id = resources.Field(column_name="id", attribute="id")
+    nombre = resources.Field(column_name="nombre", attribute="first_name")
+    apellido = resources.Field(column_name="apellido", attribute="last_name")
+    contraseña = resources.Field(column_name="dni", attribute="password")
+    email = resources.Field(column_name="email", attribute="email")
+    curso = resources.Field(
+        column_name="curso",
+        attribute="course__grade",
+    )
+    especialidades = fields.Field(
+        column_name="especialidades",
+        attribute="specialties",
+        widget=ManyToManyWidget(Speciality, field="name"),
+    )
+    grupos = fields.Field(
+        column_name="grupos",
+        attribute="groups",
+        widget=ManyToManyWidget(Group, field="name"),
+    )
+
     class Meta:
         model = CustomUser
         fields = (
             "id",
-            "first_name",
-            "last_name",
+            "nombre",
+            "apellido",
             "username",
+            "contraseña",
             "email",
-            "course",
-            "specialties",
-            "groups__name",
+            "curso",
+            "especialidades",
+            "grupos",
         )
-        export_order = (
-            "id",
-            "first_name",
-            "last_name",
-            "username",
-            "email",
-            "course",
-            "specialties",
-            "groups__name",
-        )
+        export_order = fields
+
+    def before_save_instance(self, instance, using_transactions, dry_run):
+        # Generar el nombre de usuario en función de "first_name" y "last_name"
+        first_name = instance.first_name
+        last_name = instance.last_name
+        username = f"{first_name}{last_name}"
+
+        # Asignar el nombre de usuario generado al campo "username"
+        instance.username = username
+
+        # Obtener o crear el objeto "curso" con nombre '4'
+        try:
+            course = Course.objects.get(grade="4")
+        except Course.DoesNotExist:
+            # Si el objeto "curso" con nombre '4' no existe, puedes crearlo aquí
+            course = Course.objects.create(grade="4")
+
+        # Asignar el objeto "curso" al campo "course" del usuario
+        instance.course = course
+        instance.is_staff= False
+        # Cifrar la contraseña si es necesario
+        if not dry_run:
+            password = instance.password
+            hashed_password = make_password(password)
+            instance.password = hashed_password
+
+        super().before_save_instance(instance, using_transactions, dry_run)
+
+        # Obtener el próximo ID y asignarlo a la instancia
+        siguiente_id = obtener_siguiente_id_usuario()
+        instance.id = siguiente_id
 
 
 # Clase de filtros y busqueda de usuarios
 class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
     resource_class = UserResource
     list_display = (
+        "id",
         "username",
         "email",
         "course",
@@ -121,6 +178,30 @@ class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
         "groups",
         "course__grade",
         "specialties__name",
+    )
+
+    # form = CustomUserAdminForm
+    add_form = UserCreationForm
+
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        (
+            "Personal info",
+            {"fields": ("first_name", "last_name", "email", "course", "specialties")},
+        ),
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                )
+            },
+        ),
+        ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
 
 
@@ -161,8 +242,28 @@ class LogResource(resources.ModelResource):
         )
 
 
+from django import forms
+
+from django.contrib.admin.filters import ChoicesFieldListFilter
+
+class LogForm(forms.ModelForm):
+    class Meta:
+        model = Log
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        pass
+
+
+
 # Clase de filtros y busqueda de los prestamos
 class LogyAdmin(ImportExportActionModelAdmin):
+    form = LogForm
+
+    class Media:
+        js = ("admin/js/log_admin.js",)
+
     resource_class = LogResource
     list_display = (
         "status",
@@ -199,6 +300,17 @@ class LogyAdmin(ImportExportActionModelAdmin):
                 return
 
         super().save_model(request, obj, form, change)
+
+    def get_exclude(self, request, obj=None):
+        exclude = super().get_exclude(request, obj)
+        if obj and obj.status in [Log.Status.COMPRADO, Log.Status.ROTO]:
+            exclude = exclude or ()
+            exclude += (
+                "lender",
+                "dateOut",
+            )
+        return exclude
+
 
 
 # Clase para export-import de boxes
@@ -258,7 +370,15 @@ class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
         approved_element_count = Log.objects.filter(box=obj, status="COM").aggregate(
             total=models.Sum("quantity")
         )["total"]
-        return approved_element_count if approved_element_count is not None else 0
+        rotos = Log.objects.filter(box=obj, status="ROT").aggregate(
+            total=models.Sum("quantity")
+        )["total"]
+        if rotos is None:
+            rotos = 0
+        if approved_element_count is None:
+            approved_element_count = 0
+        stock = approved_element_count - rotos
+        return stock
 
     # El nombre que aparece de la fila
     get_logs.short_description = "Stock"
@@ -291,6 +411,9 @@ class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
         total_ar = Log.objects.filter(box=obj, status="AP").aggregate(
             total=models.Sum("quantity")
         )["total"]
+        total_rot = Log.objects.filter(box=obj, status="ROT").aggregate(
+            total=models.Sum("quantity")
+        )["total"]
         total_ped = Log.objects.filter(box=obj, status="PED").aggregate(
             total=models.Sum("quantity")
         )["total"]
@@ -300,8 +423,10 @@ class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
             total_ar = 0
         if total_ped is None:
             total_ped = 0
+        if total_rot is None:
+            total_rot = 0
 
-        current_stock = total_com - total_ar - total_ped
+        current_stock = total_com - total_ar - total_ped - total_rot
         return current_stock
 
     # El nombre que aparece de la fila

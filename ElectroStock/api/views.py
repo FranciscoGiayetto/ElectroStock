@@ -23,17 +23,29 @@ class ProductosEcommerceAPIView(viewsets.ModelViewSet):
     serializer_class = ElementEcommerceSerializer
 
 
-# View para los prestamos con el usuario actual
-class PrestamoVerAPIView(viewsets.ModelViewSet):
-    permission_classes = [PermisoUsuarioActual]
-    serializer_class = LogSerializer
+@api_view(["GET", "POST"])
+def PrestamoVerAPIView(request, user_id):
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.PEDIDO,
+            models.Log.Status.DESAPROBADO,
+            models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTOTARDIO
+        ]
+        
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
-    def get_queryset(self):
-        user = self.request.user
-        return models.Log.objects.filter(borrower=user)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
 
-    queryset = get_queryset
-
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
 
 # View para las categorias
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -98,6 +110,9 @@ def get_stock(request, element_id):
             total_ped = models.Log.objects.filter(
                 box__id__in=box_ids, status="PED"
             ).aggregate(total=Sum("quantity"))["total"]
+            total_rot = models.Log.objects.filter(
+                box__id__in=box_ids, status="ROT"
+            ).aggregate(total=Sum("quantity"))["total"]
             total_ap = models.Log.objects.filter(
                 box__id__in=box_ids, status="AP"
             ).aggregate(total=Sum("quantity"))["total"]
@@ -108,8 +123,10 @@ def get_stock(request, element_id):
                 total_ped = 0
             if total_ap is None:
                 total_ap = 0
+            if total_rot is None:
+                total_rot = 0
 
-            current_stock = total_com - total_ped - total_ap
+            current_stock = total_com - total_ped - total_ap - total_rot
 
             queryset = models.Log.objects.filter(box__id__in=box_ids, status="COM")
             queryset = queryset.annotate(
@@ -125,23 +142,51 @@ def get_stock(request, element_id):
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
 
-# View para todos los logs con el estado carrito y que el usuario haya pedido
-class CarritoAPIView(viewsets.ModelViewSet):
-    serializer_class = LogSerializer
-    permission_classes = [permissions.AllowAny]
-    queryset=models.Log.objects.filter( status=models.Log.Status.CARRITO)
+@api_view(["GET", "POST"])
+def carrito(request, user_id):
+    if request.method == "GET":
+        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.CARRITO)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
     
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
+
+@api_view(["GET", "POST"])
+def VencidosAPIView(request, user_id):
+    if request.method == "GET":
+        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.VENCIDO)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
 
 
-# View para todos los logs con el estado vencido y que el usuario haya pedido
-class VencidosAPIView(viewsets.ModelViewSet):
-    serializer_class = LogSerializer
-    permission_classes = [permissions.AllowAny]
+@api_view(["GET", "POST"])
+def PendientesAPIView(request, user_id):
+    if request.method == "GET":
+        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.PEDIDO)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
 
-    def get_queryset(self):
-        user = self.request.user
-        return models.Log.objects.filter(lender=user, status=models.Log.Status.VENCIDO)
-
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
 
 # View para todos los logs del usuario actual
 
@@ -155,6 +200,26 @@ class PrestamosAPIView(viewsets.ModelViewSet):
         return models.Log.objects.filter(lender=user)
 
 
+@api_view(["GET", "POST"])
+def PrestamosActualesView(request, user_id):
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.VENCIDO,
+        ]
+        
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
 
 # View para las estadisticas de los productos mas pedidos
 class MostRequestedElementView(generics.ListAPIView):
@@ -289,3 +354,26 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         lender_statistics = serializer.data if serializer.data else None
         return Response(lender_statistics)
+
+from rest_framework import status
+#View elementos mas rotos
+class BoxMasLogsRotos(generics.ListAPIView):
+    def get(self, request):
+        # Utiliza annotate para contar los logs con status="ROTO" en cada Box
+        boxes_con_logs_rotos = models.Box.objects.annotate(num_logs_rotos=Count('log', filter=models.Log.objects.filter(status='ROTO')))
+
+        # Ordena los boxes de mayor a menor cantidad de logs roto
+        boxes_ordenados = boxes_con_logs_rotos.order_by('-num_logs_rotos')
+
+        # Obtén el box con más logs roto (el primero de la lista)
+        box_mas_logs_rotos = boxes_ordenados.first()
+
+        # Puedes devolver solo el nombre o cualquier otro dato que necesites
+        if box_mas_logs_rotos:
+            response_data = {
+                'box_nombre': box_mas_logs_rotos.name,
+                'cantidad_logs_rotos': box_mas_logs_rotos.num_logs_rotos,
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'No hay logs con status "ROTO".'}, status=status.HTTP_404_NOT_FOUND)
