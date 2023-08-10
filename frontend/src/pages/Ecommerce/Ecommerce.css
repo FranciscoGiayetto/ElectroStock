@@ -35,8 +35,11 @@ body {
 
 #ecommerce{
   margin-top: 6rem;
-  margin-left: 4rem;
-  align-items: center;
+ 
+  align-items: right;
+}
+#filtros{
+
 }
 
 .mb-4 {
@@ -55,3 +58,4 @@ body {
     margin-bottom: 0.5rem; /* Espacio aún más pequeño en pantallas más pequeñas */
   }
 }
+
