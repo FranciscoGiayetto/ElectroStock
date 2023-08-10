@@ -8,18 +8,26 @@ import {
   MDBRow,
   } from "mdb-react-ui-kit";
 import useAxios from "../../utils/useAxios";
+import { useAuthStore } from '../../store/auth';
 
 function Carrito() {
   const api = useAxios(); 
   const [carrito, setCarrito] = useState(null);
+  const [isLoggedIn, user] = useAuthStore((state) => [
+    state.isLoggedIn,
+    state.user,
+]);
+  const userData = user()
 
   useEffect(() => {
+    
     getCarrito();
   }, []);
 
   const getCarrito = async () => {
     try {
-      const response = await api.get(`/carrito/`);
+      console.log(userData.user_id)
+      const response = await api.get(`/carrito/${userData.user_id}`);
       let data = await response.data;
       setCarrito(data);
       console.log(data);
@@ -34,7 +42,7 @@ function Carrito() {
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol>
             <p>
-              <span className="h2">Shopping Cart </span>
+              <span className="h2">Shopping Cart</span>
             </p>
 
             

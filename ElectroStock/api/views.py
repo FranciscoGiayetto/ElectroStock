@@ -129,10 +129,8 @@ def get_stock(request, element_id):
 class CarritoAPIView(viewsets.ModelViewSet):
     serializer_class = LogSerializer
     permission_classes = [permissions.AllowAny]
-
-    def get_queryset(self):
-        user = self.request.user
-        return models.Log.objects.filter(lender=user, status=models.Log.Status.CARRITO)
+    queryset=models.Log.objects.filter( status=models.Log.Status.CARRITO)
+    
 
 
 # View para todos los logs con el estado vencido y que el usuario haya pedido
