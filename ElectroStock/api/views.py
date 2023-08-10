@@ -173,6 +173,20 @@ def VencidosAPIView(request, user_id):
     return Response(status=405)
 
 
+@api_view(["GET", "POST"])
+def PendientesAPIView(request, user_id):
+    if request.method == "GET":
+        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.PEDIDO)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
 
 # View para todos los logs del usuario actual
 
