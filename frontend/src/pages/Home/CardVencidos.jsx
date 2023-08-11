@@ -16,11 +16,16 @@ import {
   MDBTableHead,
   MDBTableBody,
 } from 'mdb-react-ui-kit';
+import { useAuthStore } from '../../store/auth';
+ 
 
 const CardVencidos = () => {
     const api = useAxios();
-    const  userId  = 1;
     const [element, setElement] = useState([]);
+        const [isLoggedIn, user] = useAuthStore((state) => [
+  state.isLoggedIn,
+  state.user,
+]);
 
     useEffect(() => {
         getElement();
@@ -28,10 +33,8 @@ const CardVencidos = () => {
 
 const getElement = async () => {
     try {
-        const response = await api.get(`/vencidos/${userId}`);
-        const data = response.data.map(category => ({
-        ...category,
-        }));
+        const response = await api.get(`/vencidos/${userData.user_id}`);
+        let data = await response.data;
         setElement(data);
         console.log(data)
     } catch (error) {
@@ -39,7 +42,9 @@ const getElement = async () => {
     }
 };
 
-        
+const userData = user()
+
+
 
   return (
     <MDBCard alignment='left'>
