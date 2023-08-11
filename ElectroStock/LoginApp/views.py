@@ -10,7 +10,7 @@ from ElectroStockApp.models import CustomUser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 import json
-
+from ElectroStockApp import models
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -21,6 +21,22 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        # Agregar el usuario al grupo de Profesor
+        profesor_group = models.Group.objects.get(name="Profesor")
+        user.groups.add(profesor_group)
+
+        # Obtener las especialidades seleccionadas
+        speciality_ids = request.data.get("selectedSpecialities", [])
+        specialities = models.Speciality.objects.filter(pk__in=speciality_ids)
+        user.specialties.set(specialities)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 @api_view(['GET'])
 def getRoutes(request):
