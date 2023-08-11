@@ -182,7 +182,7 @@ function Register() {
                                     ))}
                                         </Form.Group>
                                     <div>
-                                        <div className='text-center'>
+                                        <div className='text-center' style={{paddingTop:"1rem"}}>
                                             <Button className='text-center rounded-5 ' size='lg' style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0' }} variant="primary" type="submit">
                                                 Crear Cuenta
                                             </Button>
