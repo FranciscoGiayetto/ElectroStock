@@ -342,6 +342,12 @@ class BoxResource(resources.ModelResource):
             "element__name",
             "location__name",
         )
+    def before_import_row(self, row, **kwargs):
+        location_name = row.get('location__name')
+        if location_name:
+            location, created = Location.objects.get_or_create(name=location_name)
+            row['location__name'] = location.name
+            row['location_id'] = location.id
 
 
 # Clase de filtros y busqueda de box
