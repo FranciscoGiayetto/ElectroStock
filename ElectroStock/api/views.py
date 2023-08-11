@@ -31,21 +31,22 @@ def PrestamoVerAPIView(request, user_id):
             models.Log.Status.PEDIDO,
             models.Log.Status.DESAPROBADO,
             models.Log.Status.VENCIDO,
-            models.Log.Status.DEVUELTOTARDIO
+            models.Log.Status.DEVUELTOTARDIO,
         ]
-        
+
         queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
         serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data)
-    
+
     if request.method == "POST":
         # Realiza acciones necesarias para agregar elementos al carrito
         # ...
 
         return Response({"message": "Elemento agregado al carrito"})
-    
+
     return Response(status=405)
+
 
 # View para las categorias
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -145,36 +146,56 @@ def get_stock(request, element_id):
 @api_view(["GET", "POST"])
 def carrito(request, user_id):
     if request.method == "GET":
-        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.CARRITO)
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.CARRITO
+        )
         serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data)
-    
+
     if request.method == "POST":
         return Response({"message": "Elemento agregado al carrito"})
-    
+
     return Response(status=405)
+
 
 @api_view(["GET", "POST"])
 def VencidosAPIView(request, user_id):
     if request.method == "GET":
-        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.VENCIDO)
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.VENCIDO
+        )
         serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+
+        return Response({"message": "Elemento agregado al carrito"})
+
     return Response(status=405)
 
 
 @api_view(["GET", "POST"])
 def PendientesAPIView(request, user_id):
     if request.method == "GET":
-        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.PEDIDO)
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.PEDIDO
+        )
         serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+
+        return Response({"message": "Elemento agregado al carrito"})
+
     return Response(status=405)
 
+
 # View para todos los logs del usuario actual
+
 
 class PrestamosAPIView(viewsets.ModelViewSet):
     serializer_class = LogSerializer
@@ -193,21 +214,29 @@ def PrestamosActualesView(request, user_id):
             models.Log.Status.APROBADO,
             models.Log.Status.VENCIDO,
         ]
-        
+
         queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
         serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data)
+
+    if request.method == "POST":
+        return Response({"message": "Elemento agregado al carrito"})
+
     return Response(status=405)
+
 
 # View para las estadisticas de los productos mas pedidos
 class MostRequestedElementView(generics.ListAPIView):
     serializer_class = ElementSerializer
 
     def get_queryset(self):
-        # Obtener el elemento más pedido (basado en la cantidad de préstamos registrados)
+        current_year = timezone.now().year
         queryset = (
-            models.Element.objects.filter(box__log__status=models.Log.Status.APROBADO)
+            models.Element.objects.filter(
+                box__log__status=models.Log.Status.APROBADO,
+                box__log__dateIn__year=current_year,
+            )
             .annotate(
                 num_borrowed_logs=Count(
                     "box__log", filter=Q(box__log__status=models.Log.Status.APROBADO)
@@ -223,11 +252,15 @@ class MostRequestedElementView(generics.ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         response_data = []
 
+        current_year = (
+            timezone.now().year
+        )  # Agregar esta línea para definir la variable current_year
+
         for item in serializer.data:
             element_data = item.copy()
             element_id = item["id"]
             num_borrowed_logs = models.Log.objects.filter(
-                box__element_id=element_id, status="AP"
+                box__element_id=element_id, status="AP", dateIn__year=current_year
             ).count()
             element_data["num_borrowed_logs"] = num_borrowed_logs
             response_data.append(element_data)
@@ -237,11 +270,16 @@ class MostRequestedElementView(generics.ListAPIView):
 
 # view para la estaditica del porcentaje de prestamos aprobados
 class LogStatisticsView(generics.ListAPIView):
-    queryset = models.Log.objects.all()
     serializer_class = LogStatisticsSerializer
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        current_year = timezone.now().year
+        queryset = models.Log.objects.filter(dateIn__year=current_year)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
         statistics = queryset.aggregate(
             total_logs=Count("id"),
             approved_logs=Sum(
@@ -251,17 +289,26 @@ class LogStatisticsView(generics.ListAPIView):
                 Case(When(status="DAP", then=1), default=0, output_field=IntegerField())
             ),
         )
-        return [statistics]
+
+        serializer = self.get_serializer(
+            [statistics], many=True
+        )  # Use the LogStatisticsSerializer
+        return Response(serializer.data)
 
 
 # view para la estadistica para el mayor usuario que hace prestamos
 class LenderStatisticsView(generics.ListAPIView):
-    queryset = (
-        models.Log.objects.values("lender__username")
-        .annotate(total_lender_logs=Count("lender"))
-        .order_by("-total_lender_logs")
-    )
     serializer_class = LenderStatisticsSerializer
+
+    def get_queryset(self):
+        current_year = timezone.now().year
+        queryset = (
+            models.Log.objects.filter(dateIn__year=current_year)
+            .values("lender__username")
+            .annotate(total_lender_logs=Count("lender"))
+            .order_by("-total_lender_logs")
+        )
+        return queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -271,13 +318,21 @@ class LenderStatisticsView(generics.ListAPIView):
 
 
 # view para el usuario que mas aprueba prestamos
+from django.utils import timezone
+
+
 class BorrowerStatisticsView(generics.ListAPIView):
-    queryset = (
-        models.Log.objects.values("borrower__username")
-        .annotate(total_borrower_logs=Count("borrower"))
-        .order_by("-total_borrower_logs")
-    )
     serializer_class = BorrowerStatisticsSerializer
+
+    def get_queryset(self):
+        current_year = timezone.now().year
+        queryset = (
+            models.Log.objects.filter(dateIn__year=current_year)
+            .values("borrower__username")
+            .annotate(total_borrower_logs=Count("borrower"))
+            .order_by("-total_borrower_logs")
+        )
+        return queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -288,12 +343,17 @@ class BorrowerStatisticsView(generics.ListAPIView):
 
 # view para la estadistica de los dias con mayor prestamos
 class DateStatisticsView(generics.ListAPIView):
-    queryset = (
-        models.Log.objects.values("dateIn")
-        .annotate(total_datein_logs=Count("dateIn"))
-        .order_by("-total_datein_logs")[:3]
-    )
     serializer_class = DateStatisticsSerializer
+
+    def get_queryset(self):
+        current_year = timezone.now().year
+        queryset = (
+            models.Log.objects.filter(dateIn__year=current_year)
+            .values("dateIn")
+            .annotate(total_datein_logs=Count("dateIn"))
+            .order_by("-total_datein_logs")[:3]
+        )
+        return queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -304,11 +364,16 @@ class DateStatisticsView(generics.ListAPIView):
 
 # View para la estadistica de la taza de vencidos
 class VencidoStatisticsView(generics.ListAPIView):
-    queryset = models.Log.objects.all()
     serializer_class = VencidoStatisticsSerializer
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        current_year = timezone.now().year
+        queryset = models.Log.objects.filter(dateIn__year=current_year)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
         statistics = queryset.aggregate(
             total_logs=Count("id"),
             approved_logs=Sum(
@@ -321,12 +386,28 @@ class VencidoStatisticsView(generics.ListAPIView):
                 Case(When(status="TAR", then=1), default=0, output_field=IntegerField())
             ),
         )
-        return [statistics]
 
-#View mandar mayores deudoreszz
+        serializer = self.get_serializer(
+            [statistics], many=True
+        )  # Use the VencidoStatisticsSerializer
+        return Response(serializer.data)
+
+
+# View mandar mayores deudoreszz
 class LenderVencidosStatisticsView(generics.ListAPIView):
-    queryset = models.Log.objects.filter(Q(status='VEN') | Q(status='TAR')).values('lender__username').annotate(vencidos_count=Count('lender')).order_by('-vencidos_count')    
     serializer_class = LenderVencidosStatisticsSerializer
+
+    def get_queryset(self):
+        current_year = timezone.now().year
+        queryset = (
+            models.Log.objects.filter(
+                Q(status="VEN") | Q(status="TAR"), dateIn__year=current_year
+            )
+            .values("lender__username")
+            .annotate(vencidos_count=Count("lender"))
+            .order_by("-vencidos_count")
+        )
+        return queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -334,15 +415,23 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
         lender_statistics = serializer.data if serializer.data else None
         return Response(lender_statistics)
 
+
 from rest_framework import status
-#View elementos mas rotos
+
+
 class BoxMasLogsRotos(generics.ListAPIView):
     def get(self, request):
-        # Utiliza annotate para contar los logs con status="ROTO" en cada Box
-        boxes_con_logs_rotos = models.Box.objects.annotate(num_logs_rotos=Count('log', filter=models.Log.objects.filter(status='ROTO')))
+        current_year = timezone.now().year
 
-        # Ordena los boxes de mayor a menor cantidad de logs roto
-        boxes_ordenados = boxes_con_logs_rotos.order_by('-num_logs_rotos')
+        # Utiliza annotate para contar los logs con status="ROTO" en cada Box del año actual
+        boxes_con_logs_rotos = models.Box.objects.annotate(
+            num_logs_rotos=Count(
+                "log", filter=Q(log__status="ROTO", log__dateIn__year=current_year)
+            )
+        )
+
+        # Ordena los boxes de mayor a menor cantidad de logs rotos
+        boxes_ordenados = boxes_con_logs_rotos.order_by("-num_logs_rotos")
 
         # Obtén el box con más logs roto (el primero de la lista)
         box_mas_logs_rotos = boxes_ordenados.first()
@@ -350,9 +439,12 @@ class BoxMasLogsRotos(generics.ListAPIView):
         # Puedes devolver solo el nombre o cualquier otro dato que necesites
         if box_mas_logs_rotos:
             response_data = {
-                'box_nombre': box_mas_logs_rotos.name,
-                'cantidad_logs_rotos': box_mas_logs_rotos.num_logs_rotos,
+                "box_nombre": box_mas_logs_rotos.name,
+                "cantidad_logs_rotos": box_mas_logs_rotos.num_logs_rotos,
             }
             return Response(response_data, status=status.HTTP_200_OK)
         else:
-            return Response({'message': 'No hay logs con status "ROTO".'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"message": 'No hay logs con status "ROTO" en el año actual.'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
