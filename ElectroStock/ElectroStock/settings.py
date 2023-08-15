@@ -120,7 +120,7 @@ USE_TZ = True
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/img-prod/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'img-prod')
@@ -225,7 +225,10 @@ JAZZMIN_SETTINGS = {
         "ElectroStockApp.Laboratory":"fas fa-flask",
         "ElectroStockApp.Speciality":"fas fa-hard-hat",
         "ElectroStockApp.Course":"fas fa-graduation-cap",
+        "token_blacklist.blacklistedtoken":"fas fa-lock",
+        "token_blacklist.outstandingtoken":"fas fa-lock",
     },
+
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
@@ -297,6 +300,7 @@ JAZZMIN_UI_TWEAKS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     )
 }
 
@@ -304,9 +308,9 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=100000),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
-    'ROTATE_REFRESH_TOKENS': True,
+    'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
 
@@ -331,7 +335,7 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=100000),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
@@ -361,7 +365,7 @@ EMAIL_USE_TLS = True
 # Redis configuration 
 from datetime import timedelta
 
-CELERY_BROKER_URL = 'redis://default:hU7ZgQnaKpTDOliOy0Vt@containers-us-west-40.railway.app:6872'  # Ejemplo: 'amqp://guest:guest@localhost:5672/'
+CELERY_BROKER_URL = CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/'  # Ejemplo para RabbitMQ
 CELERY_ACCEPT_CONTENT=['json']
 CELERY_TASK_SERIALIZER= 'json'
 CELERY_IMPORTS = ('ElectroStockApp.task',)

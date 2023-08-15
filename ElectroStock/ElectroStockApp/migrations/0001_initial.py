@@ -268,13 +268,13 @@ class Migration(migrations.Migration):
                     "observation",
                     models.CharField(blank=True, max_length=100, null=True),
                 ),
-                ("dateIn", models.DateTimeField(null=True)),
+                ("dateIn", models.DateTimeField(null=False)),
                 ("dateOut", models.DateTimeField(blank=True, null=True)),
                 (
                     "borrower",
                     models.ForeignKey(
-                        blank=True,
-                        null=True,
+                        blank=False,
+                        null=False,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="borrowed_logs",
                         to=settings.AUTH_USER_MODEL,

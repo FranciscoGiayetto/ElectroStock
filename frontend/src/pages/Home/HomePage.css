@@ -3,3 +3,18 @@
     z-index: 100;
   }
  */
+
+ .bienvenido{
+  align-items: center;
+  color: black;
+  padding-top: 5rem;
+}
+
+#labelBienvenido {
+
+  font-weight: 600;
+  background-image: linear-gradient(to left,#0d6efd, #2e5266 );
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
