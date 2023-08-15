@@ -159,7 +159,7 @@ class Log(models.Model):
         ROTO="ROT","Roto"
 
     status = models.CharField(
-        max_length=30, choices=Status.choices, default=Status.CARRITO, verbose_name='Estado'
+        max_length=30, choices=Status.choices, default=Status.COMPRADO, verbose_name='Estado'
     )
     quantity = models.IntegerField(verbose_name='Cantidad')
     borrower = models.ForeignKey( #si este campo da error revisar en el init

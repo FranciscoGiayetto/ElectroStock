@@ -263,7 +263,6 @@ class LogyAdmin(ImportExportActionModelAdmin):
 
     class Media:
         js = ("admin/js/log_admin.js",)
-
     resource_class = LogResource
     list_display = (
         "status",
