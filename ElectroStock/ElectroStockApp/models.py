@@ -113,11 +113,11 @@ class Laboratory(models.Model):
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=30,verbose_name='Nombre')
+    name = models.CharField(max_length=30,verbose_name='Nombre',blank=True,null=True)
     laboratoy = models.ForeignKey(Laboratory, on_delete=models.CASCADE,verbose_name='Laboratorio')
 
     def __str__(self):
-        return self.name
+        return self.name if self.name else f"Location {self.id}"
 
     class Meta:
         verbose_name_plural = "Ubicaciones"
@@ -129,7 +129,7 @@ class Box(models.Model):
     minimumStock = models.IntegerField(verbose_name='Stock Minimo')
     name = models.CharField(max_length=30,verbose_name='Nombre')
     element = models.ForeignKey(Element, on_delete=models.CASCADE, verbose_name='Elemento')
-    location = models.ForeignKey(Location, on_delete=models.CASCADE,verbose_name='Ubicacion')
+    location = models.ForeignKey(Location, on_delete=models.CASCADE,verbose_name='Ubicacion',blank=True, null=True)
 
     def __str__(self):
         return self.name

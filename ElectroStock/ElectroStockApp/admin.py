@@ -328,27 +328,26 @@ class BoxResource(resources.ModelResource):
         model = Box
         fields = (
             "id",
-            "name",
             "responsable__username",
             "minimumStock",
-            "element__name",
+            "name",
+            "element__id",
             "location__name",
         )
         export_order = (
             "id",
-            "name",
             "responsable__username",
             "minimumStock",
-            "element__name",
+            "name",
+            "element__id",
             "location__name",
         )
+
     def before_import_row(self, row, **kwargs):
         location_name = row.get('location__name')
-        if location_name:
-            location, created = Location.objects.get_or_create(name=location_name)
-            row['location__name'] = location.name
-            row['location_id'] = location.id
-
+        laboratory_id = row.get('laboratory__id')
+        location, created = Location.objects.get_or_create(name=location_name, laboratoy_id=laboratory_id)
+        row['location'] = location
 
 # Clase de filtros y busqueda de box
 class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
@@ -453,12 +452,33 @@ class CourseAdmin(ImportExportActionModelAdmin):
     pass
 
 
+class LocationResource(resources.ModelResource):
+    class Meta:
+        model = Location
+        fields = (
+            "id",
+            "name",
+            "laboratory",
+        )
+        export_order = (
+            "id",
+            "name",
+            "laboratory",
+        )
+
 # Clase de filtros y busqueda de las ubicaciones
 class LocationAdmin(ImportExportActionModelAdmin):
-    list_display = ("name", "laboratoy")
+    resource_class = LocationResource
+
+    def get_laboratory_name(self, obj):
+        return obj.laboratory.name if obj.laboratory else "N/A"
+    get_laboratory_name.short_description = "Laboratory Name"
+
+    list_display = ("name", "get_laboratory_name")  # Use the method here
+
     search_fields = [
         "name",
-        "laboratoy__name",
+        "laboratory__name",
     ]
 
 
