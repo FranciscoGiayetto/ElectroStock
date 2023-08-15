@@ -103,8 +103,8 @@ class BoxSerializer(serializers.ModelSerializer):
 
 # Serializer de  los prestamos completmos
 class LogSerializer(serializers.ModelSerializer):
-    box = serializers.PrimaryKeyRelatedField(queryset=models.Box.objects.all())
-    borrower = serializers.PrimaryKeyRelatedField(queryset=models.CustomUser.objects.all())
+    box = BoxSerializer()
+    borrower = UsersSerializer()
     lender = UsersSerializer()
     box= BoxSerializer()
     borrower= UsersSerializer()
