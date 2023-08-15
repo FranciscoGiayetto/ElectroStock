@@ -159,7 +159,7 @@ class Log(models.Model):
         ROTO="ROT","Roto"
 
     status = models.CharField(
-        max_length=30, choices=Status.choices, default=Status.CARRITO
+        max_length=30, choices=Status.choices, default=Status.CARRITO, verbose_name='Estado'
     )
     quantity = models.IntegerField(verbose_name='Cantidad')
     borrower = models.ForeignKey( #si este campo da error revisar en el init
@@ -169,6 +169,7 @@ class Log(models.Model):
         help_text="Si se ingresa como comprado poner nombre de tu usuario",
         null=True,
         blank=True,
+        verbose_name='Prestador/Comprador'
     )
     lender = models.ForeignKey(
         CustomUser,
@@ -180,7 +181,7 @@ class Log(models.Model):
     )
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
     observation = models.CharField(max_length=100, null=True, blank=True,verbose_name='Observaciones')
-    dateIn = models.DateField(auto_now=True) #si este campo da error revisar en la init 
+    dateIn = models.DateField(auto_now=True,verbose_name='Fecha de ingreso') #si este campo da error revisar en la init 
     dateOut = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de devolucion')
 
     def __str__(self):
