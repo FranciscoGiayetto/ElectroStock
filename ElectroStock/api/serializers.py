@@ -105,7 +105,8 @@ class BoxSerializer(serializers.ModelSerializer):
 class LogSerializer(serializers.ModelSerializer):
     box = serializers.PrimaryKeyRelatedField(queryset=models.Box.objects.all())
     borrower = serializers.PrimaryKeyRelatedField(queryset=models.CustomUser.objects.all())
-
+    box= BoxSerializer()
+    borrower= UsersSerializer()
     class Meta:
         model = models.Log
         fields = (
@@ -166,7 +167,7 @@ class BorrowerStatisticsSerializer(serializers.Serializer):
 
 # Serializer para la estadistica de los dias con mayor prestamos
 class DateStatisticsSerializer(serializers.Serializer):
-    dateIn = serializers.DateTimeField()
+    dateIn = serializers.DateField()
     total_datein_logs = serializers.IntegerField()
 
     class Meta:
