@@ -109,6 +109,15 @@ export const isAccessTokenExpired = (accessToken) => {
 };
 
 
+export const requestPasswordReset = async (email) => {
+    try {
+      const response = await axios.post('/request-password-reset/', { email });
+      return { data: response.data, error: null };
+    } catch (error) {
+      return { data: null, error: error.response.data?.detail || 'Something went wrong' };
+    }
+  };
+
 export const getCurrentToken = async () => {
     const refresh_token = Cookies.get('refresh_token');
     
