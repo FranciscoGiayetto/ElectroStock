@@ -105,6 +105,7 @@ class BoxSerializer(serializers.ModelSerializer):
 class LogSerializer(serializers.ModelSerializer):
     box = serializers.PrimaryKeyRelatedField(queryset=models.Box.objects.all())
     borrower = serializers.PrimaryKeyRelatedField(queryset=models.CustomUser.objects.all())
+    lender = UsersSerializer()
     box= BoxSerializer()
     borrower= UsersSerializer()
     class Meta:
