@@ -21,7 +21,7 @@ import { useAuthStore } from '../../store/auth';
 
 // ... (imports and other code)
 
-const CardVencidos = () => {
+const CardPendientes = () => {
   const api = useAxios();
   const [element, setElement] = useState([]);
   const [isLoggedIn, user] = useAuthStore((state) => [
@@ -35,7 +35,7 @@ const CardVencidos = () => {
 
   const getElement = async () => {
     try {
-      const response = await api.get(`/vencidos/${userData.user_id}`);
+      const response = await api.get(`/pendientes/${userData.user_id}`);
       let data = await response.data;
       setElement(data);
       console.log(data);
@@ -57,7 +57,7 @@ const CardVencidos = () => {
 
   return (
     <MDBCard alignment='left' style={{ backgroundColor: '#018195'  }}>
-      <MDBCardHeader style={{ color: 'white' }}>Vencidos</MDBCardHeader>
+      <MDBCardHeader style={{ color: 'white' }}>Pendientes</MDBCardHeader>
       <MDBTable hover>
         <MDBTableHead>
           <tr>
@@ -67,18 +67,17 @@ const CardVencidos = () => {
           </tr>
         </MDBTableHead>
         <MDBTableBody>
-        {element.slice(-4).map((item, index) => (
-        <tr key={index}>
-          <td>{formatDate(item.dateOut)}</td> {/* Display formatted date */}
-          <td>{item.box.name}</td>
-          <td>{item.quantity}</td>
-        </tr>
-      ))}
-
+          {element.map((item, index) => (
+            <tr key={index}>
+              <td>{formatDate(item.dateOut)}</td> {/* Display formatted date */}
+              <td>{item.box.name}</td>
+              <td>{item.quantity}</td>
+            </tr>
+          ))}
         </MDBTableBody>
       </MDBTable>
     </MDBCard>
   );
 };
 
-export default CardVencidos;
+export default CardPendientes;

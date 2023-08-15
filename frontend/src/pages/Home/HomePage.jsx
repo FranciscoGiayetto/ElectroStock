@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import officeImage from './office.jpg';
 import './HomePage.css'
 import CardVencidos from './CardVencidos';
+import CardPendientes from './CardPendientes';
 import { useAuthStore } from '../../store/auth';
 import { getCurrentToken } from '../../utils/auth';
 function HomePage() {
@@ -21,12 +22,12 @@ function HomePage() {
   
   return (
     <div className='container pagecontainer'>
-      <div>
-        <CardVencidos></CardVencidos>
+      <div style={{ display: 'flex', gap: '20px' }}>
+      <CardVencidos />
+      <CardPendientes />
+    </div>
         <h1>Bienvenido {userData.username} </h1>
       </div>
-    
-    </div>
   );
 }
 
