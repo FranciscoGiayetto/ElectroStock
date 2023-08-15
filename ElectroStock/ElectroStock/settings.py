@@ -372,7 +372,11 @@ CELERY_IMPORTS = ('ElectroStockApp.task',)
 CELERY_BEAT_SCHEDULE = {
     'run_check_expired_logs': {
         'task': 'ElectroStockApp.task.run_check_expired_logs',
-        'schedule': timedelta(days=1),  # Ejecutar cada 1 día
+        'schedule': timedelta(minutes=1),  # Ejecutar cada 1 día
+    },
+    'increase_user_age': {
+        'task': 'ElectroStockApp.task.increase_user_age',
+        'schedule': timedelta(minutes=1),  # Ejecutar cada 1 día
     },
 }
 

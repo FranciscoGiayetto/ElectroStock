@@ -1,6 +1,6 @@
 from celery import shared_task
 from django.utils import timezone
-from .models import Log
+from .models import Log, CustomUser, Course
 from django.core.mail import send_mail
 
 
@@ -29,3 +29,22 @@ def send_notification_email(mail):
     )
 
     send_mail(subject, message, sender_email, [mail])
+
+# tasks.py
+
+@shared_task
+def increase_user_age():
+    for user in CustomUser.objects.all():
+        user.age += 1
+        user.save()
+
+        if user.age == 1:
+            print(f"User {user.username} has turned 1 year old!")
+            current_course = user.course
+            next_year = timezone.now().year + 1
+            next_year_course = Course.objects.get(year=next_year)
+
+            user.course = next_year_course
+            user.save()
+            print(f"User {user.username} has been assigned the course for the next year: {next_year_course}")
+
