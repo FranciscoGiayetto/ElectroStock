@@ -321,10 +321,14 @@ class LogyAdmin(ImportExportActionModelAdmin):
             )
         return exclude
 
-
+from import_export.widgets import ForeignKeyWidget
 # Clase para export-import de boxes
 class BoxResource(resources.ModelResource):
-    element = fields.Field(column_name='element__id', attribute='element')
+    element = fields.Field(
+        column_name='element__id',
+        attribute='element',
+        widget=ForeignKeyWidget(Element, 'id')
+    )
     class Meta:
         model = Box
         fields = (
@@ -343,6 +347,14 @@ class BoxResource(resources.ModelResource):
             "element",
             "location__name",
         )
+    def before_import_row(self, row, **kwargs):
+        element_id = row.get('element')
+        if element_id:
+            try:
+                element = Element.objects.get(id=element_id)
+                row['element'] = element
+            except Element.DoesNotExist:
+                pass  
 
 
 # Clase de filtros y busqueda de box
