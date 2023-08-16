@@ -343,11 +343,6 @@ class BoxResource(resources.ModelResource):
             "location__name",
         )
 
-    def before_import_row(self, row, **kwargs):
-        location_name = row.get('location__name')
-        laboratory_id = row.get('laboratory__id')
-        location, created = Location.objects.get_or_create(name=location_name, laboratoy_id=laboratory_id)
-        row['location'] = location
 
 # Clase de filtros y busqueda de box
 class BoxAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
@@ -458,27 +453,19 @@ class LocationResource(resources.ModelResource):
         fields = (
             "id",
             "name",
-            "laboratory",
+            "laboratory__id",
         )
         export_order = (
             "id",
             "name",
-            "laboratory",
+            "laboratory__id",
         )
 
 # Clase de filtros y busqueda de las ubicaciones
 class LocationAdmin(ImportExportActionModelAdmin):
-    resource_class = LocationResource
-
-    def get_laboratory_name(self, obj):
-        return obj.laboratory.name if obj.laboratory else "N/A"
-    get_laboratory_name.short_description = "Laboratory Name"
-
-    list_display = ("name", "get_laboratory_name")  # Use the method here
-
-    search_fields = [
+    list_display = [
         "name",
-        "laboratory__name",
+        "laboratory",
     ]
 
 

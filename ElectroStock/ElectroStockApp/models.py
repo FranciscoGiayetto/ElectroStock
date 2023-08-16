@@ -114,7 +114,7 @@ class Laboratory(models.Model):
 
 class Location(models.Model):
     name = models.CharField(max_length=30,verbose_name='Nombre',blank=True,null=True)
-    laboratoy = models.ForeignKey(Laboratory, on_delete=models.CASCADE,verbose_name='Laboratorio')
+    laboratory = models.ForeignKey(Laboratory, on_delete=models.CASCADE,verbose_name='Laboratorio')
 
     def __str__(self):
         return self.name if self.name else f"Location {self.id}"
