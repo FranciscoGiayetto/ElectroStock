@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import './login.css';
 import Logo from './logo';
+import Link from 'antd/es/typography/Link';
 const Login = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
@@ -69,6 +70,9 @@ const Login = () => {
          onChange={(e) => setPassword(e.target.value)}
         placeholder="" style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266'}} className="rounded-3 shadow form-control-lg" />
       </Form.Group>
+      <div className='text-center' style={{paddingBottom:'1rem'}}>
+            <Link href='http://127.0.0.1:8000/auth/accounts/password_reset'>Olvidaste tu contraseña?</Link>
+        </div>
       <div>
          
           <div className='text-center'>
