@@ -125,7 +125,7 @@ class Location(models.Model):
 
 
 class Box(models.Model):
-    responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     minimumStock = models.IntegerField(verbose_name='Stock Minimo')
     name = models.CharField(max_length=30,verbose_name='Nombre')
     element = models.ForeignKey(Element, on_delete=models.CASCADE, verbose_name='Elemento')

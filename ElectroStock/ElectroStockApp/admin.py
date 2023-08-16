@@ -324,6 +324,7 @@ class LogyAdmin(ImportExportActionModelAdmin):
 
 # Clase para export-import de boxes
 class BoxResource(resources.ModelResource):
+    element = fields.Field(column_name='element__id', attribute='element')
     class Meta:
         model = Box
         fields = (
@@ -331,7 +332,7 @@ class BoxResource(resources.ModelResource):
             "responsable__username",
             "minimumStock",
             "name",
-            "element__id",
+            "element",
             "location__name",
         )
         export_order = (
@@ -339,7 +340,7 @@ class BoxResource(resources.ModelResource):
             "responsable__username",
             "minimumStock",
             "name",
-            "element__id",
+            "element",
             "location__name",
         )
 
