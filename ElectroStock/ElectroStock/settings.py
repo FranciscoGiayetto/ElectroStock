@@ -303,6 +303,7 @@ JAZZMIN_UI_TWEAKS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     )
 }
 
@@ -378,5 +379,22 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'ElectroStockApp.task.run_check_expired_logs',
         'schedule': timedelta(days=1),  # Ejecutar cada 1 día
     },
+    'assign_next_year_course': {
+        'task': 'ElectroStockApp.task.assign_next_year_course',
+        'schedule': timedelta(days=365),  # Ejecutar cada 1 año
+    },
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # Puedes ajustar el nivel según tus necesidades
+    },
+}

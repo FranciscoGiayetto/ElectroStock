@@ -6,7 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 # Para arreglar el erro del export tenes que cambiar de la funcion ExportActionMixin- export_action_action ---> export_format = 1
-
+# Arreglar cuando aparece el token blacklist comentar los admin registers en  venv/lib/pythonX.X/site-packages/rest_framework_simple/token_blacklist/admin.py
 # Register your models here.
 admin.site.site_header = "Stock"
 admin.site.index_title = "Stock"
@@ -263,7 +263,6 @@ class LogyAdmin(ImportExportActionModelAdmin):
 
     class Media:
         js = ("admin/js/log_admin.js",)
-
     resource_class = LogResource
     list_display = (
         "status",
@@ -457,3 +456,4 @@ admin.site.register(Course, CourseAdmin)
 admin.site.register(Box, BoxAdmin)
 admin.site.register(Log, LogyAdmin)
 admin.site.register(Speciality)
+
