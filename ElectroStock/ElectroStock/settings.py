@@ -372,11 +372,24 @@ CELERY_IMPORTS = ('ElectroStockApp.task',)
 CELERY_BEAT_SCHEDULE = {
     'run_check_expired_logs': {
         'task': 'ElectroStockApp.task.run_check_expired_logs',
-        'schedule': timedelta(minutes=1),  # Ejecutar cada 1 día
+        'schedule': timedelta(days=1),  # Ejecutar cada 1 día
     },
-    'increase_user_age': {
-        'task': 'ElectroStockApp.task.increase_user_age',
-        'schedule': timedelta(minutes=1),  # Ejecutar cada 1 día
+    'assign_next_year_course': {
+        'task': 'ElectroStockApp.task.assign_next_year_course',
+        'schedule': timedelta(days=365),  # Ejecutar cada 1 año
     },
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # Puedes ajustar el nivel según tus necesidades
+    },
+}
