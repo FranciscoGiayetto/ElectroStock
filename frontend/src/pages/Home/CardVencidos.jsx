@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxios from '../../utils/useAxios';
 import {
+  MDBIcon,
   MDBBadge,
   MDBCard,
   MDBCardBody,
@@ -61,7 +62,7 @@ const CardVencidos = () => {
       <MDBTable hover>
         <MDBTableHead>
           <tr>
-            <th scope='col'>Fecha</th>
+            <th scope='col'>Vencimiento</th>  
             <th scope='col'>Producto</th>
             <th scope='col'>Cantidad</th>
           </tr>

@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import officeImage from './office.jpg';
 import './HomePage.css'
+import CardPrestamos from './CardPrestamos';
 import CardVencidos from './CardVencidos';
 import CardPendientes from './CardPendientes';
 import { useAuthStore } from '../../store/auth';
@@ -22,12 +23,14 @@ function HomePage() {
   
   return (
     <div className='container pagecontainer'>
-      <div style={{ display: 'flex', gap: '20px' }}>
-      <CardVencidos />
-      <CardPendientes />
-    </div>
-        <h1>Bienvenido {userData.username} </h1>
+      <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
+        <CardVencidos />
+        <CardPendientes />
       </div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <CardPrestamos />
+      </div>
+    </div>
   );
 }
 
