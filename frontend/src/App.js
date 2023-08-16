@@ -19,7 +19,8 @@ import PrivateRoute from './layouts/PrivateRoute';
 import Logout from './pages/LoginNuevo/logout';
 import Register from './pages/LoginNuevo/register';
 import Private from './pages/LoginNuevo/private';
-import PasswordResetRequest from "./pages/LoginNuevo/PasswordResetRequest";
+import { Link } from "react-router-dom";
+
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const handleSearch = (query) => {
@@ -36,7 +37,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Register />} />
               <Route path="/logout" element={<Logout />} />
-              <Route path="/restore" element={<PasswordResetRequest />} />
+
               
               <Route path="/*" element={<LayoutWrapper onSearch={handleSearch} searchQuery={searchQuery}/>} />
             </Routes>
