@@ -1,4 +1,4 @@
-id,responsable__username,minimumStock,name,element,location__name
+id,responsable__username,minimumStock,name,element__id,location__name
 1,Vettorello,10,BOX Kit herramienta electrónica (Maletines),1,A1
 2,Michalik,1,BOX Caja de pines Veneta,2,A1
 3,Michalik,2,BOX Caja de respuestos Veneta,3,A1
