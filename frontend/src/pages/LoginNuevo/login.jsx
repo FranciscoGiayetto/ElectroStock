@@ -80,7 +80,7 @@ const Login = () => {
                 Ingresar
           </Button>
           <Button className='text-center rounded-5 ' size='lg' style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0'}} variant="primary" href='/signup'>
-                Registrarse
+                Registrarsecd 
           </Button>
         </div>
       </div>
