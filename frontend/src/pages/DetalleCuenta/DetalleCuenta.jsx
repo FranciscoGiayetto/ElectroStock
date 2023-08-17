@@ -1,7 +1,7 @@
 import React from 'react';
 
 import CardUser from '../../components/CardUser/CardUser.jsx';
-import ListTable from '../../components/ListTable/ListTable.jsx';
+import ListTable from '../../components/ListTable/Table.jsx';
 import './DetalleCuenta.css'
 import { useAuthStore } from '../../store/auth';
 
