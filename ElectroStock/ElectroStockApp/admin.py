@@ -329,6 +329,17 @@ class BoxResource(resources.ModelResource):
         attribute='element',
         widget=ForeignKeyWidget(Element, 'id')
     )
+    responable = fields.Field(
+        column_name='responsable__username',
+        attribute='responsable',
+        widget=ForeignKeyWidget(CustomUser, 'username')
+    )
+    location = fields.Field(
+        column_name='location__name',
+        attribute='location',
+        widget=ForeignKeyWidget(Location, 'name')
+    )
+    
     class Meta:
         model = Box
         fields = (

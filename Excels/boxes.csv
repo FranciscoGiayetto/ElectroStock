@@ -1,4 +1,4 @@
-id,responsable,minimumStock,name,element,location
+id,responsable__username,minimumStock,name,element,location__name
 1,Vettorello,10,BOX Kit herramienta electrónica (Maletines),1,A1
 2,Michalik,1,BOX Caja de pines Veneta,2,A1
 3,Michalik,2,BOX Caja de respuestos Veneta,3,A1
@@ -157,16 +157,16 @@ id,responsable,minimumStock,name,element,location
 152,Remedi,6,BOX Multímetro digital (1 Manual del usuario),152,M6 - M12
 153,Vettorello,1,BOX Sirena 12V,153,A2
 154,Remedi,6,BOX Generador de funciones (1 Manual del usuario),154,M7-M12
-155,Vettorello,1,BOX Alimentador 0/30V + Alimentador 5/12/24V (Manual del usuario),155,Mesa 13
-156,Vettorello,1,"BOX CPU Intel I3 - 3250 - 4 GB RAM + Monitor Led 18,5""+ multimedia + disco 500GB + Grabadora DVD + teclado + mouse",156,Mesa 13
-157,Vettorello,1,BOX Parlante Bluetooth SPIKA,157,Mesa 13
-158,Vettorello,1,BOX Perforadora de papel,158,Mesa 13
-159,Vettorello,1,BOX Impresora Laser Brother HL-1212W,159,Mesa 13
-160,Vettorello,1,BOX Abrochadora,160,Mesa 13
-161,Vettorello,1,BOX Calibre,161,Mesa 13
-162,Michalik,1,BOX Conversor USB a SD,162,Mesa 13
+155,Vettorello,1,BOX Alimentador 0/30V + Alimentador 5/12/24V (Manual del usuario),155,Mesa 13 LAB 1
+156,Vettorello,1,"BOX CPU Intel I3 - 3250 - 4 GB RAM + Monitor Led 18,5""+ multimedia + disco 500GB + Grabadora DVD + teclado + mouse",156,Mesa 13 LAB 1
+157,Vettorello,1,BOX Parlante Bluetooth SPIKA,157,Mesa 13 LAB 1
+158,Vettorello,1,BOX Perforadora de papel,158,Mesa 13 LAB 1
+159,Vettorello,1,BOX Impresora Laser Brother HL-1212W,159,Mesa 13 LAB 1
+160,Vettorello,1,BOX Abrochadora,160,Mesa 13 LAB 1
+161,Vettorello,1,BOX Calibre,161,Mesa 13 LAB 1
+162,Michalik,1,BOX Conversor USB a SD,162,Mesa 13 LAB 1
 163,Vettorello,3,BOX Trinchetas,163,Mesa 13 - Caja htas
-164,Vettorello,2,BOX Zapatilla multinorma,164,Mesa 14
+164,Vettorello,2,BOX Zapatilla multinorma,164,Mesa 14 LAB 1
 165,Vettorello,12,BOX Alimentador 0/30V + Alimentador 5/12/24V (Manual del usuario),165,Mesas
 166,Vettorello,12,BOX Alicate PRO´S KIT 8PK-101D + Pinza de punta PRO´S KIT 8KP-102D+juego de destornilladores x 5,166,Mesas - Cajón Herramientas
 167,Vettorello,12,BOX Entrenador + Programador Microchip SNAP PG164100 c/cable micro USB,167,Mesas - Cajón Programación
@@ -538,7 +538,7 @@ id,responsable,minimumStock,name,element,location
 533,Córdoba,3,BOX 74HC244 Buffer 8 líneas - 3 state,533,C4
 534,Córdoba,30,BOX 74HC245 Latch bidireccional,534,C4
 535,Córdoba,30,"BOX 74HC573 (Latch ""D"" de 3 estados Octal)",535,C4
-536,Córdoba,,BOX 74HC595,536,C4
+536,Córdoba,0,BOX 74HC595,536,C4
 537,Córdoba,40,BOX 74HCT04N Not,537,C4
 538,Córdoba,19,BOX 74LS05 (NOT c/colector abierto),538,C4
 539,Córdoba,30,BOX 74LS08 (AND de 2 entradas),539,C4
@@ -825,91 +825,91 @@ id,responsable,minimumStock,name,element,location
 820,Remedi,0,BOX Módulo A4988 driver PaP,820,A2
 821,Remedi,0,BOX Bomba de agua EM20-0343 5V,821,A2
 822,Remedi,0,BOX Fuente lm2596,822,A2
-823,,0,BOX cable rojo,823,
-824,,0,BOX cable negro,824,
-825,,0,BOX 470,825,
-826,,0,BOX 4k7,826,
-827,,0,BOX 47k,827,
-828,,0,BOX 1k,828,
-829,,0,BOX 10k,829,
-830,,0,BOX 100k,830,
-831,,0,BOX 22k,831,
-832,,0,BOX 2M2,832,
-833,,0,BOX led,833,
-834,,0,BOX pulsador,834,
-835,,0,BOX foto res,835,
-836,,0,BOX foto trans,836,
-837,,0,BOX lampara 12v,837,
-838,,0,BOX vjt 2n2646,838,
-839,,0,BOX pnp 2n2905,839,
-840,,0,BOX npn 2n1711,840,
-841,,0,BOX npn bc182,841,
-842,,0,BOX fet bf245,842,
-843,,0,BOX scr tic47,843,
-844,,0,BOX R.P 7w 220r,844,
-845,,0,BOX R.P 7w 47r,845,
-846,,0,BOX R.P 7w 1r,846,
-847,,0,BOX R.P 5w 4r7,847,
-848,,0,BOX tda2006,848,
-849,,0,BOX ua7805,849,
-850,,0,BOX lm 317,850,
-851,,0,BOX ua741,851,
-852,,0,BOX ne555,852,
-853,,0,BOX ptc/ntc,853,
-854,,0,BOX 1n4007,854,
-855,,0,BOX 1n914,855,
-856,,0,BOX 0a91,856,
-857,,0,"BOX Z. 6,2v",857,
-858,,0,BOX DIAC,858,
-859,,0,"BOX 1,5r",859,
-860,,0,"BOX 4,7r",860,
-861,,0,BOX 10r,861,
-862,,0,BOX 100r,862,
-863,,0,BOX 180r,863,
-864,,0,BOX 220r,864,
-865,,0,BOX 330r,865,
-866,,0,BOX 560r,866,
-867,,0,BOX 820r,867,
-868,,0,BOX 1k,868,
-869,,0,BOX 1k5,869,
-870,,0,BOX 2k2,870,
-871,,0,BOX 3k3,871,
-872,,0,BOX 3k9,872,
-873,,0,BOX 4k7,873,
-874,,0,BOX 5k6,874,
-875,,0,BOX 10k,875,
-876,,0,BOX 15k,876,
-877,,0,BOX 22k,877,
-878,,0,BOX 27k,878,
-879,,0,BOX 33k,879,
-880,,0,BOX 39k,880,
-881,,0,BOX 47k,881,
-882,,0,BOX 100k,882,
-883,,0,BOX 120k,883,
-884,,0,BOX 220k,884,
-885,,0,BOX 470k,885,
-886,,0,BOX 1M,886,
-887,,0,BOX 1uf,887,
-888,,0,"BOX 2,2uf",888,
-889,,0,BOX 10uf,889,
-890,,0,BOX 22uf,890,
-891,,0,BOX 100uf,891,
-892,,0,BOX 470uf,892,
-893,,0,BOX 1000uf,893,
-894,,0,BOX 1nf,894,
-895,,0,"BOX 2,2nf",895,
-896,,0,"BOX 4,7nf",896,
-897,,0,BOX 10nf,897,
-898,,0,BOX 10pf,898,
-899,,0,BOX 47pf,899,
-900,,0,BOX 82pf,900,
-901,,0,BOX 560pf,901,
-902,,0,BOX 470pf,902,
-903,,0,"BOX 0,1uf",903,
-904,,0,BOX 1uf,904,
-905,,0,"BOX 0,33uf",905,
-906,,0,BOX 270pf,906,
-907,,0,BOX 22nf,907,
+823,,0,BOX cable rojo,823,Laboratorio 1
+824,,0,BOX cable negro,824,LAB 1
+825,,0,BOX 470,825,LAB 1
+826,,0,BOX 4k7,826,LAB 1
+827,,0,BOX 47k,827,LAB 1
+828,,0,BOX 1k,828,LAB 1
+829,,0,BOX 10k,829,LAB 1
+830,,0,BOX 100k,830,LAB 1
+831,,0,BOX 22k,831,LAB 1
+832,,0,BOX 2M2,832,LAB 1
+833,,0,BOX led,833,LAB 1
+834,,0,BOX pulsador,834,LAB 1
+835,,0,BOX foto res,835,LAB 1
+836,,0,BOX foto trans,836,LAB 1
+837,,0,BOX lampara 12v,837,LAB 1
+838,,0,BOX vjt 2n2646,838,LAB 1
+839,,0,BOX pnp 2n2905,839,LAB 1
+840,,0,BOX npn 2n1711,840,LAB 1
+841,,0,BOX npn bc182,841,LAB 1
+842,,0,BOX fet bf245,842,LAB 1
+843,,0,BOX scr tic47,843,LAB 1
+844,,0,BOX R.P 7w 220r,844,LAB 1
+845,,0,BOX R.P 7w 47r,845,LAB 1
+846,,0,BOX R.P 7w 1r,846,LAB 1
+847,,0,BOX R.P 5w 4r7,847,LAB 1
+848,,0,BOX tda2006,848,LAB 1
+849,,0,BOX ua7805,849,LAB 1
+850,,0,BOX lm 317,850,LAB 1
+851,,0,BOX ua741,851,LAB 1
+852,,0,BOX ne555,852,LAB 1
+853,,0,BOX ptc/ntc,853,LAB 1
+854,,0,BOX 1n4007,854,LAB 1
+855,,0,BOX 1n914,855,LAB 1
+856,,0,BOX 0a91,856,LAB 1
+857,,0,"BOX Z. 6,2v",857,LAB 1
+858,,0,BOX DIAC,858,LAB 1
+859,,0,"BOX 1,5r",859,LAB 1
+860,,0,"BOX 4,7r",860,LAB 1
+861,,0,BOX 10r,861,LAB 1
+862,,0,BOX 100r,862,LAB 1
+863,,0,BOX 180r,863,LAB 1
+864,,0,BOX 220r,864,LAB 1
+865,,0,BOX 330r,865,LAB 1
+866,,0,BOX 560r,866,LAB 1
+867,,0,BOX 820r,867,LAB 1
+868,,0,BOX 1k,868,LAB 1
+869,,0,BOX 1k5,869,LAB 1
+870,,0,BOX 2k2,870,LAB 1
+871,,0,BOX 3k3,871,LAB 1
+872,,0,BOX 3k9,872,LAB 1
+873,,0,BOX 4k7,873,LAB 1
+874,,0,BOX 5k6,874,LAB 1
+875,,0,BOX 10k,875,LAB 1
+876,,0,BOX 15k,876,LAB 1
+877,,0,BOX 22k,877,LAB 1
+878,,0,BOX 27k,878,LAB 1
+879,,0,BOX 33k,879,LAB 1
+880,,0,BOX 39k,880,LAB 1
+881,,0,BOX 47k,881,LAB 1
+882,,0,BOX 100k,882,LAB 1
+883,,0,BOX 120k,883,LAB 1
+884,,0,BOX 220k,884,LAB 1
+885,,0,BOX 470k,885,LAB 1
+886,,0,BOX 1M,886,LAB 1
+887,,0,BOX 1uf,887,LAB 1
+888,,0,"BOX 2,2uf",888,LAB 1
+889,,0,BOX 10uf,889,LAB 1
+890,,0,BOX 22uf,890,LAB 1
+891,,0,BOX 100uf,891,LAB 1
+892,,0,BOX 470uf,892,LAB 1
+893,,0,BOX 1000uf,893,LAB 1
+894,,0,BOX 1nf,894,LAB 1
+895,,0,"BOX 2,2nf",895,LAB 1
+896,,0,"BOX 4,7nf",896,LAB 1
+897,,0,BOX 10nf,897,LAB 1
+898,,0,BOX 10pf,898,LAB 1
+899,,0,BOX 47pf,899,LAB 1
+900,,0,BOX 82pf,900,LAB 1
+901,,0,BOX 560pf,901,LAB 1
+902,,0,BOX 470pf,902,LAB 1
+903,,0,"BOX 0,1uf",903,LAB 1
+904,,0,BOX 1uf,904,LAB 1
+905,,0,"BOX 0,33uf",905,LAB 1
+906,,0,BOX 270pf,906,LAB 1
+907,,0,BOX 22nf,907,LAB 1
 908,Remedi,8,BOX Destornillador cruz pequeño 383 3.0x60,908,LAB 1
 909,Remedi,9,BOX Destornillador cruz mediano 383 4.5x80,909,LAB 1
 910,Remedi,10,BOX Destornillador plano pequeño 383 3.0x75,910,LAB 1
@@ -922,61 +922,61 @@ id,responsable,minimumStock,name,element,location
 917,Remedi,10,BOX Pinza plana 301,917,LAB 1
 918,Remedi,9,BOX Pinza punta 282,918,LAB 1
 919,Remedi,8,BOX Pinza pequeña para levantar ep2a,919,LAB 1
-920,,5,BOX TIP 41C,920,
-921,,5,BOX TIP35C,921,
-922,,10,BOX Potenciometro lineal para gabinete 20kΩ,922,
-923,,10,BOX Potenciometro lineal para gabinete 1kΩ,923,
-924,,5,BOX Puente diodo 4A KBU4G o KBL10,924,
-925,,3,BOX Puente diodo 4A,925,
-926,,3,BOX PIC18F4520 TQFP,926,
-927,,3,BOX Inductancia 68uH 1A SMD,927,
-928,,3,"BOX Inductancia 150uH 2,2A SMD",928,
-929,,3,"BOX Inductancia 22uH 2,3A SMD",929,
-930,,2,BOX Micro Rele 12v 2A,930,
-931,,2,"BOX Display 7seg 0,56'' rojo SMD",931,
-932,,5,BOX Led rojo SMD,932,
-933,,5,BOX Sensor corriente INA168,933,
-934,,3,BOX LM321,934,
-935,,5,BOX Transistor MMBT2222,935,
-936,,5,BOX Diodo Schottky 500mA 30V,936,
-937,,5,"BOX KF33BDT reg LDO 3,3V 500mA",937,
-938,,5,BOX LM2576 reg -12V,938,
-939,,5,"BOX LM2576 reg 3,3V",939,
-940,,5,BOX LM2576 reg 5V,940,
-941,,5,BOX LM2576 reg 12V,941,
-942,,5,BOX LM2576 reg ADJ,942,
-943,,5,"BOX Capacitor 2,2uF 35V",943,
-944,,5,BOX Resistencias 1KΩ - 1/2w - 1206,944,
-945,,5,BOX Resistencias 0Ω - 1/4w - 1206,945,
-946,,5,"BOX Resistencias 1,8KΩ - 1/2w - 1206",946,
-947,,5,BOX Resistencias 22Ω - 1/2w - 1206,947,
-948,,5,BOX Resistencias 470Ω - 1/2w - 1206,948,
-949,,5,BOX Resistencias 1KΩ - 1/2w - 1206,949,
-950,,5,BOX Resistencias 1MΩ - 1/2w - 1206,950,
-951,,5,BOX Resistencias 100Ω - 1/2w - 1206,951,
-952,,5,BOX Resistencias 68KΩ - 1/2w - 1206,952,
-953,,5,"BOX Resistencias 3,3KΩ - 1/2w - 1206",953,
-954,,5,BOX Resistencias 680Ω - 1/2w - 1206,954,
-955,,5,"BOX Resistencias 4,7KΩ - 1/2w - 1206",955,
-956,,5,BOX Resistencias 47Ω - 1/2w - 1206,956,
-957,,5,BOX Capacitor 100nF - 1206,957,
-958,,1,BOX Placas PCB Fuente V2,958,
-959,,5,"BOX Display 7seg 0,56'' Doble catodo comun",959,
-960,Remedi,13,BOX Banco de trabajo,960,Laboratorio
-961,Remedi,2,BOX AACC Surrey 4500 Frig,961,Laboratorio
-962,Remedi,2,BOX Calefactor,962,Laboratorio
-963,Remedi,38,BOX Taburete fijo negro,963,Laboratorio
-964,Remedi,4,BOX Taburete giratorio con respaldar (negros),964,Laboratorio
-965,Remedi,3,BOX Mesa de madera,965,Laboratorio
-966,Remedi,1,BOX Mesada de mármol con bacha metálica,966,Laboratorio
-967,Remedi,1,BOX Mueble de madera,967,Laboratorio
-968,Remedi,1,BOX Televisor SmartTV TCL 49'',968,Laboratorio
-969,Remedi,1,BOX Gabinete Telecom BTS,969,Laboratorio
+920,,5,BOX TIP 41C,920,LAB 1
+921,,5,BOX TIP35C,921,LAB 1
+922,,10,BOX Potenciometro lineal para gabinete 20kΩ,922,LAB 1
+923,,10,BOX Potenciometro lineal para gabinete 1kΩ,923,LAB 1
+924,,5,BOX Puente diodo 4A KBU4G o KBL10,924,LAB 1
+925,,3,BOX Puente diodo 4A,925,LAB 1
+926,,3,BOX PIC18F4520 TQFP,926,LAB 1
+927,,3,BOX Inductancia 68uH 1A SMD,927,LAB 1
+928,,3,"BOX Inductancia 150uH 2,2A SMD",928,LAB 1
+929,,3,"BOX Inductancia 22uH 2,3A SMD",929,LAB 1
+930,,2,BOX Micro Rele 12v 2A,930,LAB 1
+931,,2,"BOX Display 7seg 0,56'' rojo SMD",931,LAB 1
+932,,5,BOX Led rojo SMD,932,LAB 1
+933,,5,BOX Sensor corriente INA168,933,LAB 1
+934,,3,BOX LM321,934,LAB 1
+935,,5,BOX Transistor MMBT2222,935,LAB 1
+936,,5,BOX Diodo Schottky 500mA 30V,936,LAB 1
+937,,5,"BOX KF33BDT reg LDO 3,3V 500mA",937,LAB 1
+938,,5,BOX LM2576 reg -12V,938,LAB 1
+939,,5,"BOX LM2576 reg 3,3V",939,LAB 1
+940,,5,BOX LM2576 reg 5V,940,LAB 1
+941,,5,BOX LM2576 reg 12V,941,LAB 1
+942,,5,BOX LM2576 reg ADJ,942,LAB 1
+943,,5,"BOX Capacitor 2,2uF 35V",943,LAB 1
+944,,5,BOX Resistencias 1KΩ - 1/2w - 1206,944,LAB 1
+945,,5,BOX Resistencias 0Ω - 1/4w - 1206,945,LAB 1
+946,,5,"BOX Resistencias 1,8KΩ - 1/2w - 1206",946,LAB 1
+947,,5,BOX Resistencias 22Ω - 1/2w - 1206,947,LAB 1
+948,,5,BOX Resistencias 470Ω - 1/2w - 1206,948,LAB 1
+949,,5,BOX Resistencias 1KΩ - 1/2w - 1206,949,LAB 1
+950,,5,BOX Resistencias 1MΩ - 1/2w - 1206,950,LAB 1
+951,,5,BOX Resistencias 100Ω - 1/2w - 1206,951,LAB 1
+952,,5,BOX Resistencias 68KΩ - 1/2w - 1206,952,LAB 1
+953,,5,"BOX Resistencias 3,3KΩ - 1/2w - 1206",953,LAB 1
+954,,5,BOX Resistencias 680Ω - 1/2w - 1206,954,LAB 1
+955,,5,"BOX Resistencias 4,7KΩ - 1/2w - 1206",955,LAB 1
+956,,5,BOX Resistencias 47Ω - 1/2w - 1206,956,LAB 1
+957,,5,BOX Capacitor 100nF - 1206,957,LAB 1
+958,,1,BOX Placas PCB Fuente V2,958,LAB 1
+959,,5,"BOX Display 7seg 0,56'' Doble catodo comun",959,LAB 1
+960,Remedi,13,BOX Banco de trabajo,960,LAB 2
+961,Remedi,2,BOX AACC Surrey 4500 Frig,961,LAB 2
+962,Remedi,2,BOX Calefactor,962,LAB 2
+963,Remedi,38,BOX Taburete fijo negro,963,LAB 2
+964,Remedi,4,BOX Taburete giratorio con respaldar (negros),964,LAB 2
+965,Remedi,3,BOX Mesa de madera,965,LAB 2
+966,Remedi,1,BOX Mesada de mármol con bacha metálica,966,LAB 2
+967,Remedi,1,BOX Mueble de madera,967,LAB 2
+968,Remedi,1,BOX Televisor SmartTV TCL 49'',968,LAB 2
+969,Remedi,1,BOX Gabinete Telecom BTS,969,LAB 2
 970,Remedi,13,"BOX Fuente de alimentación 1,3-32V/3,3/5/12/24",970,M1 - M12
 971,Remedi,12,"BOX CPU + Monitor Led 19"" + multimedia + disco + Grabadora DVD + teclado + mouse",971,M1 - M12
 972,Remedi,1,"BOX CPU Intel I3 - 3250 - 4 GB RAM + Monitor Led 18,5""+ multimedia + disco 500GB+
- Grabadora DVD + teclado + mouse",972,Mesa 13
-973,Remedi,1,BOX Impresora Laser Samsung M2020,973,Mesa 13
+ Grabadora DVD + teclado + mouse",972,Mesa 13 LAB 2
+973,Remedi,1,BOX Impresora Laser Samsung M2020,973,Mesa 13 LAB 2
 974,Remedi,1,BOX Mandril adaptador para mechas chicas con 3 accesorios p/taladro DREMEL,974,Mesa de perforación
 975,Remedi,1,BOX Taladro de banco c/llave de ajuste,975,Mesa de perforación
 976,Remedi,1,BOX Taladro Dremel Multipro,976,Mesa de perforación
@@ -999,17 +999,17 @@ id,responsable,minimumStock,name,element,location
 993,Remedi,1,BOX Baliza triple,993,Maletin M14
 994,Remedi,1,BOX Baliza simple,994,Maletin M14
 995,Remedi,1,BOX Baliza simple de repuesto,995,Maletin M14
-996,Vettorello,1,BOX Variac 0 a 220 V - 1 A,996,Mesa 14
-997,Remedi,1,"BOX Motor trifásico 3CV 2,2KW",997,Mesa 14
-998,Remedi,1,"BOX Motor trifásico 0,5HP-Altium",998,Mesa 14
-999,Remedi,1,BOX Fuente de alimentacion,999,Mesa 14
-1000,Remedi,1,BOX Variador de velocidad,1000,Mesa 14
-1001,Remedi,1,BOX Variador de velocidad,1001,Mesa 14
-1002,Remedi,4,BOX Moto reductores SIEMENS,1002,Mesa 14
-1003,Remedi,1,BOX Tablero amarillo con contactores y termomagnética,1003,Mesa 14
-1004,Remedi,1,BOX Cable canal ranurado 40x60 (tira),1004,Mesa 14
-1005,Remedi,1,"BOX PC-Duron 1,2 GHz - 512 Mb RAM - 40 Gb Disco - CD - 3 1/2 - Monitor 15""",1005,Mesa 14
-1006,Remedi,1,BOX Caja de cables unipolares varias medidas y colores,1006,Mesa 14
+996,Vettorello,1,BOX Variac 0 a 220 V - 1 A,996,Mesa 14 LAB 2
+997,Remedi,1,"BOX Motor trifásico 3CV 2,2KW",997,Mesa 14 LAB 2
+998,Remedi,1,"BOX Motor trifásico 0,5HP-Altium",998,Mesa 14 LAB 2
+999,Remedi,1,BOX Fuente de alimentacion,999,Mesa 14 LAB 2
+1000,Remedi,1,BOX Variador de velocidad,1000,Mesa 14 LAB 2
+1001,Remedi,1,BOX Variador de velocidad,1001,Mesa 14 LAB 2
+1002,Remedi,4,BOX Moto reductores SIEMENS,1002,Mesa 14 LAB 2
+1003,Remedi,1,BOX Tablero amarillo con contactores y termomagnética,1003,Mesa 14 LAB 2
+1004,Remedi,1,BOX Cable canal ranurado 40x60 (tira),1004,Mesa 14 LAB 2
+1005,Remedi,1,"BOX PC-Duron 1,2 GHz - 512 Mb RAM - 40 Gb Disco - CD - 3 1/2 - Monitor 15""",1005,Mesa 14 LAB 2
+1006,Remedi,1,BOX Caja de cables unipolares varias medidas y colores,1006,Mesa 14 LAB 2
 1007,Remedi,1,BOX Termica 4x10A,1007,Maqueta tablero amarillo
 1008,Remedi,1,BOX Temporizador para riel DIN c/zócalo,1008,Maqueta tablero amarillo
 1009,Remedi,3,BOX Contactos auxiliares para contactor (NC),1009,Maqueta tablero amarillo
@@ -1021,16 +1021,16 @@ id,responsable,minimumStock,name,element,location
 1015,Remedi,1,BOX Luz UV,1015,Mesa mármol
 1016,Remedi,2,BOX Bandeja para ataque químico de PCB,1016,Mesa mármol
 1017,Remedi,1,BOX Bandeja para agua,1017,Mesa mármol
-1018,Remedi,2,BOX Armario metálico con 6 compartimientos individuales,1018,
-1019,Remedi,12,BOX Kit de destornilladores Stanley x 6,1019,
-1020,Remedi,1,BOX Osciloscopio digital Tektronic TDS224 (100 MHz 4 canales) c/4 puntas - Manuales,1020,
-1021,Remedi,4,BOX Osciloscopio digital 100 MHz; 1Gsample; conectividad USB. Mod: Gw INSTEK GDS-1102A,1021,
-1022,Remedi,7,BOX Osciloscopio digital 100 MHz; 1Gsample; conectividad USB. Mod: Gw INSTEK GDS-1102A-U,1022,
-1023,Michalik,24,BOX Puntas de osciloscopio,1023,
-1024,Remedi,24,BOX Puntas de fuentes banana-cocodrilo (par rojo y negro),1024,
-1025,Remedi,12,BOX Pinza de punta Proskit 8PK-102D,1025,
-1026,Remedi,12,BOX Multímetro UT33A,1026,
-1027,Remedi,12,BOX Alicate Proskit 8PK-101D,1027,
+1018,Remedi,2,BOX Armario metálico con 6 compartimientos individuales,1018,LAB 2
+1019,Remedi,12,BOX Kit de destornilladores Stanley x 6,1019,LAB 2
+1020,Remedi,1,BOX Osciloscopio digital Tektronic TDS224 (100 MHz 4 canales) c/4 puntas - Manuales,1020,LAB 2
+1021,Remedi,4,BOX Osciloscopio digital 100 MHz; 1Gsample; conectividad USB. Mod: Gw INSTEK GDS-1102A,1021,LAB 2
+1022,Remedi,7,BOX Osciloscopio digital 100 MHz; 1Gsample; conectividad USB. Mod: Gw INSTEK GDS-1102A-U,1022,LAB 2
+1023,Michalik,24,BOX Puntas de osciloscopio,1023,LAB 2
+1024,Remedi,24,BOX Puntas de fuentes banana-cocodrilo (par rojo y negro),1024,LAB 2
+1025,Remedi,12,BOX Pinza de punta Proskit 8PK-102D,1025,LAB 2
+1026,Remedi,12,BOX Multímetro UT33A,1026,LAB 2
+1027,Remedi,12,BOX Alicate Proskit 8PK-101D,1027,LAB 2
 1028,Remedi,20,"BOX Borneras p/2,5mm - para riel DIN",1028,Sector ELEC. IND.2
 1029,Remedi,20,"BOX Borneras p/1,5mm - para riel DIN",1029,Sector ELEC. IND.2
 1030,Remedi,8,BOX Luz piloto verde Φ22 - 220v,1030,Sector ELEC. IND.2
