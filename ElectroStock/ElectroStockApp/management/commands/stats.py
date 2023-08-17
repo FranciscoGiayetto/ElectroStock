@@ -8,6 +8,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        # Agregar especialidades
+        specialities = ['electronica', 'programacion', 'electromecanica']
+        for speciality in specialities:
+            speciality_obj, created = Speciality.objects.get_or_create(name=speciality)
+            if created:
+                self.stdout.write(self.style.SUCCESS(f"Especialidad {speciality} creada exitosamente."))
+            else:
+                self.stdout.write(f"Dato especialidad ya existente")
+                
         #users
         especialidad_electronica = Speciality.objects.get(name='electronica')
         usuarios_data = [
@@ -48,15 +57,6 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Curso {grade} creado exitosamente."))
             else:
                 self.stdout.write(f"Dato curso ya existente")
-
-        # Agregar especialidades
-        specialities = ['electronica', 'programacion', 'electromecanica']
-        for speciality in specialities:
-            speciality_obj, created = Speciality.objects.get_or_create(name=speciality)
-            if created:
-                self.stdout.write(self.style.SUCCESS(f"Especialidad {speciality} creada exitosamente."))
-            else:
-                self.stdout.write(f"Dato especialidad ya existente")
 
         # Agregar laboratorios
         lab_data = [
