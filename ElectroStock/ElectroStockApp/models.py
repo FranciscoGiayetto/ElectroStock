@@ -12,6 +12,10 @@ if not Group.objects.filter(name="Profesor").exists():
     profesor_group = Group.objects.create(name="Profesor")
     profesor_group.permissions.add()
 
+if not Group.objects.filter(name="Jefe de area").exists():
+    profesor_group = Group.objects.create(name="Jefe de area")
+    profesor_group.permissions.add()
+
 
 class Course(models.Model):
     grade = models.IntegerField(verbose_name='Año')
@@ -123,6 +127,15 @@ class Location(models.Model):
         verbose_name_plural = "Ubicaciones"
         verbose_name = "Ubicacion"
 
+class TokenSignup(models.Model):
+    name = models.CharField(max_length=30,verbose_name='Nombre')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Tokens"
+        verbose_name = "Token"
 
 class Box(models.Model):
     responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
@@ -155,15 +168,17 @@ class Log(models.Model):
         ROTO="ROT","Roto"
 
     status = models.CharField(
-        max_length=30, choices=Status.choices, default=Status.COMPRADO, verbose_name='Estado',help_text="Para cambiar al modo prestamos, elegir el estado aprobado",
+        max_length=30, choices=Status.choices, default=Status.COMPRADO, verbose_name='Estado'
     )
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(verbose_name='Cantidad')
     borrower = models.ForeignKey( #si este campo da error revisar en el init
         CustomUser,
         on_delete=models.CASCADE,
         related_name="borrowed_logs",
         help_text="Si se ingresa como comprado poner nombre de tu usuario",
-        verbose_name='Profesor'
+        null=True,
+        blank=True,
+        verbose_name='Prestador/Comprador'
     )
     lender = models.ForeignKey(
         CustomUser,
@@ -171,12 +186,13 @@ class Log(models.Model):
         related_name="lender_logs",
         null=True,
         blank=True,
+        help_text="No es necesario si se carga como comprado",
         verbose_name='Prestatario'
     )
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
-    observation = models.CharField(max_length=100, null=True, blank=True)
-    dateIn = models.DateField(auto_now=True) #si este campo da error revisar en la init 
-    dateOut = models.DateTimeField(null=True, blank=True)
+    observation = models.CharField(max_length=100, null=True, blank=True,verbose_name='Observaciones')
+    dateIn = models.DateField(auto_now=True,verbose_name='Fecha de ingreso') #si este campo da error revisar en la init 
+    dateOut = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de devolucion',help_text="No es necesario si se carga como comprado")
 
     def __str__(self):
         return self.status

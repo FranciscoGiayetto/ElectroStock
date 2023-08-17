@@ -8,6 +8,10 @@ class CategoriaPadreSerializer(serializers.ModelSerializer):
         model = models.Category
         fields = "__all__"
 
+class TokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.TokenSignup
+        fields = "__all__"
 
 # Para ver y editar categorias
 class CategoriaSerializer(serializers.ModelSerializer):
@@ -105,7 +109,9 @@ class BoxSerializer(serializers.ModelSerializer):
 class LogSerializer(serializers.ModelSerializer):
     box = BoxSerializer()
     borrower = UsersSerializer()
-
+    lender = UsersSerializer()
+    box= BoxSerializer()
+    borrower= UsersSerializer()
     class Meta:
         model = models.Log
         fields = (
@@ -166,7 +172,7 @@ class BorrowerStatisticsSerializer(serializers.Serializer):
 
 # Serializer para la estadistica de los dias con mayor prestamos
 class DateStatisticsSerializer(serializers.Serializer):
-    dateIn = serializers.DateTimeField()
+    dateIn = serializers.DateField()
     total_datein_logs = serializers.IntegerField()
 
     class Meta:

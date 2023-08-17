@@ -17,6 +17,14 @@ correr el comando "npm install" para instalar las dependencias de react
 > Django
 > UML
 ```
+
+install rabbitmq
+sudo apt install rabbitmq-server
+sudo systemctl start rabbitmq-server
+sudo nano /etc/rabbitmq/rabbitmq-env.conf
+sudo systemctl status rabbitmq-server.service
+sudo systemctl restart rabbitmq-server
+
 ## 🧙‍♂️ CREADORES 🧙‍♂️
 ```
 ```

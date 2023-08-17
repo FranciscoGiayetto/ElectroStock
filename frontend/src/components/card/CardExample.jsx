@@ -17,7 +17,7 @@ export default function CardExample(props) {
             variant="top"
             src={image}
             className="imagencss"
-            style={{  maxHeight: '50px', width: '50%', display: 'block' }}
+            style={{  maxHeight: '70px auto', width: '50%', display: 'block' }}
           />
           <Button variant="primary" className="my-button">+</Button>
         </div>

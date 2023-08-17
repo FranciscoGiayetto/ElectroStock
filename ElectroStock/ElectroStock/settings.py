@@ -58,6 +58,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+FRONTEND_URL = 'http://localhost:3000'
+
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1','http://127.0.0.1:3000']
 
 ROOT_URLCONF = "ElectroStock.urls"
 
@@ -223,6 +226,7 @@ JAZZMIN_SETTINGS = {
         "ElectroStockApp.Element":"fas fa-hammer",
         "ElectroStockApp.Log":"fas fa-exchange-alt",
         "ElectroStockApp.Laboratory":"fas fa-flask",
+        "ElectroStockApp.TokenSignup":"fas fa-user-secret",
         "ElectroStockApp.Speciality":"fas fa-hard-hat",
         "ElectroStockApp.Course":"fas fa-graduation-cap",
         "token_blacklist.blacklistedtoken":"fas fa-lock",
@@ -248,6 +252,10 @@ JAZZMIN_SETTINGS = {
     # Whether to show the UI customizer on the sidebar
     "show_ui_builder": False,
 
+    "usermenu_links": [
+        {"name": "Token", "url": "http://127.0.0.1:8000/admin/ElectroStockApp/tokensignup/", "new_window": False, "icon":"fas fa-user-secret",},
+    ],
+    
     ###############
     # Change view #
     ###############
@@ -300,16 +308,18 @@ JAZZMIN_UI_TWEAKS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=100000),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
-    'ROTATE_REFRESH_TOKENS': True,
+    'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
 
@@ -334,9 +344,10 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=100000),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
 
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -347,6 +358,7 @@ CORS_ORIGIN_WHITELIST = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+
 ]
 
 # settings.py
@@ -373,5 +385,22 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'ElectroStockApp.task.run_check_expired_logs',
         'schedule': timedelta(days=1),  # Ejecutar cada 1 día
     },
+    'assign_next_year_course': {
+        'task': 'ElectroStockApp.task.assign_next_year_course',
+        'schedule': timedelta(days=365),  # Ejecutar cada 1 año
+    },
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # Puedes ajustar el nivel según tus necesidades
+    },
+}
