@@ -8,6 +8,10 @@ class CategoriaPadreSerializer(serializers.ModelSerializer):
         model = models.Category
         fields = "__all__"
 
+class TokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.TokenSignup
+        fields = "__all__"
 
 # Para ver y editar categorias
 class CategoriaSerializer(serializers.ModelSerializer):

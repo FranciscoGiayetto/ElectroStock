@@ -15,6 +15,29 @@ class ElementsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = ElementSerializer
 
+from cryptography.fernet import Fernet
+
+class TokenViewSet(viewsets.ModelViewSet):
+    queryset = models.TokenSignup.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = TokenSerializer
+
+    def encrypt_data(self, data, key):
+        fernet = Fernet(key)
+        encrypted_data = fernet.encrypt(data.encode())
+        return encrypted_data
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        encrypted_data = self.encrypt_data(data['name'], 'pepe1234')  # Replace 'your-secret-key' with your actual key
+        encrypted_data_base64 = encrypted_data.decode('utf-8')
+        data['encrypted_name'] = encrypted_data_base64
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 # View para los elementos que estan en el ecommerce
 class ProductosEcommerceAPIView(viewsets.ModelViewSet):

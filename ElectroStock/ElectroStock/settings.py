@@ -226,6 +226,7 @@ JAZZMIN_SETTINGS = {
         "ElectroStockApp.Element":"fas fa-hammer",
         "ElectroStockApp.Log":"fas fa-exchange-alt",
         "ElectroStockApp.Laboratory":"fas fa-flask",
+        "ElectroStockApp.TokenSignup":"fas fa-user-secret",
         "ElectroStockApp.Speciality":"fas fa-hard-hat",
         "ElectroStockApp.Course":"fas fa-graduation-cap",
         "token_blacklist.blacklistedtoken":"fas fa-lock",
@@ -251,6 +252,10 @@ JAZZMIN_SETTINGS = {
     # Whether to show the UI customizer on the sidebar
     "show_ui_builder": False,
 
+    "usermenu_links": [
+        {"name": "Token", "url": "http://127.0.0.1:8000/admin/ElectroStockApp/tokensignup/", "new_window": False, "icon":"fas fa-user-secret",},
+    ],
+    
     ###############
     # Change view #
     ###############

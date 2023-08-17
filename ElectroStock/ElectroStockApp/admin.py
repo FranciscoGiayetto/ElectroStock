@@ -444,6 +444,11 @@ class LocationAdmin(ImportExportActionModelAdmin):
         "laboratoy__name",
     ]
 
+# Clase de filtros y busqueda de las ubicaciones
+class TokenAdmin(ImportExportActionModelAdmin):
+    list_display = ("name",)
+
+
 
 # Registramos los filtros y busquedas de las clases
 admin.site.register(Element, ElementAdmin)
@@ -455,4 +460,7 @@ admin.site.register(Course, CourseAdmin)
 admin.site.register(Box, BoxAdmin)
 admin.site.register(Log, LogyAdmin)
 admin.site.register(Speciality)
+
+#SACAR ESTE
+admin.site.register(TokenSignup, TokenAdmin)
 

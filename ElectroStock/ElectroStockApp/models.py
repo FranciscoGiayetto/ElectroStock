@@ -127,6 +127,15 @@ class Location(models.Model):
         verbose_name_plural = "Ubicaciones"
         verbose_name = "Ubicacion"
 
+class TokenSignup(models.Model):
+    name = models.CharField(max_length=30,verbose_name='Nombre')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Tokens"
+        verbose_name = "Token"
 
 class Box(models.Model):
     responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -177,12 +186,13 @@ class Log(models.Model):
         related_name="lender_logs",
         null=True,
         blank=True,
+        help_text="No es necesario si se carga como comprado",
         verbose_name='Prestatario'
     )
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
     observation = models.CharField(max_length=100, null=True, blank=True,verbose_name='Observaciones')
     dateIn = models.DateField(auto_now=True,verbose_name='Fecha de ingreso') #si este campo da error revisar en la init 
-    dateOut = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de devolucion')
+    dateOut = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de devolucion',help_text="No es necesario si se carga como comprado")
 
     def __str__(self):
         return self.status
