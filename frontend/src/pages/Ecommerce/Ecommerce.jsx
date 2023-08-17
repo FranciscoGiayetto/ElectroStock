@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Ecommerce.css';
 import CardExample from '../../components/card/CardExample';
+import WordList from '../../components/card/filtros';
 import defaultpicture from '../../assets/images/defaultpicture.png';
 import { useSearchParams } from 'react-router-dom';
+
 
 function Ecommerce() {
   const [cards, setCards] = useState([]);
@@ -79,29 +81,36 @@ function Ecommerce() {
   };
   
   
-  
-
   return (
     <div className='container' id='ecommerce'>
       <div className='row'>
-        {visibleCards.map((card, index) => (
-          <div key={index} className='col-10 col-sm-7 col-md-6 col-lg-4 mb-2'>
-            <CardExample title={card.name} text={card.description} image={card.image} id={card.id} />
-          </div>
-        ))}
-      </div>
-
-      {showLoadMoreButton && (
-        <div className='row'>
-          <div className='col-12 text-center'>
-            <button className='btn btn-primary cargarMas' onClick={handleLoadMore}>
-              Cargar más
-            </button>
-          </div>
+        <div className='col-md-3' id='filtros'>
+          <WordList></WordList>
         </div>
-      )}
+        <div className='col-md-9'>
+          <div className='row'>
+            {visibleCards.map((card, index) => (
+              <div key={index} className='col-10 col-sm-7 col-md-6 col-lg-4 mb-2'>
+                <CardExample title={card.name} text={card.description} image={card.image} id={card.id} />
+              </div>
+            ))}
+          </div>
+  
+          {showLoadMoreButton && (
+            <div className='row'>
+              <div className='col-12 text-center'>
+                <button className='btn btn-primary cargarMas' onClick={handleLoadMore}>
+                  Cargar más
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
 
 export default Ecommerce;
+
+

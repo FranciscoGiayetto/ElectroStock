@@ -17,8 +17,10 @@ import MainWrapper from './layouts/MainWrapper';
 import Login from './pages/LoginNuevo/login';
 import PrivateRoute from './layouts/PrivateRoute';
 import Logout from './pages/LoginNuevo/logout';
+import Register from './pages/LoginNuevo/register';
 import Private from './pages/LoginNuevo/private';
 import MyComponent from './pages/Prestamos/Prestamos';
+import { Link } from "react-router-dom";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,23 +31,18 @@ function App() {
   return (
     <Router>
       <MainWrapper>
-      <div className="container">
-        <div className="app">
-          <Routes>
-          <Route
-                      path="/private"
-                      element={
-                          <PrivateRoute>
-                              <Private />
-                          </PrivateRoute>
-                      }
-                  />
-                  <Route path="/login" element={<Login />} />
+        <div className="container">
+          <div className="app">
+            <Routes>
+              <Route path="/private" element={<PrivateRoute><Private /></PrivateRoute>} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Register />} />
+              <Route path="/logout" element={<Logout />} />
 
-                  <Route path="/logout" element={<Logout />} />
-            <Route path="/*" element={<LayoutWrapper />} />
-          </Routes>
-        </div>
+              
+              <Route path="/*" element={<LayoutWrapper onSearch={handleSearch} searchQuery={searchQuery}/>} />
+            </Routes>
+          </div>
         </div>
       </MainWrapper>
     </Router>

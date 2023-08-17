@@ -6,7 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 # Para arreglar el erro del export tenes que cambiar de la funcion ExportActionMixin- export_action_action ---> export_format = 1
-
+# Arreglar cuando aparece el token blacklist comentar los admin registers en  venv/lib/pythonX.X/site-packages/rest_framework_simple/token_blacklist/admin.py
 # Register your models here.
 admin.site.site_header = "Stock"
 admin.site.index_title = "Stock"
@@ -140,7 +140,7 @@ class UserResource(resources.ModelResource):
 
         # Asignar el objeto "curso" al campo "course" del usuario
         instance.course = course
-
+        instance.is_staff= False
         # Cifrar la contraseña si es necesario
         if not dry_run:
             password = instance.password
@@ -244,6 +244,7 @@ class LogResource(resources.ModelResource):
 
 from django import forms
 
+from django.contrib.admin.filters import ChoicesFieldListFilter
 
 class LogForm(forms.ModelForm):
     class Meta:
@@ -255,13 +256,13 @@ class LogForm(forms.ModelForm):
         pass
 
 
+
 # Clase de filtros y busqueda de los prestamos
 class LogyAdmin(ImportExportActionModelAdmin):
     form = LogForm
 
     class Media:
         js = ("admin/js/log_admin.js",)
-
     resource_class = LogResource
     list_display = (
         "status",
@@ -308,6 +309,7 @@ class LogyAdmin(ImportExportActionModelAdmin):
                 "dateOut",
             )
         return exclude
+
 
 
 # Clase para export-import de boxes
@@ -454,3 +456,4 @@ admin.site.register(Course, CourseAdmin)
 admin.site.register(Box, BoxAdmin)
 admin.site.register(Log, LogyAdmin)
 admin.site.register(Speciality)
+

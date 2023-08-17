@@ -58,6 +58,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+FRONTEND_URL = 'http://localhost:3000'
+
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1','http://127.0.0.1:3000']
 
 ROOT_URLCONF = "ElectroStock.urls"
 
@@ -300,7 +303,9 @@ JAZZMIN_UI_TWEAKS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 
@@ -339,6 +344,7 @@ SIMPLE_JWT = {
 }
 
 
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = [
@@ -347,6 +353,7 @@ CORS_ORIGIN_WHITELIST = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+
 ]
 
 # settings.py
@@ -373,5 +380,22 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'ElectroStockApp.task.run_check_expired_logs',
         'schedule': timedelta(days=1),  # Ejecutar cada 1 día
     },
+    'assign_next_year_course': {
+        'task': 'ElectroStockApp.task.assign_next_year_course',
+        'schedule': timedelta(days=365),  # Ejecutar cada 1 año
+    },
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # Puedes ajustar el nivel según tus necesidades
+    },
+}
