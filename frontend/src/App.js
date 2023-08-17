@@ -18,6 +18,7 @@ import Login from './pages/LoginNuevo/login';
 import PrivateRoute from './layouts/PrivateRoute';
 import Logout from './pages/LoginNuevo/logout';
 import Private from './pages/LoginNuevo/private';
+import Informe from "./pages/Informe/Informe";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -70,6 +71,9 @@ function LayoutWrapper({ onSearch, searchQuery }) {
                           </PrivateRoute>} />
       <Route path="/detalleCuenta" element={<PrivateRoute>
         <DetalleCuenta />
+     </PrivateRoute>} />
+     <Route path="/informe" element={<PrivateRoute>
+        <Informe/>
      </PrivateRoute>} />
       </Routes>
     </Layout>
