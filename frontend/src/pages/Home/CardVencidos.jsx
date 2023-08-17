@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxios from '../../utils/useAxios';
+import Table from 'react-bootstrap/Table';
+
 import {
   MDBIcon,
   MDBBadge,
@@ -57,17 +59,17 @@ const CardVencidos = () => {
   };
 
   return (
-    <MDBCard alignment='left' style={{ backgroundColor: '#018195'  }}>
+    <MDBCard alignment='left' style={{ backgroundColor: '#018195' , border: 'none' }}>
       <MDBCardHeader style={{ color: 'white' }}>Vencidos</MDBCardHeader>
-      <MDBTable hover>
-        <MDBTableHead>
+      <Table hover style={{ marginBottom: '0', height: '100%' }}> 
+             <thead>
           <tr>
             <th scope='col'>Vencimiento</th>  
             <th scope='col'>Producto</th>
             <th scope='col'>Cantidad</th>
           </tr>
-        </MDBTableHead>
-        <MDBTableBody>
+        </thead>
+        <tbody>
         {element.slice(-4).map((item, index) => (
         <tr key={index}>
           <td>{formatDate(item.dateOut)}</td> {/* Display formatted date */}
@@ -76,8 +78,8 @@ const CardVencidos = () => {
         </tr>
       ))}
 
-        </MDBTableBody>
-      </MDBTable>
+        </tbody>
+      </Table>
     </MDBCard>
   );
 };

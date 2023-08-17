@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxios from '../../utils/useAxios';
+import Table from 'react-bootstrap/Table';
 import {
   MDBBadge,
   MDBCard,
@@ -52,21 +53,22 @@ const CardPendientes = () => {
     const year = dateObject.getFullYear();
     const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
     const day = dateObject.getDate().toString().padStart(2, '0');
+
     return `${year}-${month}-${day}`;
   };
 
   return (
-    <MDBCard alignment='left' style={{ backgroundColor: '#018195'  }}>
+    <MDBCard alignment='left' style={{ backgroundColor: '#018195' , border: 'none' }}>
       <MDBCardHeader style={{ color: 'white' }}>Pendientes</MDBCardHeader>
-      <MDBTable hover>
-        <MDBTableHead>
+      <Table hover style={{ marginBottom: '0', height: '100%' }}>
+                <thead>
           <tr>
             <th scope='col'>Fecha</th>
             <th scope='col'>Producto</th>
             <th scope='col'>Cantidad</th>
           </tr>
-        </MDBTableHead>
-        <MDBTableBody>
+        </thead>
+        <tbody>
         {element.slice(-4).map((item, index) => (
             <tr key={index}>
               <td>{formatDate(item.dateOut)}</td> {/* Display formatted date */}
@@ -74,8 +76,8 @@ const CardPendientes = () => {
               <td>{item.quantity}</td>
             </tr>
           ))}
-        </MDBTableBody>
-      </MDBTable>
+        </tbody>
+      </Table>
     </MDBCard>
   );
 };
