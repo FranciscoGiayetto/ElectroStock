@@ -10,41 +10,10 @@ from ElectroStockApp.models import CustomUser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 import json
-from django.contrib.auth.views import PasswordResetView as BasePasswordResetView, PasswordResetConfirmView as BasePasswordResetConfirmView, PasswordChangeView as BasePasswordChangeView
 from django.contrib.auth.models import User
 from django.urls import reverse
 from ElectroStockApp import models
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from django.template.loader import render_to_string
-from django.core.mail import send_mail
-
-
-class PasswordResetView(BasePasswordResetView):
-    def post(self, request, *args, **kwargs):
-        email = request.data.get('email')
-        if User.objects.filter(email=email).exists():
-            self.request = request
-            self.extra_email_context = {'reset_url': reverse('password_reset_confirm')}
-            self.form.save()
-            return Response({"detail": "Password reset email has been sent."}, status=status.HTTP_200_OK)
-        else:
-            return Response({"detail": "No account found with this email address."}, status=status.HTTP_400_BAD_REQUEST)
-
-class PasswordResetConfirmView(BasePasswordResetConfirmView):
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.save(serializer)
-        return Response({"detail": "Password has been reset with the new password."}, status=status.HTTP_200_OK)
-
-class PasswordChangeView(BasePasswordChangeView):
-    def post(self, request, *args, **kwargs):
-        self.user = self.request.user
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.change_password(serializer)
-        return Response({"detail": "Password has been successfully changed."}, status=status.HTTP_200_OK)
 
 
 
