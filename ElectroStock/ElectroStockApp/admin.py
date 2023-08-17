@@ -158,7 +158,6 @@ class UserResource(resources.ModelResource):
 class CustomUserAdmin(ImportExportActionModelAdmin, UserAdmin):
     resource_class = UserResource
     list_display = (
-        "id",
         "username",
         "email",
         "course",
