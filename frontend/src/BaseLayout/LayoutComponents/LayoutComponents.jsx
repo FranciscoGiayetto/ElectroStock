@@ -12,6 +12,7 @@ import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import DataUsageIcon from '@mui/icons-material/DataUsage';
 import './LayoutComponents.css';
 import its from '../../assets/its.png';
 import { useNavigate } from 'react-router-dom';
@@ -81,8 +82,8 @@ const LayoutComponents = ({ onSearch }) => {
           <Menu.Item key="3" icon={<PaidRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/presupuesto' }}>
             Presupuesto
           </Menu.Item>
-          <Menu.Item key="4" icon={<StorageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/stock' }}>
-            Stock
+          <Menu.Item key="4" icon={<DataUsageIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
+            Informe
           </Menu.Item>
           <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
             Admin
