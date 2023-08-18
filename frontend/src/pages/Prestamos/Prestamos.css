@@ -1,0 +1,19 @@
+/* Prestamos.css */
+
+.pagecontainer {
+    text-align: left; /* Alineación a la izquierda */
+  }
+  
+  .prestamos-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alineación a la izquierda */
+    gap: 20px; /* Espacio entre las tarjetas de préstamos */
+    margin-top: -20px; /* Espacio en la parte superior */
+  }
+  
+  
+  .titulo {
+    font-size: 30px; /* Tamaño de fuente */
+    font-weight: 1px;
+    margin-top: 10px;}

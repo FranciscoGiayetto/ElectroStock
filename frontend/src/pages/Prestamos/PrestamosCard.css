@@ -1,27 +1,53 @@
-/* PrestamosCard.css */
+/* CardPrestamos.css */
 
-.card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 16px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Agrega otros estilos según tus preferencias */
-
-  /* Ajustar el tamaño del contenedor de la card */
-  width: 400px;
-  /* Ajustar el padding interno para dar más espacio entre los elementos */
-  padding: 20px;
+.prestamo-card {
+  display: flex;
+  border: 2px solid #ccc; /* Cambiar el grosor del borde */
+  border-radius: 8px; /* Agregar bordes redondeados */
+  padding: 10px;
+  margin-top: 100px;
+  margin-bottom: -100px;
+  /* Ajustar ancho de la tarjeta */
+  width: 999px; /* Ajusta el ancho según tus necesidades */
+  /* Ajustes para alargar la tarjeta */
+  min-height: 150px; /* Altura mínima */
+  position: relative;
 }
 
-.card h3 {
-  font-size: 20px; /* Aumentar el tamaño de fuente del título */
-  margin-bottom: 12px; /* Aumentar el espacio entre el título y los párrafos */
+.botones-container {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
 }
 
-.card p {
-  font-size: 16px; /* Aumentar el tamaño de fuente de los párrafos */
-  margin-bottom: 8px; /* Aumentar el espacio entre los párrafos */
+.boton-izquierdo {
+  background-color: #58A4B0;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  margin-right: 10px;
 }
 
-  
+.contenido-card {
+  flex-grow: 1;
+  text-align: left;
+  margin-left: 10px;
+}
+
+.img-container {
+  flex: 0 0 140px;
+  margin-right: 10x;
+  margin-top: 8px;
+}
+
+.img-container img {
+  width: 250%; /* Ajustar el ancho de la imagen */
+  height: auto; /* Mantener la proporción */
+}
