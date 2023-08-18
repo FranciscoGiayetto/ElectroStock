@@ -17,6 +17,7 @@ import its from '../../assets/its.png';
 import { useNavigate } from 'react-router-dom';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+import Form from 'react-bootstrap/Form';
 
 const { Header, Sider } = Layout;
 
@@ -103,32 +104,27 @@ const LayoutComponents = ({ onSearch }) => {
           </div>
 
           <div className='div-form'>
-            <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '10rem' }}>
-              <div className='div-autocomplete'>
+            <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width:' ' }}>
                 <Autocomplete
-                className='search-autocomplete'
-                options={myOptions}
-                getOptionLabel={(option) => option}
-                value={selectedOption}
-                onChange={(event, newValue) => setSelectedOption(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                  
-                    name='searchBar'
-                    {...params}
-                    label="Buscar productos"
-                    
-                    
-                    className='search-input'
-                  />
-                )}
-              />
-            </div>
+                  className='search-autocomplete'
+                  options={myOptions}
+                  getOptionLabel={(option) => option}
+                  value={selectedOption}
+                  onChange={(event, newValue) => setSelectedOption(newValue)}
+                  renderInput={(params) => (
+                    <Form.Control
+                      name='searchBar'
+                      {...params}
+                      className='search-input placeholder'
+                    />
+                  )}
+                />
               <Button className='button hover' variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
                 <SearchRoundedIcon />
               </Button>
             </form>
           </div>
+
 
           <div className='div-buttons'>
            

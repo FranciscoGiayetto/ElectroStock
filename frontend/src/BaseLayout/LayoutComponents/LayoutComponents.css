@@ -38,14 +38,10 @@ html, body {
   margin-right: auto;
   margin-left: 10px;
   flex: 1;
-  width: 11rem !important;
+  width: 558px !important;
   height: 2rem;
-}
+  cursor: auto;
 
-.MuiFormControl-fullWidth {
-  width: 8rem !important;
-  margin-right: 2rem;
-  
 }
 
 @media (max-width: 576px) {
@@ -53,24 +49,9 @@ html, body {
     width: 6rem;
     height: 1.5rem;
   }
-
-  .MuiFormControl-fullWidth {
-    width: 12rem !important;
-  }
-}
-
-.MuiFormControl-fullWidth {
-  width: 20rem !important;
-  margin-right: 2rem;
-  padding-right: 2rem !important;
 }
 
 .search-input::placeholder {
-  color: rgba(235, 235, 235, 0.5);
-}
-
-.search-input:focus {
-  background: #2E5266;
   color: rgba(235, 235, 235, 0.5);
 }
 
