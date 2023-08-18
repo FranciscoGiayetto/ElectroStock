@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from ElectroStockApp.models import Speciality, Laboratory, Course, Category, Element, Location
+from ElectroStockApp.models import Speciality, Laboratory, Course, Category, Element, Location, TokenSignup
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -200,3 +200,4 @@ class Command(BaseCommand):
                 print(f"Ubicación creada: {id}")
 
 
+        token, _ = TokenSignup.objects.get_or_create(name='villada')
