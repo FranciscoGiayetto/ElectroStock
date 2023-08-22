@@ -35,6 +35,10 @@ function Carrito() {
     }
   };
 
+  const handleDelete = (log_id) => {
+    console.log(log_id);
+  }
+    
   return (
     <section className="container-bg" style={{ backgroundColor: "white"}}>
       <MDBContainer className="h-100">
@@ -47,12 +51,12 @@ function Carrito() {
             {/* Renderizar los componentes CartCard */}
             {carrito.map(item => (
               <CartCard
-                key={item.box.id}
-                id={item.box.id}
-                name={item.box.name}
-                title={item.box.element.name}
-                image={item.box.element.image}
-                quantity={item.quantity}
+              id={item.id}
+              name={item.box.name}
+              title={item.box.element.name}
+              image={item.box.element.image}
+              quantity={item.quantity}
+              handleDelete={handleDelete}
               />
             ))}
             
