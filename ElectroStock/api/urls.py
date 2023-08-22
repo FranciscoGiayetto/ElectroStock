@@ -16,6 +16,7 @@ router.register("laboratory", LaboratorioViewSet, "laboratory")
 router.register("location", LocationViewSet, "location")
 router.register("box", BoxViewSet, "box")
 router.register("especialidad", SpecialityViewSet, "especialidad")
+router.register("log", LogViewSet, "log")
 
 urlpatterns = [
     path("carrito/<int:user_id>/", carrito, name="carrito"),

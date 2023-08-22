@@ -61,6 +61,10 @@ class UsersViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = UsersSerializer
 
+class LogViewSet(viewsets.ModelViewSet):
+    queryset = models.Log.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = LogSerializer
 
 # View para los cursos
 class CourseViewSet(viewsets.ModelViewSet):
