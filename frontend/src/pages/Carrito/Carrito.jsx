@@ -19,9 +19,11 @@ function Carrito() {
   ]);
   const userData = user()
 
-  useEffect(() => {
-    getCarrito();
-  }, []);
+ useEffect(() => {
+  console.log('SE EJECUTO EL USE ')
+  getCarrito();
+}, []); // Agrega userData como dependencia
+
 
   const getCarrito = async () => {
     try {
@@ -35,9 +37,15 @@ function Carrito() {
     }
   };
 
-  const handleDelete = (log_id) => {
-    console.log(log_id);
+  const handleDelete = async (log_id) => {
+    try {
+      await api.delete(`/log/${log_id}`);
+      getCarrito(); // Vuelve a obtener el carrito actualizado
+    } catch (error) {
+      console.error(error);
+    }
   }
+  
     
   return (
     <section className="container-bg" style={{ backgroundColor: "white"}}>
