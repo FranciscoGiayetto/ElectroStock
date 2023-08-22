@@ -110,6 +110,7 @@ class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Log
         fields = (
+            "id",
             "box",
             "borrower",
             "lender",
