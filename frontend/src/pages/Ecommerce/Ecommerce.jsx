@@ -84,12 +84,12 @@ function Ecommerce() {
   
   
   return (
-    <Container>
+    <Container style={{ marginTop: '5rem' }}>
       <Row>
-        <Col xs={2}>
+        <Col xs={2}  >
         <WordList></WordList>
         </Col>
-        <Col xs={10}>
+        <Col xs={10}> 
         {visibleCards.map((card, index) => (
           <div key={index} >
             <CardExample title={card.name} text={card.description} image={card.image} id={card.id} />
