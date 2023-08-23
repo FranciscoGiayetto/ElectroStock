@@ -20,6 +20,7 @@ import Logout from './pages/LoginNuevo/logout';
 import Register from './pages/LoginNuevo/register';
 import Private from './pages/LoginNuevo/private';
 import { Link } from "react-router-dom";
+import Informes from "./pages/Informes/Informes";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,6 +66,9 @@ function LayoutWrapper({ onSearch, searchQuery }) {
         <Route path="/detalleProducto/:id" element={<PrivateRoute>
                               <DetalleProducto />
                           </PrivateRoute>} />
+        <Route path="/informe/" element={<PrivateRoute>
+                              <Informes />
+                          </PrivateRoute>} />                          
       <Route path="/detalleCuenta" element={<PrivateRoute>
         <DetalleCuenta />
      </PrivateRoute>} />
