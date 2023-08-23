@@ -1,47 +1,50 @@
-// Prestamos.jsx
-
 import React, { useState, useEffect } from 'react';
 import PrestamosCard from './CardPrestamos';
-import './Prestamos.css'; 
+import useAxios from '../../utils/useAxios';
+import './Prestamos.css';
+import { useAuthStore } from '../../store/auth';
 
 const Prestamos = () => {
+  const [user] = useAuthStore((state) => [state.user]);
+  const userData = user();
+  const api = useAxios();
   const [prestamos, setPrestamos] = useState([]);
+  const user_id = userData.user_id;
 
   useEffect(() => {
-    // Simulación de datos de prueba
-    const datosDePrueba = [
-      {
-        status: 'Aprobado',
-        borrower: { username: 'Usuario1' },
-        monto: 1000,
-        fecha: '2023-08-17',
-      },
-      {
-        status: 'Pendiente',
-        borrower: { username: 'Usuario2' },
-        monto: 1500,
-        fecha: '2023-08-18',
-      },
-    ];
+    const getPrestamos = async () => {
+      try {
+        const response = await api.get(`/prestamosHistorial/${user_id}/`);
+        console.log(response.data); // Verifica la respuesta de la API
+        const data = response.data;
+        setPrestamos(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+    getPrestamos();
 
-    setPrestamos(datosDePrueba);
-  }, []);
+
+  }, [api, user_id]);
 
   return (
     <div className='container pagecontainer'>
-            <h1 className='titulo'>Mis préstamos</h1>
       <div className='prestamos-list'>
+        
+        
         {prestamos.length > 0 ? (
           prestamos.map((prestamo, index) => (
+            
             <PrestamosCard
               key={index}
               status={prestamo.status}
               cliente={prestamo.borrower.username}
-              monto={prestamo.monto}
               fecha={prestamo.fecha}
             />
           ))
         ) : (
+          
           <p>Cargando préstamos...</p>
         )}
       </div>
