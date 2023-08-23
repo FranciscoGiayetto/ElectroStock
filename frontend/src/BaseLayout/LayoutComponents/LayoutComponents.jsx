@@ -126,6 +126,7 @@ const LayoutComponents = ({ onSearch }) => {
                 {/* Searchbar */}
                 <div className='div-form'>
                   <form onSubmit={handleSearch} className='div-form'>
+
                     <Autocomplete
                       freeSolo
                       disableClearable
@@ -151,22 +152,18 @@ const LayoutComponents = ({ onSearch }) => {
                       value={selectedOption}
                       onChange={(event, newValue) => setSelectedOption(newValue)}
                       renderInput={(params) => (
-                        <TextField
-                          className='search-input'
-                          {...params}
-                          variant="outlined"
-                          name='searchBar'
-                          label="Buscar"
-                          InputProps={{
-                            endAdornment: (
+                        <FormControl variant="outlined" sx={{ m: 1, width: '25ch' }}>
+                          <InputLabel style={{ color: 'rgba(235, 235, 235, 0.5)' }}>Buscar</InputLabel>
+                          <OutlinedInput
+                            {...params}
+                            endAdornment={
                               <InputAdornment position="end">
-                                <IconButton variant='primary' type='button' onClick={handleSearch}>
-                                  <SearchRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }}/>
-                                </IconButton>
+                                
                               </InputAdornment>
-                            )
-                          }}
-                        />
+                            }
+                            label="Buscar"
+                          />
+                        </FormControl>
                       )}
                     />
 
@@ -198,12 +195,9 @@ const LayoutComponents = ({ onSearch }) => {
                       )}
                     />
 
-
                   </form>
                 </div>
               </div>                  
-
-              
 
               <div className='col'>
                 {/* Buttons */}

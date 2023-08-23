@@ -104,3 +104,7 @@ html, body {
 .logo-img {
   width: 100px;
 }
+
+.custom-placeholder::placeholder {
+  color: green; /* Cambia esto al color que desees */
+}
