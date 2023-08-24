@@ -474,3 +474,16 @@ class BoxMasLogsRotos(generics.ListAPIView):
                 {"message": 'No hay logs con status "ROTO" en el año actual.'},
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+from django.shortcuts import get_object_or_404
+@api_view(["GET"])
+def elementos_por_categoria(request, category_id):
+    # Obtener la categoría correspondiente o devolver un error 404 si no existe
+    categoria = get_object_or_404(models.Category, id=category_id)
+
+    # Obtener todos los elementos que pertenecen a la categoría
+    elementos = models.Element.objects.filter(category=categoria)
+
+    # Serializar los elementos y enviarlos en la respuesta
+    serializer = ElementSerializer(elementos, many=True)
+    return Response(serializer.data)
