@@ -266,6 +266,7 @@ class LogyAdmin(ImportExportActionModelAdmin):
 
     resource_class = LogResource
     list_display = (
+        "id",
         "status",
         "quantity",
         "observation",

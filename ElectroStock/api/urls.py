@@ -19,6 +19,7 @@ router.register("especialidad", SpecialityViewSet, "especialidad")
 router.register("log", LogViewSet, "log")
 
 urlpatterns = [
+    path("logPost/<int:user_id>/", CambioLog, name="logPost"),
     path("carrito/<int:user_id>/", carrito, name="carrito"),
     path("vencidos/<int:user_id>/", VencidosAPIView, name="vencidos"),
     path("pendientes/<int:user_id>/", PendientesAPIView, name="pendientes"),
