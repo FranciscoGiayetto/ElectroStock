@@ -22,7 +22,7 @@ import TextField from '@material-ui/core/TextField';
 const { Header, Sider } = Layout;
 
 const LayoutComponents = ({ onSearch }) => {
- 
+  const [isReadyForInstall, setIsReadyForInstall] = useState(false);
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [data, setData] = useState([]);
@@ -32,7 +32,40 @@ const LayoutComponents = ({ onSearch }) => {
 
   useEffect(() => {
     getElement();
+   
   }, []);
+
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", (event) => {
+      // Prevent the mini-infobar from appearing on mobile.
+      event.preventDefault();
+      console.log("👍", "beforeinstallprompt", event);
+      // Stash the event so it can be triggered later.
+      window.deferredPrompt = event;
+      // Remove the 'hidden' class from the install button container.
+      setIsReadyForInstall(true);
+    });
+  }, []);
+
+  async function downloadApp() {
+    console.log("👍", "butInstall-clicked");
+    const promptEvent = window.deferredPrompt;
+    if (!promptEvent) {
+      // The deferred prompt isn't available.
+      console.log("oops, no prompt event guardado en window");
+      return;
+    }
+    // Show the install prompt.
+    promptEvent.prompt();
+    // Log the result
+    const result = await promptEvent.userChoice;
+    console.log("👍", "userChoice", result);
+    // Reset the deferred prompt variable, since
+    // prompt() can only be called once.
+    window.deferredPrompt = null;
+  }
+
+
 
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
@@ -88,10 +121,14 @@ const LayoutComponents = ({ onSearch }) => {
           <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
             Admin
           </Menu.Item>
+          <Menu.Item key="7" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
+            Descargar App
+          </Menu.Item>
           <Menu.Divider />
           <Menu.Item key="6" icon={<LogoutRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/logout' }}>
             Cerrar sesión
           </Menu.Item>
+
         </Menu>
       </Sider>
 
