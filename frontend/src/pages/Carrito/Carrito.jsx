@@ -44,8 +44,9 @@ function Carrito() {
     } catch (error) {
       console.error(error);
     }
+    
   }
-  
+
     
   return (
     <section className="container-bg" style={{ backgroundColor: "white"}}>
