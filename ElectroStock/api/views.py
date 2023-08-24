@@ -466,23 +466,34 @@ def elementos_por_categoria(request, category_id):
     serializer = ElementSerializer(elementos, many=True)
     return Response(serializer.data)
 
-@api_view(["POST"])
+@api_view(["GET", "POST", "PUT"])
 def CambioLog(request, user_id):
-    # Obtener todos los registros del usuario con estado "CARRITO"
-    logs_carrito = models.Log.objects.filter(lender=user_id, status=models.Log.Status.CARRITO)
+    if request.method == "GET":
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.CARRITO
+        )
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
 
-    # Datos que deseas actualizar (status y dateout)
-    new_status = models.Log.Status.PEDIDO  # Cambiar automáticamente a "PEDIDO"
-    new_dateout = request.data.get("dateout", None)  # Obtener el nuevo dateout si se proporciona
+    if request.method == "POST":
+        # Agregar código para manejar la solicitud POST
+        # Por ejemplo, crear un nuevo registro Log si se proporciona la información necesaria
+        serializer = LogSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(lender=user_id)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # Cambiar automáticamente el estado de "CARRITO" a "PEDIDO" y actualizar dateout
-    for log in logs_carrito:
-        log.status = new_status
-        if new_dateout is not None:
-            log.dateOut = new_dateout
-        log.save()
-
-    # Serializar los registros actualizados y enviarlos en la respuesta
-    serializer = LogSerializer(logs_carrito, many=True)
-    
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    if request.method == "PUT":
+        # Agregar código para manejar la solicitud PUT
+        logs_carrito = models.Log.objects.filter(lender=user_id, status=models.Log.Status.CARRITO)
+        new_status = models.Log.Status.PEDIDO
+        new_dateout = request.data.get("dateout", None)
+        for log in logs_carrito:
+            log.status = new_status
+            if new_dateout is not None:
+                log.dateOut = new_dateout
+            log.save()
+        serializer = LogSerializer(logs_carrito, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
