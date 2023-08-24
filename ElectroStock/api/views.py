@@ -477,11 +477,13 @@ def CambioLog(request, user_id):
         return Response(serializer.data)
 
     if request.method == "POST":
-        # Agregar código para manejar la solicitud POST
-        # Por ejemplo, crear un nuevo registro Log si se proporciona la información necesaria
+         # Obtener el usuario existente (puedes usar get_object_or_404 para manejar si no existe)
+        user = get_object_or_404(models.CustomUser, id=user_id)
+        
+        # Crear un nuevo registro Log asociado al usuario
         serializer = LogCambio(data=request.data)
         if serializer.is_valid():
-            serializer.save(lender=user_id)
+            serializer.save(lender=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
