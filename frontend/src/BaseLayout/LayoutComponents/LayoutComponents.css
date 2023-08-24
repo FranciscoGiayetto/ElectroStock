@@ -40,18 +40,8 @@ html, body {
   border-radius: 20px;
   margin-right: auto;
   margin-left: 10px;
-  flex: 1;
   width: 558px !important;
-  height: 1rem;
   cursor: auto;
-}
-
-.search-input:focus {
-  border-color: #2E5266;
-}
-
-.search-input::placeholder {
-  color: #EBEBEB !important;
 }
 
 @media (max-width: 576px) {
