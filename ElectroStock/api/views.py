@@ -479,7 +479,7 @@ def CambioLog(request, user_id):
     if request.method == "POST":
         # Agregar código para manejar la solicitud POST
         # Por ejemplo, crear un nuevo registro Log si se proporciona la información necesaria
-        serializer = LogSerializer(data=request.data)
+        serializer = LogCambio(data=request.data)
         if serializer.is_valid():
             serializer.save(lender=user_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
