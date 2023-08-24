@@ -5,7 +5,7 @@ import './Informes.css';
 
 function Informes() {
   return (
-    <div>
+    <div className='container pagecontainer'> 
       {/* Renderiza el componente MostRequestedElements aquí */}
       <MostRequestedElements />
     </div>
