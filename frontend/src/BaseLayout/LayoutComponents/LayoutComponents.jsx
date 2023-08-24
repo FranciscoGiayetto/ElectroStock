@@ -15,22 +15,12 @@ import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import './LayoutComponents.css';
-import its from '../../assets/its.png';
+import itsv from '../../assets/itsv.png';
 import { useNavigate } from 'react-router-dom';
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import Input from '@mui/material/Input';
-import FilledInput from '@mui/material/FilledInput';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const { Header, Sider } = Layout;
 
@@ -112,60 +102,20 @@ const LayoutComponents = ({ onSearch }) => {
         <Header className='navbar'>
           <div className='container' style={{maxWidth: '100%'}}>
             <div className='row' style={{width: '100%'}}>
-
+              
+              {/* Image */}
               <div className='col'>  
-                {/* Image */}
                 <div className='div-logo'>
                   <a href="/">
-                    <img src={its} alt="its" className='logo-img' />
+                    <img src={itsv} alt="itsv" className='logo-img' />
                   </a>
                 </div>
               </div>
-
+              
+              {/* Searchbar */}
               <div className='col-6'>            
-                {/* Searchbar */}
                 <div className='div-form'>
                   <form onSubmit={handleSearch} className='div-form'>
-
-                    <Autocomplete
-                      freeSolo
-                      disableClearable
-                      options={myOptions}
-                      getOptionLabel={(option) => option}
-                      value={selectedOption}
-                      onChange={(event, newValue) => setSelectedOption(newValue)}
-                      renderInput={(params) => (
-                        <TextField
-                          className='search-input'
-                          {...params}
-                          name='searchBar'
-                          label='Buscar'
-                        />
-                      )}
-                    />
-
-                    <Autocomplete
-                      freeSolo
-                      disableClearable
-                      options={myOptions}
-                      getOptionLabel={(option) => option}
-                      value={selectedOption}
-                      onChange={(event, newValue) => setSelectedOption(newValue)}
-                      renderInput={(params) => (
-                        <FormControl variant="outlined" sx={{ m: 1, width: '25ch' }}>
-                          <InputLabel style={{ color: 'rgba(235, 235, 235, 0.5)' }}>Buscar</InputLabel>
-                          <OutlinedInput
-                            {...params}
-                            endAdornment={
-                              <InputAdornment position="end">
-                                
-                              </InputAdornment>
-                            }
-                            label="Buscar"
-                          />
-                        </FormControl>
-                      )}
-                    />
 
                     <Autocomplete
                       freeSolo
@@ -181,6 +131,9 @@ const LayoutComponents = ({ onSearch }) => {
                           variant="outlined"
                           name='searchBar'
                           label="Buscar productos"
+                          InputLabelProps={{
+                            style: { color: 'rgba(235, 235, 235, 0.5)' } 
+                          }}
                           inputProps={{
                             ...params.inputProps,
                             endAdornment: (
@@ -195,12 +148,16 @@ const LayoutComponents = ({ onSearch }) => {
                       )}
                     />
 
+                    <Button className='button hover' variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                      <SearchRoundedIcon />
+                    </Button>
+
                   </form>
                 </div>
               </div>                  
 
+              {/* Buttons */}
               <div className='col'>
-                {/* Buttons */}
                 <div className='div-buttons'>     
                   <Button variant="primary" type="submit" className='button'>
                     <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
