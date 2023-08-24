@@ -466,41 +466,23 @@ def elementos_por_categoria(request, category_id):
     serializer = ElementSerializer(elementos, many=True)
     return Response(serializer.data)
 
-@api_view(["GET", "POST"])
+@api_view(["POST"])
 def CambioLog(request, user_id):
-    if request.method == "GET":
-        queryset = models.Log.objects.filter(
-            lender=user_id, status=models.Log.Status.CARRITO
-        )
-        serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
+    # Obtener todos los registros del usuario con estado "CARRITO"
+    logs_carrito = models.Log.objects.filter(lender=user_id, status=models.Log.Status.CARRITO)
 
-    if request.method == "POST":
-        # Obtener los datos enviados en la solicitud POST
-        data = request.data
-        log_id = data.get("log_id", None)
-        new_status = data.get("status", None)
-        new_dateout = data.get("dateout", None)
+    # Datos que deseas actualizar (status y dateout)
+    new_status = models.Log.Status.PEDIDO  # Cambiar automáticamente a "PEDIDO"
+    new_dateout = request.data.get("dateout", None)  # Obtener el nuevo dateout si se proporciona
 
-        # Verificar si se proporcionó un ID de registro válido
-        if log_id is None:
-            return Response(
-                {"message": "Debe proporcionar un ID de registro (log_id)"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # Obtener el registro correspondiente o devolver un error 404 si no existe
-        log = get_object_or_404(models.Log, id=log_id, lender=user_id)
-
-        # Actualizar el estado y la fecha de salida si se proporcionaron
-        if new_status is not None:
-            log.status = new_status
+    # Cambiar automáticamente el estado de "CARRITO" a "PEDIDO" y actualizar dateout
+    for log in logs_carrito:
+        log.status = new_status
         if new_dateout is not None:
             log.dateOut = new_dateout
-
-        # Guardar los cambios en la base de datos
         log.save()
 
-        # Serializar el registro actualizado y enviarlo en la respuesta
-        serializer = LogSerializer(log)
-        return Response(serializer.data)
+    # Serializar los registros actualizados y enviarlos en la respuesta
+    serializer = LogSerializer(logs_carrito, many=True)
+    
+    return Response(serializer.data, status=status.HTTP_200_OK)
