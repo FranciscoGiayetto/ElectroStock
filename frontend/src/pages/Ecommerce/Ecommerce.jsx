@@ -7,8 +7,11 @@ import { useSearchParams } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
-function Ecommerce() {
+import useAxios from '../../utils/useAxios';
+import { useParams, useNavigate } from 'react-router-dom';
+function Ecommerce({allItems}) {
+  console.log(allItems)
+  const api = useAxios()
   const [cards, setCards] = useState([]);
   const [visibleCards, setVisibleCards] = useState([]);
   const [filteredCards, setFilteredCards] = useState([]);
@@ -17,6 +20,7 @@ function Ecommerce() {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('searchQuery');
   const [showLoadMoreButton, setShowLoadMoreButton] = useState(true);
+  const { name } = useParams();
   useEffect(() => {
     getElement();
   }, []);
@@ -52,9 +56,11 @@ function Ecommerce() {
   
 
   const getElement = async () => {
-    const proxyUrl = 'http://127.0.0.1:8000';
-    let response = await fetch(`${proxyUrl}/api/elementsEcommerce/`);
-    let data = await response.json();
+    const baseUrl = 'http://127.0.0.1:8000';
+ const endpoint = allItems ? 'elementsEcommerce/' : `filtroCategoria/${encodeURIComponent(name)}/`;
+
+    const response = await api.get(`${endpoint}`);
+    let data = await response.data;
 
     // Reemplazar las imágenes nulas o vacías por la imagen por defecto
     const updatedData = data.map(card => ({
