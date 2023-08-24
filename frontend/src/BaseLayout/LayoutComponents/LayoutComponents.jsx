@@ -27,7 +27,7 @@ const { Header, Sider } = Layout;
 const LayoutComponents = ({ onSearch }) => {
  
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [data, setData] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -104,61 +104,48 @@ const LayoutComponents = ({ onSearch }) => {
             <div className='row' style={{width: '100%'}}>
               
               {/* Image */}
-              <div className='col'>  
-                <div className='div-logo'>
-                  <a href="/">
-                    <img src={itsv} alt="itsv" className='logo-img' />
-                  </a>
-                </div>
+              <div className='col centered-column'>  
+                <a href="/">
+                  <img src={itsv} alt="itsv" className='logo-img' />
+                </a>              
               </div>
               
               {/* Searchbar */}
-              <div className='col-6'>            
-                <div className='div-form'>
-                  <form onSubmit={handleSearch} className='div-form'>
+              <div className='col-6 centered-column'>            
+                <form onSubmit={handleSearch} className='div-form'>
 
-                    <Autocomplete
-                      freeSolo
-                      disableClearable
-                      options={myOptions}
-                      getOptionLabel={(option) => option}
-                      value={selectedOption}
-                      onChange={(event, newValue) => setSelectedOption(newValue)}
-                      renderInput={(params) => (
-                        <TextField
-                          className='search-input'
-                          {...params}
-                          variant="outlined"
-                          name='searchBar'
-                          label="Buscar productos"
-                          InputLabelProps={{
-                            style: { color: 'rgba(235, 235, 235, 0.5)' } 
-                          }}
-                          inputProps={{
-                            ...params.inputProps,
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <IconButton variant='primary' type='button' onClick={handleSearch}>
-                                  <SearchRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }}/>
-                                </IconButton>
-                              </InputAdornment>
-                            )
-                          }}
-                        />
-                      )}
-                    />
+                  <Autocomplete
+                    className='centered-column'
+                    freeSolo
+                    disableClearable
+                    options={myOptions}
+                    getOptionLabel={(option) => option}
+                    value={selectedOption}
+                    onChange={(event, newValue) => setSelectedOption(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        className='search-input'
+                        {...params}
+                        variant="outlined"
+                        name='searchBar'
+                        label="Buscar productos"
+                        InputLabelProps={{
+                          style: { color: 'rgba(235, 235, 235, 0.5)'}  
+                        }}
+                      />
+                    )}
+                  />
 
-                    <Button className='button hover' variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                      <SearchRoundedIcon />
-                    </Button>
+                  <Button className='button hover' variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                    <SearchRoundedIcon />
+                  </Button>
 
-                  </form>
-                </div>
+                </form> 
               </div>                  
 
               {/* Buttons */}
-              <div className='col'>
-                <div className='div-buttons'>     
+              <div className='col centered-column'>
+                     
                   <Button variant="primary" type="submit" className='button'>
                     <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                   </Button>
@@ -168,7 +155,7 @@ const LayoutComponents = ({ onSearch }) => {
                   <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/detalleCuenta' }}>
                     <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
                   </Button>
-                </div>
+                
               </div>
 
             </div>
