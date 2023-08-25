@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 
 import useAxios from '../../utils/useAxios';
-const MostRequestedElements = () => {
+const MostRequestedElements = ({ endpoint }) => {
   const api = useAxios()
   const [elements, setElements] = useState([]);
 
   useEffect(() => {
-    api.get('/estadisticas/maspedido/').then((response) => {
+    api.get(endpoint).then((response) => {
       setElements(response.data);
     });
   }, []);
