@@ -480,6 +480,11 @@ def CambioLog(request, user_id):
          # Obtener el usuario existente (puedes usar get_object_or_404 para manejar si no existe)
         user = get_object_or_404(models.CustomUser, id=user_id)
         
+        # Verificar si ya existe un Log con el mismo "box" y estado "CARRITO"
+        box = request.data.get("box")
+        if models.Log.objects.filter(box=box, status=models.Log.Status.CARRITO).exists():
+            return Response({"message": "Ya existe un Log con el mismo box en estado CARRITO"}, status=status.HTTP_400_BAD_REQUEST)
+        
         # Crear un nuevo registro Log asociado al usuario
         serializer = LogCambio(data=request.data)
         if serializer.is_valid():
