@@ -21,3 +21,9 @@
 .list-group-item.active{
     background-color: #018195;
 }
+
+.num{
+    font-size: 12rem;
+    color:#2E5266;
+    ;
+}
