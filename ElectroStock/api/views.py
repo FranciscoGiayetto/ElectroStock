@@ -474,3 +474,33 @@ class BoxMasLogsRotos(generics.ListAPIView):
                 {"message": 'No hay logs con status "ROTO" en el año actual.'},
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+
+from django.db.models import Sum, F, Value, IntegerField
+from django.db.models.functions import Coalesce
+from rest_framework.views import APIView
+
+
+class TopProductsOutOfStockView(APIView):
+    serializer_class = ElementSerializer
+
+    def get_queryset(self):
+        # Obtener los 10 productos que más llegan al stock actual a 0
+        return models.Element.objects.annotate(
+            total_stock=Coalesce(
+                Sum(
+                    F('box__log__quantity'),
+                    filter=(
+                        Q(box__log__status=models.Log.Status.COMPRADO)
+                        | Q(box__log__status=models.Log.Status.ROTO)
+                    ),
+                    output_field=IntegerField(),
+                ),
+                0,
+            )
+        ).filter(total_stock=0)[:10]
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
