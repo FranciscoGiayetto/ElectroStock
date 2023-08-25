@@ -27,3 +27,8 @@
     color:#2E5266;
     ;
 }
+
+.container {
+    z-index: 10;
+  }
+  
