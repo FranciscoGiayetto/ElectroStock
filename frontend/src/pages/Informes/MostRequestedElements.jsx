@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 
 import useAxios from '../../utils/useAxios';
-import { colors } from '@mui/material';
 const MostRequestedElements = () => {
   const api = useAxios()
   const [elements, setElements] = useState([]);
