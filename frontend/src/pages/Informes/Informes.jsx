@@ -8,7 +8,7 @@ function Informes() {
     <div className='container pagecontainer'> 
       {/* Renderiza el componente MostRequestedElements aquí */}
       <MostRequestedElements endpoint="estadisticas/maspedido/"/>
-      {/*<MostRequestedElements endpoint="estadisticas/box_mas_logs_rotos/"/>*/}
+      <MostRequestedElements endpoint="estadisticas/elementsCero/"/>
     </div>
   );
 }
