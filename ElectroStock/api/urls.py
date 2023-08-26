@@ -21,8 +21,16 @@ urlpatterns = [
     path("carrito/<int:user_id>/", carrito, name="carrito"),
     path("vencidos/<int:user_id>/", VencidosAPIView, name="vencidos"),
     path("pendientes/<int:user_id>/", PendientesAPIView, name="pendientes"),
-    path("presatmosActuales/<int:user_id>/", PrestamosActualesView, name="prestamosActuales"),
-    path("prestamosHistorial/<int:user_id>/", PrestamoVerAPIView, name="prestamosHistorial"),
+    path(
+        "presatmosActuales/<int:user_id>/",
+        PrestamosActualesView,
+        name="prestamosActuales",
+    ),
+    path(
+        "prestamosHistorial/<int:user_id>/",
+        PrestamoVerAPIView,
+        name="prestamosHistorial",
+    ),
     path("stock/<int:element_id>/", get_stock, name="stock"),
     path(
         "estadisticas/maspedido/",
@@ -34,9 +42,15 @@ urlpatterns = [
     path("estadisticas/borrower/", BorrowerStatisticsView.as_view(), name="borrower"),
     path("estadisticas/date/", DateStatisticsView.as_view(), name="date"),
     path("estadisticas/vencidos/", VencidoStatisticsView.as_view(), name="vencido"),
-    path("estadisticas/mayordeudor/", LenderVencidosStatisticsView.as_view(), name="mayordeudor"),
-    path('estadisticas/box_mas_logs_rotos/', BoxMasLogsRotos.as_view(), name='box_mas_logs_rotos'),
-    
+    path(
+        "estadisticas/mayordeudor/",
+        LenderVencidosStatisticsView.as_view(),
+        name="mayordeudor",
+    ),
+    path(
+        "estadisticas/box_mas_logs_rotos/",
+        BoxMasLogsRotos.as_view(),
+        name="box_mas_logs_rotos",
+    ),
+    path("create_notification/", create_notification, name="create_notification"),
 ] + router.urls
-
-

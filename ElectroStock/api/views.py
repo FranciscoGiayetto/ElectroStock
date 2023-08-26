@@ -7,9 +7,38 @@ from .permissions import PermisoUsuarioActual
 from django.db.models import Sum, Value, IntegerField, Q, Count, Case, When
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 
-# View para los elementos
+# Notificacion Hello Word
+@api_view(["GET", "POST"])
+def create_notification(request):
+    if request.method == "POST":
+        try:
+            # Obtén el ID del alumno desde los parámetros de la URL
+            alumno_id = request.POST.get("alumno_id")
+            alumno = get_object_or_404(models.CustomUser, pk=alumno_id)
+
+            # Obtiene el grupo "Profesor"
+            profesor_group = models.Group.objects.get(name="Profesor")
+
+            # Crea la notificación para el alumno y el grupo
+            alumno.send_notification(
+                "HELLO MONO", target_users=[alumno], target_groups=[profesor_group]
+            )
+
+            return JsonResponse({"message": "Notificación creada con éxito."})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    else:
+        return JsonResponse({"error": "Método no permitido."}, status=405)
+
+
+#  View para los elementos
+
+
 class ElementsViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.all()
     permission_classes = [permissions.AllowAny]
