@@ -1,12 +1,14 @@
 import React from 'react';
 
-import CardMyData from '../../components/CardMyData/CardMyData.jsx';
+import CardMyData from '../../components/CardMyData/CardData.jsx';
 import CardUser from '../../components/CardUser/CardUser.jsx';
+import CardPrestamos from '../../components/CardPrestamos/CardPrestamos.jsx';
 import './DetalleCuenta.css'
 import { useAuthStore } from '../../store/auth';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
 
 
 
@@ -29,8 +31,11 @@ function DetalleCuenta() {
           <CardMyData></CardMyData>
         </Col>
       </Row>
-       
-         
+      <Row style={{marginTop:'2rem'}}>
+        <Col>
+        <CardPrestamos></CardPrestamos>
+        </Col>
+      </Row>
     </Container>
   );
 }
