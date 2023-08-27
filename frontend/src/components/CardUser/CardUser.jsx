@@ -1,11 +1,17 @@
 import React from 'react';
 
 import './CardUser.css'
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Stack from 'react-bootstrap/Stack';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import {
   MDBCard,
   MDBCardBody,
   MDBCardTitle,
   MDBCardText,
+  MDBCardHeader,
   MDBBtn
 } from 'mdb-react-ui-kit';
 
@@ -17,12 +23,22 @@ import {
 
 export default function CardUser() {
   return (
-    <MDBCard border='none' style={{fontFamily:'Roboto, sans-serif', fontSize:'0.938rem', boxShadow:'0 2px 4px rgba(0, 0, 0, 0.05)'}}>
+    <MDBCard border='none' style={{ fontFamily:'Roboto, sans-serif', fontSize:'0.938rem', boxShadow:'0 2px 4px rgba(0, 0, 0, 0.05)'}}>
+      <MDBCardHeader className='card-header'>Alumno</MDBCardHeader>
       <MDBCardBody>
-        <MDBCardTitle>Card title</MDBCardTitle>
-        <MDBCardText>
-          Some quick example text to build on the card title and make up the bulk of the card's content.
-        </MDBCardText>
+        <Stack direction='horizontal' gap={4}>
+          <div className='p-2'>
+            <PersonRoundedIcon style={{fontSize:'5rem'}}></PersonRoundedIcon>
+          </div>
+          <Stack >
+            <div>
+              <p style={{fontSize:'1.6rem'}}>Franco Morales Demaria</p>
+            </div>
+            <div>
+              <p style={{fontSize:'1.25rem'}}>6C Programacion</p>
+            </div>
+          </Stack>
+        </Stack>
       </MDBCardBody>
     </MDBCard>
   );
