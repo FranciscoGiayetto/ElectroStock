@@ -1,16 +1,13 @@
 
 import React from 'react';
 
-import './CardMyData.css'
+import './CardData.css'
 import Table from 'react-bootstrap/Table';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   MDBCard,
-  MDBCardBody,
-  MDBCardTitle,
-  MDBCardText,
   MDBCardHeader,
-  MDBBtn
+  MDBCardBody,
 } from 'mdb-react-ui-kit';
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -21,7 +18,36 @@ import {
 export default function CardMyData() {
   return(
     
-  <MDBCard alignment='left' border='none' style={{fontFamily:'Roboto, sans-serif', fontSize:'0.938rem', boxShadow:'0 2px 4px rgba(0, 0, 0, 0.05)'}}>
+    <MDBCard className="card-user" alignment='left' border='none' style={{fontFamily: 'Roboto, sans-serif'}}>
+      <MDBCardHeader className="card-header">
+        Mis Datos
+      </MDBCardHeader>
+      
+      <Table hover className="card-table">
+      
+        <tbody>
+          <tr>
+            <th scope='col'>Email:</th>
+            <td scope='col'>franco.moralesdemaria@gmail.com</td>
+            <td scope='col'><EditIcon style={{color:'#2E5266', fontSize:'0.938rem'}} /></td>
+          </tr>
+          
+          <tr>
+            <th scope='col'>Usuario:</th>
+            <td scope='col'>Franco Morales Demaria</td>
+            <td scope='col'><EditIcon style={{color:'#2E5266', fontSize:'0.938rem'}} /></td>
+          </tr>
+
+          <tr>
+            <th scope='col'>Contraseña:</th>
+            <td scope='col'>**********</td>
+            <td scope='col'><EditIcon style={{color:'#2E5266', fontSize:'0.938rem'}} /></td>
+          </tr>
+        </tbody>
+      </Table>
+    </MDBCard>
+    /* 
+    <MDBCard alignment='left' border='none' style={{fontFamily:'Roboto, sans-serif', fontSize:'0.938rem', boxShadow:'0 2px 4px rgba(0, 0, 0, 0.05)'}}>
     <MDBCardHeader style={{backgroundColor:'#018195', color: '#EBEBEB', fontSize:'1.25rem'}}>Mis Datos</MDBCardHeader>
     <Table hover style={{ marginBottom: '0', height: '100%', borderRadius:'1rem' }}> 
       <tbody>  
@@ -44,7 +70,7 @@ export default function CardMyData() {
         </tr>
       </tbody>
     </Table>
-  </MDBCard>
+  </MDBCard> */
     
   );
 }
