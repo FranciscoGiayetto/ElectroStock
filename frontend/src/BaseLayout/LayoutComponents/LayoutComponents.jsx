@@ -6,24 +6,31 @@ import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import { InputGroup, FormControl, Button } from 'react-bootstrap';
+import { InputGroup, Button } from 'react-bootstrap';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import MenuIcon from '@mui/icons-material/Menu';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import './LayoutComponents.css';
-import its from '../../assets/its.png';
+import itsv from '../../assets/itsv.png';
 import { useNavigate } from 'react-router-dom';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
+
 
 const { Header, Sider } = Layout;
 
 const LayoutComponents = ({ onSearch }) => {
  
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [data, setData] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -64,12 +71,14 @@ const LayoutComponents = ({ onSearch }) => {
   return (
     <div>
       <Sider trigger={null} collapsible collapsed={collapsed} className='sidebar'>
-        <Menu theme="light" mode="inline" style={{ background: '#EBEBEB' }}>
+        <Menu theme="light" mode="inline" style={{ background: 'white' }}>
           <Menu.Item
             key="0"
-            icon={collapsed ? <MenuUnfoldOutlined style={{ fontSize: '20px' }} /> : <MenuFoldOutlined style={{ fontSize: '20px' }} />}
+            icon={collapsed ? <MenuIcon style={{ fontSize: '20px' }} /> : <ArrowBackIosIcon style={{ fontSize: '17px' }} />}
             onClick={handleToggleSidebar}
-            style={{ color: 'black' }}
+            className={collapsed ? 'menu-icon-collapsed' : 'menu-icon-expanded'}
+            style={{ color: 'black',
+                     backgroundColor:'transparent' }}
           />
           <Menu.Divider />
           <Menu.Item key="1" icon={<StoreRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/tienda' }}>
@@ -94,56 +103,79 @@ const LayoutComponents = ({ onSearch }) => {
         </Menu>
       </Sider>
 
-      <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
+      
         <Header className='navbar'>
-          <div className='div-logo'>
-            <a href="/">
-              <img src={its} alt="its" className='logo-img' />
-            </a>
-          </div>
-
-          <div className='div-form'>
-            <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '10rem' }}>
-              <div className='div-autocomplete'>
-                <Autocomplete
-                className='search-autocomplete'
-                options={myOptions}
-                getOptionLabel={(option) => option}
-                value={selectedOption}
-                onChange={(event, newValue) => setSelectedOption(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                  
-                    name='searchBar'
-                    {...params}
-                    label="Buscar productos"
-                    
-                    
+          <Container fluid>
+            <Row>
+          
+              {/* Image */}
+              <Col>  
+                <a href="/">
+                  <img src={itsv} alt="itsv" className='logo-img' />
+                </a>              
+              </Col>
+              
+              {/* Searchbar */}
+              <Col >            
+                <form onSubmit={handleSearch} className='div-form'>
+                
+                  <Autocomplete
                     className='search-input'
-                  />
-                )}
-              />
-            </div>
-              <Button className='button hover' variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                <SearchRoundedIcon />
-              </Button>
-            </form>
-          </div>
+                    freeSolo
+                    
+                    fullWidth
+                    options={myOptions}
+                    getOptionLabel={(option) => option}
+                    value={selectedOption}
+                    onChange={(event, newValue) => setSelectedOption(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        className='search-input'
+                        {...params}
+                        variant="outlined"
+                        name='searchBar'
+                        label="Buscar productos"
+                        InputLabelProps={{
+                          style: { color: 'rgba(235, 235, 235, 0.5)'}  
+                        }}
+                      />
 
-          <div className='div-buttons'>
-           
-            <Button variant="primary" type="submit" className='button hover'>
-              <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-            </Button>
-            <Button variant="primary" type="submit" className='button hover'>
-              <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-            </Button>
-            <Button variant="primary" type="submit" className='button hover' onClick={() => { window.location.href = '/detalleCuenta' }}>
-              <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
-            </Button>
-          </div>
+                    )}
+                  />
+                
+                  <Button variant="primary" type="submit" className='button' style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                    <SearchRoundedIcon />
+                  </Button>
+
+                </form> 
+              </Col>
+
+              {/* Buttons */}
+              <Col>  
+                <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/carrito' }}>
+                  <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                </Button>
+              </Col>
+              <Col>
+                <Button variant="primary" type="submit" className='button' >
+                  <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                </Button>
+              </Col>
+              <Col>   
+                <Button variant="primary" type="submit" className='button'  onClick={() => { window.location.href = '/detalleCuenta' }}>
+                  <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
+                </Button>
+              </Col>
+              <Col>
+                <DownloadRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)'}}/> 
+              </Col>
+              <Col >
+                <p style={{color:'rgba(235, 235, 235, 0.5)'}}>Descargar</p> 
+              </Col>          
+            </Row>
+          </Container>
         </Header>
-      </Layout>
+      
     </div>
   );
 };
