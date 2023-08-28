@@ -23,7 +23,7 @@ export default function CardMyData() {
         Mis Datos
       </MDBCardHeader>
       
-      <Table hover className="card-table">
+      <Table hover className="card-table" >
       
         <tbody>
           <tr>
@@ -38,7 +38,7 @@ export default function CardMyData() {
             <td scope='col'><EditIcon style={{color:'#2E5266', fontSize:'0.938rem'}} /></td>
           </tr>
 
-          <tr>
+          <tr style={{borderBottomLeftRadius:'3rem', borderBottomRightRadius:'3rem'}}>
             <th scope='col'>Contraseña:</th>
             <td scope='col'>**********</td>
             <td scope='col'><EditIcon style={{color:'#2E5266', fontSize:'0.938rem'}} /></td>
@@ -46,31 +46,6 @@ export default function CardMyData() {
         </tbody>
       </Table>
     </MDBCard>
-    /* 
-    <MDBCard alignment='left' border='none' style={{fontFamily:'Roboto, sans-serif', fontSize:'0.938rem', boxShadow:'0 2px 4px rgba(0, 0, 0, 0.05)'}}>
-    <MDBCardHeader style={{backgroundColor:'#018195', color: '#EBEBEB', fontSize:'1.25rem'}}>Mis Datos</MDBCardHeader>
-    <Table hover style={{ marginBottom: '0', height: '100%', borderRadius:'1rem' }}> 
-      <tbody>  
-        <tr>
-          <th>Email:</th>  
-          <td>franco.moralesdemaria@gmail.com</td>
-          <td><EditIcon style={{ fontSize:'0.938rem', color:'#2E5266' }}></EditIcon></td>
-        </tr>
-        
-        <tr>
-          <th>Usuario:</th>
-          <td>Franco Morales Demaria</td>
-          <td><EditIcon style={{ fontSize:'0.938rem', color:'#2E5266' }}></EditIcon></td>
-        </tr>
-
-        <tr style={{borderBottom:'transparent'}}>
-          <th>Contraseña:</th>
-          <td>**********</td>
-          <td><EditIcon style={{ fontSize:'0.938rem', color:'#2E5266' }}></EditIcon></td>
-        </tr>
-      </tbody>
-    </Table>
-  </MDBCard> */
-    
+  
   );
 }
