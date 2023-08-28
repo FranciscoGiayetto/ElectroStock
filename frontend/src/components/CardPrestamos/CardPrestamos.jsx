@@ -36,13 +36,26 @@ export default function CardPrestamos() {
           <div className='p-2'>
             <img src={fotoPrueba2} alt="Paisaje" style={{width:'10rem'}}/>
           </div>
-          <Stack >
-            <div>
-              <p style={{fontSize:'1.6rem'}}>Franco Morales Demaria</p>
+          <Stack>
+            <div style={{marginTop:'0.2rem'}}>
+              <p style={{fontSize:'0.938rem', color:'#45BE7F', margin:'0'}}>Entregado</p>
+              <p style={{fontSize:'0.938rem'}}>6 productos</p>
             </div>
-            <div>
-              <p style={{fontSize:'1.25rem'}}>6C Programacion</p>
+          </Stack>
+          <Stack>
+            <div style={{marginTop:'0.2rem'}}>
+              <p style={{fontSize:'0.938rem', margin:'0'}}>Juan Frattin</p>
+              <p style={{fontSize:'0.938rem', margin:'0'}}>6c Programacion</p>
             </div>
+          </Stack>
+          <Stack>
+            <div style={{marginTop:'0.2rem'}}>
+              <p style={{fontSize:'0.938rem', margin:'0'}}>Nacho no sabe que poner</p>
+              <p style={{fontSize:'0.938rem', margin:'0'}}>Asi que hasta que no lo complete</p>
+              <p style={{fontSize:'0.938rem'}}>Yo tampoco</p>
+            </div>
+          </Stack>
+          <Stack>
           </Stack>
         </Stack>
       
