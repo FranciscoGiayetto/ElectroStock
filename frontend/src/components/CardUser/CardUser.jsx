@@ -32,7 +32,7 @@ export default function CardUser(props) {
           </div>
           <Stack >
             <div>
-              <p style={{fontSize:'1.6rem'}}>{props.name}</p>
+              <p style={{fontSize:'1.6rem'}}>{props.last_name} {props.first_name}</p>
             </div>
             <div>
               <p style={{fontSize:'1.25rem'}}>{props.course}</p>
