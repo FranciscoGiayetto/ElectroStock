@@ -5,6 +5,7 @@ import Stack from 'react-bootstrap/Stack';
 import Table from 'react-bootstrap/Table';
 import fotoPrueba2 from '../../assets/fotoPrueba2.jpg';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import Button from 'react-bootstrap/Button';
 import {
   MDBCard,
   MDBCardBody,
@@ -33,29 +34,49 @@ export default function CardPrestamos() {
           </tbody>
         </Table>
         <Stack direction='horizontal' gap={4}>
-          <div className='p-2'>
+          <div className='p-2' style={{marginLeft:'0.5rem', marginRight:'1rem'}}>
             <img src={fotoPrueba2} alt="Paisaje" style={{width:'10rem'}}/>
           </div>
           <Stack>
-            <div style={{marginTop:'0.2rem'}}>
+            <div style={{marginTop:'0.2rem', marginRight:'1rem'}}>
               <p style={{fontSize:'0.938rem', color:'#45BE7F', margin:'0'}}>Entregado</p>
               <p style={{fontSize:'0.938rem'}}>6 productos</p>
             </div>
           </Stack>
           <Stack>
-            <div style={{marginTop:'0.2rem'}}>
+            <div style={{marginTop:'0.2rem', marginRight:'1rem'}}>
               <p style={{fontSize:'0.938rem', margin:'0'}}>Juan Frattin</p>
               <p style={{fontSize:'0.938rem', margin:'0'}}>6c Programacion</p>
             </div>
           </Stack>
           <Stack>
-            <div style={{marginTop:'0.2rem'}}>
+            <div style={{marginTop:'0.2rem', marginRight:'1rem'}}>
               <p style={{fontSize:'0.938rem', margin:'0'}}>Nacho no sabe que poner</p>
               <p style={{fontSize:'0.938rem', margin:'0'}}>Asi que hasta que no lo complete</p>
               <p style={{fontSize:'0.938rem'}}>Yo tampoco</p>
             </div>
           </Stack>
-          <Stack>
+          <Stack style={{marginRight:'1rem'}}>
+            <div style={{marginTop:'0.5rem'}}>
+              <Button
+                className='botonCarrito'
+                style={{ fontSize:'0.938rem', backgroundColor: '#58A4B0', border: 'none', width:'9.813rem', height:'2.5rem' }}
+                variant='primary'
+                type='submit'
+              >
+                Agregar al carrito
+              </Button>
+            </div>
+            <div style={{marginTop:'0.5rem'}}>
+              <Button
+                className='botonCarrito'
+                style={{ fontSize:'0.938rem', backgroundColor: '#58A4B0', border: 'none', width:'9.813rem', height:'2.5rem' }}
+                variant='primary'
+                type='submit'
+              >
+                Ver préstamo
+              </Button>
+            </div>
           </Stack>
         </Stack>
       
