@@ -47,12 +47,12 @@ function DetalleCuenta() {
     <Container fluid style={{marginTop:'6rem', marginBottom:'5rem'}}>
       <Row>
         <Col>
-          <CardUser name={element.username} course={element.course}></CardUser>
+          <CardUser first_name={element.first_name} last_name={element.last_name} course={element.course}></CardUser>
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
         <Col>
-          <CardMyData email={element.email}></CardMyData>
+          <CardMyData email={element.email} username={element.username}></CardMyData>
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
