@@ -21,7 +21,7 @@ import {
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
 </head>
 
-export default function CardUser() {
+export default function CardUser(props) {
   return (
     <MDBCard border='none' style={{ fontFamily:'Roboto, sans-serif', fontSize:'0.938rem', boxShadow:'0 2px 4px rgba(0, 0, 0, 0.05)'}}>
       <MDBCardHeader className='card-header'>Alumno</MDBCardHeader>
@@ -32,10 +32,10 @@ export default function CardUser() {
           </div>
           <Stack >
             <div>
-              <p style={{fontSize:'1.6rem'}}>Franco Morales Demaria</p>
+              <p style={{fontSize:'1.6rem'}}>{props.name}</p>
             </div>
             <div>
-              <p style={{fontSize:'1.25rem'}}>6C Programacion</p>
+              <p style={{fontSize:'1.25rem'}}>{props.course}</p>
             </div>
           </Stack>
         </Stack>
