@@ -38,4 +38,10 @@
 .wide{
     width: 23rem;
 }
+
+.icono-tasa{
+    text-align: right;
+    vertical-align: top;
+    margin-left: 90%;
+}
   

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import useAxios from '../../utils/useAxios';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 
 const Tasas = ({ endpoint }) => {
     const api = useAxios();
@@ -24,6 +25,7 @@ const Tasas = ({ endpoint }) => {
           <ListGroup as="ul" className='wide'>
             <ListGroup.Item as="li" className='num font-bold'>
                 {expiredRate !== null ? `${expiredRate.toFixed(2)}%` : 'Cargando...'}
+                <span className='icono-tasa'><EventBusyIcon></EventBusyIcon></span>
             </ListGroup.Item>
             <ListGroup.Item as="li" active>
                 Tasa vencidos
