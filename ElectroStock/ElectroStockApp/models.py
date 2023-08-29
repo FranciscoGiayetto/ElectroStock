@@ -90,6 +90,8 @@ class Notification(models.Model):
         HELLO = "HW", "Hello World"
         CUSTOM = "CS", "Custom"
         PEDIDO = "PD", "Pedido"
+        APROBADO = "AP", "Aprobado"
+        DESAPROBADO = "DP", "Desaprobado"
 
     class NotificationStatus(models.TextChoices):
         UNREAD = "unread", "No leída"
@@ -283,6 +285,14 @@ class Log(models.Model):
     def is_pedido(self):
         return self.status == self.Status.PEDIDO
 
+    @property
+    def is_aprobado(self):
+        return self.status == self.Status.APROBADO
+
+    @property
+    def is_desaprobado(self):
+        return self.status == self.Status.DESAPROBADO
+
     # Conecta el método a la señal post_save del modelo Log
 
     class Meta:
@@ -312,4 +322,28 @@ def create_notification_on_pedido(sender, instance, **kwargs):
         notificacion.user_revoker.add(*profesor_group_users)
 
 
+def create_notification_on_aprobado(sender, instance, **kwargs):
+    if instance.is_aprobado:
+        # Crea y envía la notificación al usuario prestador
+        notificacion = Notification.objects.create(
+            user_sender=None,  # Sin remitente
+            type_of_notification=Notification.NotificationType.APROBADO,
+            message=f"Tu solicitud de préstamo ha sido aprobada: {instance.box.name}",
+        )
+        notificacion.user_revoker.add(instance.borrower)
+
+
+def create_notification_on_desaprobado(sender, instance, **kwargs):
+    if instance.is_desaprobado:
+        # Crea y envía la notificación al usuario prestador
+        notificacion = Notification.objects.create(
+            user_sender=None,  # Sin remitente
+            type_of_notification=Notification.NotificationType.DESAPROBADO,
+            message=f"Tu solicitud de préstamo ha sido desaprobada: {instance.box.name}",
+        )
+        notificacion.user_revoker.add(instance.borrower)
+
+
+post_save.connect(create_notification_on_aprobado, sender=Log)
+post_save.connect(create_notification_on_desaprobado, sender=Log)
 post_save.connect(create_notification_on_pedido, sender=Log)
