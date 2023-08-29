@@ -84,6 +84,10 @@ class UsersViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = UsersSerializer
 
+class LogViewSet(viewsets.ModelViewSet):
+    queryset = models.Log.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = LogSerializer
 
 # View para los cursos
 class CourseViewSet(viewsets.ModelViewSet):
@@ -176,9 +180,6 @@ def carrito(request, user_id):
         return Response(serializer.data)
 
     if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-
         return Response({"message": "Elemento agregado al carrito"})
 
     return Response(status=405)
@@ -474,3 +475,55 @@ class BoxMasLogsRotos(generics.ListAPIView):
                 {"message": 'No hay logs con status "ROTO" en el año actual.'},
                 status=status.HTTP_404_NOT_FOUND,
             )
+from django.shortcuts import get_object_or_404
+
+@api_view(["GET"])
+def elementos_por_categoria(request, category_id):
+    # Obtener la categoría correspondiente o devolver un error 404 si no existe
+    categoria = get_object_or_404(models.Category, id=category_id)
+
+    # Obtener todos los elementos que pertenecen a la categoría
+    elementos = models.Element.objects.filter(category=categoria)
+
+    # Serializar los elementos y enviarlos en la respuesta
+    serializer = ElementSerializer(elementos, many=True)
+    return Response(serializer.data)
+
+@api_view(["GET", "POST", "PUT"])
+def CambioLog(request, user_id):
+    if request.method == "GET":
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.CARRITO
+        )
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    if request.method == "POST":
+         # Obtener el usuario existente (puedes usar get_object_or_404 para manejar si no existe)
+        user = get_object_or_404(models.CustomUser, id=user_id)
+        
+        # Verificar si ya existe un Log con el mismo "box" y estado "CARRITO"
+        box = request.data.get("box")
+        if models.Log.objects.filter(box=box, status=models.Log.Status.CARRITO).exists():
+            return Response({"message": "Ya existe un Log con el mismo box en estado CARRITO"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Crear un nuevo registro Log asociado al usuario
+        serializer = LogCambio(data=request.data)
+        if serializer.is_valid():
+            serializer.save(lender=user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "PUT":
+        # Agregar código para manejar la solicitud PUT
+        logs_carrito = models.Log.objects.filter(lender=user_id, status=models.Log.Status.CARRITO)
+        new_status = models.Log.Status.PEDIDO
+        new_dateout = request.data.get("dateout", None)
+        for log in logs_carrito:
+            log.status = new_status
+            if new_dateout is not None:
+                log.dateOut = new_dateout
+            log.save()
+        serializer = LogSerializer(logs_carrito, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

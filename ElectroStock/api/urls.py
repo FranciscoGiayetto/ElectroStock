@@ -17,14 +17,17 @@ router.register("location", LocationViewSet, "location")
 router.register("box", BoxViewSet, "box")
 router.register("especialidad", SpecialityViewSet, "especialidad")
 router.register("token", TokenViewSet, "token")
+router.register("log", LogViewSet, "log")
 
 urlpatterns = [
+    path("logPost/<int:user_id>/", CambioLog, name="logPost"),
     path("carrito/<int:user_id>/", carrito, name="carrito"),
     path("vencidos/<int:user_id>/", VencidosAPIView, name="vencidos"),
     path("pendientes/<int:user_id>/", PendientesAPIView, name="pendientes"),
     path("presatmosActuales/<int:user_id>/", PrestamosActualesView, name="prestamosActuales"),
     path("prestamosHistorial/<int:user_id>/", PrestamoVerAPIView, name="prestamosHistorial"),
     path("stock/<int:element_id>/", get_stock, name="stock"),
+    path("filtroCategoria/<int:category_id>/", elementos_por_categoria, name="filtroCategoria"),
     path(
         "estadisticas/maspedido/",
         MostRequestedElementView.as_view(),

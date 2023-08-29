@@ -35,7 +35,7 @@ function DetalleProducto() {
       console.log(response);
       let data = await response.data;
       setElement(data);
-      console.log(element);
+      console.log(userData.user_id);
     } catch (error) {
       console.error(error);
     }
@@ -61,18 +61,19 @@ function DetalleProducto() {
 
     let body = {
       box: 1,
-      borrower: 1,
-      lender: null,
+      borrower: userData.user_id,
+      lender: userData.user_id,
       status: 'CAR',
-      quantity: null,
+      quantity: 1,
       observation: null,
       dateIn: null,
       dateOut: null,
     };
 
     try {
-      const response = await api.post('/prestamos/', body);
+      const response = await api.post(`/logPost/${userData.user_id}/`, body);
       setPostRes(response.data.response);
+      navigate('/tienda'); 
     } catch (error) {
       setPostRes(error.response.data);
     }

@@ -115,6 +115,7 @@ class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Log
         fields = (
+            "id",
             "box",
             "borrower",
             "lender",
@@ -125,6 +126,21 @@ class LogSerializer(serializers.ModelSerializer):
             "dateOut",
         )
 
+# Serializer de  los prestamos completmos
+class LogCambio(serializers.ModelSerializer):
+    class Meta:
+        model = models.Log
+        fields = (
+            "id",
+            "box",
+            "borrower",
+            "lender",
+            "status",
+            "quantity",
+            "observation",
+            "dateIn",
+            "dateOut",
+        )
 
 # Se pasa el stock actual de los productos
 class StockSerializer(serializers.Serializer):
