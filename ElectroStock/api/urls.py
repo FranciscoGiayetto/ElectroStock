@@ -52,5 +52,5 @@ urlpatterns = [
         BoxMasLogsRotos.as_view(),
         name="box_mas_logs_rotos",
     ),
-    path("create_notification/", create_notification, name="create_notification"),
+    
 ] + router.urls

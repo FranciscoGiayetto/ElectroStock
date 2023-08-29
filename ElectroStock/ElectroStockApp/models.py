@@ -21,6 +21,10 @@ if not Group.objects.filter(name="Jefe de area").exists():
     profesor_group.permissions.add()
 
 
+
+
+
+
 class Course(models.Model):
     grade = models.IntegerField(verbose_name="Año")
 
@@ -58,12 +62,10 @@ class CustomUser(AbstractUser):
         related_name="custom_users",
     )
 
-    def send_notification(
-        self, type_of_notification, target_users=None, target_groups=None
-    ):
+    def send_notification(    self, type_of_notification, target_users=None, target_groups=None):
         notification = Notification.objects.create(
-            user_sender=self, type_of_notification=type_of_notification
-        )
+        user_sender=self, type_of_notification=type_of_notification
+    )
 
         if target_users:
             notification.user_revoker.add(*target_users)
@@ -77,25 +79,59 @@ class CustomUser(AbstractUser):
         return notification
 
 
+
+
+
+from django.db import models
+from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+
+# ... otros imports ...
+
 class Notification(models.Model):
+    class NotificationType(models.TextChoices):
+        HELLO = "HW", "Hello World"
+        CUSTOM = "CS", "Custom"
+
+    class NotificationStatus(models.TextChoices):
+        UNREAD = "unread", "No leída"
+        READ = "read", "Leída"
+
     user_sender = models.ForeignKey(
-        CustomUser,
+        get_user_model(),
         null=True,
         blank=True,
         related_name="sent_notifications",
         on_delete=models.CASCADE,
     )
-    user_revoker = models.ForeignKey(
-        CustomUser,
-        null=True,
+    user_revoker = models.ManyToManyField(
+        get_user_model(),
+        verbose_name=("destinatarios"),
         blank=True,
-        related_name="revoked_notifications",
-        on_delete=models.CASCADE,
+        related_name="notifications_revoked",
     )
-    status = models.CharField(max_length=264, null=True, blank=True, default="unread")
-    type_of_notification = models.CharField(max_length=264, null=True, blank=True)
+    status = models.CharField(
+        max_length=10,
+        choices=NotificationStatus.choices,
+        default=NotificationStatus.UNREAD,
+        verbose_name="Estado",
+    )
+    type_of_notification = models.CharField(
+        max_length=2,
+        choices=NotificationType.choices,
+        default=NotificationType.CUSTOM,
+        verbose_name="Tipo de notificación",
+    )
+    message = models.TextField(null=True, blank=True, verbose_name="Mensaje")
     timestamp = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        verbose_name_plural = "Notificaciones"
+        verbose_name = "Notificación"
+
+    def __str__(self):
+        return self.message
 
 class Category(models.Model):
     name = models.CharField(max_length=40, null=True, blank=True, verbose_name="Nombre")

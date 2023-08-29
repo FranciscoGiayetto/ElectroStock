@@ -26,6 +26,7 @@ urlpatterns = [path("admin/", admin.site.urls),
                path('upload_csv/', views.upload_csv, name='upload_csv'),
                path('docs/', include_docs_urls(title="API DOCUMENTATION")),
                path('auth/', include("LoginApp.urls")),
+               path("notifications/", include("notifications.urls")),
                ]
 
 
