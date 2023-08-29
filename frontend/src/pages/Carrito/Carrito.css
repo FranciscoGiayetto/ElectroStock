@@ -1,0 +1,16 @@
+.container-background{
+  width: 500px;
+  height: 250px;
+  margin: 50px;
+  margin-top: 100px;
+  border-radius: 20px;
+  background-color: white;
+}
+
+.div-btn{
+  display: table; text-align: center;
+}
+
+.boton{
+  display: table-cell; vertical-align: bottom;
+}

@@ -58,6 +58,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+FRONTEND_URL = 'http://localhost:3000'
+
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1','http://127.0.0.1:3000']
 
 ROOT_URLCONF = "ElectroStock.urls"
 
@@ -120,7 +123,7 @@ USE_TZ = True
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/img-prod/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'img-prod')
@@ -300,16 +303,18 @@ JAZZMIN_UI_TWEAKS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=100000),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
-    'ROTATE_REFRESH_TOKENS': True,
+    'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
 
@@ -334,9 +339,10 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=100000),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
 
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -347,6 +353,7 @@ CORS_ORIGIN_WHITELIST = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+
 ]
 
 # settings.py
@@ -364,7 +371,7 @@ EMAIL_USE_TLS = True
 # Redis configuration 
 from datetime import timedelta
 
-CELERY_BROKER_URL = 'redis://default:hU7ZgQnaKpTDOliOy0Vt@containers-us-west-40.railway.app:6872'  # Ejemplo: 'amqp://guest:guest@localhost:5672/'
+CELERY_BROKER_URL = CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/'  # Ejemplo para RabbitMQ
 CELERY_ACCEPT_CONTENT=['json']
 CELERY_TASK_SERIALIZER= 'json'
 CELERY_IMPORTS = ('ElectroStockApp.task',)
@@ -373,5 +380,22 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'ElectroStockApp.task.run_check_expired_logs',
         'schedule': timedelta(days=1),  # Ejecutar cada 1 día
     },
+    'assign_next_year_course': {
+        'task': 'ElectroStockApp.task.assign_next_year_course',
+        'schedule': timedelta(days=365),  # Ejecutar cada 1 año
+    },
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # Puedes ajustar el nivel según tus necesidades
+    },
+}

@@ -12,9 +12,13 @@ if not Group.objects.filter(name="Profesor").exists():
     profesor_group = Group.objects.create(name="Profesor")
     profesor_group.permissions.add()
 
+if not Group.objects.filter(name="Jefe de area").exists():
+    profesor_group = Group.objects.create(name="Jefe de area")
+    profesor_group.permissions.add()
+
 
 class Course(models.Model):
-    grade = models.IntegerField()
+    grade = models.IntegerField(verbose_name='Año')
 
     def __str__(self):
         return str(self.grade)
@@ -25,7 +29,7 @@ class Course(models.Model):
 
 
 class Speciality(models.Model):
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=40,verbose_name='Nombre')
 
     def __str__(self):
         return self.name
@@ -54,14 +58,15 @@ class CustomUser(AbstractUser, PermissionsMixin):
 
 
 class Category(models.Model):  # ✅
-    name = models.CharField(max_length=40, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
+    name = models.CharField(max_length=40, null=True, blank=True,verbose_name='Nombre')
+    description = models.TextField(null=True, blank=True,verbose_name='Descripcion')
     category = models.ForeignKey(
         "self",
         on_delete=models.CASCADE,
         related_name="child_categories",
         null=True,
         blank=True,
+        verbose_name='Categoria'
     )
 
     def __str__(self):
@@ -73,20 +78,21 @@ class Category(models.Model):  # ✅
 
 
 class Element(models.Model):
-    name = models.CharField(max_length=30)
-    description = models.TextField(null=True, blank=True)
+    name = models.CharField(max_length=30,verbose_name='Nombre')
+    description = models.TextField(null=True, blank=True,verbose_name='Descripcion')
     price_usd = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         null=True,
         blank=True,
         help_text="Ingrese el precio en dolares",
+        verbose_name='Precio'
     )
-    image = models.ImageField(upload_to="img-prod/", blank=True)
+    image = models.ImageField(upload_to="img-prod/", blank=True,verbose_name='Foto')
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, null=True, blank=True
+        Category, on_delete=models.CASCADE, null=True, blank=True,verbose_name='Categoria'
     )
-    ecommerce = models.BooleanField(default=True)
+    ecommerce = models.BooleanField(default=True,verbose_name='Prestable')
 
     def __str__(self):
         return self.name
@@ -97,9 +103,9 @@ class Element(models.Model):
 
 
 class Laboratory(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30,verbose_name='Nombre')
     speciality = models.ForeignKey(
-        Speciality, on_delete=models.CASCADE, null=True, blank=True
+        Speciality, on_delete=models.CASCADE, null=True, blank=True,verbose_name='Especialidad'
     )
 
     def __str__(self):
@@ -111,8 +117,8 @@ class Laboratory(models.Model):
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=30)
-    laboratoy = models.ForeignKey(Laboratory, on_delete=models.CASCADE)
+    name = models.CharField(max_length=30,verbose_name='Nombre')
+    laboratoy = models.ForeignKey(Laboratory, on_delete=models.CASCADE,verbose_name='Laboratorio')
 
     def __str__(self):
         return self.name
@@ -124,10 +130,10 @@ class Location(models.Model):
 
 class Box(models.Model):
     responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    minimumStock = models.IntegerField()
-    name = models.CharField(max_length=30)
-    element = models.ForeignKey(Element, on_delete=models.CASCADE)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    minimumStock = models.IntegerField(verbose_name='Stock Minimo')
+    name = models.CharField(max_length=30,verbose_name='Nombre')
+    element = models.ForeignKey(Element, on_delete=models.CASCADE, verbose_name='Elemento')
+    location = models.ForeignKey(Location, on_delete=models.CASCADE,verbose_name='Ubicacion')
 
     def __str__(self):
         return self.name
@@ -150,16 +156,20 @@ class Log(models.Model):
         DEVUELTO = "DEV", "Devuelto"
         VENCIDO = "VEN", "Vencido"
         DEVUELTOTARDIO = "TAR", "Tardio"
+        ROTO="ROT","Roto"
 
     status = models.CharField(
-        max_length=30, choices=Status.choices, default=Status.DESAPROBADO
+        max_length=30, choices=Status.choices, default=Status.COMPRADO, verbose_name='Estado'
     )
-    quantity = models.IntegerField()
-    borrower = models.ForeignKey(
+    quantity = models.IntegerField(verbose_name='Cantidad')
+    borrower = models.ForeignKey( #si este campo da error revisar en el init
         CustomUser,
         on_delete=models.CASCADE,
         related_name="borrowed_logs",
         help_text="Si se ingresa como comprado poner nombre de tu usuario",
+        null=True,
+        blank=True,
+        verbose_name='Prestador/Comprador'
     )
     lender = models.ForeignKey(
         CustomUser,
@@ -167,11 +177,12 @@ class Log(models.Model):
         related_name="lender_logs",
         null=True,
         blank=True,
+        verbose_name='Prestatario'
     )
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
-    observation = models.CharField(max_length=100, null=True, blank=True)
-    dateIn = models.DateField(auto_now=True)
-    dateOut = models.DateTimeField(null=True, blank=True)
+    observation = models.CharField(max_length=100, null=True, blank=True,verbose_name='Observaciones')
+    dateIn = models.DateField(auto_now=True,verbose_name='Fecha de ingreso') #si este campo da error revisar en la init 
+    dateOut = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de devolucion')
 
     def __str__(self):
         return self.status

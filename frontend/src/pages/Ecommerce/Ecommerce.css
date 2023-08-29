@@ -2,9 +2,6 @@ body {
   background-color: rgb(4, 54, 54);
 }
 
-h1 {
-  font-size: 60px;
-}
 
 .col-4 {
   padding-top: 3rem;
@@ -38,8 +35,11 @@ h1 {
 
 #ecommerce{
   margin-top: 6rem;
-  margin-left: 4rem;
-  align-items: center;
+ 
+  align-items: right;
+}
+#filtros{
+
 }
 
 .mb-4 {
@@ -58,3 +58,4 @@ h1 {
     margin-bottom: 0.5rem; /* Espacio aún más pequeño en pantallas más pequeñas */
   }
 }
+

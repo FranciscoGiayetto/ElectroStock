@@ -11,6 +11,7 @@ export const login = async (username, password) => {
         });
         if (status === 200) {
             setAuthUser(data.access, data.refresh);
+            console.log(data)
         }
         return { data, error: null };
     } catch (error) {
@@ -21,16 +22,27 @@ export const login = async (username, password) => {
     }
 };
 
-export const register = async (username, password, password2) => {
+export const register = async (username, password, password2,email,selectedSpecialities) => {
+    console.log({
+        username,
+        password,
+        password2,
+        email,
+        selectedSpecialities
+    })
     try {
         const { data } = await axios.post('register/', {
             username,
             password,
             password2,
+            email,
+            selectedSpecialities
         });
+        
         await login(username, password);
         return { data, error: null };
     } catch (error) {
+       
         return {
             data: null,
             error: error.response.data || 'Something went wrong',
@@ -64,6 +76,7 @@ export const setAuthUser = (access_token, refresh_token) => {
         expires: 1,
         secure: true,
     });
+    
 
     Cookies.set('refresh_token', refresh_token, {
         expires: 7,
@@ -93,4 +106,28 @@ export const isAccessTokenExpired = (accessToken) => {
     } catch (err) {
         return true; // Token is invalid or expired
     }
+};
+
+
+
+
+export const requestPasswordReset = async (email) => {
+  try {
+    const csrftoken = Cookies.get('csrftoken'); // Obtén el token CSRF de tus cookies
+    console.log(csrftoken)
+    const response = await axios.post('/request-password-reset/', { email }, {
+      headers: {
+        'X-CSRFToken': csrftoken,
+      },
+    });
+    return { data: response.data, error: null };
+  } catch (error) {
+    return { data: null, error: error.response.data?.detail || 'Something went wrong' };
+  }
+};
+
+export const getCurrentToken = async () => {
+    const refresh_token = Cookies.get('refresh_token');
+    
+    return refresh_token;
 };
