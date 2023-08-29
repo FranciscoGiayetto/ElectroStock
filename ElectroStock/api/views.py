@@ -475,32 +475,71 @@ class BoxMasLogsRotos(generics.ListAPIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-
-from django.db.models import Sum, F, Value, IntegerField
-from django.db.models.functions import Coalesce
+from django.db.models import Sum, F, Value, IntegerField, ExpressionWrapper
 from rest_framework.views import APIView
+
+ # Calcula cual es stock actual
+def current_stock(box_id):
+    total_com = models.Log.objects.filter(box__id=box_id, status=models.Log.Status.COMPRADO).aggregate(
+        total=Sum("quantity")
+    )["total"]
+    total_ped = models.Log.objects.filter(box__id=box_id, status=models.Log.Status.PEDIDO).aggregate(
+        total=Sum("quantity")
+    )["total"]
+    total_rot = models.Log.objects.filter(box__id=box_id, status=models.Log.Status.ROTO).aggregate(
+        total=Sum("quantity")
+    )["total"]
+    total_ap = models.Log.objects.filter(box__id=box_id, status=models.Log.Status.APROBADO).aggregate(
+        total=Sum("quantity")
+    )["total"]
+
+    if total_com is None:
+        total_com = 0
+    if total_ped is None:
+        total_ped = 0
+    if total_rot is None:
+        total_rot = 0
+    if total_ap is None:
+        total_ap = 0
+
+    current_stock = total_com - total_ped - total_rot - total_ap
+    return current_stock
 
 
 class TopProductsOutOfStockView(APIView):
     serializer_class = ElementSerializer
 
     def get_queryset(self):
-        # Obtener los 10 productos que más llegan al stock actual a 0
+        # Obtener los 10 productos que llegan a un stock de 0 debido a salidas aprobadas (AP) y salidas de pedidos (PED)
         return models.Element.objects.annotate(
-            total_stock=Coalesce(
-                Sum(
-                    F('box__log__quantity'),
-                    filter=(
-                        Q(box__log__status=models.Log.Status.COMPRADO)
-                        | Q(box__log__status=models.Log.Status.ROTO)
-                    ),
-                    output_field=IntegerField(),
-                ),
-                0,
+            current_stock=ExpressionWrapper(
+                Value(0, output_field=IntegerField()),
+                output_field=IntegerField()
             )
-        ).filter(total_stock=0)[:10]
+        ).annotate(
+            total_out_of_stock=Sum(
+                ExpressionWrapper(
+                    F('box__log__quantity'),
+                    output_field=IntegerField()
+                ),
+                filter=(
+                    Q(box__log__status=models.Log.Status.PEDIDO)
+                    | Q(box__log__status=models.Log.Status.APROBADO)
+                )
+            )
+        ).filter(current_stock=0).order_by('-total_out_of_stock')[:10]
+
 
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = self.serializer_class(queryset, many=True)
-        return Response(serializer.data)
+        data = [
+             {
+                 'name': element.name,
+                 'total_out_of_stock': element.total_out_of_stock,
+                 'current_stock': current_stock(1)
+             }
+             for element in queryset
+        ]
+        return Response(data)
+
+
