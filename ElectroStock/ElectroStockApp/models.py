@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-
+from django.db.models.signals import post_save
 
 # Creo el grupo alumno
 if not Group.objects.filter(name="Alumno").exists():
@@ -19,10 +19,6 @@ if not Group.objects.filter(name="Profesor").exists():
 if not Group.objects.filter(name="Jefe de area").exists():
     profesor_group = Group.objects.create(name="Jefe de area")
     profesor_group.permissions.add()
-
-
-
-
 
 
 class Course(models.Model):
@@ -62,10 +58,12 @@ class CustomUser(AbstractUser):
         related_name="custom_users",
     )
 
-    def send_notification(    self, type_of_notification, target_users=None, target_groups=None):
+    def send_notification(
+        self, type_of_notification, target_users=None, target_groups=None
+    ):
         notification = Notification.objects.create(
-        user_sender=self, type_of_notification=type_of_notification
-    )
+            user_sender=self, type_of_notification=type_of_notification
+        )
 
         if target_users:
             notification.user_revoker.add(*target_users)
@@ -79,9 +77,6 @@ class CustomUser(AbstractUser):
         return notification
 
 
-
-
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.contrib.auth import get_user_model
@@ -89,10 +84,12 @@ from django.utils import timezone
 
 # ... otros imports ...
 
+
 class Notification(models.Model):
     class NotificationType(models.TextChoices):
         HELLO = "HW", "Hello World"
         CUSTOM = "CS", "Custom"
+        PEDIDO = "PD", "Pedido"
 
     class NotificationStatus(models.TextChoices):
         UNREAD = "unread", "No leída"
@@ -132,6 +129,7 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.message
+
 
 class Category(models.Model):
     name = models.CharField(max_length=40, null=True, blank=True, verbose_name="Nombre")
@@ -281,6 +279,37 @@ class Log(models.Model):
     def __str__(self):
         return self.status
 
+    @property
+    def is_pedido(self):
+        return self.status == self.Status.PEDIDO
+
+    # Conecta el método a la señal post_save del modelo Log
+
     class Meta:
         verbose_name_plural = "Prestamos y movimientos"
         verbose_name = "Prestamo y movimientos"
+
+
+def create_notification_on_pedido(sender, instance, **kwargs):
+    if instance.is_pedido:
+        # Obtén el grupo "Profesor"
+        profesor_group = Group.objects.get(name="Profesor")
+
+        # Crea y envía la notificación a todos los usuarios del grupo "Profesor"
+        detalles_pedido = (
+            f"Detalles del pedido:\n"
+            f"Elemento: {instance.box.name}\n"
+            f"Cantidad: {instance.quantity}\n"
+            f"Observaciones: {instance.observation}"
+        )
+
+        notificacion = Notification.objects.create(
+            user_sender=None,  # Sin remitente
+            type_of_notification=Notification.NotificationType.PEDIDO,
+            message=detalles_pedido,
+        )
+        profesor_group_users = get_user_model().objects.filter(groups=profesor_group)
+        notificacion.user_revoker.add(*profesor_group_users)
+
+
+post_save.connect(create_notification_on_pedido, sender=Log)
