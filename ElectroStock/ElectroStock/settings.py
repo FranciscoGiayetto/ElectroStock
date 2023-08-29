@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'import_export',
     "rest_framework",
     "LoginApp",
+    "notifications",
     'rest_framework_simplejwt.token_blacklist',
     "channels",
 ]
