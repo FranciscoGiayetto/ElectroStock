@@ -20,15 +20,17 @@ const Tasas = ({ endpoint }) => {
     }, [api, endpoint]);
 
     return (
-        <ListGroup as="ul">
-            <ListGroup.Item as="li" className='num'>
+        <div className="container mt-4">
+          <ListGroup as="ul" className='wide'>
+            <ListGroup.Item as="li" className='num font-bold'>
                 {expiredRate !== null ? `${expiredRate.toFixed(2)}%` : 'Cargando...'}
             </ListGroup.Item>
             <ListGroup.Item as="li" active>
                 Tasa vencidos
             </ListGroup.Item>
 
-        </ListGroup>
+          </ListGroup>
+        </div>
     );
 }
 

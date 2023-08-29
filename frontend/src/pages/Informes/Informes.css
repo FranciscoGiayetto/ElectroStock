@@ -23,12 +23,19 @@
 }
 
 .num{
-    font-size: 12rem;
+    font-size: 1.5rem;
     color:#2E5266;
-    ;
+    font-family: "Roboto Mono";
+    text-align: left;
+    vertical-align: bottom; 
+    padding-top: 2rem;
 }
 
 .container {
     z-index: 10;
   }
+
+.wide{
+    width: 23rem;
+}
   
