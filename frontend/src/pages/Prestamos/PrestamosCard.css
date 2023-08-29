@@ -1,9 +1,15 @@
-body {
-  background-color: #eee;
+.card-user {
+  font-size: 0.938rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-@media (max-width: 767.98px) {
-  .border-sm-start-none {
-    border-left: none !important;
-  }
+.card-header {
+  background-color: #018195;
+  color: #EBEBEB;
+  font-size: 1.25rem;
+}
+
+.card-table {
+  margin-bottom: 0;
+  height: 100%;
 }
