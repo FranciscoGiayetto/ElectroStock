@@ -1,30 +1,9 @@
-/* CardPrestamos.css */
-
-
-.prestamo-card {
-  display: flex;
-  border-radius: 15px;/* Cambiar el grosor del borde */
-  padding: 10px;
-  margin-top: 100px;
-  position: relative;
-  width: 400px; 
-  height: -500px;
+body {
+  background-color: #eee;
 }
 
-
-
-
-
-.contenido-card {
-  flex-grow: 1;
-  text-align: left;
-  margin-left: 10px;
-}
-
-
-
-.img-container img {
-  width: 100%; /* Ajustar el ancho de la imagen */
-  height: auto; /* Mantener la proporción */
-  border-radius: 10px;
+@media (max-width: 767.98px) {
+  .border-sm-start-none {
+    border-left: none !important;
+  }
 }
