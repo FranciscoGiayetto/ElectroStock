@@ -456,4 +456,4 @@ admin.site.register(Course, CourseAdmin)
 admin.site.register(Box, BoxAdmin)
 admin.site.register(Log, LogyAdmin)
 admin.site.register(Speciality)
-
+admin.site.register(Notification)
