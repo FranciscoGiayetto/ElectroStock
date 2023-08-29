@@ -92,6 +92,7 @@ class Notification(models.Model):
         PEDIDO = "PD", "Pedido"
         APROBADO = "AP", "Aprobado"
         DESAPROBADO = "DP", "Desaprobado"
+        DEVUELTO = "DV", "Devuelto"
 
     class NotificationStatus(models.TextChoices):
         UNREAD = "unread", "No leída"
@@ -293,6 +294,10 @@ class Log(models.Model):
     def is_desaprobado(self):
         return self.status == self.Status.DESAPROBADO
 
+    @property
+    def is_devuelto(self):
+        return self.status == self.Status.DEVUELTO
+
     # Conecta el método a la señal post_save del modelo Log
 
     class Meta:
@@ -344,6 +349,37 @@ def create_notification_on_desaprobado(sender, instance, **kwargs):
         notificacion.user_revoker.add(instance.borrower)
 
 
+def create_notification_on_devuelto(sender, instance, **kwargs):
+    if instance.is_devuelto:
+        # Crea y envía la notificación al usuario prestador
+        notificacion_prestador = Notification.objects.create(
+            user_sender=None,  # Sin remitente
+            type_of_notification=Notification.NotificationType.DEVUELTO,
+            message=f"Tu préstamo ha sido devuelto: {instance.box.name}",
+        )
+        notificacion_prestador.user_revoker.add(instance.borrower)
+
+        # Obtén el grupo "Profesor"
+        profesor_group = Group.objects.get(name="Profesor")
+
+        # Crea y envía la notificación a todos los usuarios del grupo "Profesor"
+        detalles_devuelto = (
+            f"Detalles del préstamo devuelto:\n"
+            f"Elemento: {instance.box.name}\n"
+            f"Cantidad: {instance.quantity}\n"
+            f"Observaciones: {instance.observation}"
+        )
+
+        notificacion_profesores = Notification.objects.create(
+            user_sender=None,  # Sin remitente
+            type_of_notification=Notification.NotificationType.DEVUELTO,
+            message=detalles_devuelto,
+        )
+        profesor_group_users = get_user_model().objects.filter(groups=profesor_group)
+        notificacion_profesores.user_revoker.add(*profesor_group_users)
+
+
+post_save.connect(create_notification_on_devuelto, sender=Log)
 post_save.connect(create_notification_on_aprobado, sender=Log)
 post_save.connect(create_notification_on_desaprobado, sender=Log)
 post_save.connect(create_notification_on_pedido, sender=Log)
