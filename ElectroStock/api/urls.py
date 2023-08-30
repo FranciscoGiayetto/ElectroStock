@@ -28,6 +28,7 @@ urlpatterns = [
     path("prestamosHistorial/<int:user_id>/", PrestamoVerAPIView, name="prestamosHistorial"),
     path("stock/<int:element_id>/", get_stock, name="stock"),
     path("filtroCategoria/<int:category_id>/", elementos_por_categoria, name="filtroCategoria"),
+    path("pendientes/<int:user_id>/", PrestamoPendientesAPIView, name="pendientes"),
     path(
         "estadisticas/maspedido/",
         MostRequestedElementView.as_view(),
