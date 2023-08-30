@@ -70,12 +70,14 @@ function LayoutWrapper({ onSearch, searchQuery }) {
       <Route path="/detalleCuenta" element={<PrivateRoute>
         <DetalleCuenta />
      </PrivateRoute>} />
+     
      <Route path="/Prestamos" element={<PrivateRoute>
         <MyComponent />
      </PrivateRoute>} />
      <Route path="/informe" element={<PrivateRoute>
         <Informe/>
      </PrivateRoute>} />
+        
       </Routes>
     </Layout>
   );

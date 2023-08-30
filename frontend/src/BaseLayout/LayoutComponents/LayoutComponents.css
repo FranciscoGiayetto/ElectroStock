@@ -23,7 +23,7 @@ html, body {
 
 .sidebar {
   height: 100vh;
-  background: #EBEBEB;
+  background: white;
   position: fixed;
   left: 0;
   top: 64px;
@@ -41,6 +41,7 @@ html, body {
   margin-right: auto;
   margin-left: 10px;
   width: 558px !important;
+  
   cursor: auto;
 }
 
