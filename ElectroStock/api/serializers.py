@@ -13,6 +13,11 @@ class TokenSerializer(serializers.ModelSerializer):
         model = models.TokenSignup
         fields = "__all__"
 
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Notification
+        fields = "__all__"
+
 # Para ver y editar categorias
 class CategoriaSerializer(serializers.ModelSerializer):
     category = CategoriaPadreSerializer()

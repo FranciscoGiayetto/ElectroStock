@@ -550,3 +550,16 @@ def CambioLog(request, user_id):
             log.save()
         serializer = LogSerializer(logs_carrito, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+@api_view(["GET", "POST"])
+def NotificacionesAPIView(request, user_id):
+    if request.method == "GET":
+        queryset = models.Notification.objects.filter(user_revoker=user_id)
+
+        serializer = NotificationSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    if request.method == "POST":
+        return Response({"message": "Notificaciones agregada"})
+
+    return Response(status=405)

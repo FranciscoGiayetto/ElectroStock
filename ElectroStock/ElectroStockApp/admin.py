@@ -267,7 +267,7 @@ class LogForm(forms.ModelForm):
         pass
 
 
-
+from django.contrib import messages
 # Clase de filtros y busqueda de los prestamos
 class LogyAdmin(ImportExportActionModelAdmin):
     form = LogForm
