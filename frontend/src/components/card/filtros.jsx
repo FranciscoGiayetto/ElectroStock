@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useAxios from '../../utils/useAxios';
 import { useParams } from 'react-router-dom';
+import { Container, ListGroup } from 'react-bootstrap';
 
 const WordList = () => {
   const api = useAxios();
@@ -45,9 +46,10 @@ const WordList = () => {
       <h2>Categorias Padre</h2>
       <ul>
         {parentCategories.map((item) => (
-          <li key={item.id}>
+          <ListGroup key={item.id}>
             <div>
-              {item.name}
+            {item.name}
+             
             </div>
             {/* Render children categories as a dropdown */}
             <select onChange={(e) => handleFilter(parseInt(e.target.value))}>
@@ -60,7 +62,9 @@ const WordList = () => {
                   </option>
                 ))}
             </select>
-          </li>
+
+          </ListGroup> 
+        
         ))}
       </ul>
     </div>
