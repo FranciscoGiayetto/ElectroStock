@@ -10,6 +10,19 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import axios from 'axios';
+import Stack from 'react-bootstrap/Stack';
+import Table from 'react-bootstrap/Table';
+import fotoPrueba2 from '../../assets/fotoPrueba2.jpg';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import Button from 'react-bootstrap/Button';
+import {
+  MDBCard,
+  MDBCardBody,
+  MDBCardHeader,
+  MDBCardTitle,
+  MDBCardText,
+  MDBBtn
+} from 'mdb-react-ui-kit';
 
 
 
@@ -20,44 +33,69 @@ function DetalleCuenta() {
     state.user,
 ]);
   const [element, setElement] = useState([]);
+  const [prestamos, setPrestamos] = useState([]);
   const api = useAxios();
-  const id = 3;
   const userData = user();
-  console.log(userData)
+  const id = userData.user_id;
 
-  const getElement = async () => {
+  console.log(id)
+
+  const getUser = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/users/${id}/`);
-      console.log(response);
+      const response = await api.get(`http://127.0.0.1:8000/api/users/${id}/`);
       let data = await response.data;
+      console.log(data)
       setElement(data);
-      console.log(element);
     } catch (error) {
       console.error(error);
     }
   };
   
+  const getPrestamos = async () => {
+    try {
+      const response = await api.get(`/prestamosHistorial/${id}/`);
+      let data = await response.data;
+      console.log(data)
+      setPrestamos(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    getElement()
+    getUser()
+    getPrestamos()
     }
     ,[]
   ) ;
+
 
   return (
     <Container fluid style={{marginTop:'6rem', marginBottom:'5rem'}}>
       <Row>
         <Col>
-          <CardUser first_name={element.first_name} last_name={element.last_name} course={element.course}></CardUser>
+          <CardUser first_name={user.first_name} last_name={user.last_name} course={user.course}></CardUser>
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
         <Col>
-          <CardMyData email={element.email} username={element.username}></CardMyData>
+          <CardMyData email={user.email} username={user.username}></CardMyData>
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
         <Col>
-        <CardPrestamos></CardPrestamos>
+        {prestamos.length > 0 ? (
+          prestamos.map((prestamo, index) => (
+            <CardPrestamos status={prestamos.status} 
+                           quantity={prestamos.quantity} 
+                           profeNombre={prestamos.borrower.first_name} 
+                           profeApellido={prestamos.borrower.last_name}
+                           specialties={prestamo.lender.specialties}></CardPrestamos>  
+          ))
+        ) : (
+          
+          <p>Cargando préstamos...</p>
+        )}
         </Col>
       </Row>
     </Container>
