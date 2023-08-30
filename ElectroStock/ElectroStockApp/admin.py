@@ -511,4 +511,4 @@ admin.site.register(Speciality)
 
 #SACAR ESTE
 admin.site.register(TokenSignup, TokenAdmin)
-
+admin.site.register(Notification)

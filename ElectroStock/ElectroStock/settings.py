@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'import_export',
     "rest_framework",
     "LoginApp",
+    "notifications",
     'rest_framework_simplejwt.token_blacklist',
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -81,7 +83,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ElectroStock.wsgi.application"
-
+ASGI_APPLICATION= "ElectroStock.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -402,5 +404,16 @@ LOGGING = {
     'root': {
         'handlers': ['console'],
         'level': 'DEBUG',  # Puedes ajustar el nivel según tus necesidades
+    },
+}
+
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
     },
 }
