@@ -25,15 +25,21 @@ const WordList = () => {
     try {
       const response = await api.get(`/category/`);
       const data = response.data;
-      const formattedParentCategories = data.filter((category) => category.category === null);
+  
+      // Filter out the categories you want to display
+      const filteredParentCategories = data.filter(
+        (category) => category.category === null && (category.name === 'equipos' || category.name === 'componentes'|| category.name === 'insumos'|| category.name === 'kits arduino')
+      );
+  
       const formattedChildrenCategories = data.filter((category) => category.category !== null);
-
-      setParentCategories(formattedParentCategories);
+  
+      setParentCategories(filteredParentCategories);
       setChildrenCategories(formattedChildrenCategories);
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   const getCategoryNameById = (categoryId) => {
     const category = parentCategories.find((item) => item.id === categoryId);
