@@ -60,7 +60,7 @@ function DetalleProducto() {
     e.preventDefault();
 
     let body = {
-      box: 1,
+      box: element.id,
       borrower: userData.user_id,
       lender: userData.user_id,
       status: 'CAR',
@@ -72,6 +72,7 @@ function DetalleProducto() {
 
     try {
       const response = await api.post(`/logPost/${userData.user_id}/`, body);
+      console.log(response.data)
       setPostRes(response.data.response);
       navigate('/tienda'); 
     } catch (error) {
