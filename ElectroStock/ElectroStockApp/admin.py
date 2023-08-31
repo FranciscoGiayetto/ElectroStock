@@ -477,19 +477,19 @@ class LocationResource(resources.ModelResource):
         fields = (
             "id",
             "name",
-            "laboratory__id",
+            "laboratoy__id",
         )
         export_order = (
             "id",
             "name",
-            "laboratory__id",
+            "laboratoy__id",
         )
 
 # Clase de filtros y busqueda de las ubicaciones
 class LocationAdmin(ImportExportActionModelAdmin):
     list_display = [
         "name",
-        "laboratory",
+        "laboratoy",
     ]
 
 # Clase de filtros y busqueda de las ubicaciones

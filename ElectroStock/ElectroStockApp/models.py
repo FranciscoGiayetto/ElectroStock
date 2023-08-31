@@ -203,7 +203,7 @@ class Laboratory(models.Model):
 
 class Location(models.Model):
     name = models.CharField(max_length=30, verbose_name="Nombre")
-    laboratory = models.ForeignKey(
+    laboratoy = models.ForeignKey(
         Laboratory, on_delete=models.CASCADE, verbose_name="Laboratorio"
     )
 
@@ -225,7 +225,7 @@ class TokenSignup(models.Model):
         verbose_name = "Token"
 
 class Box(models.Model):
-    responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True,blank=True)
     minimumStock = models.IntegerField(verbose_name="Stock Minimo")
     name = models.CharField(max_length=30, verbose_name="Nombre")
     element = models.ForeignKey(

@@ -193,7 +193,7 @@ class Command(BaseCommand):
             # Actualiza o crea la ubicación usando el ID especificado
             location, created = Location.objects.update_or_create(
                 id=id,
-                defaults={'name': name, 'laboratory': laboratory}
+                defaults={'name': name, 'laboratoy': laboratory}
             )
 
             if created:
