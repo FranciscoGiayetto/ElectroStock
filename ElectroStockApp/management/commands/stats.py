@@ -1,19 +1,12 @@
 from django.core.management.base import BaseCommand
-from ElectroStockApp.models import Speciality, Laboratory, Course, Category, Element
+from ElectroStockApp.models import Speciality, Laboratory, Course, Category, Element, Location, TokenSignup
+from django.contrib.auth import get_user_model
 
-
+User = get_user_model()
 class Command(BaseCommand):
     help = 'Carga de datos iniciales en la base de datos'
 
     def handle(self, *args, **options):
-        # Agregar cursos
-        grades = [4, 5, 6, 7]
-        for grade in grades:
-            course, created = Course.objects.get_or_create(grade=grade)
-            if created:
-                self.stdout.write(self.style.SUCCESS(f"Curso {grade} creado exitosamente."))
-            else:
-                self.stdout.write(f"Dato ya existente")
 
         # Agregar especialidades
         specialities = ['electronica', 'programacion', 'electromecanica']
@@ -22,7 +15,48 @@ class Command(BaseCommand):
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Especialidad {speciality} creada exitosamente."))
             else:
-                self.stdout.write(f"Dato ya existente")
+                self.stdout.write(f"Dato especialidad ya existente")
+                
+        #users
+        especialidad_electronica = Speciality.objects.get(name='electronica')
+        usuarios_data = [
+            {'username': 'Michalik', 'especialidad': especialidad_electronica},
+            {'username': 'Vettorello', 'especialidad': especialidad_electronica},
+            {'username': 'Córdoba', 'especialidad': especialidad_electronica},
+            {'username': 'Remedi', 'especialidad': especialidad_electronica},
+        ]
+
+        for usuario_data in usuarios_data:
+            username = usuario_data['username']
+            especialidad = usuario_data['especialidad']
+
+            if not User.objects.filter(username=username).exists():
+                user = User.objects.create_user(username=username)
+                user.specialties.add(especialidad)
+                user.save()
+                print('Usuario creado')
+
+
+        # Categorias padre
+        equipos, _ = Category.objects.get_or_create(name='equipos')
+        componentes, _ = Category.objects.get_or_create(name='componentes')
+        insumos, _ = Category.objects.get_or_create(name='insumos')
+        maletines_componentes, _ = Category.objects.get_or_create(name='maletines componentes')
+        kits_arduino, _ = Category.objects.get_or_create(name='kits arduino')
+        maletines, _ = Category.objects.get_or_create(name='maletines')
+        lockers, _ = Category.objects.get_or_create(name='lockers')
+        armario, _ = Category.objects.get_or_create(name='armario')
+        repuestos, _ = Category.objects.get_or_create(name='repuestos')
+        
+        
+        # Agregar cursos
+        grades = [4, 5, 6, 7]
+        for grade in grades:
+            course, created = Course.objects.get_or_create(grade=grade)
+            if created:
+                self.stdout.write(self.style.SUCCESS(f"Curso {grade} creado exitosamente."))
+            else:
+                self.stdout.write(f"Dato curso ya existente")
 
         # Agregar laboratorios
         lab_data = [
@@ -30,73 +64,140 @@ class Command(BaseCommand):
             {'name': 'Laboratorio 2', 'speciality': 'electronica'}
         ]
         for data in lab_data:
-            speciality = speciality = Speciality.objects.get(name=data['speciality'])
+            speciality = Speciality.objects.get(name=data['speciality'])
             lab, created = Laboratory.objects.get_or_create(name=data['name'], speciality=speciality)
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Laboratorio '{data['name']}' creado exitosamente."))
             else:
-                self.stdout.write(f"Dato ya existente")
+                self.stdout.write(f"Dato laboratorio ya existente")
 
+        # Categorias hijas
+        sensores, _ = Category.objects.get_or_create(name='sensores', category=equipos)
         
-        #DATOS DE EJEMPLO:
-        # Check if the first element exists
-        if not Element.objects.filter(name="Elemento 1").exists():
-            # Crea categorías
-            categoria1 = Category.objects.create(name="Categoría 1", description="Descripción de la categoría 1")
-            categoria2 = Category.objects.create(name="Categoría 2", description="Descripción de la categoría 2")
-            # Agrega más categorías aquí si es necesario
+        categorias_componentes = [
+            'resistencias',
+            'lamparas e indicadores',
+            'diodos y rectificadores',
+            'opticos y displays',
+            'transistores',
+            'tiristores',
+            'parlantes y microfonos',
+            'inductancias, nucleos y transformadores',
+            'capacitores',
+            'interruptores, pulsadores y reles',
+            'buffers',
+            'ci digitales',
+            'cristales y osciladores',
+            'zocalos',
+            'ci transmisores, receptores y modulos',
+            'reguladores de tension y protecciones',
+            'ci analogicos',
+            'conectores, borneras, terminales y fichas',
+            'elementos disipadores y aisladores',
+            'fusibles y portafusibles',
+            'elementos de montaje',
+            'motores y servomecanismos',
+            'cables varios'
+        ]
+        for categoria in categorias_componentes:
+            Category.objects.get_or_create(name=categoria, category=componentes)
 
-            # Crea elementos
-            elemento1 = Element.objects.create(name="Elemento 1", description="Descripción del elemento 1",  price_usd=10.99, category=categoria1)
-            elemento2 = Element.objects.create(name="Elemento 2", description="Descripción del elemento 2", price_usd=5.99, category=categoria1)
-            elemento3 = Element.objects.create(name="Elemento 3", description="Descripción del elemento 3", price_usd=7.99, category=categoria2)
-            elemento4 = Element.objects.create(name="Elemento 4", description="Descripción del elemento 4",  price_usd=12.99, category=categoria2)
-            elemento5 = Element.objects.create(name="Elemento 5", description="Descripción del elemento 5",  price_usd=8.99, category=categoria1)
-            elemento6 = Element.objects.create(name="Elemento 6", description="Descripción del elemento 6", price_usd=9.99, category=categoria2)
-            elemento7 = Element.objects.create(name="Elemento 7", description="Descripción del elemento 7",  price_usd=11.99, category=categoria1)
-            elemento8 = Element.objects.create(name="Elemento 8", description="Descripción del elemento 8", price_usd=6.99, category=categoria2)
-            elemento9 = Element.objects.create(name="Elemento 9", description="Descripción del elemento 9", price_usd=14.99, category=categoria1)
-            elemento10 = Element.objects.create(name="Elemento 10", description="Descripción del elemento 10",  price_usd=7.99, category=categoria2)
-            elemento11 = Element.objects.create(name="Elemento 11", description="Descripción del elemento 11", price_usd=9.99, category=categoria1)
-            elemento12 = Element.objects.create(name="Elemento 12", description="Descripción del elemento 12", price_usd=13.99, category=categoria2)
-            elemento13 = Element.objects.create(name="Elemento 13", description="Descripción del elemento 13",  price_usd=10.99, category=categoria1)
-            elemento14 = Element.objects.create(name="Elemento 14", description="Descripción del elemento 14", price_usd=8.99, category=categoria2)
-            elemento15 = Element.objects.create(name="Elemento 15", description="Descripción del elemento 15",  price_usd=11.99, category=categoria1)
-            elemento16 = Element.objects.create(name="Elemento 16", description="Descripción del elemento 16", price_usd=9.99, category=categoria2)
-            elemento17 = Element.objects.create(name="Elemento 17", description="Descripción del elemento 17",  price_usd=12.99, category=categoria1)
-            elemento18 = Element.objects.create(name="Elemento 18", description="Descripción del elemento 18", price_usd=7.99, category=categoria2)
-            elemento19 = Element.objects.create(name="Elemento 19", description="Descripción del elemento 19", price_usd=14.99, category=categoria1)
-            elemento20 = Element.objects.create(name="Elemento 20", description="Descripción del elemento 20",  price_usd=6.99, category=categoria2)
-            elemento21 = Element.objects.create(name="Elemento 21", description="Descripción del elemento 21",  price_usd=10.99, category=categoria1)
-            elemento22 = Element.objects.create(name="Elemento 22", description="Descripción del elemento 22", price_usd=5.99, category=categoria1)
-            elemento23 = Element.objects.create(name="Elemento 23", description="Descripción del elemento 23", price_usd=7.99, category=categoria2)
-            elemento24 = Element.objects.create(name="Elemento 24", description="Descripción del elemento 24",  price_usd=12.99, category=categoria2)
-            elemento25 = Element.objects.create(name="Elemento 25", description="Descripción del elemento 25",  price_usd=8.99, category=categoria1)
-            elemento26 = Element.objects.create(name="Elemento 26", description="Descripción del elemento 26", price_usd=9.99, category=categoria2)
-            elemento27 = Element.objects.create(name="Elemento 27", description="Descripción del elemento 27",  price_usd=11.99, category=categoria1)
-            elemento28 = Element.objects.create(name="Elemento 28", description="Descripción del elemento 28", price_usd=6.99, category=categoria2)
-            elemento29 = Element.objects.create(name="Elemento 29", description="Descripción del elemento 29", price_usd=14.99, category=categoria1)
-            elemento30 = Element.objects.create(name="Elemento 30", description="Descripción del elemento 30",  price_usd=7.99, category=categoria2)
-            elemento31 = Element.objects.create(name="Elemento 31", description="Descripción del elemento 31", price_usd=9.99, category=categoria1)
-            elemento32 = Element.objects.create(name="Elemento 32", description="Descripción del elemento 32", price_usd=13.99, category=categoria2)
-            elemento33 = Element.objects.create(name="Elemento 33", description="Descripción del elemento 33",  price_usd=10.99, category=categoria1)
-            elemento34 = Element.objects.create(name="Elemento 34", description="Descripción del elemento 34", price_usd=8.99, category=categoria2)
-            elemento35 = Element.objects.create(name="Elemento 35", description="Descripción del elemento 35",  price_usd=11.99, category=categoria1)
-            elemento36 = Element.objects.create(name="Elemento 36", description="Descripción del elemento 36", price_usd=9.99, category=categoria2)
-            elemento37 = Element.objects.create(name="Elemento 37", description="Descripción del elemento 37",  price_usd=12.99, category=categoria1)
-            elemento38 = Element.objects.create(name="Elemento 38", description="Descripción del elemento 38", price_usd=7.99, category=categoria2)
-            elemento39 = Element.objects.create(name="Elemento 39", description="Descripción del elemento 39", price_usd=14.99, category=categoria1)
-            elemento40 = Element.objects.create(name="Elemento 40", description="Descripción del elemento 40",  price_usd=6.99, category=categoria2)
-            elemento41 = Element.objects.create(name="Elemento 41", description="Descripción del elemento 41",  price_usd=10.99, category=categoria1)
-            elemento42 = Element.objects.create(name="Elemento 42", description="Descripción del elemento 42", price_usd=5.99, category=categoria1)
-            elemento43 = Element.objects.create(name="Elemento 43", description="Descripción del elemento 43", price_usd=7.99, category=categoria2)
-            elemento44 = Element.objects.create(name="Elemento 44", description="Descripción del elemento 44",  price_usd=12.99, category=categoria2)
-            elemento45 = Element.objects.create(name="Elemento 45", description="Descripción del elemento 45",  price_usd=8.99, category=categoria1)
-            elemento46 = Element.objects.create(name="Elemento 46", description="Descripción del elemento 46", price_usd=9.99, category=categoria2)
-            elemento47 = Element.objects.create(name="Elemento 47", description="Descripción del elemento 47",  price_usd=11.99, category=categoria1)
-            elemento48 = Element.objects.create(name="Elemento 48", description="Descripción del elemento 48", price_usd=6.99, category=categoria2)
-            elemento49 = Element.objects.create(name="Elemento 49", description="Descripción del elemento 49", price_usd=14.99, category=categoria1)
-            elemento50 = Element.objects.create(name="Elemento 50", description="Descripción del elemento 50",  price_usd=7.99, category=categoria2)
-            print("elementos y categorias de ejemplo creados")
-        else:
-            print("datos de ejemplo ya existentes")
+        categorias_insumos = [
+            'informatica',
+            'electricidad/electronica',
+            'ferreteria',
+            'libreria',
+            'impresión 3d',
+            'drogueria - quimica',
+            'proceso fabricacion circuitos impresos'
+        ]
+        for categoria in categorias_insumos:
+            Category.objects.get_or_create(name=categoria, category=insumos)
+
+        categorias_maletines_componentes = [
+            'cables',
+            'potenciómetros',
+            'varios',
+            'diodos',
+            'resistencias maletines componentes',
+            'capacitores electrolíticos',
+            'capacitores varios'
+        ]
+
+        for categoria in categorias_maletines_componentes:
+            Category.objects.get_or_create(name=categoria, category=maletines_componentes)
+
+        self.stdout.write(self.style.SUCCESS('Datos categorias ya creados'))
+
+
+        data = [
+            (1, "A1", 1),
+            (2, "M5", 1),
+            (3, "A2", 1),
+            (4, "Depósito", 1),
+            (5, "A3", 1),
+            (6, "C1-C5", 1),
+            (7, "C3", 1),
+            (8, "Caja htas", 1),
+            (9, "D7", 1),
+            (10, "Estante", 1),
+            (11, "Laboratorio", 1),
+            (12, "M1", 1),
+            (13, "M1- M5 ", 1),
+            (14, "M1-M12", 1),
+            (15, "M1-M6 y A2", 1),
+            (16, "M2", 1),
+            (17, "M3", 1),
+            (18, "M6 ", 1),
+            (19, "M4", 1),
+            (20, "M6 - M12", 1),
+            (21, "M7-M12", 1),
+            (22, "Mesa 13 LAB 1", 1),
+            (23, "Mesa 13 - Caja htas", 1),
+            (24, "Mesa 14 LAB 1", 1),
+            (25, "Mesas", 1),
+            (26, "Mesas - Cajón Herramientas", 1),
+            (27, "Mesas - Cajón Programación", 1),
+            (28, "Mesas 1-12", 1),
+            (29, "C2", 1),
+            (30, "C1", 1),
+            (31, "C4", 1),
+            (32, "D13", 1),
+            (33, "D14", 1),
+            (34, "C5", 1),
+            (35, "Caja htas+A3", 1),
+            (36, "M13", 1),
+            (37, "M14", 1),
+            (38, "Laboratorio 1", 1),
+            (39, "LAB 1", 1),
+            (40, "LAB 2", 2),
+            (41, "M1 - M12", 2),
+            (42, "Mesa 13 LAB 2", 2),
+            (43, "Mesa de perforación", 2),
+            (44, "Maletin inductivo M14", 2),
+            (45, "Maletin capacitivo M14", 2),
+            (46, "Maletin M14", 2),
+            (47, "Mesa 14 LAB 2", 2),
+            (48, "Maqueta tablero amarillo", 2),
+            (49, "Mesa mármol", 2),
+            (50, "Laboratorio 2", 2),
+            (51, "Sector ELEC. IND.2", 2),
+            (52, "Sector ELEC.IND.2", 2),
+            (53, "Sector INF.ELEC.2", 2),
+            (54, "Cajón", 2),
+            (55, "Sector ELECTROTEC.2", 2)
+        ]
+        for id, name, laboratory_id in data:
+            laboratory = Laboratory.objects.get(id=laboratory_id)
+            
+            # Actualiza o crea la ubicación usando el ID especificado
+            location, created = Location.objects.update_or_create(
+                id=id,
+                defaults={'name': name, 'laboratoy': laboratory}
+            )
+
+            if created:
+                print(f"Ubicación creada: {id}")
+
+
+        token, _ = TokenSignup.objects.get_or_create(name='villada')

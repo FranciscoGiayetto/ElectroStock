@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,8 +25,7 @@ SECRET_KEY = "django-insecure-ff=y)c_ri$c_l3)#zz#%)8&gffn85+^5vo)+enx*6t1jov8*ok
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://electrostock-dev.fl0.io','https://*.127.0.0.1']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -45,6 +44,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'import_export',
     "rest_framework",
+    "LoginApp",
+    "notifications",
+    'rest_framework_simplejwt.token_blacklist',
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -57,6 +60,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+FRONTEND_URL = 'http://localhost:3000'
+
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1','http://127.0.0.1:3000']
 
 ROOT_URLCONF = "ElectroStock.urls"
 
@@ -77,7 +83,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ElectroStock.wsgi.application"
-
+ASGI_APPLICATION= "ElectroStock.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -119,7 +125,7 @@ USE_TZ = True
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/img-prod/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'img-prod')
@@ -222,9 +228,13 @@ JAZZMIN_SETTINGS = {
         "ElectroStockApp.Element":"fas fa-hammer",
         "ElectroStockApp.Log":"fas fa-exchange-alt",
         "ElectroStockApp.Laboratory":"fas fa-flask",
+        "ElectroStockApp.TokenSignup":"fas fa-user-secret",
         "ElectroStockApp.Speciality":"fas fa-hard-hat",
         "ElectroStockApp.Course":"fas fa-graduation-cap",
+        "token_blacklist.blacklistedtoken":"fas fa-lock",
+        "token_blacklist.outstandingtoken":"fas fa-lock",
     },
+
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
@@ -244,6 +254,10 @@ JAZZMIN_SETTINGS = {
     # Whether to show the UI customizer on the sidebar
     "show_ui_builder": False,
 
+    "usermenu_links": [
+        {"name": "Token", "url": "http://127.0.0.1:8000/admin/ElectroStockApp/tokensignup/", "new_window": False, "icon":"fas fa-user-secret",},
+    ],
+    
     ###############
     # Change view #
     ###############
@@ -280,7 +294,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
-    "theme": "yeti",
+    "theme": "litera",
     "dark_mode_theme": None,
     "button_classes": {
         "primary": "btn-outline-primary",
@@ -294,8 +308,49 @@ JAZZMIN_UI_TWEAKS = {
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
+
+
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=100000),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=100000),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -305,4 +360,60 @@ CORS_ORIGIN_WHITELIST = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+
 ]
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST= 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'electrostock.noreplay@gmail.com'
+EMAIL_HOST_PASSWORD = 'exjvovbiofvrbgej' #NO BORRAR ESTO NUNCA, also, Pepe1234
+EMAIL_USE_TLS = True
+
+
+
+# celery -A ElectroStock worker --beat --loglevel=info
+# Redis configuration 
+from datetime import timedelta
+
+CELERY_BROKER_URL = CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/'  # Ejemplo para RabbitMQ
+CELERY_ACCEPT_CONTENT=['json']
+CELERY_TASK_SERIALIZER= 'json'
+CELERY_IMPORTS = ('ElectroStockApp.task',)
+CELERY_BEAT_SCHEDULE = {
+    'run_check_expired_logs': {
+        'task': 'ElectroStockApp.task.run_check_expired_logs',
+        'schedule': timedelta(days=1),  # Ejecutar cada 1 día
+    },
+    'assign_next_year_course': {
+        'task': 'ElectroStockApp.task.assign_next_year_course',
+        'schedule': timedelta(days=365),  # Ejecutar cada 1 año
+    },
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # Puedes ajustar el nivel según tus necesidades
+    },
+}
+
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
