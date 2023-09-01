@@ -22,6 +22,7 @@ import Private from './pages/LoginNuevo/private';
 import MyComponent from './pages/Prestamos/Prestamos';
 import { Link } from "react-router-dom";
 import Informe from "./pages/Informe/Informe";
+import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,6 +70,9 @@ function LayoutWrapper({ onSearch, searchQuery }) {
                           </PrivateRoute>} />
       <Route path="/detalleCuenta" element={<PrivateRoute>
         <DetalleCuenta />
+     </PrivateRoute>} />
+     <Route path="/detallePrestamo" element={<PrivateRoute>
+        <DetallePrestamo />
      </PrivateRoute>} />
      
      <Route path="/Prestamos" element={<PrivateRoute>
