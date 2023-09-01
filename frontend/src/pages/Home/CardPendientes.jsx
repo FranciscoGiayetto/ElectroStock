@@ -58,8 +58,8 @@ const CardPendientes = () => {
   };
 
   return (
-    <MDBCard alignment='left' style={{ backgroundColor: '#018195' , border: 'none' }}>
-      <MDBCardHeader style={{ color: 'white' }}>Pendientes</MDBCardHeader>
+    <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', width: '33%', minHeight: '40vh', maxHeight: '50vh', minWidth: '50vh' }}>       
+     <MDBCardHeader style={{ color: 'white' }}>Pendientes</MDBCardHeader>
       <Table hover style={{ marginBottom: '0', height: '100%' }}>
                 <thead>
           <tr>
@@ -72,8 +72,8 @@ const CardPendientes = () => {
         {element.slice(-4).map((item, index) => (
             <tr key={index}>
               <td>{formatDate(item.dateOut)}</td> {/* Display formatted date */}
-              <td>{item.box.name}</td>
-              <td>{item.quantity}</td>
+              <td>{item.box.name.length > 10? item.box.name.slice(0, 10) + '...' : item.box.name}</td>      
+             <td>{item.quantity}</td>
             </tr>
           ))}
         </tbody>

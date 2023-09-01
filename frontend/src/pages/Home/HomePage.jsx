@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import officeImage from './office.jpg';
-import './HomePage.css'
+import './HomePage.css';
 import CardPrestamos from './CardPrestamos';
 import CardVencidos from './CardVencidos';
 import CardPendientes from './CardPendientes';
@@ -10,44 +10,41 @@ import { getCurrentToken } from '../../utils/auth';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import CardNotificaciones from './CardNotificaciones';
 
 function HomePage() {
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
-]);
+  ]);
 
+  const token = getCurrentToken();
+  const userData = user();
+  console.log(token.PromiseResult);
 
-  const token = getCurrentToken()
-  const userData = user()
-  console.log(token.PromiseResult)
-
-
-
-  
   return (
-    <Container>      
-        <Row>
-          <Col xs={7}>
-                  <Container fluid className='container1'>
-                  <Row>
-                  <Col><CardVencidos /></Col>
-                  <Col><CardPendientes /></Col>
-                </Row>
-                <Row>
-                  <Col><CardPrestamos /></Col>
-                  
-                </Row>
-                </Container>
-          </Col>
-
-          <Col xs={5} className='container1'>
-                <CardPrestamos/>
-          </Col>
-        </Row>
+    <Container>
+      <Row>
+        <Col xs={7} style={{ marginLeft: '1rem', marginRight: '1rem' }}>
+          <Row>
+            <Col xs={6} style={{ marginTop: '5rem' }}>
+              <CardVencidos />
+            </Col>
+            <Col xs={6} style={{ marginTop: '5rem' }}>
+              <CardPendientes />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12} style={{ marginTop: '2rem' }}>
+              <CardPrestamos />
+            </Col>
+          </Row>
+        </Col>
+        <Col xs={4} style={{ marginTop: '2rem' }}>
+          <CardNotificaciones />
+        </Col>
+      </Row>
     </Container>
-       
-    
   );
 }
 
