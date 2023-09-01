@@ -23,24 +23,25 @@ function HomePage() {
   console.log(token.PromiseResult);
 
   return (
-    <Container>
+    <Container className='pagecontainer container'>
+        <h1 style={{paddingRight:'10rem'}}>Bienvenido {userData.username}</h1>
       <Row>
-        <Col xs={7} style={{ marginLeft: '1rem', marginRight: '1rem' }}>
-          <Row>
+        <Col xs={6} style={{  marginRight: '5rem' }}>
+          <Row >
             <Col xs={6} style={{ marginTop: '5rem' }}>
               <CardVencidos />
             </Col>
-            <Col xs={6} style={{ marginTop: '5rem' }}>
+            <Col xs={6} style={{ paddingLeft:'5rem', marginTop: '5rem' }}>
               <CardPendientes />
             </Col>
           </Row>
           <Row>
-            <Col xs={12} style={{ marginTop: '2rem' }}>
+            <Col xs={6} style={{ marginTop: '2rem' }}>
               <CardPrestamos />
             </Col>
           </Row>
         </Col>
-        <Col xs={4} style={{ marginTop: '2rem' }}>
+        <Col xs={5  } style={{ paddingLeft: '7rem' }}>
           <CardNotificaciones />
         </Col>
       </Row>
