@@ -503,7 +503,7 @@ from django.shortcuts import get_object_or_404
 @api_view(["GET"])
 def elementos_por_categoria(request, category_id):
     # Obtener la categoría correspondiente o devolver un error 404 si no existe
-    categoria = get_object_or_404(models.Category, id=category_id)
+    categoria = get_object_or_404(models.Category, name=category_id)
 
     # Obtener todos los elementos que pertenecen a la categoría
     elementos = models.Element.objects.filter(category=categoria)
