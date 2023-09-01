@@ -1,21 +1,21 @@
 {
   "background_color": "#ffffff",
   "categories": ["lifestyle", "music"],
-  "description": "Esta es una PWA de prueba para mi gente en YouTube",
+  "description": "Esta es una PWA de prueba",
   "dir": "ltr",
   "display_override": ["standalone", "fullscreen"],
   "display": "standalone",
   "icons": [{
     "src":"logo512.png",
-    "type":"image/png",
-    "sizes":"512x512"
+    "type":"../src/assets/itsv.png",
+    "sizes":"201x56"
   }],
   "lang": "es-MX",
-  "name": "PWA Lasfito test",
+  "name": "Electro Stock",
   "orientation": "portrait",
   "prefer_related_application": false,
   "scope": "/",
-  "short_name": "PWA Lasfi",
+  "short_name": "electro",
   "start_url": "/",
   "theme_color": "orange"
 }
