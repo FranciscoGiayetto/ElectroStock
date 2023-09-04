@@ -73,28 +73,33 @@ function DetalleCuenta() {
   return (
     <Container fluid style={{marginTop:'6rem', marginBottom:'5rem'}}>
       <Row>
-        <Col>
-          <CardUser first_name={user.first_name} last_name={user.last_name} course={user.course}></CardUser>
+        <Col style={{width:'62.5rem'}}>
+          <CardUser first_name={element.first_name} last_name={element.last_name} course={element.course}></CardUser>
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
         <Col>
-          <CardMyData email={user.email} username={user.username}></CardMyData>
+          <CardMyData email={element.email} username={element.username}></CardMyData>
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
         <Col>
         {prestamos.length > 0 ? (
-          prestamos.map((prestamo, index) => (
-            <CardPrestamos status={prestamos.status} 
-                           quantity={prestamos.quantity} 
-                           profeNombre={prestamos.borrower.first_name} 
-                           profeApellido={prestamos.borrower.last_name}
-                           specialties={prestamo.lender.specialties}></CardPrestamos>  
+          prestamos.map((prestamos, index) => (
+            <CardPrestamos
+                key={index}
+                status={prestamos.status}
+                quantity={prestamos.quantity}
+                profeNombre={prestamos.borrower.first_name}
+                profeApellido={prestamos.borrower.last_name}
+                specialties={prestamos.lender.specialties}
+                dateIn={prestamos.dateIn}
+                image={prestamos.image}
+              ></CardPrestamos>  
           ))
         ) : (
           
-          <p>Cargando préstamos...</p>
+          <p>No hay prestamos</p>
         )}
         </Col>
       </Row>

@@ -1,86 +1,72 @@
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import './CardExample.css';
 import { Link } from 'react-router-dom';
 import React from "react";
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-  MDBCardImage,
-  MDBIcon,
-  MDBRipple,
-  MDBBtn,
-} from "mdb-react-ui-kit";
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 
 export default function CardExample(props) {
-  const { id, name, title, image, text } = props;
+  const { id, title, image } = props;
   return (
-    <MDBContainer fluid >
-      <MDBRow className="justify-content-end mb-3">
-        <MDBCol md="12" xl="10">
-          <MDBCard className="shadow-0 border rounded-3">
-            <MDBCardBody>
-              <MDBRow>
-                <MDBCol md="12" lg="3" className="mb-4 mb-lg-0">
-                  <MDBRipple
-                    rippleColor="light"
-                    rippleTag="div"
-                    className="bg-image rounded hover-zoom hover-overlay"
-                  >
+    <div className="container-fluid">
+      <div className="row justify-content-end mb-3">
+        <div className="col-md-12 col-xl-10">
+          <Card className="shadow-sm border rounded-3">
+            <div className="card-body">
+              <div className="row">
+                <div className="col-md-12 col-lg-3 mb-4 mb-lg-0">
+                  <div className="bg-image rounded hover-zoom hover-overlay">
                     <Link to={`/detalleProducto/${id}`}>
-
-                    <MDBCardImage
-                      src={image}
-                      fluid
-                      className="w-100"
-                    />
+                      <Card.Img
+                        src={image}
+                        fluid
+                        className="w-100"
+                      />
                     </Link>
-                    <a>
+                    <div>
                       <div
-                        className="mask"
                         style={{ backgroundColor: "rgba(251, 251, 251, 0.15)" }}
                       ></div>
-                          
-                    </a>
-                  </MDBRipple>
-                </MDBCol>
+                    </div>
+                  </div>
+                </div>
                 
-                <MDBCol 
-                  
-                  className="border-sm-start-none border-start"
-                >
+                <div className="col border-sm-start-none border-start">
                   <div className="d-flex flex-row align-items-center mb-1">
-                 
-
-                    <h4 className="mb-1 me-1"><Card.Title>{title}</Card.Title></h4>
-                    <span className="text-danger">
-                    </span>
+                    <h4 className="mb-1 me-1">{title}</h4>
+                    <span className="text-danger"></span>
                   </div>
                   <h6 className="text-success">Stock Disponible</h6>
                   <div className="d-flex flex-column mt-4">
-                  <MDBBtn color="primary" size="sm" style={{ backgroundColor: '#58A4B0' , border:'none' }}>
-                      Agregar al Carrito
-                  </MDBBtn>
-                  
-
-                  <MDBBtn outline color="#58A4B0" size="sm" className="mt-2" style={{ borderColor: '#58A4B0', color: '#58A4B0' }}>
-                    
-                    Ver Más
-                  </MDBBtn>
-                
+                    <Link to={`/detalleProducto/${id}`}>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        className="w-100"
+                        style={{ backgroundColor: '#58A4B0', border: 'none' }}
+                      >
+                        Agregar al Carrito
+                      </Button>
+                    </Link>
+                    <Link to={`/detalleProducto/${id}`}>
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        className="mt-2 w-100"
+                        style={{
+                          borderColor: '#58A4B0',
+                          color: '#58A4B0',
+                          backgroundColor: 'white', // Color de fondo en estado normal
+                        }}
+                      >
+                        Ver Más
+                      </Button>
+                    </Link>
                   </div>
-                </MDBCol>
-              </MDBRow>
-
-            </MDBCardBody>
-          </MDBCard>
-        </MDBCol>
-      </MDBRow>
-    </MDBContainer>
-
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }
-

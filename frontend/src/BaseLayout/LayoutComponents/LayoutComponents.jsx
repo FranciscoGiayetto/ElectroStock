@@ -16,6 +16,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import DataUsageRoundedIcon from '@mui/icons-material/DataUsageRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -23,8 +24,6 @@ import Col from 'react-bootstrap/Col';
 import './LayoutComponents.css';
 import itsv from '../../assets/itsv.png';
 import { useNavigate } from 'react-router-dom';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
 
 const { Header, Sider } = Layout;
 
@@ -124,71 +123,87 @@ const LayoutComponents = ({ onSearch }) => {
           <Menu.Item key="3" icon={<PaidRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/presupuesto' }}>
             Presupuesto
           </Menu.Item>
-          <Menu.Item key="4" icon={<DataUsageIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
+          <Menu.Item key="4" icon={<DataUsageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
             Informe
           </Menu.Item>
           <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
             Admin
           </Menu.Item>
-          <Menu.Item key="7" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
+          <Menu.Divider />
+          <Menu.Item key="7" icon={<DownloadRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
             Descargar App
           </Menu.Item>
-          <Menu.Divider />
           <Menu.Item key="6" icon={<LogoutRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/logout' }}>
             Cerrar sesión
           </Menu.Item>
-
         </Menu>
       </Sider>
 
       
-        <Header className='navbar'>
-          <div className='div-logo'>
-            <a href="/">
-              <img src={its} alt="its" className='logo-img' />
-            </a>
-          </div>
-
-          <div className='div-form'>
-            <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '10rem' }}>
-              <div className='div-autocomplete'>
-                <Autocomplete
-                className='search-autocomplete'
-                options={myOptions}
-                getOptionLabel={(option) => option}
-                value={selectedOption}
-                onChange={(event, newValue) => setSelectedOption(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                  
-                    name='searchBar'
-                    {...params}
-                    label="Buscar productos"
-                    
-                    
+      <Header className='navbar'>
+          <Container fluid>
+            <Row>
+          
+              {/* Image */}
+              <Col style={{ marginLeft:'1.5rem' }}>  
+                <a href="/">
+                  <img src={itsv} alt="itsv" className='logo-img' />
+                </a>              
+              </Col>
+              
+              {/* Searchbar */}
+              <Col >            
+                <form onSubmit={handleSearch} className='div-form'>
+                
+                  <Autocomplete
                     className='search-input'
-                  />
-                )}
-              />
-            </div>
-              <Button className='button hover' variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                <SearchRoundedIcon />
-              </Button>
-            </form>
-          </div>
+                    freeSolo
+                    style={{ width:'40rem' }}
+                    fullWidth
+                    options={myOptions}
+                    getOptionLabel={(option) => option}
+                    value={selectedOption}
+                    onChange={(event, newValue) => setSelectedOption(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        className='search-input'
+                        {...params}
+                        variant="outlined"
+                        name='searchBar'
+                        label="Buscar productos"
+                        InputLabelProps={{
+                          style: { color: 'rgba(235, 235, 235, 0.5)'}  
+                        }}
+                      />
 
-          <div className='div-buttons'>
-           
-            <Button variant="primary" type="submit" className='button hover'>
-              <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-            </Button>
-            <Button variant="primary" type="submit" className='button hover'>
-              <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-            </Button>
-            <Button variant="primary" type="submit" className='button hover' onClick={() => { window.location.href = '/detalleCuenta' }}>
-              <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
-            </Button>
-          </div>
+                    )}
+                  />
+                
+                  <Button variant="primary" type="submit" className='button' style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                    <SearchRoundedIcon />
+                  </Button>
+
+                </form> 
+              </Col>
+
+              {/* Buttons */}
+              <Col style={{ marginLeft:'8rem'}}>  
+                <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/carrito' }}>
+                  <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                </Button>
+              </Col>
+              <Col style={{ marginLeft:'0'}}>
+                <Button variant="primary" type="submit" className='button' >
+                  <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                </Button>
+              </Col>
+              <Col style={{ marginLeft:'0rem'}}>   
+                <Button variant="primary" type="submit" className='button'  onClick={() => { window.location.href = '/detalleCuenta' }}>
+                  <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
+                </Button>
+              </Col>          
+            </Row>
+          </Container>
         </Header>
       
     </div>

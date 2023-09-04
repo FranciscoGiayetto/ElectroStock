@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useAxios from '../../utils/useAxios';
 import { useParams } from 'react-router-dom';
-import { Container, ListGroup } from 'react-bootstrap';
 
 const WordList = () => {
   const api = useAxios();
@@ -26,15 +25,21 @@ const WordList = () => {
     try {
       const response = await api.get(`/category/`);
       const data = response.data;
-      const formattedParentCategories = data.filter((category) => category.category === null);
+  
+      // Filter out the categories you want to display
+      const filteredParentCategories = data.filter(
+        (category) => category.category === null && (category.name === 'equipos' || category.name === 'componentes'|| category.name === 'insumos'|| category.name === 'kits arduino')
+      );
+  
       const formattedChildrenCategories = data.filter((category) => category.category !== null);
-
-      setParentCategories(formattedParentCategories);
+  
+      setParentCategories(filteredParentCategories);
       setChildrenCategories(formattedChildrenCategories);
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   const getCategoryNameById = (categoryId) => {
     const category = parentCategories.find((item) => item.id === categoryId);
@@ -43,28 +48,41 @@ const WordList = () => {
 
   return (
     <div className="word-list">
-      <h2>Categorias Padre</h2>
       <ul>
         {parentCategories.map((item) => (
-          <ListGroup key={item.id}>
+          <li key={item.id}>
             <div>
-            {item.name}
-             
+              <a
+                href={`/tienda/${item.name}`}
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: '1.2rem',
+                  color: 'black',             // Añade esta línea para cambiar el color del texto a negro
+                  textDecoration: 'none'      // Añade esta línea para quitar el subrayado del enlace
+                }}
+              >
+                {capitalizeFirstLetter(item.name)}
+              </a>
             </div>
-            {/* Render children categories as a dropdown */}
-            <select onChange={(e) => handleFilter(parseInt(e.target.value))}>
-              <option value="">Seleccione una categoría hija</option>
+            <ul>
               {childrenCategories
                 .filter((child) => child.category.id === item.id)
                 .map((child) => (
-                  <option key={child.id} value={child.id}>
-                    {item.name} - {child.name}
-                  </option>
+                  <li key={child.id}>
+                    <a
+                      href={`/tienda/${child.name}`}
+                      style={{
+                        fontSize: '0.9rem',
+                        color: 'black',         // Añade esta línea para cambiar el color del texto a negro
+                        textDecoration: 'none'  // Añade esta línea para quitar el subrayado del enlace
+                      }}
+                    >
+                      {capitalizeFirstLetter(child.name)}
+                    </a>
+                  </li>
                 ))}
-            </select>
-
-          </ListGroup> 
-        
+            </ul>
+          </li>
         ))}
       </ul>
     </div>

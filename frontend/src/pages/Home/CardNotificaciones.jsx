@@ -24,7 +24,7 @@ import { useAuthStore } from '../../store/auth';
 
 // ... (imports and other code)
 
-const CardVencidos = () => {
+const CardNotificaciones = () => {
   const api = useAxios();
   const [element, setElement] = useState([]);
   const [isLoggedIn, user] = useAuthStore((state) => [
@@ -38,7 +38,7 @@ const CardVencidos = () => {
 
   const getElement = async () => {
     try {
-      const response = await api.get(`/vencidos/${userData.user_id}`);
+      const response = await api.get(`/Notificaciones/${userData.user_id}`);
       let data = await response.data;
       setElement(data);
       console.log(data);
@@ -59,30 +59,38 @@ const CardVencidos = () => {
   };
 
   return (
-    
-    <MDBCard alignment='left' style={{ paddingRight:'3rem', backgroundColor: 'white', border: 'none', width: '33%', minHeight: '40vh', maxHeight: '50vh', minWidth: '48vh' }}>        
-    <MDBCardHeader style={{ color: 'white' }}>Vencidos</MDBCardHeader>
-      <Table hover style={{ marginBottom: '0', height: '100%' }}> 
-             <thead>
-          <tr>
-            <th scope='col'>Vencimiento</th>  
-            <th scope='col'>Producto</th>
-            <th scope='col'>Cantidad</th>
-          </tr>
-        </thead>
-        <tbody>
-        {element.slice(-4).map((item, index) => (
-        <tr key={index}>
-          <td>{formatDate(item.dateOut)}</td> {/* Display formatted date */}
-          <td>{item.box.name}</td>
-          <td>{item.quantity}</td>
-        </tr>
-      ))}
+    <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', minHeight: '100vh' }}>
+      <MDBCardHeader style={{ color: 'white' }}>Notificaciones</MDBCardHeader>
+      {element.length === 0 ? (
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <p>No hay notificaciones.</p>
+        </div>
+      ) : (
+        <Table hover style={{ marginBottom: '0', height: '100%' }}>     
+            <tbody>
+            {element.map((item, index) => (
+                <tr key={index}>
+                <td>{formatDate(item.dateOut)}</td> {/* Display formatted date */}
+                <td>{item.box.name}</td>
+                <td>{item.quantity}</td>
+                <td>{item.dateIn}</td> {/* Display formatted date */}
+                <td>
+                <MDBBadge color='success' pill>
+                {item.status }
+                </MDBBadge>
+            </td>
+            
 
-        </tbody>
-      </Table>
+                </tr>
+            ))}
+            </tbody>       
+         </Table>
+      )}
     </MDBCard>
   );
 };
 
-export default CardVencidos;
+  
+
+
+export default CardNotificaciones;

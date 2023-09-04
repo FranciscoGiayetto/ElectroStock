@@ -29,13 +29,14 @@ export default function CardPrestamos(props) {
         <Table className='card-table'>
           <tbody>
             <tr>
-              <td>10 Enero, 2023</td>
+              <td>{props.dateIn}</td>
             </tr>
           </tbody>
         </Table>
         <Stack direction='horizontal' gap={4}>
           <div className='p-2' style={{marginLeft:'0.5rem', marginRight:'1rem'}}>
-            <img src={fotoPrueba2} alt="Paisaje" style={{width:'10rem'}}/>
+          <img src={props.image || fotoPrueba2} alt="Paisaje" style={{ width: '10rem' }}/>
+
           </div>
           <Stack>
             <div style={{marginTop:'0.2rem', marginRight:'1rem'}}>
@@ -45,7 +46,7 @@ export default function CardPrestamos(props) {
           </Stack>
           <Stack>
             <div style={{marginTop:'0.2rem', marginRight:'1rem'}}>
-              <p style={{fontSize:'0.938rem', margin:'0'}}>{props.profeNombre}{props.profeApellido}</p>
+              <p style={{fontSize:'0.938rem', margin:'0'}}>{props.profeNombre} {props.profeApellido}</p>
               <p style={{fontSize:'0.938rem', margin:'0'}}>{props.specialties}</p>
             </div>
           </Stack>

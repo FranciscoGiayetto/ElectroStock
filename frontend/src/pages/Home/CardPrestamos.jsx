@@ -57,41 +57,41 @@ const CardPrestamos = () => {
     const day = dateObject.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
-
   return (
-    <MDBCard alignment='left' style={{ backgroundColor: '#018195'  , border: 'none'}}>
+    <MDBCard alignment='left' style={{ backgroundColor: '#018195', border: 'none' , minWidth: '98vh' }}>
       <MDBCardHeader style={{ color: 'white' }}>Prestamos</MDBCardHeader>
-      <Table hover style={{ marginBottom: '0', height: '100%' }}>     
-         <thead>
+      <Table hover style={{ marginBottom: '0', height: '100%' }}>
+        <thead>
           <tr>
             <th scope='col'>Fecha</th>
             <th scope='col'>Producto</th>
             <th scope='col'>Cantidad</th>
             <th scope='col'>Vencimiento</th>
             <th scope='col'>Estado</th>
-
           </tr>
         </thead>
         <tbody>
-        {element.slice(-4).map((item, index) => (
+          {element.slice(-4).map((item, index) => (
             <tr key={index}>
-              <td>{formatDate(item.dateOut)}</td> {/* Display formatted date */}
+              <td>{formatDate(item.dateIn)}</td>
               <td>{item.box.name}</td>
               <td>{item.quantity}</td>
-              <td>{item.dateIn}</td> {/* Display formatted date */}
-            <td>
-            <MDBBadge color='success' pill>
-            {item.status }
-            </MDBBadge>
-          </td>
-         
-
+              <td>{item.dateIn}</td>
+              <td>
+                {item.status === 'PED' ? (
+                  <span style={{ display: 'inline-block', width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'green' }} />
+                ) : item.status === 'VEN' ? (
+                  <span style={{ display: 'inline-block', width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'red' }} />
+                ) : (
+                  ''
+                )}
+              
+              </td>
             </tr>
           ))}
         </tbody>
       </Table>
     </MDBCard>
-    
   );
 };
 
