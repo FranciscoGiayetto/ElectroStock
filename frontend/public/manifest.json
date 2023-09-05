@@ -6,12 +6,12 @@
   "display_override": ["standalone", "fullscreen"],
   "display": "standalone",
   "icons": [{
-    "src":"logo512.png",
-    "type":"../src/assets/itsv.png",
-    "sizes":"201x56"
+    "src":"/logo512.png",
+    "sizes":"512x512",
+    "type":"image/png"
   }],
   "lang": "es-MX",
-  "name": "Electro Stock",
+  "name": "ElectroStock",
   "orientation": "portrait",
   "prefer_related_application": false,
   "scope": "/",
