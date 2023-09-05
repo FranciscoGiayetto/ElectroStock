@@ -19,9 +19,12 @@
   width: 100%;
   z-index: 100;
 }
-.centered-form{
+.centered-form {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
+
+

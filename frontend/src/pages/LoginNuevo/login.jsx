@@ -44,11 +44,10 @@ const Login = () => {
     return (
         
       <Container style={{fontFamily:'Roboto, sans-serif'}} >
-        <Row>
-          
-          <Col xs={12}>
-            <div style={{justifyContent:'center', alignItems:'center'}}>
-              <img src={ITSVlogin} alt="Logo"/>
+        <Row>          
+          <Col xs={12} style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+            <div >
+              <img src={ITSVlogin} alt="Logo" style={{width:'10rem'}}/>
             </div>
           </Col>
           <Col className="centered-form">
