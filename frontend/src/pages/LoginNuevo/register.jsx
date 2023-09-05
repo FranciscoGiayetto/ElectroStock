@@ -5,7 +5,7 @@ import { useAuthStore } from '../../store/auth';
 import useAxios from '../../utils/useAxios';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './login.css';
-import Logo from './logo';
+import ITSVlogin from '../../assets/ITSVlogin.svg';
 
 function Register() {
     const api = useAxios();
@@ -96,7 +96,9 @@ function Register() {
             <Container>
                 <Row>
                     <Col xs={12} className="text-xs-center">
-                        <div className='top-left-image'><Logo/></div>
+                        <div className='top-left-image'>
+                            <img src={ITSVlogin} alt="Logo"/>
+                        </div>
                     </Col>
                     <Col className="centered-form">
                         <div className="login-container">
