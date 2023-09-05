@@ -186,6 +186,7 @@ class VencidoStatisticsSerializer(serializers.Serializer):
     expired_logs = serializers.IntegerField()
     tardio_logs = serializers.IntegerField()
     expired_rate = serializers.SerializerMethodField()
+    vencido_percentage = serializers.FloatField()
 
     def get_expired_rate(self, obj):
         if obj["total_logs"] > 0:

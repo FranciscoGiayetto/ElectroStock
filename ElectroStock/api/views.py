@@ -4,12 +4,16 @@ from ElectroStockApp import models
 from .serializers import *
 from rest_framework import viewsets, permissions, generics
 from .permissions import PermisoUsuarioActual
-from django.db.models import Sum, Value, IntegerField, Q, Count, Case, When
+from django.db.models import Sum, Value, IntegerField, Q, Count, Case, When, F, FloatField
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.contrib.auth import get_user_model, get_user
+from django.contrib.auth.models import Group
+from rest_framework.decorators import api_view
 
-
-# View para los elementos
 class ElementsViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.all()
     permission_classes = [permissions.AllowAny]
@@ -70,6 +74,25 @@ def PrestamoVerAPIView(request, user_id):
 
     return Response(status=405)
 
+@api_view(["GET", "POST"])
+def PrestamoPendientesAPIView(request, user_id):
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.PEDIDO,
+        ]
+        
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+
+        return Response({"message": "Elemento agregado al carrito"})
+    
+    return Response(status=405)
 
 # View para las categorias
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -84,6 +107,10 @@ class UsersViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = UsersSerializer
 
+class LogViewSet(viewsets.ModelViewSet):
+    queryset = models.Log.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = LogSerializer
 
 # View para los cursos
 class CourseViewSet(viewsets.ModelViewSet):
@@ -176,9 +203,6 @@ def carrito(request, user_id):
         return Response(serializer.data)
 
     if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-
         return Response({"message": "Elemento agregado al carrito"})
 
     return Response(status=405)
@@ -389,6 +413,7 @@ class DateStatisticsView(generics.ListAPIView):
 
 
 # View para la estadistica de la taza de vencidos
+# View para la estadística de la taza de vencidos
 class VencidoStatisticsView(generics.ListAPIView):
     serializer_class = VencidoStatisticsSerializer
 
@@ -403,19 +428,27 @@ class VencidoStatisticsView(generics.ListAPIView):
         statistics = queryset.aggregate(
             total_logs=Count("id"),
             approved_logs=Sum(
-                Case(When(status="AP", then=1), default=0, output_field=IntegerField())
+                Case(When(status="AP", then=1), default=0, output_field=FloatField())
             ),
             expired_logs=Sum(
-                Case(When(status="VEN", then=1), default=0, output_field=IntegerField())
+                Case(When(status="VEN", then=1), default=0, output_field=FloatField())
             ),
             tardio_logs=Sum(
-                Case(When(status="TAR", then=1), default=0, output_field=IntegerField())
+                Case(When(status="TAR", then=1), default=0, output_field=FloatField())
             ),
         )
 
-        serializer = self.get_serializer(
-            [statistics], many=True
-        )  # Use the VencidoStatisticsSerializer
+        # Calcula el porcentaje de registros vencidos
+        total_logs = statistics['approved_logs']
+        expired_logs = statistics['expired_logs']
+        print(total_logs)
+        print(expired_logs)
+        vencido_percentage = (expired_logs / total_logs) * 100 if total_logs > 0 else 0
+
+        # Agrega el porcentaje correcto al diccionario de estadísticas
+        statistics['vencido_percentage'] = vencido_percentage
+
+        serializer = self.get_serializer([statistics], many=True)
         return Response(serializer.data)
 
 
@@ -474,72 +507,68 @@ class BoxMasLogsRotos(generics.ListAPIView):
                 {"message": 'No hay logs con status "ROTO" en el año actual.'},
                 status=status.HTTP_404_NOT_FOUND,
             )
+from django.shortcuts import get_object_or_404
 
-from django.db.models import Sum, F, Value, IntegerField, ExpressionWrapper
-from rest_framework.views import APIView
+@api_view(["GET"])
+def elementos_por_categoria(request, category_id):
+    # Obtener la categoría correspondiente o devolver un error 404 si no existe
+    categoria = get_object_or_404(models.Category, name=category_id)
 
- # Calcula cual es stock actual
-def current_stock(box_id):
-    total_com = models.Log.objects.filter(box__id=box_id, status=models.Log.Status.COMPRADO).aggregate(
-        total=Sum("quantity")
-    )["total"]
-    total_ped = models.Log.objects.filter(box__id=box_id, status=models.Log.Status.PEDIDO).aggregate(
-        total=Sum("quantity")
-    )["total"]
-    total_rot = models.Log.objects.filter(box__id=box_id, status=models.Log.Status.ROTO).aggregate(
-        total=Sum("quantity")
-    )["total"]
-    total_ap = models.Log.objects.filter(box__id=box_id, status=models.Log.Status.APROBADO).aggregate(
-        total=Sum("quantity")
-    )["total"]
+    # Obtener todos los elementos que pertenecen a la categoría
+    elementos = models.Element.objects.filter(category=categoria)
 
-    if total_com is None:
-        total_com = 0
-    if total_ped is None:
-        total_ped = 0
-    if total_rot is None:
-        total_rot = 0
-    if total_ap is None:
-        total_ap = 0
+    # Serializar los elementos y enviarlos en la respuesta
+    serializer = ElementSerializer(elementos, many=True)
+    return Response(serializer.data)
 
-    current_stock = total_com - total_ped - total_rot - total_ap
-    return current_stock
+@api_view(["GET", "POST", "PUT"])
+def CambioLog(request, user_id):
+    if request.method == "GET":
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.CARRITO
+        )
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
 
+    if request.method == "POST":
+         # Obtener el usuario existente (puedes usar get_object_or_404 para manejar si no existe)
+        user = get_object_or_404(models.CustomUser, id=user_id)
+        
+        # Verificar si ya existe un Log con el mismo "box" y estado "CARRITO"
+        box = request.data.get("box")
+        if models.Log.objects.filter(box=box, status=models.Log.Status.CARRITO).exists():
+            return Response({"message": "Ya existe un Log con el mismo box en estado CARRITO"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Crear un nuevo registro Log asociado al usuario
+        serializer = LogCambio(data=request.data)
+        if serializer.is_valid():
+            serializer.save(lender=user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class TopProductsOutOfStockView(APIView):
-    serializer_class = ElementSerializer
+    if request.method == "PUT":
+        # Agregar código para manejar la solicitud PUT
+        logs_carrito = models.Log.objects.filter(lender=user_id, status=models.Log.Status.CARRITO)
+        new_status = models.Log.Status.PEDIDO
+        new_dateout = request.data.get("dateout", None)
+        for log in logs_carrito:
+            log.status = new_status
+            if new_dateout is not None:
+                log.dateOut = new_dateout
+            log.save()
+        serializer = LogSerializer(logs_carrito, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+@api_view(["GET", "POST"])
+def NotificacionesAPIView(request, user_id):
+    if request.method == "GET":
+        queryset = models.Notification.objects.filter(user_revoker=user_id)
 
-    def get_queryset(self):
-        # Obtener los 10 productos que llegan a un stock de 0 debido a salidas aprobadas (AP) y salidas de pedidos (PED)
-        return models.Element.objects.annotate(
-            current_stock=ExpressionWrapper(
-                Value(0, output_field=IntegerField()),
-                output_field=IntegerField()
-            )
-        ).annotate(
-            total_out_of_stock=Sum(
-                ExpressionWrapper(
-                    F('box__log__quantity'),
-                    output_field=IntegerField()
-                ),
-                filter=(
-                    Q(box__log__status=models.Log.Status.PEDIDO)
-                    | Q(box__log__status=models.Log.Status.APROBADO)
-                )
-            )
-        ).filter(current_stock=0).order_by('-total_out_of_stock')[:10]
+        serializer = NotificationSerializer(queryset, many=True)
+        return Response(serializer.data)
 
+    if request.method == "POST":
+        return Response({"message": "Notificaciones agregada"})
 
-    def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        data = [
-             {
-                 'name': element.name,
-                 'total_out_of_stock': element.total_out_of_stock,
-                 'current_stock': current_stock(1)
-             }
-             for element in queryset
-        ]
-        return Response(data)
-
-
+    return Response(status=405)
