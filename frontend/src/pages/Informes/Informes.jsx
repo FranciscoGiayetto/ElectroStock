@@ -10,6 +10,7 @@ function Informes() {
       <MostRequestedElements endpoint="estadisticas/maspedido/"/>
       <MostRequestedElements endpoint="estadisticas/elementsCero/"/>
       <Tasas endpoint="estadisticas/vencidos/"/>
+      <Tasas endpoint="estadisticas/aprobado/"/>
     </div>
   );
 }

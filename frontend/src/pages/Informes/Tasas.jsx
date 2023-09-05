@@ -12,7 +12,7 @@ const Tasas = ({ endpoint }) => {
         api.get(endpoint)
             .then(response => {
                 const data = response.data[0]; // Suponiendo que siempre obtienes un solo objeto en la respuesta
-                const rate = data.expired_rate * 100; // Multiplica por 100 para obtener el porcentaje
+                const rate = data.expired_rate;
                 setExpiredRate(rate);
             })
             .catch(error => {
@@ -24,8 +24,8 @@ const Tasas = ({ endpoint }) => {
         <div className="container mt-4">
           <ListGroup as="ul" className='wide'>
             <ListGroup.Item as="li" className='num font-bold'>
-                {expiredRate !== null ? `${expiredRate.toFixed(2)}%` : 'Cargando...'}
-                <span className='icono-tasa'><EventBusyIcon></EventBusyIcon></span>
+              <span className='icono-tasa'><EventBusyIcon></EventBusyIcon></span>
+              {expiredRate !== null ? `${expiredRate.toFixed(2)}%` : 'Cargando...'}
             </ListGroup.Item>
             <ListGroup.Item as="li" active>
                 Tasa vencidos
