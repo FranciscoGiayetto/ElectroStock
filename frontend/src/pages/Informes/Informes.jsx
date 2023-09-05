@@ -8,9 +8,7 @@ function Informes() {
   return (
     <div className='container pagecontainer'> 
       <MostRequestedElements endpoint="estadisticas/maspedido/"/>
-      <MostRequestedElements endpoint="estadisticas/elementsCero/"/>
       <Tasas endpoint="estadisticas/vencidos/"/>
-      <Tasas endpoint="estadisticas/aprobado/"/>
     </div>
   );
 }
