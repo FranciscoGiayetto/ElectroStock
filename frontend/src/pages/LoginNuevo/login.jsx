@@ -46,14 +46,14 @@ const Login = () => {
       <Container style={{fontFamily:'Roboto, sans-serif'}} >
         <Row>          
           <Col xs={12} style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-            <div >
+            <div style={{marginTop:'4rem'}}>
               <img src={ITSVlogin} alt="Logo" style={{width:'10rem'}}/>
             </div>
           </Col>
           <Col className="centered-form">
             <div className="login-container">
               <p className="login-heading">
-                <b>Ingresá tus datos para<br/>iniciar sesión</b>
+                Ingresá tus datos para<br/>iniciar sesión
               </p>
               <div className="login-form">
                 <Form onSubmit={handleLogin}>
