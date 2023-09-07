@@ -3,10 +3,12 @@ import { login } from '../../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 import { Container, Row, Col } from 'react-bootstrap';
+import './login.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import ITSVlogin from '../../assets/ITSVlogin.svg';
 import Link from 'antd/es/typography/Link';
+
 
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -65,7 +67,7 @@ const Login = () => {
                     name="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    type="text" placeholder="" style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266'}} className="rounded-3 shadow form-control-lg"/>
+                    type="text" placeholder="Nombre de usuario" className="input-style"/>
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -76,7 +78,7 @@ const Login = () => {
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="" style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266'}} className="rounded-3 shadow form-control-lg" />
+                    placeholder="Contraseña" className="input-style" />
                   </Form.Group>
 
                   <div className='text-center' style={{paddingBottom:'1rem'}}>
@@ -116,9 +118,4 @@ const Login = () => {
     );
 };
 
-
-
-
-
-  
 export default Login;

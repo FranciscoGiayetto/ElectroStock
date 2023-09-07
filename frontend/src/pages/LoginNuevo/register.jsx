@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 import useAxios from '../../utils/useAxios';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import './login.css';
+
 import ITSVlogin from '../../assets/ITSVlogin.svg';
 
 function Register() {
