@@ -82,23 +82,26 @@ const Login = () => {
                   </Form.Group>
 
                   <div className='text-center' style={{paddingBottom:'1rem'}}>
-                    <Link href='http://127.0.0.1:8000/auth/accounts/password_reset'>Olvidaste tu contraseña?</Link>
+                    <Link href='http://127.0.0.1:8000/auth/accounts/password_reset' style={{color:' #2E5266'}} > Olvidaste tu contraseña? </Link>
                   </div>
-
+                  
                   <div className='text-center'>
                     <Button
-                      className='botonCarrito'
-                      style={{ fontSize:'0.938rem', backgroundColor: '#58A4B0', border: 'none', width:'9.813rem', height:'2.5rem' }}
+                      className='button-style'
                       variant='primary'
                       type='submit'
                     >
                       Ingresar
                     </Button>
                   </div>
-                  <div className='text-center' style={{marginTop:'.5rem'}}>
+
+                  <div className='div-hr'>
+                    <hr className='hr-style'/>
+                  </div>
+
+                  <div className='text-center'>
                     <Button
-                      className='botonCarrito'
-                      style={{ fontSize:'0.938rem', backgroundColor: '#58A4B0', border: 'none', width:'9.813rem', height:'2.5rem' }}
+                      className='button-style'
                       variant='primary'
                       href='/signup'
                     >
