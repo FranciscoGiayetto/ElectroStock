@@ -79,3 +79,27 @@ display: flex;
 .font-family {
   font-family: Roboto, sans-serif;
 }
+
+.input-style.custom-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  border-radius: 0.4rem;
+}
+
+.input-style.custom-checkbox input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid #2E5266;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.input-style.custom-checkbox input[type="checkbox"]:checked {
+  background-color: #58A4B0;
+  border-color: #58A4B0;
+  cursor: pointer;
+}
+
+
