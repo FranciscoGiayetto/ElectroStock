@@ -19,7 +19,7 @@ import Link from 'antd/es/typography/Link';
 const Login = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
-    const [password, setPassword] = useState(' ');
+    const [password, setPassword] = useState('');
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
     useEffect(() => {
@@ -45,7 +45,7 @@ const Login = () => {
     };
     return (
         
-      <Container style={{fontFamily:'Roboto, sans-serif'}} >
+      <Container className='font-family'>
         <Row>          
           <Col xs={12} style={{display:'flex', justifyContent:'center'}}>
             <div style={{marginTop:'4rem'}}>
