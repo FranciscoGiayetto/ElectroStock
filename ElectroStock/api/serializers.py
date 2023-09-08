@@ -76,18 +76,17 @@ class ElementEcommerceSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "name", "description", "image", "category")
         queryset = models.Element.objects.filter(ecommerce=True)
 
-
-# Para ver y editar todos los datos del laboratorio
-class LaboratorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Laboratory
-        fields = "__all__"
-
-
 # Para ver y editar todos los datos del especialidad
 class SpecialitySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Speciality
+        fields = "__all__"
+
+# Para ver y editar todos los datos del laboratorio
+class LaboratorySerializer(serializers.ModelSerializer):
+    speciality = SpecialitySerializer()
+    class Meta:
+        model = models.Laboratory
         fields = "__all__"
 
 
@@ -225,3 +224,4 @@ class VencidoStatisticsSerializer(serializers.Serializer):
 class LenderVencidosStatisticsSerializer(serializers.Serializer):
     lender__username = serializers.CharField()
     vencidos_count = serializers.IntegerField()
+

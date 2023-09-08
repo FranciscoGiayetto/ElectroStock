@@ -20,6 +20,8 @@ router.register("token", TokenViewSet, "token")
 router.register("log", LogViewSet, "log")
 
 urlpatterns = [
+    path('elementos_por_especialidad/<str:nombre_especialidad>/', boxes_por_especialidad, name='elementos_por_especialidad'),
+    path('categories_por_especialidad/<str:nombre_especialidad>/', categories_por_especialidad, name='categories_por_especialidad'),
     path("logPost/<int:user_id>/", CambioLog, name="logPost"),
     path("carrito/<int:user_id>/", carrito, name="carrito"),
     path("vencidos/<int:user_id>/", VencidosAPIView, name="vencidos"),

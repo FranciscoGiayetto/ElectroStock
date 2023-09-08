@@ -563,3 +563,54 @@ def NotificacionesAPIView(request, user_id):
         return Response({"message": "Notificaciones agregada"})
 
     return Response(status=405)
+
+from django.db.models import F
+@api_view(["GET"])
+def boxes_por_especialidad(request, nombre_especialidad):
+    # Obtén la especialidad especificada en la URL
+    especialidad = get_object_or_404(models.Speciality, name=nombre_especialidad)
+
+    # Filtrar boxes por la especialidad y obtener los elementos dentro de cada box
+    boxes = models.Box.objects.filter(
+        location__laboratoy__speciality=especialidad
+    ).prefetch_related("element")
+
+    # Crear una lista de elementos en el formato deseado
+    elementos_por_especialidad = []
+    for box in boxes:
+        elemento = {
+            "id": box.element.id,
+            "name": box.element.name,
+            "description": box.element.description,
+            "price_usd": box.element.price_usd,
+            "image": None if not box.element.image else box.element.image.url,
+            "ecommerce": box.element.ecommerce,
+            "category": box.element.category.id if box.element.category else None
+        }
+        elementos_por_especialidad.append(elemento)
+
+    return Response(elementos_por_especialidad)
+
+@api_view(["GET"])
+def categories_por_especialidad(request, nombre_especialidad):
+    # Obtén la especialidad especificada en la URL
+    especialidad = get_object_or_404(models.Speciality, name=nombre_especialidad)
+
+    # Filtrar cajas (boxes) por la especialidad y obtener las categorías únicas de los elementos
+    categorias = models.Category.objects.filter(
+        element__box__location__laboratoy__speciality=especialidad
+    ).distinct()
+
+    # Crear una lista de categorías en el formato deseado
+    categorias_por_especialidad = []
+    for categoria in categorias:
+        categoria_info = {
+            "id": categoria.id,
+            "category": categoria.category.name if categoria.category else None,  
+            "name": categoria.name,
+            "description": categoria.description,
+            # Puedes agregar más campos de la categoría si es necesario
+        }
+        categorias_por_especialidad.append(categoria_info)
+
+    return Response(categorias_por_especialidad)
