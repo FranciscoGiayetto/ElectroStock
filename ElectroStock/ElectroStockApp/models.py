@@ -165,14 +165,6 @@ class Category(models.Model):
 class Element(models.Model):
     name = models.CharField(max_length=30, verbose_name="Nombre")
     description = models.TextField(null=True, blank=True, verbose_name="Descripcion")
-    price_usd = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        help_text="Ingrese el precio en dolares",
-        verbose_name="Precio",
-    )
     image = models.ImageField(upload_to="img-prod/", blank=True, verbose_name="Foto")
     category = models.ForeignKey(
         Category,
@@ -396,3 +388,49 @@ post_save.connect(create_notification_on_devuelto, sender=Log)
 post_save.connect(create_notification_on_aprobado, sender=Log)
 post_save.connect(create_notification_on_desaprobado, sender=Log)
 post_save.connect(create_notification_on_pedido, sender=Log)
+
+class Budget(models.Model):
+    class Status(models.TextChoices):
+        COMPLETADO = "COMPLETADO", "Completado"
+        PROGRESO = "PROGRESO", "Progreso"
+    name = models.CharField(max_length=30, verbose_name="Nombre")
+    status = models.CharField(
+        max_length=30,
+        choices=Status.choices,
+        default=Status.PROGRESO,
+        verbose_name="Estado",
+    )
+    class Meta:
+        verbose_name_plural = "Presupuesto"
+        verbose_name = "Presupuesto"
+
+class BudgetLog(models.Model):
+    class Status(models.TextChoices):
+        COMPRADO = "COMPRADO", "Comprado"
+        PENDIENTE = "PENDIENTE", "Pendiente"
+    name = models.CharField(max_length=30, verbose_name="Nombre",null=True, blank=True)
+    status = models.CharField(
+        max_length=30,
+        choices=Status.choices,
+        default=Status.PENDIENTE,
+        verbose_name="Estado",
+    )
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Ingrese el precio en pesos",
+        verbose_name="Precio",
+    )
+    element = models.ForeignKey(
+        Element, on_delete=models.CASCADE, verbose_name="Elemento" ,null=True, blank=True
+    )
+    budget = models.ForeignKey(
+        Budget, on_delete=models.CASCADE, verbose_name="Presupuesto"
+    )
+    quantity = models.IntegerField(verbose_name="Cantidad")
+
+    class Meta:
+        verbose_name_plural = "Prestamos y movimientos del presupuesto"
+        verbose_name = "Prestamos y movimientos del presupuesto"
