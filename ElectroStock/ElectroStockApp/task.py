@@ -64,28 +64,37 @@ def assign_next_year_course():
 from django.core.exceptions import ObjectDoesNotExist
 
 # Hay que hacer que si ya se creo un log de budget no se crea otro y ver el error
+
 @shared_task
 def check_stock_and_add_budget_logs():
     # Obtén todos los productos que tengan un stock mínimo
     products_with_minimum_stock = Box.objects.filter(minimumStock__isnull=False)
 
     for product in products_with_minimum_stock:
+        # Verificar si ya existe un registro de presupuesto para este elemento
+        existing_budget_log = BudgetLog.objects.filter(element__name=product.element.name).first()
+
+        if existing_budget_log:
+            # Ya existe un registro de presupuesto para este elemento, no hagas nada
+            continue
+
         # Calcular la cantidad de registros de préstamos relacionados con la caja actual
         borrowed_logs_count = Log.objects.filter(box=product, status='COM').exclude(observation='ROTO').count()
 
-        # Verificar si la cantidad es menor que el stock mínimo
-        if borrowed_logs_count < product.minimumStock:
-            # Recupera la instancia de Element correspondiente al nombre
-            try:
-                element_instance = Element.objects.get(name=product.element.name)
-            except ObjectDoesNotExist:
-                element_instance = None
+        # Recupera la instancia de Element correspondiente al nombre
+        try:
+            element_instance = Element.objects.filter(name=product.element.name).first()
+        except ObjectDoesNotExist:
+            element_instance = None
 
-            try:
-                budget_instance = Budget.objects.get(id=1)  # Reemplaza con la lógica adecuada para obtener un presupuesto
-            except ObjectDoesNotExist:
-                budget_instance = None
+        try:
+            budget_instance = Budget.objects.get(id=1)  # Reemplaza con la lógica adecuada para obtener un presupuesto
+        except ObjectDoesNotExist:
+            budget_instance = None
 
+        # Verificar si la cantidad a agregar es mayor que 0 antes de crear el BudgetLog
+        quantity_to_add = product.minimumStock - borrowed_logs_count
+        if quantity_to_add > 0:
             if element_instance:
                 # Agregar un BudgetLog con los detalles
                 budget_log = BudgetLog.objects.create(
@@ -94,7 +103,7 @@ def check_stock_and_add_budget_logs():
                     price=0,  # Calcula el precio según tu lógica
                     element=element_instance,
                     budget=budget_instance,  # Reemplaza con la instancia de tu presupuesto
-                    quantity=product.minimumStock - borrowed_logs_count,
+                    quantity=quantity_to_add,
                 )
 
                 # Puedes realizar otras acciones aquí, como enviar notificaciones si es necesario
@@ -104,5 +113,6 @@ def check_stock_and_add_budget_logs():
                 # Por ejemplo, puedes agregar un registro de error en un archivo de registro
                 # o enviar una notificación de error
                 pass
+
 
 
