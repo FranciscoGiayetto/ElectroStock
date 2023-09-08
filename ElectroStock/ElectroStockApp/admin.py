@@ -495,7 +495,15 @@ class LocationAdmin(ImportExportActionModelAdmin):
 class TokenAdmin(ImportExportActionModelAdmin):
     list_display = ("name",)
 
-
+class BudgetLogAdmin(ImportExportActionModelAdmin):
+    list_display = [
+        "name",
+        "element",
+        "status",
+        "budget",
+        "price",
+        "quantity",
+    ]
 
 # Registramos los filtros y busquedas de las clases
 admin.site.register(Element, ElementAdmin)
@@ -512,4 +520,4 @@ admin.site.register(Speciality)
 admin.site.register(TokenSignup, TokenAdmin)
 admin.site.register(Notification)
 admin.site.register(Budget)
-admin.site.register(BudgetLog)
+admin.site.register(BudgetLog,BudgetLogAdmin)

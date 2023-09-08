@@ -352,6 +352,7 @@ SIMPLE_JWT = {
 
 
 
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = [
@@ -390,6 +391,10 @@ CELERY_BEAT_SCHEDULE = {
     'assign_next_year_course': {
         'task': 'ElectroStockApp.task.assign_next_year_course',
         'schedule': timedelta(days=365),  # Ejecutar cada 1 año
+    },
+    'check_stock_and_add_budget_logs': {
+        'task': 'ElectroStockApp.task.check_stock_and_add_budget_logs',
+        'schedule': timedelta(minutes=1),  # Ejecutar cada 1 año
     },
 }
 
