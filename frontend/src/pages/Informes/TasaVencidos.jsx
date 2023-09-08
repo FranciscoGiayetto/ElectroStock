@@ -9,7 +9,8 @@ const TasaVencidos = ({ endpoint }) => {
 
     useEffect(() => {
         api.get(endpoint).then((response) => {
-            setVencidoPercentage(response.data[0].vencido_percentage);
+            const roundedRate = Math.round(response.data[0].vencido_percentage * 10) / 10;
+            setVencidoPercentage(roundedRate);
         });
     }, []);
 
@@ -18,7 +19,7 @@ const TasaVencidos = ({ endpoint }) => {
             <ListGroup as="ul" className='wide'>
                 <ListGroup.Item as="li" className='num font-bold'>
                     <span className='icono-tasa'><EventBusyIcon></EventBusyIcon></span>
-                    {vencidoPercentage !== null ? vencidoPercentage : 'Cargando...'}
+                    {vencidoPercentage !== null ? `${vencidoPercentage}%` : 'Cargando...'}
                 </ListGroup.Item>
                 <ListGroup.Item as="li" active>
                     Tasa vencidos

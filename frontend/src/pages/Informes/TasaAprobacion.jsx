@@ -5,11 +5,12 @@ import EventBusyIcon from '@mui/icons-material/EventBusy';
 
 const TasaAprobacion = ({ endpoint }) => {
     const api = useAxios();
-    const [vencidoPercentage, setVencidoPercentage] = useState(null);
+    const [approvalRate, setApprovalRate] = useState(null);
 
     useEffect(() => {
         api.get(endpoint).then((response) => {
-            setVencidoPercentage(response.data[0].vencido_percentage);
+            const roundedRate = Math.round(response.data[0].approval_rate * 10) / 10;
+            setApprovalRate(roundedRate);
         });
     }, []);
 
@@ -18,7 +19,7 @@ const TasaAprobacion = ({ endpoint }) => {
             <ListGroup as="ul" className='wide'>
                 <ListGroup.Item as="li" className='num font-bold'>
                     <span className='icono-tasa'><EventBusyIcon></EventBusyIcon></span>
-                    {vencidoPercentage !== null ? vencidoPercentage : 'Cargando...'}
+                    {approvalRate !== null ? `${approvalRate}%` : 'Cargando...'}
                 </ListGroup.Item>
                 <ListGroup.Item as="li" active>
                     Tasa aprobación
