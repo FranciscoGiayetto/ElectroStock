@@ -108,7 +108,7 @@ function Register() {
                     </Col>
                     <Col className="centered-form">
                         <div className="login-container">
-                            <p className="login-heading"><b>Ingresá tus datos para<br />registrarte</b></p>
+                            <p className="login-heading">Ingresá tus datos para<br />registrarte</p>
                             <div className="login-form">
 
                                 <Form onSubmit={handleSubmit}>

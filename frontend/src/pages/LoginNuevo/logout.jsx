@@ -23,48 +23,35 @@ const Logout = () => {
         logout();
     }, []);
     return (
-        <Container className='font-family'>
-            <Row>
-                <div style={{marginTop:'20rem'}} className='text-center'>
-
-                <p className='color' style={{textAlign:'left'}}> 
-                    <p style={{fontSize:'1.4rem'}}>
+        <Container className='font-family' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', minWidth:'100' }}>
+            <div className='text-center'>
+                <p className='color' style={{ textAlign: 'left' }}>
+                    <p style={{ fontSize: '1.4rem' }}>
                         Sesión cerrada
                     </p>
                     Cerraste sesión correctamente
                 </p>
-
                 <div className='text-center'>
-                    
                     <Button
                         className='button-style'
-                        style={{marginRight:'1rem'}}
+                        style={{ marginRight: '1rem' }}
                         variant='primary'
                         type='submit'
                         href='/login'
                     >
-                    Iniciar sesión
+                        Iniciar sesión
                     </Button>
-
                     <Button
-                    className='button-style'
-                    variant='primary'
-                    href='/signup'
+                        className='button-style'
+                        variant='primary'
+                        href='/signup'
                     >
-                    Registrarse
+                        Registrarse
                     </Button>
                 </div>
-
-
-
-                <div className='text-center'>
-                    
-                </div>
-
-                </div>
-            </Row>
-            
+            </div>
         </Container>
+
     )
 };
 
