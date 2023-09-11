@@ -62,8 +62,7 @@ def assign_next_year_course():
                 user.delete()  # Eliminar el usuario si el curso no existe
 
 from django.core.exceptions import ObjectDoesNotExist
-
-# Hay que hacer que si ya se creo un log de budget no se crea otro y ver el error
+from django.db.models import Sum
 
 @shared_task
 def check_stock_and_add_budget_logs():
@@ -74,45 +73,60 @@ def check_stock_and_add_budget_logs():
         # Verificar si ya existe un registro de presupuesto para este elemento
         existing_budget_log = BudgetLog.objects.filter(element__name=product.element.name).first()
 
+
+
+        # Recupera el elemento correspondiente al producto
+        element_instance = product.element
+
+        # Calcular la cantidad total de registros de préstamos con estado 'COM' para el elemento actual
+        borrowed_logs_com = Log.objects.filter(box__element=element_instance, status='COM').aggregate(Sum('quantity'))['quantity__sum'] or 0
+
+        # Calcular la cantidad total de registros de préstamos con estado 'ROTO' para el elemento actual
+        borrowed_logs_roto = Log.objects.filter(box__element=element_instance, status='ROT').aggregate(Sum('quantity'))['quantity__sum'] or 0
+
+        # Calcula la cantidad a agregar como la diferencia entre los préstamos 'COM' y los préstamos 'ROTO'
+        quantity_to_add =  product.minimumStock  -(borrowed_logs_com - borrowed_logs_roto)
+        # Encuentra la especialidad siguiendo la cadena de relaciones desde Box
+        speciality = None
+        if element_instance:
+            try:
+                location = product.location
+                laboratory = location.laboratoy
+                speciality = laboratory.speciality
+            except (Location.DoesNotExist, Laboratory.DoesNotExist, Speciality.DoesNotExist):
+                pass
+
+        # Encuentra el último presupuesto para la especialidad del producto, si existe
+        latest_budget = None
+        if speciality:
+            try:
+                latest_budget = Budget.objects.filter(speciality=speciality).latest('id')
+            except Budget.DoesNotExist:
+                pass
+
+        # Calcula la cantidad a agregar como la diferencia entre el stock mínimo y el stock actual
+
+        logging.info(
+                    f"cantidad a agregar: {quantity_to_add}, comprado: {borrowed_logs_com}, roto: {borrowed_logs_roto}, srock minimo: {product.minimumStock }"
+                )
+
         if existing_budget_log:
-            # Ya existe un registro de presupuesto para este elemento, no hagas nada
-            continue
-
-        # Calcular la cantidad de registros de préstamos relacionados con la caja actual
-        borrowed_logs_count = Log.objects.filter(box=product, status='COM').exclude(observation='ROTO').count()
-
-        # Recupera la instancia de Element correspondiente al nombre
-        try:
-            element_instance = Element.objects.filter(name=product.element.name).first()
-        except ObjectDoesNotExist:
-            element_instance = None
-
-        try:
-            budget_instance = Budget.objects.get(id=1)  # Reemplaza con la lógica adecuada para obtener un presupuesto
-        except ObjectDoesNotExist:
-            budget_instance = None
-
-        # Verificar si la cantidad a agregar es mayor que 0 antes de crear el BudgetLog
-        quantity_to_add = product.minimumStock - borrowed_logs_count
-        if quantity_to_add > 0:
-            if element_instance:
-                # Agregar un BudgetLog con los detalles
+            # Actualizar la cantidad en el registro de presupuesto existente
+            existing_budget_log.quantity = quantity_to_add
+            existing_budget_log.save()
+        else:
+            if quantity_to_add > 0:
+                # Agregar un nuevo BudgetLog con los detalles
                 budget_log = BudgetLog.objects.create(
                     name='',
-                    status='PENDIENTE',  # Puedes ajustar esto según tus necesidades
-                    price=0,  # Calcula el precio según tu lógica
+                    status='PENDIENTE',
+                    price=0,
                     element=element_instance,
-                    budget=budget_instance,  # Reemplaza con la instancia de tu presupuesto
+                    budget=latest_budget,
                     quantity=quantity_to_add,
                 )
 
-                # Puedes realizar otras acciones aquí, como enviar notificaciones si es necesario
-            else:
-                # Maneja el caso en el que no se encontró la instancia de Element
-                # Puedes registrar un mensaje de error o tomar la acción adecuada aquí
-                # Por ejemplo, puedes agregar un registro de error en un archivo de registro
-                # o enviar una notificación de error
-                pass
+
 
 
 

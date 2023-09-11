@@ -148,6 +148,7 @@ class SpecialityViewSet(viewsets.ModelViewSet):
 
 
 # View para tomar el stock actual segun el id que mandas por la url
+
 @api_view(["GET", "POST"])
 def get_stock(request, element_id):
     if request.method == "GET":

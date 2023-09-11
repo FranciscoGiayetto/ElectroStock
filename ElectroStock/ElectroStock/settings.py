@@ -394,7 +394,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'check_stock_and_add_budget_logs': {
         'task': 'ElectroStockApp.task.check_stock_and_add_budget_logs',
-        'schedule': timedelta(minutes=1),  # Ejecutar cada 1 año
+        'schedule': timedelta(days=1),  # Ejecutar cada 1 año
     },
 }
 

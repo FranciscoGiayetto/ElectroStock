@@ -400,6 +400,13 @@ class Budget(models.Model):
         default=Status.PROGRESO,
         verbose_name="Estado",
     )
+    speciality = models.ForeignKey(
+        Speciality,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name="Especialidad",
+    )
     class Meta:
         verbose_name_plural = "Presupuesto"
         verbose_name = "Presupuesto"
