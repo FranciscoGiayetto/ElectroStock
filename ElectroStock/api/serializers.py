@@ -226,6 +226,7 @@ class LenderVencidosStatisticsSerializer(serializers.Serializer):
     vencidos_count = serializers.IntegerField()
 
 class BudgetSerializer(serializers.ModelSerializer):
+    speciality = SpecialitySerializer()
     class Meta:
         model = models.Budget
         fields = "__all__"

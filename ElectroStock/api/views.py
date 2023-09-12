@@ -629,7 +629,16 @@ def BudgetLogViewSet(request, budget_id):
 
     return Response(status=405)
 
-class BudgetViewSet(viewsets.ModelViewSet):
-    queryset = models.Budget.objects.all()
-    permission_classes = [permissions.AllowAny]
-    serializer_class = BudgetSerializer
+@api_view(["GET", "POST"])
+def BudgetViewSet(request, speciality_name):
+    if request.method == "GET":
+        queryset = models.Budget.objects.filter(speciality__name=speciality_name)
+
+
+        serializer = BudgetSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    if request.method == "POST":
+        return Response({"message": "Notificaciones agregada"})
+
+    return Response(status=405)
