@@ -3,6 +3,7 @@ import './Informes.css';
 import MostRequestedElements from './MostRequestedElements';
 import TasaVencidos from './TasaVencidos';
 import TasaAprobacion from './TasaAprobacion';
+import BoxMasLogRotos from './BoxMasLogRotos';
 
 function Informes() {
   return (
@@ -10,6 +11,7 @@ function Informes() {
       <MostRequestedElements endpoint="estadisticas/maspedido/"/>
       <TasaVencidos endpoint="estadisticas/vencidos/"/>
       <TasaAprobacion endpoint="estadisticas/aprobado/"/>
+      <BoxMasLogRotos endpoint="estadisticas/box_mas_logs_rotos/"/>
     </div>
   );
 }
