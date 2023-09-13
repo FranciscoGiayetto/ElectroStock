@@ -401,7 +401,7 @@ class DateStatisticsView(generics.ListAPIView):
             models.Log.objects.filter(dateIn__year=current_year)
             .values("dateIn")
             .annotate(total_datein_logs=Count("dateIn"))
-            .order_by("-total_datein_logs")[:3]
+            .order_by("-total_datein_logs")[:1]
         )
         return queryset
 
