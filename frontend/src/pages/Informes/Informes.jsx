@@ -3,7 +3,6 @@ import './Informes.css';
 import MostRequestedElements from './MostRequestedElements';
 import TasaVencidos from './TasaVencidos';
 import TasaAprobacion from './TasaAprobacion';
-import BoxMasLogRotos from './BoxMasLogRotos';
 
 function Informes() {
   return (
