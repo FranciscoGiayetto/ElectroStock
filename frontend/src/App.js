@@ -61,6 +61,7 @@ function LayoutWrapper({ onSearch, searchQuery }) {
   <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
   <Route path="/detalleProducto/:id" element={<PrivateRoute><DetalleProducto /></PrivateRoute>} />
   <Route path="/detalleCuenta" element={<PrivateRoute><DetalleCuenta /></PrivateRoute>} />
+  <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
 </Routes>
 
     </Layout>
