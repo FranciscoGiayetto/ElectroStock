@@ -616,19 +616,12 @@ def categories_por_especialidad(request, nombre_especialidad):
 
     return Response(categorias_por_especialidad)
 
-@api_view(["GET", "POST"])
-def BudgetLogViewSet(request, budget_id):
-    if request.method == "GET":
-        queryset = models.BudgetLog.objects.filter(id=budget_id)
 
-        serializer = BudgetLogSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    if request.method == "POST":
-        return Response({"message": "Notificaciones agregada"})
-
-    return Response(status=405)
-
+class BudgetLogViewSet(viewsets.ModelViewSet):
+    queryset = models.BudgetLog.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = BudgetLogSerializer
+    
 @api_view(["GET", "POST"])
 def BudgetViewSet(request, speciality_name):
     if request.method == "GET":
