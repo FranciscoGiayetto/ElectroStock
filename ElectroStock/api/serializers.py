@@ -88,7 +88,7 @@ class SpecialitySerializer(serializers.ModelSerializer):
 
 # Para ver y editar todos los datos de la location
 class LocationSerializer(serializers.ModelSerializer):
-    laboratoy = LaboratorySerializer()
+    laboratory = LaboratorySerializer()
 
     class Meta:
         model = models.Location

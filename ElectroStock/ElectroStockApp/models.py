@@ -192,7 +192,7 @@ class Log(models.Model):
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
     observation = models.CharField(max_length=100, null=True, blank=True,verbose_name='Observaciones')
     dateIn = models.DateField(auto_now=True,verbose_name='Fecha de ingreso') #si este campo da error revisar en la init 
-    dateOut = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de devolucion',help_text="No es necesario si se carga como comprado")
+    dateOut = models.DateField(null=True, blank=True, verbose_name='Fecha de devolucion',help_text="No es necesario si se carga como comprado")
 
     def __str__(self):
         return self.status

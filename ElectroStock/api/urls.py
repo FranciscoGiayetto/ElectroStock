@@ -37,7 +37,7 @@ urlpatterns = [
     path("estadisticas/vencidos/", VencidoStatisticsView.as_view(), name="vencido"),
     path("estadisticas/mayordeudor/", LenderVencidosStatisticsView.as_view(), name="mayordeudor"),
     path('estadisticas/box_mas_logs_rotos/', BoxMasLogsRotos.as_view(), name='box_mas_logs_rotos'),
-    #path('estadisticas/elementsCero/', TopProductsOutOfStockView.as_view(), name='elementsCero'),
+    path('estadisticas/avgDate/', DateAvgView.as_view(), name='avg/date'),
     
 ] + router.urls
 
