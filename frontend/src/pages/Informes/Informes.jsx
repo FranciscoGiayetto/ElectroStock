@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-
-import MostRequestedElements from './MostRequestedElements';
 import './Informes.css';
-import Tasas from './Tasas';
+import MostRequestedElements from './MostRequestedElements';
+import TasaVencidos from './TasaVencidos';
+import TasaAprobacion from './TasaAprobacion';
 
 function Informes() {
   return (
     <div className='container pagecontainer'> 
       <MostRequestedElements endpoint="estadisticas/maspedido/"/>
-      <MostRequestedElements endpoint="estadisticas/elementsCero/"/>
-      <Tasas endpoint="estadisticas/vencidos/"/>
+      <TasaVencidos endpoint="estadisticas/vencidos/"/>
+      <TasaAprobacion endpoint="estadisticas/aprobado/"/>
     </div>
   );
 }
