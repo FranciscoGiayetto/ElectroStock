@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import PollOutlinedIcon from '@mui/icons-material/PollOutlined';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import useAxios from '../../utils/useAxios';
 
-const DiaDemandado = ({ title, subtitle }) => {
+const DiaDemandado = ({ subtitle }) => {
+  const [dateInData, setDateInData] = useState([]);
+  const axiosInstance = useAxios();
+
+  useEffect(() => {
+    axiosInstance
+      .get('/estadisticas/date/')
+      .then(response => {
+        if (response.data.length > 0) {
+          const { dateIn } = response.data[0];
+          setDateInData(dateIn);
+        }
+      })
+      .catch(error => {
+        console.error('Error al obtener datos:', error);
+      });
+  }, [axiosInstance]);
+
   return (
     <Card style={{ borderRadius: '15px' }}>
       <Card.Body>
@@ -12,8 +29,8 @@ const DiaDemandado = ({ title, subtitle }) => {
             <PollOutlinedIcon fontSize="large" />
           </div>
           <div>
-            <h5>{title}</h5>
-            <p className="mb-0">{subtitle}</p>
+          <h5 style={{ marginBottom: '1px' }}>{dateInData}</h5>
+            <p style={{ marginTop: '1px' }} className="mb-0">{subtitle}</p>
           </div>
         </div>
       </Card.Body>
@@ -22,3 +39,4 @@ const DiaDemandado = ({ title, subtitle }) => {
 };
 
 export default DiaDemandado;
+
