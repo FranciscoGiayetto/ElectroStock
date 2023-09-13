@@ -4,8 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 import useAxios from '../../utils/useAxios';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import './login.css';
-import Logo from './logo';
+
+import ITSVlogin from '../../assets/ITSVlogin.svg';
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
+</head>
 
 function Register() {
     const api = useAxios();
@@ -43,15 +49,15 @@ function Register() {
        let data=[
         {
             "id": 1,
-            "name": "electronica"
+            "name": "Electronica"
         },
         {
             "id": 2,
-            "name": "programacion"
+            "name": "Programación"
         },
         {
             "id": 3,
-            "name": "electromecanica"
+            "name": "Electromecánica"
         }
     ]
     setSpecialitiesList(data)
@@ -93,28 +99,29 @@ function Register() {
 
     return (
         <section>
-            <Container>
+            <Container className='font-family'>
                 <Row>
-                    <Col xs={12} className="text-xs-center">
-                        <div className='top-left-image'><Logo/></div>
+                    <Col xs={12} style={{display:'flex', justifyContent:'center'}}>
+                        <div style={{marginTop:'4rem'}}>
+                            <img src={ITSVlogin} alt="Logo" style={{width:'10rem'}}/>
+                        </div>
                     </Col>
                     <Col className="centered-form">
                         <div className="login-container">
-                            <p className="login-heading"><b>Ingresá tus datos para<br />registrarte</b></p>
+                            <p className="login-heading">Ingresá tus datos para<br />registrarte</p>
                             <div className="login-form">
+
                                 <Form onSubmit={handleSubmit}>
-                                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                                        <Form.Label className='color'>Username</Form.Label>
+                                    <Form.Group  className="mb-3" controlId="formBasicEmail">
+                                        <Form.Label className='color'>Nombre</Form.Label>
                                         <Form.Control
-                                            id="username"
-                                            name="username"
-                                            value={username}
-                                            onChange={(e) => setUsername(e.target.value)}
-                                            type="text" placeholder=""
-                                            style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266' }}
-                                            className="rounded-3 shadow form-control-lg"
-                                        />
+                                        id="username"
+                                        name="username"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        type="text" placeholder="Nombre de usuario" className="input-style"/>
                                     </Form.Group>
+
                                     <Form.Group className="mb-3" controlId="formBasicEmail">
                                         <Form.Label className='color'>Email</Form.Label>
                                         <Form.Control
@@ -122,73 +129,74 @@ function Register() {
                                             name="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            type="text" placeholder=""
-                                            style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266' }}
-                                            className="rounded-3 shadow form-control-lg"
+                                            type="text" placeholder="ejemplo@gmail.com" className="input-style"
                                         />
                                     </Form.Group>
+
                                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                                        <Form.Label className='color'>Contraseña*</Form.Label>
+                                        <Form.Label className='color'>Contraseña *</Form.Label>
                                         <Form.Control
                                             type="password"
                                             id="password"
                                             name="password"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
-                                            placeholder=""
-                                            style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266' }}
-                                            className="rounded-3 shadow form-control-lg"
+                                            placeholder="Contraseña" className="input-style"
                                         />
                                     </Form.Group>
+
                                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                                        <Form.Label className='color'>Repetir Contraseña*</Form.Label>
+                                        <Form.Label className='color'>Repetir Contraseña *</Form.Label>
                                         <Form.Control
                                             type="password"
                                             id="password2"
                                             name="password2"
                                             value={password2}
                                             onChange={(e) => setPassword2(e.target.value)}
-                                            placeholder=""
-                                            style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266' }}
-                                            className="rounded-3 shadow form-control-lg"
+                                            placeholder="Contraseña" className="input-style"                                           
                                         />
                                     </Form.Group>
+
                                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                                        <Form.Label className='color'>Token Secreto*</Form.Label>
+                                        <Form.Label className='color'>Token *</Form.Label>
                                         <Form.Control
                                             type="password"
                                             id="secretTokenField"
                                             name="secretTokenField"
                                             value={secretTokenField}
                                             onChange={(e) => setSecretTokenField(e.target.value)}
-                                            placeholder=""
-                                            style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266' }}
-                                            className="rounded-3 shadow form-control-lg"
+                                            placeholder="Token único" className="input-style"
                                         />
                                     </Form.Group>
+
                                     <Form.Group controlId="formBasicSpecialities">
-                                    <Form.Label className='color'>Especialidades*</Form.Label>
-                                    {specialitiesList.map(speciality => (
-                                        <Form.Check
-                                            key={speciality.id}
-                                            type="checkbox"
-                                            label={speciality.name}
-                                            value={speciality.id}
-                                            checked={selectedSpecialities.includes(speciality.id)}
-                                            onChange={() => handleSpecialityChange(speciality.id)}
-                                            style={{ backgroundColor: '#EBEBEB', border: '1px solid #2E5266' }}
-                                            className="rounded-3 shadow form-control-lg"
-                                        />
-                                    ))}
-                                        </Form.Group>
+                                        <Form.Label className='color'>Especialidad *</Form.Label>
+                                        {specialitiesList.map(speciality => (
+                                            <div key={speciality.id} className="input-style custom-checkbox">
+                                                <input
+                                                    type="checkbox"
+                                                    id={`speciality-${speciality.id}`}
+                                                    value={speciality.id}
+                                                    checked={selectedSpecialities.includes(speciality.id)}
+                                                    onChange={() => handleSpecialityChange(speciality.id)}
+                                                    className="input-style-checkbox"
+                                                />
+                                                <label htmlFor={`speciality-${speciality.id}`} className="input-style-label">
+                                                    {speciality.name}
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </Form.Group>
+
                                     <div>
-                                        <div className='text-center' style={{paddingTop:"1rem"}}>
-                                            <Button className='text-center rounded-5 ' size='lg' style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0' }} variant="primary" type="submit">
+                                        <div className='text-center' style={{marginTop:"1rem", marginBottom:'1rem'}}>
+                                            <Button className='button-style' variant="primary" type="submit">
                                                 Crear Cuenta
                                             </Button>
                                         </div>
                                     </div>
                                 </Form>
+
                             </div>
                         </div>
                     </Col>
