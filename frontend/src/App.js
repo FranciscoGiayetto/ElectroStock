@@ -23,6 +23,7 @@ import MyComponent from './pages/Prestamos/Prestamos';
 import { Link } from "react-router-dom";
 import Informe from "./pages/Informe/Informe";
 import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
+import Presupuestos from "./pages/Presupuestos/Presupuestos";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,8 +41,6 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Register />} />
               <Route path="/logout" element={<Logout />} />
-
-              
               <Route path="/*" element={<LayoutWrapper onSearch={handleSearch} searchQuery={searchQuery}/>} />
             </Routes>
           </div>
@@ -61,6 +60,8 @@ function LayoutWrapper({ onSearch, searchQuery }) {
   <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
   <Route path="/detalleProducto/:id" element={<PrivateRoute><DetalleProducto /></PrivateRoute>} />
   <Route path="/detalleCuenta" element={<PrivateRoute><DetalleCuenta /></PrivateRoute>} />
+  <Route path="/presupuesto" element={<PrivateRoute><Presupuestos /></PrivateRoute>} />
+  <Route path="/presupuesto/:id" element={<PrivateRoute><Presupuestos /></PrivateRoute>} />
 </Routes>
 
     </Layout>
