@@ -11,7 +11,6 @@ function Informes() {
       <MostRequestedElements endpoint="estadisticas/maspedido/"/>
       <TasaVencidos endpoint="estadisticas/vencidos/"/>
       <TasaAprobacion endpoint="estadisticas/aprobado/"/>
-      <BoxMasLogRotos endpoint="estadisticas/box_mas_logs_rotos/"/>
     </div>
   );
 }
