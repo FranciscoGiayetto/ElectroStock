@@ -28,7 +28,7 @@ function DetallePresupuesto() {
     try {
       const response = await api.get(`budgetlog/${id}/`);
       let data = await response.data;
-      console.log(data)
+      console.log(response)
       setPresupuesto(data);
     } catch (error) {
       console.error(error);

@@ -13,7 +13,7 @@ from django.http import JsonResponse
 from django.contrib.auth import get_user_model, get_user
 from django.contrib.auth.models import Group
 from rest_framework.decorators import api_view
-
+import json
 class ElementsViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.all()
     permission_classes = [permissions.AllowAny]
@@ -616,7 +616,7 @@ def categories_por_especialidad(request, nombre_especialidad):
 
     return Response(categorias_por_especialidad)
 
-@api_view(["GET", "POST"])
+@api_view(["GET", "POST", "DELETE"])
 def BudgetLogViewSet(request, budget_id):
     if request.method == "GET":
         queryset = models.BudgetLog.objects.filter(budget=budget_id)
@@ -627,6 +627,18 @@ def BudgetLogViewSet(request, budget_id):
     if request.method == "POST":
         return Response({"message": "Notificaciones agregada"})
 
+    if request.method == "DELETE":
+            try:
+                print(request.data)
+              
+                
+                
+                queryset = models.BudgetLog.objects.get(id=2, budget = budget_id)
+                queryset.delete()
+                return Response({"message": "Log eliminado"})
+            except models.BudgetLog.DoesNotExist:
+                return Response({f"message": "Log no encontrado {request.log_id}"}, status=status.HTTP_404_NOT_FOUND)
+                 
     return Response(status=405)
 
 @api_view(["GET", "POST"])
@@ -643,7 +655,7 @@ def BudgetSpecialityViewSet(request, speciality_name):
 
     return Response(status=405)
 
-@api_view(["GET", "POST"])
+@api_view(["GET", "POST", "DELETE"])
 def BudgetViewSet(request):
     if request.method == "GET":
         queryset = models.Budget.objects.all()
@@ -655,4 +667,12 @@ def BudgetViewSet(request):
     if request.method == "POST":
         return Response({"message": "Notificaciones agregada"})
 
+    if request.method == "DELETE":
+            
+            
+            return Response({"message": "Notificaciones agregada"})
+
+
     return Response(status=405)
+
+    
