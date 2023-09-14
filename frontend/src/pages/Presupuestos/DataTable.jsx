@@ -23,6 +23,15 @@ const DataTable = ({ presupuestos }) => {
   const offset = currentPage * itemsPerPage;
   const paginatedData = presupuestos.slice(offset, offset + itemsPerPage);
 
+  const getRowBackgroundColor = (estado) => {
+    if (estado === "PROGRESO") {
+      return "text-warning"; // Amarillo
+    } else if (estado === "COMPLETADO") {
+      return "text-success"; // Verde
+    }
+    return "";
+  };
+
   return (
     <MDBCard className="my-4 p-3">
       <MDBCardHeader className="bg-primary text-white">Presupuestos</MDBCardHeader>
@@ -37,10 +46,14 @@ const DataTable = ({ presupuestos }) => {
         </thead>
         <tbody>
           {paginatedData.map((presupuesto) => (
-            <tr key={presupuesto.id} onClick={() => handleRowClick(presupuesto.id)} className="cursor-pointer">
+            <tr
+              key={presupuesto.id}
+              onClick={() => handleRowClick(presupuesto.id)}
+              className={`cursor-pointer ${getRowBackgroundColor(presupuesto.status)}`}
+            >
               <td>{presupuesto.id}</td>
               <td>{presupuesto.name}</td>
-              <td>{presupuesto.status}</td>
+              <td className={`cursor-pointer ${getRowBackgroundColor(presupuesto.status)}`}>{presupuesto.status}</td>
               <td>{presupuesto.speciality.name}</td>
             </tr>
           ))}
@@ -48,7 +61,7 @@ const DataTable = ({ presupuestos }) => {
       </Table>
       <div className="pagination justify-content-center">
         <ReactPaginate
-          activeClassName={'active'}  
+          activeClassName={'active'}
           breakClassName={'item break-me'}
           previousLabel={' Anterior '}
           nextLabel={' Siguiente '}
