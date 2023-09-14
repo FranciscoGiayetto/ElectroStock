@@ -1,15 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import {
   MDBCard,
   MDBCardHeader,
 } from 'mdb-react-ui-kit';
+import { useNavigate } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
 
 const DataTable = ({ presupuestos }) => {
+  const navigate = useNavigate();
+  const handleRowClick = (key) => {
+    navigate(`${key}`);
+  }
+
+  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  const offset = currentPage * itemsPerPage;
+  const paginatedData = presupuestos.slice(offset, offset + itemsPerPage);
+
   return (
-    <MDBCard alignment='left' style={{ backgroundColor: '#018195', border: 'none', minWidth: '98vh' }}>
-      <MDBCardHeader style={{ color: 'white' }}>Presupuestos</MDBCardHeader>
-      <Table hover style={{ marginBottom: '0', height: '100%' }}>
+    <MDBCard className="my-4 p-3">
+      <MDBCardHeader className="bg-primary text-white">Presupuestos</MDBCardHeader>
+      <Table responsive striped bordered hover className="mt-3">
         <thead>
           <tr>
             <th scope='col'>ID</th>
@@ -19,16 +36,33 @@ const DataTable = ({ presupuestos }) => {
           </tr>
         </thead>
         <tbody>
-          {presupuestos.map((presupuesto) => (
-            <tr key={presupuesto.id}>
+          {paginatedData.map((presupuesto) => (
+            <tr key={presupuesto.id} onClick={() => handleRowClick(presupuesto.id)} className="cursor-pointer">
               <td>{presupuesto.id}</td>
               <td>{presupuesto.name}</td>
               <td>{presupuesto.status}</td>
-              <td>{presupuesto.speciality}</td>
+              <td>{presupuesto.speciality.name}</td>
             </tr>
           ))}
         </tbody>
       </Table>
+      <div className="pagination justify-content-center">
+        <ReactPaginate
+          activeClassName={'active'}  
+          breakClassName={'item break-me'}
+          previousLabel={' Anterior '}
+          nextLabel={' Siguiente '}
+          breakLabel={'...'}
+          pageCount={Math.ceil(presupuestos.length / itemsPerPage)}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination'}
+          pageClassName={'item pagination-page'}
+          previousClassName={"item previous"}
+          nextClassName={"item"}
+        />
+      </div>
     </MDBCard>
   );
 };

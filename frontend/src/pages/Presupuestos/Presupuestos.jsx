@@ -21,16 +21,7 @@ function Presupuestos() {
   const userData = user();
   const id = userData.user_id;
 
-  const getUser = async () => {
-    try {
-      const response = await api.get(`http://127.0.0.1:8000/api/users/${id}/`);
-      let data = await response.data;
-      console.log(data)
-      setElement(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+ 
 
   const getPresupuesto = async () => {
     try {
