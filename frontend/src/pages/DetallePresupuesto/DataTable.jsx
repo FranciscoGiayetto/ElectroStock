@@ -1,7 +1,13 @@
+import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
-import { MDBCard, MDBCardHeader } from 'mdb-react-ui-kit';
+import {
+  MDBCard,
+  MDBCardHeader,
+} from 'mdb-react-ui-kit';
 
 const DataTable = ({ presupuesto }) => {
+  const [filter, setFilter] = useState(''); // Estado para el filtro de búsqueda
+
   const calcularPrecioTotal = () => {
     let total = 0;
     for (const item of presupuesto) {
@@ -9,6 +15,16 @@ const DataTable = ({ presupuesto }) => {
     }
     return total.toFixed(2);
   };
+
+  // Función para manejar cambios en el filtro de búsqueda
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
+
+  // Filtrar los elementos basados en el filtro de búsqueda
+  const filteredPresupuesto = presupuesto.filter((item) =>
+    item.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
   return (
     <div>
@@ -22,6 +38,16 @@ const DataTable = ({ presupuesto }) => {
       >
         <MDBCardHeader className="bg-primary text-white">Detalle del Presupuesto</MDBCardHeader>
 
+        <div className="text-center mb-3" style={{ paddingTop: '1rem'}}>
+          <input
+            type="text"
+            placeholder="Filtrar por nombre..."
+            value={filter}
+            onChange={handleFilterChange}
+            style={{ width: '60%', display: 'inline-block' }}
+          />
+        </div>
+
         <Table responsive striped bordered hover className="mt-3">
           <thead>
             <tr>
@@ -34,8 +60,8 @@ const DataTable = ({ presupuesto }) => {
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody >
-            {presupuesto.map((item, index) => (
+          <tbody>
+            {filteredPresupuesto.map((item, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{item.name}</td>
