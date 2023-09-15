@@ -25,8 +25,7 @@ SECRET_KEY = "django-insecure-ff=y)c_ri$c_l3)#zz#%)8&gffn85+^5vo)+enx*6t1jov8*ok
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', 'electrostock-dev.fl0.io']
-CSRF_TRUSTED_ORIGINS = ['https://electrostock-dev.fl0.io','https://*.127.0.0.1','https://electrostock-dev.fl0.io','https://*.mydomain.com','https://*.127.0.0.1','http://127.0.0.1:3000']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -62,6 +61,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 FRONTEND_URL = 'http://localhost:3000'
+
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1','http://127.0.0.1:3000']
 
 ROOT_URLCONF = "ElectroStock.urls"
 

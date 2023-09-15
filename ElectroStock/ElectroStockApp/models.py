@@ -20,6 +20,14 @@ if not Group.objects.filter(name="Jefe de area").exists():
     profesor_group = Group.objects.create(name="Jefe de area")
     profesor_group.permissions.add()
 
+if not Group.objects.filter(name="Ayudante del Stock").exists():
+    profesor_group = Group.objects.create(name="Ayudante del Stock")
+    profesor_group.permissions.add()
+
+if not Group.objects.filter(name="Ayudante del Presupuesto").exists():
+    profesor_group = Group.objects.create(name="Ayudante del Presupuesto")
+    profesor_group.permissions.add()
+
 
 class Course(models.Model):
     grade = models.IntegerField(verbose_name="Año")
