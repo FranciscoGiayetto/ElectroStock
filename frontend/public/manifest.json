@@ -1,21 +1,19 @@
 {
-  "background_color": "#ffffff",
-  "categories": ["lifestyle", "music"],
-  "description": "Esta es una PWA de prueba",
-  "dir": "ltr",
-  "display_override": ["standalone", "fullscreen"],
-  "display": "standalone",
-  "icons": [{
-    "src":"/logo512.png",
-    "sizes":"512x512",
+  "name":"Prestamos Villada",
+  "short-name":"itsv_p",
+  "description":"Applicacion de prestamos, presupuestos y administracion de stock del instituto tecnico salesiano villada",
+  "dir":"ltr",
+  "lang":"es-MX",
+  "icons":[{
+    "src":"/itsv256.png",
+    "sizes":"256x256",
     "type":"image/png"
-  }],
-  "lang": "es-MX",
-  "name": "ElectroStock",
+    }],
+  "display":"standalone",
+  "display_override": ["standalone", "fullscreen"],
   "orientation": "portrait",
-  "prefer_related_application": false,
-  "scope": "/",
-  "short_name": "electro",
+  "background_color": "#ffffff",
+  "theme_color":"white",
   "start_url": "/",
-  "theme_color": "orange"
+  "categories": ["technology", "web"]
 }
