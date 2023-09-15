@@ -616,7 +616,7 @@ def categories_por_especialidad(request, nombre_especialidad):
 
     return Response(categorias_por_especialidad)
 
-@api_view(["GET", "POST", "DELETE"])
+@api_view(["GET", "POST", "DELETE", "PUT"])
 def BudgetLogViewSet(request, budget_id):
     if request.method == "GET":
         queryset = models.BudgetLog.objects.filter(budget=budget_id)
@@ -631,14 +631,20 @@ def BudgetLogViewSet(request, budget_id):
             try:
                 print(request.data)
               
-                
-                
-                queryset = models.BudgetLog.objects.get(id=2, budget = budget_id)
+                                
+                queryset = models.BudgetLog.objects.get(id=budget_id)
                 queryset.delete()
                 return Response({"message": "Log eliminado"})
             except models.BudgetLog.DoesNotExist:
                 return Response({f"message": "Log no encontrado {request.log_id}"}, status=status.HTTP_404_NOT_FOUND)
-                 
+    if request.method == "PUT":
+        # Actualiza el estado del presupuesto a "COMPRADO".
+        queryset = models.BudgetLog.objects.get(id=budget_id)
+        serializer = BudgetLogSerializer(queryset, data=request.data, partial= True)
+        if serializer.is_valid():
+            serializer.save()
+            print(serializer.data)
+            return Response(serializer.data)
     return Response(status=405)
 
 @api_view(["GET", "POST"])

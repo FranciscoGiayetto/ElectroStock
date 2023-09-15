@@ -35,6 +35,12 @@ function DetallePresupuesto() {
     }
   };
 
+
+
+  const updateData = async () => {
+    await getPresupuesto();
+  };
+
   useEffect(() => {
     getPresupuesto();
   }, []);
@@ -43,7 +49,7 @@ function DetallePresupuesto() {
     <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
       <Row>
         <Col style={{ width: '62.5rem' }}>
-          <DataTable presupuesto={presupuesto} />
+          <DataTable presupuesto={presupuesto} onUpdate={updateData} />
         </Col>
       </Row>
     </Container>

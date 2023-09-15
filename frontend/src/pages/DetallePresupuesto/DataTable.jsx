@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import {
   MDBCard,
@@ -7,12 +7,29 @@ import {
 import useAxios from '../../utils/useAxios.js';
 import { useParams, useNavigate } from 'react-router-dom';
 
+const DataTable = ({ presupuesto, onUpdate }) => {
+  let budgetName = ""
+  try{
+     budgetName = presupuesto[0].budget.name
+  }
+  catch (error){
+     budgetName = "a"
+  }
 
-const DataTable = ({ presupuesto }) => {
-  console.log(presupuesto)  
+  const getClassByEstado = (estado) => {
+    if (estado === "COMPRADO") {
+      return "table-success"; // Clase para colorear en verde
+    } else if (estado === "PENDIENTE") {
+      return "table-warning"; // Clase para colorear en naranja
+    }
+    return ""; // Sin color si no es "COMPRADO" ni "PENDIENTE"
+  };
+  
+
   const api = useAxios();
   const [filter, setFilter] = useState(''); // Estado para el filtro de búsqueda
-  const {id} = useParams();
+  const { id } = useParams();
+
   const calcularPrecioTotal = () => {
     let total = 0;
     for (const item of presupuesto) {
@@ -26,14 +43,22 @@ const DataTable = ({ presupuesto }) => {
     setFilter(e.target.value);
   };
 
-
   const handleItemDelete = async (log_id) => {
-    const body = {
-        log_id: 5
-      };
     try {
-      await api.delete(`/budgetlog/${id}`,body);
-       // Vuelve a obtener el carrito actualizado
+      await api.delete(`/budgetlog/${log_id}`);
+      onUpdate();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleItemCompra = async (log_id, estadoActual) => {
+    
+    try {
+      const nuevoEstado = estadoActual === "COMPRADO" ? "PENDIENTE" : "COMPRADO";
+
+      await api.put(`/budgetlog/${log_id}/`, { status: nuevoEstado });
+      onUpdate();
     } catch (error) {
       console.error(error);
     }
@@ -43,7 +68,7 @@ const DataTable = ({ presupuesto }) => {
   const filteredPresupuesto = presupuesto.filter((item) =>
     item.name.toLowerCase().includes(filter.toLowerCase())
   );
-
+  
   return (
     <div>
       <MDBCard
@@ -54,9 +79,10 @@ const DataTable = ({ presupuesto }) => {
           overflowY: 'auto',
         }}
       >
-        <MDBCardHeader className="bg-primary text-white">Detalle del Presupuesto</MDBCardHeader>
+        <MDBCardHeader className="bg-primary text-white">Detalle del Presupuesto: {budgetName}
+        </MDBCardHeader>
 
-        <div className="text-center mb-3" style={{ paddingTop: '1rem'}}>
+        <div className="text-center mb-3" style={{ paddingTop: '1rem' }}>
           <input
             type="text"
             placeholder="Filtrar por nombre..."
@@ -80,7 +106,7 @@ const DataTable = ({ presupuesto }) => {
           </thead>
           <tbody>
             {filteredPresupuesto.map((item, index) => (
-              <tr key={index}>
+              <tr key={index} className={getClassByEstado(item.status)}>
                 <td>{index + 1}</td>
                 <td>{item.name}</td>
                 <td>{item.quantity}</td>
@@ -88,7 +114,10 @@ const DataTable = ({ presupuesto }) => {
                 <td>{item.quantity}</td>
                 <td>{(item.quantity * parseFloat(item.price)).toFixed(2)}</td>
                 <td>
-                  <button onClick={() => handleItemDelete(index)} className="btn btn-danger btn-sm">Eliminar</button>
+                  <button onClick={() => handleItemDelete(item.id)} className="btn btn-danger btn-sm">Eliminar</button>
+                  <button  onClick={() => handleItemCompra(item.id, item.status)} className={`btn btn-sm ${item.status === 'COMPRADO' ? 'btn-success' : 'btn-warning'}`}>
+                {item.status === 'COMPRADO' ? 'COMPRADO' : 'PENDIENTE'}
+              </button>
                 </td>
               </tr>
             ))}
