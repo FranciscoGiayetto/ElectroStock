@@ -13,7 +13,14 @@ const DiaDemandado = ({ subtitle }) => {
       .then(response => {
         if (response.data.length > 0) {
           const { dateIn } = response.data[0];
-          setDateInData(dateIn);
+
+          // Formatear la fecha en el formato "DD/MM"
+          const formattedDate = new Date(dateIn).toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+          });
+
+          setDateInData(formattedDate);
         }
       })
       .catch(error => {
@@ -22,15 +29,15 @@ const DiaDemandado = ({ subtitle }) => {
   }, [axiosInstance]);
 
   return (
-    <Card style={{ borderRadius: '15px' }}>
+    <Card style={{ borderRadius: '6px', width: '370px'}}>
       <Card.Body>
         <div className="d-flex align-items-center">
           <div className="mr-3">
-            <PollOutlinedIcon fontSize="large" />
+            <PollOutlinedIcon sx={{ fontSize: 50 }} style={{ alignSelf: 'center' }} />
           </div>
           <div>
-          <h5 style={{ marginBottom: '1px' }}>{dateInData}</h5>
-            <p style={{ marginTop: '1px' }} className="mb-0">{subtitle}</p>
+            <h5 style={{ margin: '0' }}>{dateInData}</h5>
+            <p style={{ margin: '0', fontSize: '0.8rem' }}>{subtitle}</p>
           </div>
         </div>
       </Card.Body>
@@ -39,4 +46,3 @@ const DiaDemandado = ({ subtitle }) => {
 };
 
 export default DiaDemandado;
-
