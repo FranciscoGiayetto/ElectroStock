@@ -435,7 +435,8 @@ class DateAvgView(APIView):
         queryset = (
             models.Log.objects.filter(
                 dateIn__year=current_year,
-                status__in=["AP", "DAP", "DEV", "VEN", "TAR"]
+                status__in=["AP", "DAP", "DEV", "VEN", "TAR"],
+                dateOut__isnull=False
             )
         )
 
