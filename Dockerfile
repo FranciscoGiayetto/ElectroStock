@@ -7,6 +7,7 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+RUN cd ElectroStock
 RUN python manage.py makemigrations
 RUN python manage.py migrate
 
