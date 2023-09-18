@@ -83,7 +83,7 @@ function DetalleCuenta() {
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
-        <Col>
+        <Col className='hidden-card'>
         {prestamos.length > 0 ? (
           prestamos.map((prestamos, index) => (
             <CardPrestamos

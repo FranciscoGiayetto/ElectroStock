@@ -25,3 +25,10 @@
     width: 30rem;
   }
 }
+
+@media screen and (max-width: 450px) {
+
+  .hidden-card{
+    display: none;
+  }
+}
