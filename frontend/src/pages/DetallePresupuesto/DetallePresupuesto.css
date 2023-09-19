@@ -1,0 +1,25 @@
+.sticky-tfoot {
+  position: sticky;
+  bottom: 0;
+  background-color: #fff; /* Agrega un fondo blanco si es necesario para separar el tfoot del tbody */
+  z-index: 5;
+ 
+   /* Asegura que el tfoot esté por encima del tbody */
+}
+
+
+.active {
+
+    color: #000000!important;
+  }
+  
+  .item {
+    align-items: center;
+    color: #888; /* Color gris para otros números de página */
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+  }
