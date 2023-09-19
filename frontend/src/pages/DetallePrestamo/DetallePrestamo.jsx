@@ -1,15 +1,99 @@
-import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './DetallePrestamo.css'; // Create this CSS file
-import OrderCard from '../../components/ordercard/OrderCard'; // Create this component
-import {
-  MDBCol,
-  MDBContainer,
-  MDBRow,
-} from "mdb-react-ui-kit";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import StarIcon from '@mui/icons-material/StarBorder';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
+import GlobalStyles from '@mui/material/GlobalStyles';
+import Container from '@mui/material/Container';
 import useAxios from "../../utils/useAxios";
 import { useAuthStore } from '../../store/auth';
 import { Navigate, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import defaultpicture from '../../assets/images/defaultpicture.png';
+
+
+
+function Copyright(props) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © '}
+      <Link color="inherit" href="https://mui.com/">
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
+
+const tiers = [
+  {
+    title: 'Nombre del componente',
+    description: [
+      <img src={defaultpicture} alt='Imagen' className='img-fluid product-details__image' />
+
+    ],
+   
+  },
+  {
+    title: 'Componente',
+    subheader: 'Texto de ejemplo',
+    description: [
+      'Prestatario',
+      'aprobado',
+      'Fecha de pedido',
+      
+    ],
+    buttonText: 'Volver',
+    buttonVariant: 'contained',
+  },
+  {
+    title: 'info adicional',
+    description: [
+      'Componentes disponibles',
+      'Fecha de devolucion',
+      'Acerca de',
+    ],
+  
+  },
+];
+
+const footers = [
+  {
+    title: 'Company',
+    description: ['Team', 'History', 'Contact us', 'Locations'],
+  },
+  {
+    title: 'Features',
+    description: [
+      'Cool stuff',
+      'Random feature',
+      'Team feature',
+      'Developer stuff',
+      'Another one',
+    ],
+  },
+  {
+    title: 'Resources',
+    description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
+  },
+  {
+    title: 'Legal',
+    description: ['Privacy policy', 'Terms of use'],
+  },
+];
+
+// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme();
 
 function DetallePrestamo() {
   const api = useAxios(); 
@@ -21,7 +105,7 @@ function DetallePrestamo() {
   const userData = user();
   const navigate = useNavigate(); 
 
-  useEffect(() => {
+  useEffect(() => { 
     console.log('SE EJECUTÓ EL USE')
     getOrders();
   }, []);
@@ -37,35 +121,98 @@ function DetallePrestamo() {
       console.error(error);
     }
   };
+  const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme();
 
   return (
-    <section className="container-bg" style={{ backgroundColor: "white"}}>
-      <MDBContainer className="h-100">
-        <MDBRow className="justify-content-center align-items-center h-100">
-          <MDBCol>
-            <p>
-              <span className="h2">Prestamos pendientes:</span>
-            </p>
+    <ThemeProvider theme={defaultTheme}>
+    <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
+    <CssBaseline />
+  
+    {/* Hero unit */}
+    <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
+    <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
+  <Typography
+    component="h2"
+    variant="h3"  // Cambiar de "h2" a "h3" para hacerlo más pequeño
+    align="center"
+    color="text.primary"
+    gutterBottom
+    sx={{ fontFamily: 'arial' }}  // Reemplaza 'nombre-de-la-fuente' con la fuente que desees
+  >
+    Prestamo de nari
+  </Typography>
+</Container>
 
-            {/* Render OrderCard components */}
-            {orders.map(order => (
-              <OrderCard
-                key={order.id}
-                id={order.id}
-                boxName={order.box.name}
-                elementName={order.box.element.name}
-                image={order.box.element.image}
-                quantity={order.quantity}
-                dateOut={order.dateOut}
-                // Include any other necessary props
+     
+    </Container>
+    {/* End hero unit */}
+    <Container maxWidth="md" component="main">
+      <Grid container spacing={5} alignItems="flex-end">
+        {tiers.map((tier) => (
+          // Enterprise card is full width at sm breakpoint
+          <Grid
+            item
+            key={tier.title}
+            xs={12}
+            sm={tier.title === 'Enterprise' ? 12 : 6}
+            md={4}
+          >
+            <Card>
+              <CardHeader
+                title={tier.title}
+                subheader={tier.subheader}
+                titleTypographyProps={{ align: 'center' }}
+                action={tier.title === 'Detalles del prestamo 2'}
+                subheaderTypographyProps={{
+                  align: 'center',
+                }}
+                sx={{
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'light'
+                      ? theme.palette.grey[200]
+                      : theme.palette.grey[700],
+                }}
               />
-            ))}
-
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-    </section>
-  )
+              <CardContent>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'baseline',
+                    mb: 2,
+                  }}
+                >
+                  
+                </Box>
+                <ul>
+                  {tier.description.map((line) => (
+                    <Typography
+                      component="li"
+                      variant="subtitle1"
+                      align="center"
+                      key={line}
+                    >
+                      {line}
+                    </Typography>
+                  ))}
+                </ul>
+              </CardContent>
+              <CardActions>
+                <Button fullWidth variant={tier.buttonVariant}>
+                  {tier.buttonText}
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+    
+  </ThemeProvider>
+);
 }
 
 export default DetallePrestamo;
