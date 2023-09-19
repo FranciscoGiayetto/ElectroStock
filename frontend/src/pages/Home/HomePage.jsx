@@ -24,25 +24,37 @@ function HomePage() {
 
   return (
     <Container className='pagecontainer container'>
-        <h1 style={{paddingRight:'10rem'}}>Bienvenido {userData.username}</h1>
       <Row>
-        <Col xs={6} style={{  marginRight: '5rem' }}>
-          <Row >
-            <Col xs={6} style={{ marginTop: '5rem' }}>
-              <CardVencidos />
+        <Col xs={6} style={{ marginRight: '5rem' }}>
+        <h1 style={{ fontWeight: 'bold', color: 'black' }}>
+  ¡Hola {userData.username}!
+</h1>
+
+
+          <Row>
+            <Col xs={6} style={{ marginTop: '1rem' }}>
+              <div className="card shadow-all-over">
+                <CardVencidos />
+              </div>
             </Col>
-            <Col xs={6} style={{ paddingLeft:'5rem', marginTop: '5rem' }}>
-              <CardPendientes />
+            <Col xs={6} style={{ paddingLeft: '5rem', marginTop: '1rem' }}>
+              <div className="card shadow-all-over">
+                <CardPendientes />
+              </div>
             </Col>
           </Row>
           <Row>
             <Col xs={6} style={{ marginTop: '2rem' }}>
-              <CardPrestamos />
+              <div className="card shadow-all-over">
+                <CardPrestamos />
+              </div>
             </Col>
           </Row>
         </Col>
-        <Col xs={5  } style={{ paddingLeft: '7rem' }}>
-          <CardNotificaciones />
+        <Col xs={5} style={{ paddingLeft: '7rem' }} >
+          <div className="card shadow-all-over">
+            <CardNotificaciones />
+          </div>
         </Col>
       </Row>
     </Container>

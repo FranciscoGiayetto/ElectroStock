@@ -46,6 +46,13 @@ const CardVencidos = () => {
       console.error(error);
     }
   };
+  function formatBoxName(name) {
+    if (name.length > 14) {
+      return name.substring(4, 14) + '...';
+    } else {
+      return name.substring(4);
+    }
+  }
 
   const userData = user();
 
@@ -60,7 +67,7 @@ const CardVencidos = () => {
 
   return (
     
-    <MDBCard alignment='left' style={{ paddingRight:'3rem', backgroundColor: 'white', border: 'none', width: '33%', minHeight: '40vh', maxHeight: '50vh', minWidth: '48vh' }}>        
+    <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', width: '33%', minHeight: '35vh', maxHeight: '50vh', minWidth: '50vh' }}>       
     <MDBCardHeader style={{ color: 'white' }}>Vencidos</MDBCardHeader>
       <Table hover style={{ marginBottom: '0', height: '100%' }}> 
              <thead>
@@ -71,10 +78,10 @@ const CardVencidos = () => {
           </tr>
         </thead>
         <tbody>
-        {element.slice(-4).map((item, index) => (
+        {element.slice(-3).map((item, index) => (
         <tr key={index}>
           <td>{formatDate(item.dateOut)}</td> {/* Display formatted date */}
-          <td>{item.box.name}</td>
+          <td>{formatBoxName(item.box.name)}</td>
           <td>{item.quantity}</td>
         </tr>
       ))}

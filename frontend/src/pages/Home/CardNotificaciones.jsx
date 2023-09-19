@@ -38,7 +38,7 @@ const CardNotificaciones = () => {
 
   const getElement = async () => {
     try {
-      const response = await api.get(`/Notificaciones/${userData.user_id}`);
+      const response = await api.get(`/notificaciones/${userData.user_id}`);
       let data = await response.data;
       setElement(data);
       console.log(data);
