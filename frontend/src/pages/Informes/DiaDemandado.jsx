@@ -29,15 +29,15 @@ const DiaDemandado = ({ subtitle }) => {
   }, [axiosInstance]);
 
   return (
-    <Card style={{ borderRadius: '6px', width: '370px'}}>
+    <Card style={{ borderRadius: '6px', width: '250px' , height: '60px', marginTop:'10px' }}>
       <Card.Body>
         <div className="d-flex align-items-center">
           <div className="mr-3">
-            <PollOutlinedIcon sx={{ fontSize: 50 }} style={{ alignSelf: 'center' }} />
+            <PollOutlinedIcon sx={{ fontSize: 40 }} style={{ alignSelf: 'center' }} />
           </div>
           <div>
-            <h5 style={{ margin: '0' }}>{dateInData}</h5>
-            <p style={{ margin: '0', fontSize: '0.8rem' }}>{subtitle}</p>
+            <h6 style={{ margin: '0' }}>{dateInData}</h6>
+            <p style={{ margin: '0', fontSize: '0.7rem' }}>{subtitle}</p>
           </div>
         </div>
       </Card.Body>
