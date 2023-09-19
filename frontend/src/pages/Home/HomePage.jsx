@@ -24,14 +24,15 @@ function HomePage() {
 
   return (
     <Container className='pagecontainer container'>
-        <h1 style={{paddingRight:'10rem'}}>Bienvenido {userData.username}</h1>
       <Row>
+      <h1 style={{paddingRight:'10rem'}}>Hola {userData.username}!</h1>
+
         <Col xs={6} style={{  marginRight: '5rem' }}>
           <Row >
-            <Col xs={6} style={{ marginTop: '5rem' }}>
+            <Col xs={6} style={{ marginTop: '1rem' }}>
               <CardVencidos />
             </Col>
-            <Col xs={6} style={{ paddingLeft:'5rem', marginTop: '5rem' }}>
+            <Col xs={6} style={{ paddingLeft:'5rem', marginTop: '1rem' }}>
               <CardPendientes />
             </Col>
           </Row>

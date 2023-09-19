@@ -60,8 +60,8 @@ const CardVencidos = () => {
 
   return (
     
-    <MDBCard alignment='left' style={{ paddingRight:'3rem', backgroundColor: 'white', border: 'none', width: '33%', minHeight: '40vh', maxHeight: '50vh', minWidth: '48vh' }}>        
-    <MDBCardHeader style={{ color: 'white' }}>Vencidos</MDBCardHeader>
+    <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', width: '33%', minHeight: '35vh', maxHeight: '50vh', minWidth: '50vh' }}>       
+      <MDBCardHeader style={{ color: 'white' }}>Vencidos</MDBCardHeader>
       <Table hover style={{ marginBottom: '0', height: '100%' }}> 
              <thead>
           <tr>

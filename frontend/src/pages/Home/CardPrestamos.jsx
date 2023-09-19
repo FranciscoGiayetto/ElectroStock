@@ -58,7 +58,7 @@ const CardPrestamos = () => {
     return `${year}-${month}-${day}`;
   };
   return (
-    <MDBCard alignment='left' style={{ backgroundColor: '#018195', border: 'none' , minWidth: '98vh' }}>
+    <MDBCard alignment='left' style={{ backgroundColor: '#018195', border: 'none' , minWidth: '105vh' }}>
       <MDBCardHeader style={{ color: 'white' }}>Prestamos</MDBCardHeader>
       <Table hover style={{ marginBottom: '0', height: '100%' }}>
         <thead>
