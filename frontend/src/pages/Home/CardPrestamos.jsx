@@ -47,6 +47,14 @@ const CardPrestamos = () => {
     }
   };
 
+  function formatBoxName(name) {
+  if (name.length > 25) {
+    return name.substring(4, 25) + '...';
+  } else {
+    return name.substring(4);
+  }
+}
+
   const userData = user();
 
   // Función para formatear una cadena de fecha y hora en solo fecha
@@ -71,11 +79,10 @@ const CardPrestamos = () => {
           </tr>
         </thead>
         <tbody>
-          {element.slice(-4).map((item, index) => (
+          {element.slice(-3).map((item, index) => (
             <tr key={index}>
               <td>{formatDate(item.dateIn)}</td>
-              <td>{item.box.name}</td>
-              <td>{item.quantity}</td>
+              <td>{formatBoxName(item.box.name)}</td>              <td>{item.quantity}</td>
               <td>{item.dateIn}</td>
               <td>
                 {item.status === 'PED' ? (

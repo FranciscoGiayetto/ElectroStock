@@ -22,6 +22,7 @@ function DetalleProducto() {
   useEffect(() => {
     console.log(userData);
     getElement();
+    getStockInfo();
     handleLayoutChange();
     window.addEventListener('resize', handleLayoutChange);
     return () => {
@@ -40,6 +41,18 @@ function DetalleProducto() {
       console.error(error);
     }
   };
+  const getStockInfo = async () => {
+    try {
+      const stockResponse = await api.get(`/stock/${id}/`); 
+      console.log(stockResponse);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+
+  
+
 
   const handleLayoutChange = () => {
     const isMobileLayout = window.innerWidth < 768;
@@ -79,6 +92,7 @@ function DetalleProducto() {
       setPostRes(error.response.data);
     }
   };
+   
 
   return (
     <div className='container pagecontainer'>
@@ -89,8 +103,8 @@ function DetalleProducto() {
           </div>
 
           <div className='col-md-6 product-details__info-container' style={{ width: '45%' }}>
-            <h1 className='product-details__title'>Nombre: {element.name}</h1>
-            <h1 className='product-details__description'>Descripción: {element.description}</h1>
+            <h1 className='product-details__title'> {element.name}</h1>
+            
             <h1 className='product-details__category'>Categoría: {element.category}</h1>
             <h1 className='product-details__stock'>Stock: 20</h1>
 

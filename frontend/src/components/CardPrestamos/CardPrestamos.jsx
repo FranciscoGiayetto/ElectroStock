@@ -35,8 +35,7 @@ export default function CardPrestamos(props) {
         </Table>
         <Stack direction='horizontal' gap={4}>
           <div className='p-2' style={{marginLeft:'0.5rem', marginRight:'1rem'}}>
-          <img src={props.image || fotoPrueba2} alt="Paisaje" style={{ width: '10rem' }}/>
-
+            <img src={props.image || fotoPrueba2} alt="Paisaje" style={{ width: '100%', maxWidth:'10rem'}}/>
           </div>
           <Stack>
             <div style={{marginTop:'0.2rem', marginRight:'1rem'}}>
@@ -52,16 +51,16 @@ export default function CardPrestamos(props) {
           </Stack>
           <Stack>
             <div style={{marginTop:'0.2rem', marginRight:'1rem'}}>
-              <p style={{fontSize:'0.938rem', margin:'0'}}>Nacho no sabe que poner</p>
-              <p style={{fontSize:'0.938rem', margin:'0'}}>Asi que hasta que no lo complete</p>
-              <p style={{fontSize:'0.938rem'}}>Yo tampoco</p>
+              <p style={{fontSize:'0.938rem', margin:'0'}}></p>
+              <p style={{fontSize:'0.938rem', margin:'0'}}></p>
+              <p style={{fontSize:'0.938rem'}}></p>
             </div>
           </Stack>
           <Stack style={{marginRight:'1rem'}}>
             <div style={{marginTop:'0.5rem'}}>
               <Button
                 className='botonCarrito'
-                style={{ fontSize:'0.938rem', backgroundColor: '#58A4B0', border: 'none', width:'9.813rem', height:'2.5rem' }}
+                style={{ fontSize:'0.938rem', backgroundColor: '#58A4B0', border: 'none', width:'80%', maxWidth:'9rem'}}
                 variant='primary'
                 type='submit'
               >
@@ -71,7 +70,7 @@ export default function CardPrestamos(props) {
             <div style={{marginTop:'0.5rem'}}>
               <Button
                 className='botonCarrito'
-                style={{ fontSize:'0.938rem', backgroundColor: '#58A4B0', border: 'none', width:'9.813rem', height:'2.5rem' }}
+                style={{ fontSize:'0.938rem', backgroundColor: '#58A4B0', border: 'none', width:'80%', maxWidth:'9rem'}}
                 variant='primary'
                 type='submit'
               >

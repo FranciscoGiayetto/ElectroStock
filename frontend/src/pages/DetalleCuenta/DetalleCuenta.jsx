@@ -73,7 +73,7 @@ function DetalleCuenta() {
   return (
     <Container fluid style={{marginTop:'6rem', marginBottom:'5rem'}}>
       <Row>
-        <Col style={{width:'62.5rem'}}>
+        <Col>
           <CardUser first_name={element.first_name} last_name={element.last_name} course={element.course}></CardUser>
         </Col>
       </Row>
@@ -83,7 +83,7 @@ function DetalleCuenta() {
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
-        <Col>
+        <Col className='hidden-card'>
         {prestamos.length > 0 ? (
           prestamos.map((prestamos, index) => (
             <CardPrestamos
