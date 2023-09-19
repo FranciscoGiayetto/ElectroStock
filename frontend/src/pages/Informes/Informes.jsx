@@ -42,12 +42,13 @@ function Informes() {
         </div>
       </div>
 
-      <div className="row">
+      <div className="row" style={{marginTop:'30px'}}>
         {/* Fila 2 */}
         <div className="col-md-4">
           <MostRequestedElements endpoint="estadisticas/maspedido/" />
         </div>
         <div className="col-md-8">
+        <h2>Top deudores</h2>
           <HorizontalBarChart data={deudorData} />
         </div>
       </div>
