@@ -36,14 +36,7 @@ function Copyright(props) {
 }
 
 const tiers = [
-  {
-    title: 'Nombre del componente',
-    description: [
-      <img src={defaultpicture} alt='Imagen' className='img-fluid product-details__image' />
-
-    ],
-   
-  },
+ 
   {
     title: 'Componente',
     subheader: 'Texto de ejemplo',
@@ -53,8 +46,16 @@ const tiers = [
       'Fecha de pedido',
       
     ],
-    buttonText: 'Volver',
+    buttonText: 'Volver al prestamo',
     buttonVariant: 'contained',
+  },
+  {
+    title: 'Nombre del componente',
+    description: [
+      <img src={defaultpicture} alt='Imagen' className='img-fluid product-details__image' />
+
+    ],
+   
   },
   {
     title: 'info adicional',
