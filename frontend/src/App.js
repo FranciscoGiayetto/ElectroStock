@@ -21,7 +21,6 @@ import Register from './pages/LoginNuevo/register';
 import Private from './pages/LoginNuevo/private';
 import MyComponent from './pages/Prestamos/Prestamos';
 import { Link } from "react-router-dom";
-import Informe from "./pages/Informe/Informe";
 import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
 import Informes from "./pages/Informes/Informes";
 
