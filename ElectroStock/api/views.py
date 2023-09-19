@@ -536,32 +536,27 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
 
 
 from rest_framework import status
-
-
+from django.db.models import Count, Q, Subquery, OuterRef
 class BoxMasLogsRotos(generics.ListAPIView):
-    def get(self, request):
+    serializer_class = BoxMasLogsRotostSerializer 
+
+    def get_queryset(self):
         current_year = timezone.now().year
-
-        # Utiliza annotate para contar los logs con status="ROTO" en cada Box del año actual
-        boxes_con_logs_rotos = models.Box.objects.annotate(
-            num_logs_rotos=Count(
-                "log", filter=Q(log__status="ROTO", log__dateIn__year=current_year)
+        queryset = (
+            models.Box.objects.annotate(
+                num_logs_rotos=Count(
+                    "log", filter=Q(log__status="ROTO", log__dateIn__year=current_year)
+                )
             )
+            .order_by("-num_logs_rotos")[:5]  # Obtén los primeros 5 boxes con más logs roto
         )
+        return queryset
 
-        # Ordena los boxes de mayor a menor cantidad de logs rotos
-        boxes_ordenados = boxes_con_logs_rotos.order_by("-num_logs_rotos")
-
-        # Obtén el box con más logs roto (el primero de la lista)
-        box_mas_logs_rotos = boxes_ordenados.first()
-
-        # Puedes devolver solo el nombre o cualquier otro dato que necesites
-        if box_mas_logs_rotos:
-            response_data = {
-                "box_nombre": box_mas_logs_rotos.name,
-                "cantidad_logs_rotos": box_mas_logs_rotos.num_logs_rotos,
-            }
-            return Response(response_data, status=status.HTTP_200_OK)
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        if serializer.data:
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(
                 {"message": 'No hay logs con status "ROTO" en el año actual.'},
