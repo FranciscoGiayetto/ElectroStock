@@ -52,5 +52,6 @@ urlpatterns = [
         BoxMasLogsRotos.as_view(),
         name="box_mas_logs_rotos",
     ),
+    path('estadisticas/avgDate/', DateAvgView.as_view(), name='avg/date'),
     
 ] + router.urls

@@ -23,6 +23,7 @@ import MyComponent from './pages/Prestamos/Prestamos';
 import { Link } from "react-router-dom";
 import Informe from "./pages/Informe/Informe";
 import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
+import Informes from "./pages/Informes/Informes";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -55,15 +56,26 @@ function LayoutWrapper({ onSearch, searchQuery }) {
   return (
     <Layout>
       <Routes>
-  <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
-  <Route path="/tienda" element={<PrivateRoute><Ecommerce allItems={true} /></PrivateRoute>} />
-  <Route path="/tienda/:name" element={<PrivateRoute><Ecommerce allItems={false} /></PrivateRoute>} />                          
-  <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
-  <Route path="/detalleProducto/:id" element={<PrivateRoute><DetalleProducto /></PrivateRoute>} />
-  <Route path="/detalleCuenta" element={<PrivateRoute><DetalleCuenta /></PrivateRoute>} />
-  <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
-</Routes>
-
+      
+      <Route path="/" element={<PrivateRoute>
+                              <HomePage />
+                          </PrivateRoute>} />
+        <Route path= "/tienda" element={<PrivateRoute>
+                              <Ecommerce />
+                          </PrivateRoute>}/>
+        <Route path= "/carrito" element={<PrivateRoute>
+                              <Carrito />
+                          </PrivateRoute>}/>
+        <Route path="/detalleProducto/:id" element={<PrivateRoute>
+                              <DetalleProducto />
+                          </PrivateRoute>} />
+        <Route path="/informe/" element={<PrivateRoute>
+                              <Informes />
+                          </PrivateRoute>} />                          
+      <Route path="/detalleCuenta" element={<PrivateRoute>
+        <DetalleCuenta />
+     </PrivateRoute>} />
+      </Routes>
     </Layout>
   );
 }

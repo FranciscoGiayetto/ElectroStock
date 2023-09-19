@@ -4,7 +4,7 @@ from ElectroStockApp import models
 from .serializers import *
 from rest_framework import viewsets, permissions, generics
 from .permissions import PermisoUsuarioActual
-from django.db.models import Sum, Value, IntegerField, Q, Count, Case, When
+from django.db.models import Sum, Value, IntegerField, Q, Count, Case, When, F, FloatField
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.views.decorators.csrf import csrf_exempt
@@ -401,7 +401,7 @@ class DateStatisticsView(generics.ListAPIView):
             models.Log.objects.filter(dateIn__year=current_year)
             .values("dateIn")
             .annotate(total_datein_logs=Count("dateIn"))
-            .order_by("-total_datein_logs")[:3]
+            .order_by("-total_datein_logs")[:1]
         )
         return queryset
 
@@ -411,8 +411,69 @@ class DateStatisticsView(generics.ListAPIView):
         date_statistics = serializer.data if serializer.data else None
         return Response(date_statistics)
 
+from django.db.models import ExpressionWrapper, F, DurationField, Avg
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.utils import timezone
+from django.db.models import F, ExpressionWrapper, DurationField, Avg
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.utils import timezone
+from django.db.models import F, ExpressionWrapper, DurationField, Avg
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.utils import timezone
+from django.db.models import Count
+from django.db.models import F, ExpressionWrapper, Func
+from django.db.models.fields import CharField
+from datetime import timedelta
 
-# View para la estadistica de la taza de vencidos
+class DateAvgView(APIView):
+    def get(self, request, format=None):
+        # Filtra los registros por los estados AP, DAP, DEV, VEN y TAR
+        current_year = timezone.now().year
+        queryset = (
+            models.Log.objects.filter(
+                dateIn__year=current_year,
+                status__in=["AP", "DAP", "DEV", "VEN", "TAR"],
+                dateOut__isnull=False
+            )
+        )
+
+        # Agrega una anotación para calcular la duración solo si dateOut no es nulo
+        queryset = queryset.annotate(
+            duration=ExpressionWrapper(
+                F("dateOut") - F("dateIn"), output_field=DurationField()
+            )
+        )
+
+        # Filtra los registros con duración no nula
+        queryset = queryset.exclude(duration=None)
+
+        # Imprime los valores de duration en la queryset
+        for log in queryset:
+            print(f"Log ID: {log.id}, Duration: {log.duration}")
+
+        average_duration_timedelta = queryset.aggregate(avg_duration=Avg("duration"))[
+            "avg_duration"
+        ]
+
+        # Verifica si el resultado es None antes de realizar la conversión
+        if average_duration_timedelta is not None:
+            # Extrae los componentes de días, horas, minutos y segundos
+            days = average_duration_timedelta.days
+            seconds = average_duration_timedelta.seconds
+
+            hours, remainder = divmod(seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+
+            average_duration_str = f"{days} días"
+        else:
+            average_duration_str = "N/A"  # Si no hay resultados
+
+        return Response({"average_duration": average_duration_str})
+
+# View para la estadística de la taza de vencidos
 class VencidoStatisticsView(generics.ListAPIView):
     serializer_class = VencidoStatisticsSerializer
 
@@ -427,19 +488,27 @@ class VencidoStatisticsView(generics.ListAPIView):
         statistics = queryset.aggregate(
             total_logs=Count("id"),
             approved_logs=Sum(
-                Case(When(status="AP", then=1), default=0, output_field=IntegerField())
+                Case(When(status="AP", then=1), default=0, output_field=FloatField())
             ),
             expired_logs=Sum(
-                Case(When(status="VEN", then=1), default=0, output_field=IntegerField())
+                Case(When(status="VEN", then=1), default=0, output_field=FloatField())
             ),
             tardio_logs=Sum(
-                Case(When(status="TAR", then=1), default=0, output_field=IntegerField())
+                Case(When(status="TAR", then=1), default=0, output_field=FloatField())
             ),
         )
 
-        serializer = self.get_serializer(
-            [statistics], many=True
-        )  # Use the VencidoStatisticsSerializer
+        # Calcula el porcentaje de registros vencidos
+        total_logs = statistics['approved_logs']
+        expired_logs = statistics['expired_logs']
+        print(total_logs)
+        print(expired_logs)
+        vencido_percentage = (expired_logs / total_logs) * 100 if total_logs > 0 else 0
+
+        # Agrega el porcentaje correcto al diccionario de estadísticas
+        statistics['vencido_percentage'] = vencido_percentage
+
+        serializer = self.get_serializer([statistics], many=True)
         return Response(serializer.data)
 
 
