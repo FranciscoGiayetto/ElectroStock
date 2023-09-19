@@ -20,15 +20,15 @@ const TiempoPorPrestamo = () => {
   }, [axiosInstance]);
 
   return (
-    <Card style={{ borderRadius: '6px', width: '370px'}}>
+    <Card style={{ borderRadius: '6px', width: '250px', height: '60px' ,marginTop:'25px'}}>
       <Card.Body>
         <div className="d-flex align-items-center">
           <div className="mr-3">
-            <AccessTimeOutlinedIcon sx={{ fontSize: 50 }} style={{ alignSelf: 'center' }} />
+            <AccessTimeOutlinedIcon sx={{ fontSize: 40 }} style={{ alignSelf: 'center' }} />
           </div>
           <div>
-            <h5 style={{ margin: '0' }}>{averageDuration}</h5>
-            <p style={{ margin: '0', fontSize: '0.8rem' }}>Tiempo por préstamo</p>
+            <h6 style={{ margin: '0', fontSize: '1rem' }}>{averageDuration}</h6>
+            <p style={{ margin: '0', fontSize: '0.7rem' }}>Tiempo por préstamo</p>
           </div>
         </div>
       </Card.Body>
