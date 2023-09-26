@@ -48,4 +48,11 @@
     margin-top: 5px; /* Puedes ajustar este valor según tus preferencias */
   }
   
+.customCard {
+    border-radius: 6px;
+    width: 298px;
+    height: 60px;
+    margin-top: 25px;
+  }
+  
   
