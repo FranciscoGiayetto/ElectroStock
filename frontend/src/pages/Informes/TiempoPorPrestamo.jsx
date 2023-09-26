@@ -20,7 +20,7 @@ const TiempoPorPrestamo = () => {
   }, [axiosInstance]);
 
   return (
-    <Card style={{ borderRadius: '6px', width: '250px', height: '60px' ,marginTop:'25px'}}>
+    <Card className='customCard'>
       <Card.Body>
         <div className="d-flex align-items-center">
           <div className="mr-3">

@@ -29,7 +29,7 @@ const DiaDemandado = ({ subtitle }) => {
   }, [axiosInstance]);
 
   return (
-    <Card style={{ borderRadius: '6px', width: '250px' , height: '60px', marginTop:'10px' }}>
+    <Card className='customCard' style={{marginTop:'12px'}}>
       <Card.Body>
         <div className="d-flex align-items-center">
           <div className="mr-3">
