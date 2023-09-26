@@ -92,7 +92,7 @@ class LaboratorySerializer(serializers.ModelSerializer):
 
 # Para ver y editar todos los datos de la location
 class LocationSerializer(serializers.ModelSerializer):
-    laboratoy = LaboratorySerializer()
+    laboratory = LaboratorySerializer()
 
     class Meta:
         model = models.Location
@@ -206,6 +206,7 @@ class VencidoStatisticsSerializer(serializers.Serializer):
     expired_logs = serializers.IntegerField()
     tardio_logs = serializers.IntegerField()
     expired_rate = serializers.SerializerMethodField()
+    vencido_percentage = serializers.FloatField()
 
     def get_expired_rate(self, obj):
         if obj["total_logs"] > 0:
@@ -225,3 +226,15 @@ class LenderVencidosStatisticsSerializer(serializers.Serializer):
     lender__username = serializers.CharField()
     vencidos_count = serializers.IntegerField()
 
+class BudgetSerializer(serializers.ModelSerializer):
+    speciality = SpecialitySerializer()
+    class Meta:
+        model = models.Budget
+        fields = "__all__"
+
+class BudgetLogSerializer(serializers.ModelSerializer):
+    element = ElementSerializer()
+    budget = BudgetSerializer()
+    class Meta:
+        model = models.BudgetLog
+        fields = "__all__"
