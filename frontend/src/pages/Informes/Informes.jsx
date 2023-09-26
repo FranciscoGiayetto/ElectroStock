@@ -25,7 +25,7 @@ function Informes() {
   }, []);
 
   return (
-    <div className="container pagecontainer">
+    <div className="container pagecontainer" style={{marginLeft:'125px'}}>
       <div className="row">
         {/* Fila 1 */}
         <div className="col-md-4">
