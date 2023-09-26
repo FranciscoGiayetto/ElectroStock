@@ -538,30 +538,31 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
 from rest_framework import status
 from django.db.models import Count, Q, Subquery, OuterRef
 class BoxMasLogsRotos(generics.ListAPIView):
-    serializer_class = BoxMasLogsRotostSerializer 
+    serializer_class = BoxMasLogsRotostSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
         queryset = (
-            models.Box.objects.annotate(
-                num_logs_rotos=Count(
-                    "log", filter=Q(log__status="ROTO", log__dateIn__year=current_year)
-                )
+            models.Box.objects.filter(
+                log__status="ROT"
             )
-            .order_by("-num_logs_rotos")[:5]  # Obtén los primeros 5 boxes con más logs roto
+            .annotate(total_productos_rotos=Sum('log__quantity'))
+            .order_by('-total_productos_rotos')
         )
+        
         return queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        if serializer.data:
+        
+        if queryset.exists():
+            serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(
-                {"message": 'No hay logs con status "ROTO" en el año actual.'},
+                {"message": 'No hay boxes con logs con status "ROTO".'},
                 status=status.HTTP_404_NOT_FOUND,
             )
+        
 from django.shortcuts import get_object_or_404
 
 @api_view(["GET"])
