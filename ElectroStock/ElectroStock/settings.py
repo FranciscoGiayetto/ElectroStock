@@ -92,6 +92,9 @@ DATABASES = {
     "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
 }
 
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': 'Backups'}
+
 #aca le digo a django que use de usuario la clase personalizada
 AUTH_USER_MODEL = 'ElectroStockApp.CustomUser'
 
@@ -390,6 +393,10 @@ CELERY_BEAT_SCHEDULE = {
     'assign_next_year_course': {
         'task': 'ElectroStockApp.task.assign_next_year_course',
         'schedule': timedelta(days=365),  # Ejecutar cada 1 año
+    },
+    'backup-task': {
+        'task': 'ElectroStockApp.task.backup_database',
+        'schedule': timedelta(days=7),  # Ejecuta la tarea todos los días a la medianoche
     },
 }
 

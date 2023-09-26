@@ -58,3 +58,22 @@ def assign_next_year_course():
             except Course.DoesNotExist:
                 logging.warning(f"No course found for year {next_year}")
                 user.delete()  # Eliminar el usuario si el curso no existe
+
+from django.core.management import call_command
+from celery import shared_task
+from django.core.management import call_command
+import os
+
+@shared_task
+def backup_database():
+    try:
+        # Ejecuta el comando dumpdata para exportar los datos de la base de datos
+        backup_filename = 'backup_data.json'  # Nombre del archivo de copia de seguridad
+        call_command('dumpdata', output=backup_filename)
+
+        # Mueve el archivo de copia de seguridad a un directorio específico
+        backup_directory = '../Backups/'  # Reemplaza con tu directorio de backups
+        os.rename(backup_filename, os.path.join(backup_directory, backup_filename))
+    except Exception as e:
+        # Maneja cualquier excepción que pueda ocurrir durante el respaldo
+        raise e
