@@ -8,13 +8,23 @@ import useAxios from '../../utils/useAxios.js';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const DataTable = ({ presupuesto, onUpdate }) => {
-  let budgetName = ""
-  try{
-     budgetName = presupuesto[0].budget.name
-  }
-  catch (error){
-     budgetName = "a"
-  }
+  const [budgetStatus,  setBudgetStatus] = useState("");
+  const [budgetName,  setBudgetName] = useState("");
+
+  
+  useEffect(() => {
+    try {
+      if (presupuesto && presupuesto.length > 0) {
+        setBudgetName(presupuesto[0].budget.name);
+        setBudgetStatus(presupuesto[0].budget.status);
+      } else {
+        setBudgetName("a"); // Establece un valor predeterminado si no hay datos de presupuesto
+        setBudgetStatus(""); // Establece un valor predeterminado si no hay datos de presupuesto
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [presupuesto]);
 
   const getClassByEstado = (estado) => {
     if (estado === "COMPRADO") {
@@ -29,6 +39,7 @@ const DataTable = ({ presupuesto, onUpdate }) => {
   const api = useAxios();
   const [filter, setFilter] = useState(''); // Estado para el filtro de búsqueda
   const { id } = useParams();
+ 
 
   const calcularPrecioTotal = () => {
     let total = 0;
@@ -42,6 +53,18 @@ const DataTable = ({ presupuesto, onUpdate }) => {
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
+
+  const handleBudgetStatusChange = async () => {
+    try {
+      const nuevoEstado = budgetStatus === 'PROGRESO' ? 'COMPLETADO' : 'PROGRESO';
+      setBudgetStatus(nuevoEstado);
+      await api.put(`/budget/${id}/`, { status: nuevoEstado });
+      
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   const handleItemDelete = async (log_id) => {
     try {
@@ -79,7 +102,18 @@ const DataTable = ({ presupuesto, onUpdate }) => {
           overflowY: 'auto',
         }}
       >
-        <MDBCardHeader className="bg-primary text-white">Detalle del Presupuesto: {budgetName}
+        <MDBCardHeader className="bg-primary text-white">
+          <div>
+          Detalle del Presupuesto: {budgetName}
+        <button
+    onClick={handleBudgetStatusChange}
+    className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
+    style={{ float: 'right' }}
+  >
+    {budgetStatus === 'PROGRESO' ? 'PROGRESO' : 'COMPLETADO'}
+  </button>
+  </div>
+
         </MDBCardHeader>
 
         <div className="text-center mb-3" style={{ paddingTop: '1rem' }}>

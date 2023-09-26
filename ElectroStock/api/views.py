@@ -661,8 +661,8 @@ def BudgetSpecialityViewSet(request, speciality_name):
 
     return Response(status=405)
 
-@api_view(["GET", "POST", "DELETE"])
-def BudgetViewSet(request):
+@api_view(["GET", "POST", "DELETE", "PUT"])
+def BudgetViewSet(request, budget_id=None):
     if request.method == "GET":
         queryset = models.Budget.objects.all()
 
@@ -677,7 +677,15 @@ def BudgetViewSet(request):
             
             
             return Response({"message": "Notificaciones agregada"})
-
+        
+    if request.method == "PUT":
+        # Actualiza el estado del presupuesto a "COMPRADO".
+        queryset = models.Budget.objects.get(id=budget_id)
+        serializer = BudgetSerializer(queryset, data=request.data, partial= True)
+        if serializer.is_valid():
+            serializer.save()
+            print(serializer.data)
+            return Response(serializer.data)
 
     return Response(status=405)
 
