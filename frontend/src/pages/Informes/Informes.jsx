@@ -46,7 +46,7 @@ function Informes() {
       <div className="row" style={{ marginTop: '30px' }}>
         {/* Fila 2 */}
         <div className="col-md-8">
-          <h2>Top deudores</h2>
+          <h4>Top deudores</h4>
           <HorizontalBarChart data={deudorData} />
         </div>
         <div className="col-md-4">
@@ -54,13 +54,11 @@ function Informes() {
         </div>
       </div>
 
-      <div className="row">
-        {/* Fila 3 */}
-        <div className="col-md-8">
-          <VerticalBarChart data={boxData} />
-        </div>
-      </div>
-      <VerticalBarChart data={boxData} />
+      <div className="col-md-8 d-flex flex-column" style={{ width: '900px', height: '300px' }}>
+  <h4>Box que mas se rompen</h4>
+  <VerticalBarChart data={boxData} />
+</div>
+      
     </div>
     
   );
