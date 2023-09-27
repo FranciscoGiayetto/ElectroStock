@@ -20,7 +20,7 @@ function Informes() {
 
     fetch('/api/estadisticas/box_mas_logs_rotos/')
       .then(response => response.json())
-      .then(data => setBoxData([data]))
+      .then(data => setBoxData(data))
       .catch(error => console.error('Error fetching box data:', error));
   }, []);
 
@@ -60,7 +60,9 @@ function Informes() {
           <VerticalBarChart data={boxData} />
         </div>
       </div>
+      <VerticalBarChart data={boxData} />
     </div>
+    
   );
 }
 
