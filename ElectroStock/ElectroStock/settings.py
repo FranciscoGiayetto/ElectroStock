@@ -395,15 +395,13 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'ElectroStockApp.task.assign_next_year_course',
         'schedule': timedelta(days=365),  # Ejecutar cada 1 año
     },
-<<<<<<< HEAD
     'backup-task': {
         'task': 'ElectroStockApp.task.backup_database',
         'schedule': timedelta(days=7),  # Ejecuta la tarea todos los días a la medianoche
-=======
+    },
     'check_stock_and_add_budget_logs': {
         'task': 'ElectroStockApp.task.check_stock_and_add_budget_logs',
         'schedule': timedelta(days=1),  # Ejecutar cada 1 año
->>>>>>> d595c6803bd5c4cd3076aa51b409cc78402fd205
     },
 }
 

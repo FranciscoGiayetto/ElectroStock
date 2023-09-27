@@ -194,7 +194,7 @@ def get_stock(request, element_id):
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
 
-@api_view(["GET", "POST"])
+@api_view(["GET", "PUT"])
 def carrito(request, user_id):
     if request.method == "GET":
         queryset = models.Log.objects.filter(
@@ -203,11 +203,23 @@ def carrito(request, user_id):
         serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    if request.method == "POST":
-        return Response({"message": "Elemento agregado al carrito"})
+    if request.method == "PUT":
+        try:
+            log_id = request.data.get("log_id")
+            new_quantity = request.data.get("new_quantity")
+            log = models.Log.objects.get(id=log_id, lender=user_id, status=models.Log.Status.CARRITO)
+            
+            # Actualiza la cantidad del registro en el carrito
+            log.quantity = new_quantity
+            log.save()
+            
+            return Response({"message": "Cantidad del elemento actualizada correctamente"})
+        except models.Log.DoesNotExist:
+            return Response({"message": "El registro no existe en el carrito"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response(status=405)
-
+    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(["GET", "POST"])
 def VencidosAPIView(request, user_id):

@@ -61,7 +61,6 @@ def assign_next_year_course():
                 logging.warning(f"No course found for year {next_year}")
                 user.delete()  # Eliminar el usuario si el curso no existe
 
-<<<<<<< HEAD
 from django.core.management import call_command
 from celery import shared_task
 from django.core.management import call_command
@@ -80,7 +79,6 @@ def backup_database():
     except Exception as e:
         # Maneja cualquier excepción que pueda ocurrir durante el respaldo
         raise e
-=======
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum
 
@@ -150,4 +148,3 @@ def check_stock_and_add_budget_logs():
 
 
 
->>>>>>> d595c6803bd5c4cd3076aa51b409cc78402fd205
