@@ -10,17 +10,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 const DataTable = ({ presupuesto, onUpdate }) => {
   const [budgetStatus,  setBudgetStatus] = useState("");
   const [budgetName,  setBudgetName] = useState("");
-
+  const [budgetLogs, setBudgetLogs] = useState([]);
   
   useEffect(() => {
     try {
-      if (presupuesto && presupuesto.length > 0) {
-        setBudgetName(presupuesto[0].budget.name);
-        setBudgetStatus(presupuesto[0].budget.status);
-      } else {
-        setBudgetName("a"); // Establece un valor predeterminado si no hay datos de presupuesto
-        setBudgetStatus(""); // Establece un valor predeterminado si no hay datos de presupuesto
-      }
+     
+        setBudgetName(presupuesto.budget_details.name);
+        setBudgetStatus(presupuesto.budget_details.status);
+        setBudgetLogs(presupuesto.budget_logs)
     } catch (error) {
       console.error(error);
     }
@@ -43,7 +40,7 @@ const DataTable = ({ presupuesto, onUpdate }) => {
 
   const calcularPrecioTotal = () => {
     let total = 0;
-    for (const item of presupuesto) {
+    for (const item of budgetLogs) {
       total += item.quantity * parseFloat(item.price);
     }
     return total.toFixed(2);
@@ -88,7 +85,7 @@ const DataTable = ({ presupuesto, onUpdate }) => {
   };
 
   // Filtrar los elementos basados en el filtro de búsqueda
-  const filteredPresupuesto = presupuesto.filter((item) =>
+  const filteredPresupuesto = budgetLogs.filter((item) =>
     item.name.toLowerCase().includes(filter.toLowerCase())
   );
   
