@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   MDBCard,
   MDBCardBody,
@@ -7,10 +8,16 @@ import {
   MDBRow,
 } from "mdb-react-ui-kit";
 import Button from 'react-bootstrap/Button';
-import React from 'react';
 
 export default function CartCard(props) {
-  const { id, name, title, image, quantity, handleDelete } = props;
+  const { id, name, title, image, quantity, handleDelete, handleQuantityChange } = props;
+
+  const handleInputChange = (e) => {
+    const newQuantity = parseInt(e.target.value, 10);
+    console.log(`New quantity for item ${id}: ${newQuantity}`);
+    // Call the handleQuantityChange function to handle quantity changes
+    handleQuantityChange(id, newQuantity);
+  };
 
   return (
     <MDBCard className="rounded-3 mb-4">
@@ -32,7 +39,14 @@ export default function CartCard(props) {
             xl="2"
             className="d-flex align-items-center justify-content-around"
           >
-            <MDBInput min={0} defaultValue={quantity} type="number" size="sm" />
+            {/* Use the handleInputChange function to handle quantity changes */}
+            <MDBInput
+              min={0}
+              value={quantity}
+              onChange={handleInputChange}
+              type="number"
+              size="sm"
+            />
           </MDBCol>
           <MDBCol md="1" lg="1" xl="5" className="d-flex align-items-center justify-content-end">
             <Button variant="danger" onClick={() => handleDelete(id)}>x</Button>{' '}
