@@ -76,7 +76,7 @@ async function downloadApp() {
 
 
   const getElement = async () => {
-    const proxyUrl = 'http://127.0.0.1:8000';
+    const proxyUrl = 'https://electrostock-dev.fl0.io';
     let response = await fetch(`${proxyUrl}/api/elementsEcommerce/`);
     let data = await response.json();
     let uniqueOptions = new Set();
@@ -117,7 +117,7 @@ async function downloadApp() {
           />
           <Menu.Divider />
           <Menu.Item key="1" icon={<StoreRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/tienda' }}>
-            Tienda
+            tienda
           </Menu.Item>
           <Menu.Item key="2" icon={<CachedRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/Prestamos' }}>
             Préstamo
@@ -128,7 +128,7 @@ async function downloadApp() {
           <Menu.Item key="4" icon={<DataUsageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
             Informe
           </Menu.Item>
-          <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
+          <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'https://electrostock-dev.fl0.io/admin/' }}>
             Admin
           </Menu.Item>
           <Menu.Divider />

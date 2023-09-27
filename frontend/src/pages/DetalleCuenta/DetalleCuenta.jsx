@@ -42,7 +42,7 @@ function DetalleCuenta() {
 
   const getUser = async () => {
     try {
-      const response = await api.get(`http://127.0.0.1:8000/api/users/${id}/`);
+      const response = await api.get(`https://electrostock-dev.fl0.io/api/users/${id}/`);
       let data = await response.data;
       console.log(data)
       setElement(data);

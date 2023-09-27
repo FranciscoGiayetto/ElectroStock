@@ -82,7 +82,7 @@ const Login = () => {
                   </Form.Group>
 
                   <div className='text-center' style={{paddingBottom:'1rem'}}>
-                    <Link href='http://127.0.0.1:8000/auth/accounts/password_reset' style={{color:' #2E5266'}} > Olvidaste tu contraseña? </Link>
+                    <Link href='https://electrostock-dev.fl0.io/auth/accounts/password_reset' style={{color:' #2E5266'}} > Olvidaste tu contraseña? </Link>
                   </div>
                   
                   <div className='text-center'>

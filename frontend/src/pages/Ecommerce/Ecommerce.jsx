@@ -53,7 +53,7 @@ function Ecommerce({ allItems }) {
   };
 
   const getElement = async () => {
-    const baseUrl = 'http://127.0.0.1:8000';
+    const baseUrl = 'https://electrostock-dev.fl0.io';
     const endpoint = allItems
       ? 'elementsEcommerce/'
       : `filtroCategoria/${encodeURIComponent(name)}/`;

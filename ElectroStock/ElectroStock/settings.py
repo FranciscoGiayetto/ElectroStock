@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-ff=y)c_ri$c_l3)#zz#%)8&gffn85+^5vo)+enx*6t1jov8*ok
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -62,7 +62,7 @@ MIDDLEWARE = [
 ]
 FRONTEND_URL = 'http://localhost:3000'
 
-CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1','http://127.0.0.1:3000']
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1','http://127.0.0.1:3000', 'https://electrostock-dev.fl0.io']
 
 ROOT_URLCONF = "ElectroStock.urls"
 
@@ -395,15 +395,9 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'ElectroStockApp.task.assign_next_year_course',
         'schedule': timedelta(days=365),  # Ejecutar cada 1 año
     },
-<<<<<<< HEAD
     'backup-task': {
         'task': 'ElectroStockApp.task.backup_database',
         'schedule': timedelta(days=7),  # Ejecuta la tarea todos los días a la medianoche
-=======
-    'check_stock_and_add_budget_logs': {
-        'task': 'ElectroStockApp.task.check_stock_and_add_budget_logs',
-        'schedule': timedelta(days=1),  # Ejecutar cada 1 año
->>>>>>> d595c6803bd5c4cd3076aa51b409cc78402fd205
     },
 }
 
