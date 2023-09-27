@@ -65,7 +65,7 @@ function Carrito() {
   };
 
   const handleContinue = async () => {
-    let body = {
+    let body = {  
       dateOut: dateInputData
     };
     try {
