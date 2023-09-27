@@ -31,6 +31,7 @@ urlpatterns = [
     path("stock/<int:element_id>/", get_stock, name="stock"),
     path("filtroCategoria/<str:category_id>/", elementos_por_categoria, name="filtroCategoria"),
     path("pendientes/<int:user_id>/", PrestamoPendientesAPIView, name="pendientes"),
+    path("logCantidad/<int:log_id>/", update_log_quantity, name="logCantidad"),
     path("notificaciones/<int:user_id>/", NotificacionesAPIView, name="notificaciones"),
     path(
         "estadisticas/maspedido/",

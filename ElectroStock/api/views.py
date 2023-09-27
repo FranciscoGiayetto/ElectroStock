@@ -614,3 +614,30 @@ def categories_por_especialidad(request, nombre_especialidad):
         categorias_por_especialidad.append(categoria_info)
 
     return Response(categorias_por_especialidad)
+
+@api_view(["GET", "PUT"])
+def update_log_quantity(request, log_id):
+    try:
+        # Buscar el registro Log por ID
+        log = models.Log.objects.get(pk=log_id)
+
+        if request.method == "GET":
+            # Serializar y devolver los detalles del registro Log
+            serializer = LogSerializer(log)
+            return Response(serializer.data)
+
+        elif request.method == "PUT":
+            # Obtener la nueva cantidad desde la solicitud
+            new_quantity = request.data.get("quantity")
+
+            # Actualizar la cantidad del registro Log
+            log.quantity = new_quantity
+            log.save()
+
+            # Devolver una respuesta exitosa
+            return Response({"message": "Cantidad del registro actualizada correctamente"})
+
+    except models.Log.DoesNotExist:
+        return Response({"message": "El registro Log no existe"}, status=status.HTTP_404_NOT_FOUND)
+
+    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
