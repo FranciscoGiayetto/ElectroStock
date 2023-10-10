@@ -6,6 +6,7 @@ import {
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
+import { HiPlusCircle } from "react-icons/hi2";
 
 const DataTable = ({ presupuestos }) => {
   const navigate = useNavigate();
@@ -67,8 +68,14 @@ const DataTable = ({ presupuestos }) => {
   };
 
   return (
-    <MDBCard className="my-4 p-3">
-      <MDBCardHeader className="bg-primary text-white">Presupuestos</MDBCardHeader>
+    <MDBCard className="my-4 p-3" >
+     <MDBCardHeader style={{fontSize:"2rem"}} className="bg-primary text-white d-flex justify-content-between align-items-center">
+  <span>Presupuestos</span>
+  <div className="hover-scale">
+  <HiPlusCircle />
+  </div>
+</MDBCardHeader>
+
       <Table responsive striped bordered hover className="mt-3">
         <thead>
           <tr>
