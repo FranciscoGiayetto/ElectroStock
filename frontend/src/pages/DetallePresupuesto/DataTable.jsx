@@ -11,7 +11,10 @@ const DataTable = ({ presupuesto, onUpdate }) => {
   const [budgetStatus,  setBudgetStatus] = useState("");
   const [budgetName,  setBudgetName] = useState("");
   const [budgetLogs, setBudgetLogs] = useState([]);
-  
+  const [editingRows, setEditingRows] = useState({});
+  const [editedValues, setEditedValues] = useState({});
+
+
   useEffect(() => {
     try {
      
@@ -37,6 +40,44 @@ const DataTable = ({ presupuesto, onUpdate }) => {
   const [filter, setFilter] = useState(''); // Estado para el filtro de búsqueda
   const { id } = useParams();
  
+
+
+  const handleItemEdit = (log_id) => {
+    // Activa la edición para la fila correspondiente
+    setEditingRows((prevEditingRows) => ({
+      ...prevEditingRows,
+      [log_id]: true,
+    }));
+  };
+
+  const handleItemSave = async (log_id) => {
+    try {
+      const editedItem = editedValues[log_id];
+      // Realiza la solicitud PUT a la base de datos con los valores editados
+      await api.put(`/budgetlog/${log_id}/`, editedItem);
+      onUpdate();
+      // Desactiva la edición para la fila correspondiente
+      setEditingRows((prevEditingRows) => ({
+        ...prevEditingRows,
+        [log_id]: false,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+
+  const handleItemInputChange = (log_id, field, value) => {
+    // Actualiza los valores editados para la fila correspondiente
+    setEditedValues((prevEditedValues) => ({
+      ...prevEditedValues,
+      [log_id]: {
+        ...prevEditedValues[log_id],
+        [field]: value,
+      },
+    }));
+  };
+  
 
   const calcularPrecioTotal = () => {
     let total = 0;
@@ -101,18 +142,17 @@ const DataTable = ({ presupuesto, onUpdate }) => {
       >
         <MDBCardHeader className="bg-primary text-white">
           <div>
-          Detalle del Presupuesto: {budgetName}
-        <button
-    onClick={handleBudgetStatusChange}
-    className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
-    style={{ float: 'right' }}
-  >
-    {budgetStatus === 'PROGRESO' ? 'PROGRESO' : 'COMPLETADO'}
-  </button>
-  </div>
-
+            Detalle del Presupuesto: {budgetName}
+            <button
+              onClick={handleBudgetStatusChange}
+              className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
+              style={{ float: 'right' }}
+            >
+              {budgetStatus === 'PROGRESO' ? 'PROGRESO' : 'COMPLETADO'}
+            </button>
+          </div>
         </MDBCardHeader>
-
+  
         <div className="text-center mb-3" style={{ paddingTop: '1rem' }}>
           <input
             type="text"
@@ -122,13 +162,12 @@ const DataTable = ({ presupuesto, onUpdate }) => {
             style={{ width: '60%', display: 'inline-block' }}
           />
         </div>
-
+  
         <Table responsive striped bordered hover className="mt-3">
           <thead>
             <tr>
               <th>N°</th>
               <th>Nombre</th>
-              <th>Cantidad</th>
               <th>Precio</th>
               <th>Stock</th>
               <th>Total</th>
@@ -139,16 +178,84 @@ const DataTable = ({ presupuesto, onUpdate }) => {
             {filteredPresupuesto.map((item, index) => (
               <tr key={index} className={getClassByEstado(item.status)}>
                 <td>{index + 1}</td>
-                <td>{item.name}</td>
-                <td>{item.quantity}</td>
-                <td>{item.price}</td>
-                <td>{item.quantity}</td>
+                <td>
+                  {editingRows[item.id] ? (
+                    <input
+                      type="text"
+                      style={{maxWidth:"200px"}}
+                      className="form-control"
+                      value={editedValues[item.id]?.name || item.name}
+                      onChange={(e) =>
+                        handleItemInputChange(item.id, "name", e.target.value)
+                      }
+                    />
+                  ) : (
+                    item.name
+                  )}
+                </td>
+                    
+                <td>
+                {editingRows[item.id] ? (
+                    <input
+                      type="number"
+                      style={{maxWidth:"150px"}}
+                      className="form-control"
+                      value={editedValues[item.id]?.price || item.price}
+                      onChange={(e) =>
+                        handleItemInputChange(item.id, "price", e.target.value)
+                      }
+                    />
+                  ) : (
+                    item.price
+                  )}
+                
+                </td>
+                <td>
+                {editingRows[item.id] ? (
+                    <input
+                      type="number"
+                      className="form-control"
+                      style={{maxWidth:"100px"}}
+                      value={editedValues[item.id]?.quantity || item.quantity}
+                      onChange={(e) =>
+                        handleItemInputChange(item.id, "quantity", e.target.value)
+                      }
+                    />
+                  ) : (
+                    item.quantity
+                  )}
+                
+                
+                </td>
                 <td>{(item.quantity * parseFloat(item.price)).toFixed(2)}</td>
                 <td>
-                  <button onClick={() => handleItemDelete(item.id)} className="btn btn-danger btn-sm">Eliminar</button>
-                  <button  onClick={() => handleItemCompra(item.id, item.status)} className={`btn btn-sm ${item.status === 'COMPRADO' ? 'btn-success' : 'btn-warning'}`}>
-                {item.status === 'COMPRADO' ? 'COMPRADO' : 'PENDIENTE'}
-              </button>
+                  {editingRows[item.id] ? (
+                    <button
+                      onClick={() => handleItemSave(item.id)}
+                      className="btn btn-success btn-sm"
+                    >
+                      Guardar
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleItemEdit(item.id)}
+                      className="btn btn-primary btn-sm"
+                    >
+                      Editar
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleItemDelete(item.id)}
+                    className="btn btn-danger btn-sm ml-2"
+                  >
+                    Eliminar
+                  </button>
+                  <button
+                    onClick={() => handleItemCompra(item.id, item.status)}
+                    className={`btn btn-sm ${item.status === 'COMPRADO' ? 'btn-success' : 'btn-warning'}`}
+                  >
+                    {item.status === 'COMPRADO' ? 'COMPRADO' : 'PENDIENTE'}
+                  </button>
                 </td>
               </tr>
             ))}
@@ -165,6 +272,6 @@ const DataTable = ({ presupuesto, onUpdate }) => {
       </MDBCard>
     </div>
   );
-};
+  };
 
 export default DataTable;
