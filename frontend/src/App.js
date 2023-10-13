@@ -23,6 +23,7 @@ import MyComponent from './pages/Prestamos/Prestamos';
 import { Link } from "react-router-dom";
 import Informe from "./pages/Informe/Informe";
 import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
+import Error404 from "./pages/Error404/Error404";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,6 +63,8 @@ function LayoutWrapper({ onSearch, searchQuery }) {
   <Route path="/detalleProducto/:id" element={<PrivateRoute><DetalleProducto /></PrivateRoute>} />
   <Route path="/detalleCuenta" element={<PrivateRoute><DetalleCuenta /></PrivateRoute>} />
   <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
+  <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
+  <Route path="/error404" element={<PrivateRoute><Error404 /></PrivateRoute>} />
 </Routes>
 
     </Layout>
