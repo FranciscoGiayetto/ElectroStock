@@ -1,16 +1,25 @@
-.container-bg{
-  width: 700px;
+.container-bg {
+  width: 43.75rem; 
   height: auto;
-  margin: 50px;
-  margin-top: 100px;
-  border-radius: 10px;
-  padding-top: 15px;
-  padding-bottom: 20px;
+  margin: 3.125rem;
+  margin-top: 6.25rem;
+  border-radius: 0.625rem;
+  padding-top: 0.9375rem; 
+  padding-bottom: 1.25rem; 
   background-color: white;
 }
 
+.btn-style{
+  font-size: 0.938rem;
+  background-color: #58A4B0;
+  border: none;
+  width: 9rem;
+  height: 2.5rem;
+}
+
 .div-btn{
-  display: table; text-align: center;
+  display: table; 
+  text-align: center;
 }
 
 .boton{

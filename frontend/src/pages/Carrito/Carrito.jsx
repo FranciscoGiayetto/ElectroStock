@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Carrito.css';
 import CartCard from '../../components/cartcard/CartCard';
+import Button from 'react-bootstrap/Button';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+
 import {
   MDBCol,
   MDBContainer,
@@ -10,6 +15,12 @@ import {
 import useAxios from "../../utils/useAxios";
 import { useAuthStore } from '../../store/auth';
 import { Navigate, useNavigate } from 'react-router-dom';
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
+</head>
 
 function Carrito() {
   const api = useAxios();
@@ -78,12 +89,13 @@ function Carrito() {
   }
 
   return (
-    <section className="container-bg" style={{ backgroundColor: "white"}}>
+    <section className="container-bg" style={{fontFamily: 'Roboto, sans-serif'}}>
       <MDBContainer className="h-100">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol>
-            <p>
-              <span className="h2">Shopping Cart</span>
+            <p style={{fontSize: '1.563rem'}}>
+              <ShoppingCartOutlinedIcon style={{marginRight: '0.5rem'}}/>
+              Carrito
             </p>
 
             {/* Renderizar los componentes CartCard */}
@@ -103,10 +115,11 @@ function Carrito() {
             {/* Datetime Input */}
             <div className="mb-2 d-flex justify-content-between">
               <div>
-                <label htmlFor="datetimeInput" className="form-label">
+                <label style={{marginRight:'0.5rem'}} htmlFor="datetimeInput" className="form-label">
                   Fecha de devolución:
                 </label>
                 <input
+                  style={{marginRight:'13rem'}}
                   type="date"
                   name="dateInput"
                   min={new Date().toISOString().split('T')[0]}
@@ -114,9 +127,9 @@ function Carrito() {
                   onChange={(e) => setDateInputData(e.target.value)}
                 />
               </div>
-              <div>
-                <button className="btn btn-primary btn-sm" onClick={handleContinue}>Continuar</button>
-              </div>
+              <Button className='btn-style' onClick={handleContinue}>
+                Siguiente
+              </Button>
             </div>
           </MDBCol>
         </MDBRow>

@@ -1,4 +1,5 @@
 import React from 'react';
+import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import {
   MDBCard,
   MDBCardBody,
@@ -49,7 +50,7 @@ export default function CartCard(props) {
             />
           </MDBCol>
           <MDBCol md="1" lg="1" xl="5" className="d-flex align-items-center justify-content-end">
-            <Button variant="danger" onClick={() => handleDelete(id)}>x</Button>{' '}
+            <Button onClick={() => handleDelete(id)} style={{background:'none', border:'none'}}> <ClearRoundedIcon style={{color:'#2E5266'}}/> </Button>{' '}
           </MDBCol>
         </MDBRow>
       </MDBCardBody>
