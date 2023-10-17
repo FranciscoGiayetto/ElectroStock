@@ -21,7 +21,6 @@ import React, { useEffect, useState } from 'react';
 import defaultpicture from '../../assets/images/defaultpicture.png';
 
 
-
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -42,29 +41,34 @@ const tiers = [
     subheader: 'Texto de ejemplo',
     description: [
       'Prestatario',
-      'aprobado',
-      'Fecha de pedido',
+      'Aprobado',
+      'Fecha de pedido','Componentes disponibles',
+      'Fecha de devolucion',
+      'Acerca de',
       
     ],
     buttonText: 'Volver al prestamo',
     buttonVariant: 'contained',
   },
   {
-    title: 'Nombre del componente',
+
     description: [
       <img src={defaultpicture} alt='Imagen' className='img-fluid product-details__image' />
 
-    ],
+    ]
    
   },
   {
-    title: 'info adicional',
+    title: 'Que desea hacer?',
     description: [
-      'Componentes disponibles',
-      'Fecha de devolucion',
-      'Acerca de',
-    ],
-  
+      <Button variant="contained" color="success">
+  Aceptar
+</Button>,
+<span>ㅤ</span>,
+<Button variant="outlined" color="error">
+  Rechazar
+</Button>   
+  ],
   },
 ];
 
@@ -135,23 +139,23 @@ const defaultTheme = createTheme();
     {/* Hero unit */}
     <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
     <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
-  <Typography
-    component="h2"
-    variant="h3"  // Cambiar de "h2" a "h3" para hacerlo más pequeño
-    align="center"
-    color="text.primary"
-    gutterBottom
-    sx={{ fontFamily: 'arial' }}  // Reemplaza 'nombre-de-la-fuente' con la fuente que desees
-  >
-    Prestamo de nari
-  </Typography>
+    <Typography
+  component="h2"
+  variant="h3"
+  align="center"
+  color="text.primary"
+  gutterBottom
+  sx={{ fontFamily: 'Arial, sans-serif', fontSize: '2rem' }}
+>
+  Prestamo de Nari
+</Typography>
+
 </Container>
 
      
     </Container>
     {/* End hero unit */}
-    <Container maxWidth="md" component="main">
-      <Grid container spacing={5} alignItems="flex-end">
+    <Container maxWidth="md" component="main" className='container47' sx={{ marginTop: 0 }}>      <Grid container spacing={5} alignItems="flex-end">
         {tiers.map((tier) => (
           // Enterprise card is full width at sm breakpoint
           <Grid
@@ -202,7 +206,7 @@ const defaultTheme = createTheme();
                 </ul>
               </CardContent>
               <CardActions>
-                <Button fullWidth variant={tier.buttonVariant}>
+              <Button fullWidth variant={tier.buttonVariant}>
                   {tier.buttonText}
                 </Button>
               </CardActions>
