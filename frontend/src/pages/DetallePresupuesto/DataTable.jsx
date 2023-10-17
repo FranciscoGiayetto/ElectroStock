@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import Table from 'react-bootstrap/Table';
 import {
   MDBCard,
@@ -13,7 +13,8 @@ const DataTable = ({ presupuesto, onUpdate }) => {
   const [budgetLogs, setBudgetLogs] = useState([]);
   const [editingRows, setEditingRows] = useState({});
   const [editedValues, setEditedValues] = useState({});
-
+  const [isEditingBudgetName, setIsEditingBudgetName] = useState(false);
+  const nameInputRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -40,7 +41,21 @@ const DataTable = ({ presupuesto, onUpdate }) => {
   const [filter, setFilter] = useState(''); // Estado para el filtro de búsqueda
   const { id } = useParams();
  
-
+  const activateBudgetNameEditing = () => {
+    setIsEditingBudgetName(true);
+    if (nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  };
+  const saveBudgetName = async () => {
+    try {
+      setIsEditingBudgetName(false);
+      await api.put(`/budget/${id}/`, { name: budgetName });
+      onUpdate();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleItemEdit = (log_id) => {
     // Activa la edición para la fila correspondiente
@@ -140,18 +155,54 @@ const DataTable = ({ presupuesto, onUpdate }) => {
           overflowY: 'auto',
         }}
       >
-        <MDBCardHeader className="bg-primary text-white">
-          <div>
-            Detalle del Presupuesto: {budgetName}
-            <button
-              onClick={handleBudgetStatusChange}
-              className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
-              style={{ float: 'right' }}
-            >
-              {budgetStatus === 'PROGRESO' ? 'PROGRESO' : 'COMPLETADO'}
-            </button>
-          </div>
-        </MDBCardHeader>
+<MDBCardHeader className="bg-primary text-white">
+  <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div>
+      Nombre del Presupuesto :  
+    </div>
+    {isEditingBudgetName ? (
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <input
+          ref={nameInputRef}
+          type="text"
+          value={budgetName}
+          onChange={(e) => setBudgetName(e.target.value)}
+          onBlur={saveBudgetName}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              saveBudgetName();
+            }
+          }}
+          style={{
+            border: 'none',
+            outline: 'none',
+            background: 'transparent',
+           
+            color: 'white',
+            fontSize: '1rem',
+            padding: '0.25rem 0.5rem',
+          }}
+        />
+      </div>
+    ) : (
+      <div onDoubleClick={activateBudgetNameEditing}>
+        {budgetName}
+      </div>
+    )}
+    <button
+      onClick={handleBudgetStatusChange}
+      className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
+      style={{
+        marginLeft: 'auto',
+      }}
+    >
+      {budgetStatus === 'PROGRESO' ? 'PROGRESO' : 'COMPLETADO'}
+    </button>
+  </div>
+</MDBCardHeader>
+
+
   
         <div className="text-center mb-3" style={{ paddingTop: '1rem' }}>
           <input
