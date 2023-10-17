@@ -8,57 +8,64 @@ import defaultpicture from '../../assets/images/defaultpicture.png';
 import './DetalleProducto.css';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
+// Lista de categorías con nombres correspondientes a los IDs
+const categorias = [
+  { id: 1, nombre: "Electrónica" },
+  { id: 2, nombre: "Ropa" },
+  // Agrega más categorías según sea necesario
+];
+
 function DetalleProducto() {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const [posRes, setPostRes] = useState('');
   const [element, setElement] = useState(null);
   const [isVerticalLayout, setIsVerticalLayout] = useState(false);
-  const numeroAleatorio = Math.floor (Math.random () * 21) + 5;
-  const [quantity, setQuantity] = useState (1);
-  const navigate = useNavigate ();
-  const api = useAxios ();
-  const {id} = useParams ();
+  const numeroAleatorio = Math.floor(Math.random() * 21) + 5;
+  const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
+  const api = useAxios();
+  const { id } = useParams();
 
-  useEffect (() => {
-    console.log (userData);
-    getElement ();
-    handleLayoutChange ();
-    window.addEventListener ('resize', handleLayoutChange);
+  useEffect(() => {
+    console.log(userData);
+    getElement();
+    handleLayoutChange();
+    window.addEventListener('resize', handleLayoutChange);
     return () => {
-      window.removeEventListener ('resize', handleLayoutChange);
+      window.removeEventListener('resize', handleLayoutChange);
     };
   }, [id]);
 
   const getElement = async () => {
     try {
-      const response = await api.get (`/elements/${id}/`);
-      console.log (response);
+      const response = await api.get(`/elements/${id}/`);
+      console.log(response);
       let data = await response.data;
-      setElement (data);
-      console.log (userData.user_id);
+      setElement(data);
+      console.log(userData.user_id);
     } catch (error) {
-      console.error (error);
+      console.error(error);
     }
   };
 
   const handleLayoutChange = () => {
     const isMobileLayout = window.innerWidth < 768;
-    setIsVerticalLayout (!isMobileLayout);
+    setIsVerticalLayout(!isMobileLayout);
   };
 
   const handleIncrement = () => {
-    setQuantity (quantity + 1);
+    setQuantity(quantity + 1);
   };
 
   const handleDecrement = () => {
     if (quantity > 1) {
-      setQuantity (quantity - 1);
+      setQuantity(quantity - 1);
     }
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault ();
+    e.preventDefault();
 
     let body = {
       box: element.id,
@@ -72,29 +79,26 @@ function DetalleProducto() {
     };
 
     try {
-      const response = await api.post (`/logPost/${userData.user_id}/`, body);
-      console.log (response.data);
-      setPostRes (response.data.response);
-      navigate ('/tienda');
+      const response = await api.post(`/logPost/${userData.user_id}/`, body);
+      console.log(response.data);
+      setPostRes(response.data.response);
+      navigate('/tienda');
     } catch (error) {
-      setPostRes (error.response.data);
+      setPostRes(error.response.data);
     }
   };
 
   const backButtonStyle = {
     position: 'absolute',
     top: 20,
-    left: 5, // Ajusta esta coordenada
+    left: 5,
   };
 
   return (
-    <div className="container pagecontainer" style={{position: 'relative'}}>
+    <div className="container pagecontainer" style={{ position: 'relative' }}>
       <div style={backButtonStyle}>
-        <Button
-          variant="outline-primary"
-          onClick={() => navigate ('/tienda')}
-        >
-          <ChevronLeftIcon /> 
+        <Button variant="outline-primary" onClick={() => navigate('/tienda')}>
+          <ChevronLeftIcon />
         </Button>
       </div>
       {element && (
@@ -107,16 +111,18 @@ function DetalleProducto() {
             />
           </div>
 
-          <div className="col-md-6 product-details__info-container" style={{width: '45%'}}>
+          <div className="col-md-6 product-details__info-container" style={{ width: '45%' }}>
             <h1 className="product-details__title">Nombre: {element.name}</h1>
             <h1 className="product-details__description">Descripción: {element.description}</h1>
-            <h1 className="product-details__category">Categoría: {element.category}</h1>
+            <h1 className="product-details__category">
+              Categoría: {categorias.find(cat => cat.id === element.category)?.nombre}
+            </h1>
             <h1 className="product-details__stock">Stock: 20</h1>
 
             <Button
               className="botonCarrito"
               size="lg"
-              style={{backgroundColor: '#58A4B0', border: '1px solid #58A4B0', left: '5px'}} // Ajusta esta coordenada
+              style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0', left: '5px' }}
               variant="primary"
               type="submit"
               onClick={handleSubmit}
