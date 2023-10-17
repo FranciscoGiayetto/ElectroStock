@@ -23,7 +23,7 @@ import MyComponent from './pages/Prestamos/Prestamos';
 import { Link } from "react-router-dom";
 import Informe from "./pages/Informe/Informe";
 import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
-import Error404 from "./pages/Error404/Error404";
+import ErrorPage from './ErrorPage';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,7 +33,7 @@ function App() {
   };
   return (
     <Router>
-      <MainWrapper>
+      <MainWrapper> 
         <div className="container">
           <div className="app">
             <Routes>
@@ -56,19 +56,19 @@ function LayoutWrapper({ onSearch, searchQuery }) {
   return (
     <Layout>
       <Routes>
-  <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
-  <Route path="/tienda" element={<PrivateRoute><Ecommerce allItems={true} /></PrivateRoute>} />
-  <Route path="/tienda/:name" element={<PrivateRoute><Ecommerce allItems={false} /></PrivateRoute>} />                          
-  <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
-  <Route path="/detalleProducto/:id" element={<PrivateRoute><DetalleProducto /></PrivateRoute>} />
-  <Route path="/detalleCuenta" element={<PrivateRoute><DetalleCuenta /></PrivateRoute>} />
-  <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
-  <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
-  <Route path="/error404" element={<PrivateRoute><Error404 /></PrivateRoute>} />
-</Routes>
-
+        <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+        <Route path="/tienda" element={<PrivateRoute><Ecommerce allItems={true} /></PrivateRoute>} />
+        <Route path="/tienda/:name" element={<PrivateRoute><Ecommerce allItems={false} /></PrivateRoute>} />                          
+        <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
+        <Route path="/detalleProducto/:id" element={<PrivateRoute><DetalleProducto /></PrivateRoute>} />
+        <Route path="/detalleCuenta" element={<PrivateRoute><DetalleCuenta /></PrivateRoute>} />
+        <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
+        <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
+        <Route path="/*" element={<ErrorPage />} /> {/* Add this line */}
+      </Routes>
     </Layout>
   );
 }
+
 
 export default App;
