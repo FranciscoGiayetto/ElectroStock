@@ -29,6 +29,7 @@ class CategoriaSerializer(serializers.ModelSerializer):
 
 # Para ver y editar todos los elementos
 class ElementSerializer(serializers.ModelSerializer):
+    category = CategoriaSerializer()
     class Meta:
         model = models.Element
         fields = "__all__"

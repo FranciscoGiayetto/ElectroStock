@@ -26,17 +26,17 @@ function DetalleProducto() {
   const navigate = useNavigate();
   const api = useAxios();
   const { id } = useParams();
-
   useEffect(() => {
     console.log(userData);
     getElement();
+    getStock(); // Agrega esta llamada para obtener el stock
     handleLayoutChange();
     window.addEventListener('resize', handleLayoutChange);
     return () => {
       window.removeEventListener('resize', handleLayoutChange);
     };
   }, [id]);
-
+  
   const getElement = async () => {
     try {
       const response = await api.get(`/elements/${id}/`);
@@ -48,7 +48,23 @@ function DetalleProducto() {
       console.error(error);
     }
   };
-
+  
+  const getStock = async () => {
+    try {
+      const stockResponse = await api.get(`/stock/${id}`);
+      const stockData = stockResponse.data;
+      if (stockData.length > 0) {
+        // Tomar el primer valor de current_stock en la respuesta
+        const firstStock = stockData[0].current_stock;
+        setElement(prevElement => ({ ...prevElement, stock: firstStock }));
+      } else {
+        // En caso de que no haya datos de stock en la respuesta
+        console.warn('No se encontraron datos de stock en la respuesta.');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleLayoutChange = () => {
     const isMobileLayout = window.innerWidth < 768;
     setIsVerticalLayout(!isMobileLayout);
@@ -115,9 +131,9 @@ function DetalleProducto() {
             <h1 className="product-details__title">Nombre: {element.name}</h1>
             <h1 className="product-details__description">Descripción: {element.description}</h1>
             <h1 className="product-details__category">
-              Categoría: {categorias.find(cat => cat.id === element.category)?.nombre}
+              Categoría: {element.category.name}
             </h1>
-            <h1 className="product-details__stock">Stock: 20</h1>
+            <h1 className="product-details__stock">Stock: {element.stock || 'No disponible'}</h1>
 
             <Button
               className="botonCarrito"
