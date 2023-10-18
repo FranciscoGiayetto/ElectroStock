@@ -54,12 +54,13 @@ const DataTable = ({ presupuestos }) => {
     try {
       // Realiza la solicitud POST para crear un nuevo presupuesto
       const response = await api.post('/budget/', newBudgetData);
-  
+      const newBudgetId = response.data.id;
+
       // Muestra la respuesta del servidor en la consola
       console.log(response.data);
   
       // Realiza una acción de redirección a '/tienda' o ajusta según sea necesario
-      navigate('/tienda');
+      navigate(`${newBudgetId}`);
     } catch (error) {
       // En caso de error, muestra el mensaje de error en la consola
       console.error(error);
