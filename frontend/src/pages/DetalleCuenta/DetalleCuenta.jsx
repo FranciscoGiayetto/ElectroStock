@@ -1,15 +1,13 @@
-import React, {useEffect, useState} from 'react';
-
+import React, { useEffect, useState } from 'react';
 import CardMyData from '../../components/CardMyData/CardData.jsx';
 import CardUser from '../../components/CardUser/CardUser.jsx';
 import CardPrestamos from '../../components/CardPrestamos/CardPrestamos.jsx';
-import './DetalleCuenta.css'
+import './DetalleCuenta.css';
 import useAxios from '../../utils/useAxios';
 import { useAuthStore } from '../../store/auth';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import axios from 'axios';
 import Stack from 'react-bootstrap/Stack';
 import Table from 'react-bootstrap/Table';
 import fotoPrueba2 from '../../assets/fotoPrueba2.jpg';
@@ -21,41 +19,39 @@ import {
   MDBCardHeader,
   MDBCardTitle,
   MDBCardText,
-  MDBBtn
+  MDBBtn,
 } from 'mdb-react-ui-kit';
-
-
-
+import Dropdown from 'react-bootstrap/Dropdown'; // Import React Bootstrap's Dropdown component
 
 function DetalleCuenta() {
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
-]);
+  ]);
   const [element, setElement] = useState([]);
   const [prestamos, setPrestamos] = useState([]);
   const api = useAxios();
   const userData = user();
   const id = userData.user_id;
 
-  console.log(id)
+  console.log(id);
 
   const getUser = async () => {
     try {
       const response = await api.get(`http://127.0.0.1:8000/api/users/${id}/`);
       let data = await response.data;
-      console.log(data)
+      console.log(data);
       setElement(data);
     } catch (error) {
       console.error(error);
     }
   };
-  
+
   const getPrestamos = async () => {
     try {
       const response = await api.get(`/prestamosHistorial/${id}/`);
       let data = await response.data;
-      console.log(data)
+      console.log(data);
       setPrestamos(data);
     } catch (error) {
       console.error(error);
@@ -63,30 +59,34 @@ function DetalleCuenta() {
   };
 
   useEffect(() => {
-    getUser()
-    getPrestamos()
-    }
-    ,[]
-  ) ;
-
+    getUser();
+    getPrestamos();
+  }, []);
 
   return (
-    <Container fluid style={{marginTop:'6rem', marginBottom:'5rem'}}>
+    <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
       <Row>
-        <Col style={{width:'62.5rem'}}>
-          <CardUser first_name={element.first_name} last_name={element.last_name} course={element.course}></CardUser>
+        <Col style={{ width: '62.5rem' }}>
+          <CardUser
+            first_name={element.first_name}
+            last_name={element.last_name}
+            course={element.course}
+          ></CardUser>
         </Col>
       </Row>
-      <Row style={{marginTop:'2rem'}}>
+      <Row style={{ marginTop: '2rem' }}>
         <Col>
-          <CardMyData email={element.email} username={element.username}></CardMyData>
+          <CardMyData
+            email={element.email}
+            username={element.username}
+          ></CardMyData>
         </Col>
       </Row>
-      <Row style={{marginTop:'2rem'}}>
+      <Row style={{ marginTop: '2rem' }}>
         <Col>
-        {prestamos.length > 0 ? (
-          prestamos.map((prestamos, index) => (
-            <CardPrestamos
+          {prestamos.length > 0 ? (
+            prestamos.map((prestamos, index) => (
+              <CardPrestamos
                 key={index}
                 status={prestamos.status}
                 quantity={prestamos.quantity}
@@ -95,14 +95,41 @@ function DetalleCuenta() {
                 specialties={prestamos.lender.specialties}
                 dateIn={prestamos.dateIn}
                 image={prestamos.image}
-              ></CardPrestamos>  
-          ))
-        ) : (
-          
-          <p>No hay prestamos</p>
-        )}
+              ></CardPrestamos>
+            ))
+          ) : (
+            <p>No hay prestamos</p>
+          )}
         </Col>
       </Row>
+
+      {/* Dropdown and Button */}
+      <div
+        className="dropdown-button-container"
+        style={{
+          position: 'absolute',
+          bottom: '1rem',
+          right: '1rem',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <Dropdown>
+          <Dropdown.Toggle variant="primary" id="dropdown-basic">
+            Dropdown
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item href="#/action-1">Action 1</Dropdown.Item>
+            <Dropdown.Item href="#/action-2">Action 2</Dropdown.Item>
+            <Dropdown.Item href="#/action-3">Action 3</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+
+        <Button variant="danger" style={{ marginLeft: '1rem' }}>
+          Red Button
+        </Button>
+      </div>
     </Container>
   );
 }

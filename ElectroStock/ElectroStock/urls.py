@@ -25,4 +25,3 @@ else:
         path('media/<path>', serve, {'document_root': settings.MEDIA_ROOT}),
     ]
 
-handler404 = 'ElectroStockApp.views.handler_404'

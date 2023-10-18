@@ -2,11 +2,8 @@ import csv
 from django.shortcuts import render
 from .models import *
 from django.contrib.auth.models import Group
-from django.http import Http404
 
-# custom 404 view
-def handler_404(request, exception):
-    return render(request, '404.html', status=404)
+
 
 def upload_csv(request):
     if request.method == 'POST' and request.FILES['csv_file']:

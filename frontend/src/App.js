@@ -23,7 +23,6 @@ import MyComponent from './pages/Prestamos/Prestamos';
 import { Link } from "react-router-dom";
 import Informe from "./pages/Informe/Informe";
 import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
-import ErrorPage from './ErrorPage';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,24 +32,24 @@ function App() {
   };
   return (
     <Router>
-      <MainWrapper> 
+      <MainWrapper>
         <div className="container">
           <div className="app">
-            <Routes>
-              <Route path="/private" element={<PrivateRoute><Private /></PrivateRoute>} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Register />} />
-              <Route path="/logout" element={<Logout />} />
+          <Routes>
+            <Route path="/private" element={<PrivateRoute><Private /></PrivateRoute>} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Register />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="*" element={<LayoutWrapper onSearch={handleSearch} searchQuery={searchQuery}/>} />
+          </Routes>
 
-              
-              <Route path="/*" element={<LayoutWrapper onSearch={handleSearch} searchQuery={searchQuery}/>} />
-            </Routes>
           </div>
         </div>
       </MainWrapper>
     </Router>
   );
 }
+
 
 function LayoutWrapper({ onSearch, searchQuery }) {
   return (
@@ -64,7 +63,6 @@ function LayoutWrapper({ onSearch, searchQuery }) {
         <Route path="/detalleCuenta" element={<PrivateRoute><DetalleCuenta /></PrivateRoute>} />
         <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
         <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
-        <Route path="/*" element={<ErrorPage />} /> {/* Add this line */}
       </Routes>
     </Layout>
   );
