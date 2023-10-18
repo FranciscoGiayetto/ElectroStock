@@ -99,18 +99,25 @@ function Carrito() {
             </p>
 
             {/* Renderizar los componentes CartCard */}
-            {carrito.map(item => (
-              <CartCard
-                key={item.id}
-                id={item.id}
-                name={item.box.name}
-                title={item.box.element.name}
-                image={item.box.element.image}
-                quantity={item.quantity}
-                handleDelete={handleDelete}
-                handleQuantityChange={handleQuantityChange}
-              />
-            ))}
+           
+
+        {carrito.length > 0 ? (
+          carrito.map(item => (
+            <CartCard
+              key={item.id}
+              id={item.id}
+              name={item.box.name}
+              title={item.box.element.name}
+              image={item.box.element.image}
+              quantity={item.quantity}
+              handleDelete={handleDelete}
+              handleQuantityChange={handleQuantityChange}
+            />
+          ))
+        ) : (
+          
+          <p className='text-center'>No hay productos. <br /> ¡Agregá tu proximo pedido! </p>
+        )}
 
             {/* Datetime Input */}
             <div className="mb-2 d-flex justify-content-between">
