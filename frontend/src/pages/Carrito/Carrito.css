@@ -17,6 +17,18 @@
   height: 2.5rem;
 }
 
+.btn-style:hover{
+  background-color: #528e97;
+}
+
+.date-style{
+  margin-right: 13rem;
+  border-color: #58A4B0;
+  border-radius: 0.3rem;
+  border-width: 0.1rem;
+  padding: 0.3rem;
+  cursor: text;
+}
 .text-center{
   text-align: center;
   margin-top: 2rem;

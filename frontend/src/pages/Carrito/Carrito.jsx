@@ -116,17 +116,18 @@ function Carrito() {
           ))
         ) : (
           
-          <p className='text-center'>No hay productos. <br /> ¡Agregá tu proximo pedido! </p>
+          <p className='text-center'>¡Agregá tu proximo pedido! </p>
         )}
 
             {/* Datetime Input */}
             <div className="mb-2 d-flex justify-content-between">
               <div>
-                <label style={{marginRight:'0.5rem'}} htmlFor="datetimeInput" className="form-label">
+                <label style={{marginRight:'0.3rem'}} htmlFor="datetimeInput" className="form-label">
                   Fecha de devolución:
                 </label>
+                
                 <input
-                  style={{marginRight:'13rem'}}
+                  className='date-style'
                   type="date"
                   name="dateInput"
                   min={new Date().toISOString().split('T')[0]}
