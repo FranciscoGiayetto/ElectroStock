@@ -687,7 +687,21 @@ def BudgetViewSet(request, budget_id=None):
         return Response(serializer.data)
 
     if request.method == "POST":
-        return Response({"message": "Notificaciones agregada"})
+         # Deserializa los datos de la solicitud POST
+        serializer = BudgetSerializer(data=request.data)
+        
+        # Verifica si los datos son válidos
+        if serializer.is_valid():
+            # Guarda el nuevo objeto Budget en la base de datos
+            serializer.save()
+            
+            # Devuelve una respuesta con los datos del objeto creado
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            # Devuelve una respuesta con errores de validación si los datos no son válidos
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     if request.method == "DELETE":
             
