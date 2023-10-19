@@ -71,10 +71,11 @@ class UsersSerializer(serializers.ModelSerializer):
 
 # Solo para la previsualizacion de los elementos en el ecommerce
 class ElementEcommerceSerializer(serializers.ModelSerializer):
+    current_stock = serializers.IntegerField()
     class Meta:
         model = models.Element
-        fields = ("id", "name", "description", "image", "category")
-        read_only_fields = ("id", "name", "description", "image", "category")
+        fields = ("id", "name", "description", "image", "category","current_stock")
+        read_only_fields = ("id", "name", "description", "image", "category","current_stock")
         queryset = models.Element.objects.filter(ecommerce=True)
 
 # Para ver y editar todos los datos del especialidad
