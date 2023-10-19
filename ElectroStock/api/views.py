@@ -591,7 +591,7 @@ def elementos_por_categoria(request, category_id):
             "name": elemento.name,
             "description": elemento.description,
             "image": elemento.image,
-            #"category": elemento.category.id,
+            "category": elemento.category,
             "current_stock": current_stock,
         }
 
