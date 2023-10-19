@@ -1,26 +1,10 @@
 import { Link } from 'react-router-dom';
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import useAxios from '../../utils/useAxios';
 
 export default function CardExample(props) {
-  const { id, title, image, api } = props;
-  const [stock, setStock] = useState({ current_stock: 0 }); // Inicializado con 0
-
-
-  useEffect(() => {
-    const fetchStock = async () => {
-      try {
-        const response = await api.get(`stock/${id}`);
-        setStock(response.data.stock);
-      } catch (error) {
-        console.error("Error al obtener la cantidad de stock", error);
-      }
-    }
-    fetchStock();
-  }, [id, api]);
-  
+  const { id, title, image, inStock } = props;
   return (
     <div className="container-fluid">
       <div className="row justify-content-end mb-3">
@@ -31,7 +15,11 @@ export default function CardExample(props) {
                 <div className="col-md-12 col-lg-3 mb-4 mb-lg-0">
                   <div className="bg-image rounded hover-zoom hover-overlay">
                     <Link to={`/detalleProducto/${id}`}>
-                      <Card.Img src={image} fluid className="w-100" />
+                      <Card.Img
+                        src={image}
+                        fluid
+                        className="w-100"
+                      />
                     </Link>
                     <div>
                       <div
@@ -40,19 +28,15 @@ export default function CardExample(props) {
                     </div>
                   </div>
                 </div>
-
+                
                 <div className="col border-sm-start-none border-start">
                   <div className="d-flex flex-row align-items-center mb-1">
                     <h4 className="mb-1 me-1">{title}</h4>
-                    <span className={`text-${stock.current_stock > 0 ? 'success' : 'danger'}`}>
-                      {stock.current_stock > 0 ? `Stock Disponible (${stock.current_stock} disponibles)` : 'Stock No Disponible'}
-                    </span>
-
+                    <span className="text-danger"></span>
                   </div>
-                  <div className={`text-${stock.current_stock > 0 ? 'success' : 'danger'}`}>
-                    {stock.current_stock > 0 ? `Stock Disponible (${stock.current_stock} disponibles)` : 'Stock No Disponible'}
-
-                  </div>
+                  <h6 className={inStock ?   "text-success" : "text-danger"}>
+        {inStock ? "Stock Disponible" : "Stock No Disponible"}
+      </h6>
                   <div className="d-flex flex-column mt-4">
                     <Link to={`/detalleProducto/${id}`}>
                       <Button
@@ -72,7 +56,7 @@ export default function CardExample(props) {
                         style={{
                           borderColor: '#58A4B0',
                           color: '#58A4B0',
-                          backgroundColor: 'white',
+                          backgroundColor: 'white', // Color de fondo en estado normal
                         }}
                       >
                         Ver Más

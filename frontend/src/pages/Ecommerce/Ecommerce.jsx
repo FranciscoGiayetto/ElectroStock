@@ -39,7 +39,7 @@ function Ecommerce({ allItems }) {
     setVisibleCards(prevVisibleCards => [...prevVisibleCards, ...nextCards]);
   };
 
-  const handleButtonVisibility = () => {
+  const handleButtonVisibility = () =>  {
     if (filteredCards.length === visibleCards.length && visibleCards.length !== 0) {
       setShowLoadMoreButton(false);
     } else {
@@ -48,11 +48,11 @@ function Ecommerce({ allItems }) {
   };
 
   const getElement = async () => {
-    const baseUrl = 'http://127.0.0.1:8000';
     const endpoint = allItems ? 'elementsEcommerce/' : `filtroCategoria/${encodeURIComponent(name)}/`;
 
     const response = await api.get(`${endpoint}`);
     let data = await response.data;
+    console.log(data)
 
     // Reemplazar las imágenes nulas o vacías por la imagen por defecto
     const updatedData = data.map(card => ({
@@ -96,7 +96,7 @@ function Ecommerce({ allItems }) {
           ) : (
             visibleCards.map((card, index) => (
               <div key={index}>
-                <CardExample title={card.name} text={card.description} image={card.image} id={card.id} />
+    <CardExample title={card.name} text={card.description} image={card.image} id={card.id} inStock={card.inStock} />
               </div>
             ))
           )}
@@ -114,6 +114,5 @@ function Ecommerce({ allItems }) {
     </Container>
   );
 };
-
 
 export default Ecommerce;
