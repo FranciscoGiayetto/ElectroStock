@@ -19,10 +19,10 @@ import PrivateRoute from './layouts/PrivateRoute';
 import Logout from './pages/LoginNuevo/logout';
 import Register from './pages/LoginNuevo/register';
 import Private from './pages/LoginNuevo/private';
-import MyComponent from './pages/Prestamos/Prestamos';
+import Prestamos from './pages/Prestamos/Prestamos';
 import { Link } from "react-router-dom";
-import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
 import Informes from "./pages/Informes/Informes";
+import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
 
 import Presupuestos from "./pages/Presupuestos/Presupuestos";
 import DetallePresupuesto from "./pages/DetallePresupuesto/DetallePresupuesto"
@@ -64,6 +64,10 @@ function LayoutWrapper({ onSearch, searchQuery }) {
   <Route path="/presupuesto" element={<PrivateRoute><Presupuestos /></PrivateRoute>} />
   <Route path="/presupuesto/:id" element={<PrivateRoute><DetallePresupuesto /></PrivateRoute>} />
   <Route path="/informe" element={<PrivateRoute><Informes /></PrivateRoute>} />
+  <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
+  <Route path="/Prestamos" element={<PrivateRoute>
+        <Prestamos />
+     </PrivateRoute>} />
 </Routes>
 
     </Layout>
