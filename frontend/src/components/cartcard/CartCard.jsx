@@ -1,5 +1,6 @@
 import React from 'react';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import './CartCard.css';
 import {
   MDBCard,
   MDBCardBody,
@@ -35,6 +36,12 @@ export default function CartCard(props) {
 
           <MDBCol md="3" lg="3" xl="6">
             <p className="lead fw-normal mb-2">{title}</p>
+            <MDBInput
+            placeholder='Añadir comentario'
+            className='input-style'>
+            
+            </MDBInput>
+            
           </MDBCol>
 
           <MDBCol md="3" lg="3" xl="2"
@@ -47,6 +54,7 @@ export default function CartCard(props) {
               onChange={handleInputChange}
               type="number"
               size="sm"
+              className='quantity-style'
             />
           </MDBCol>
 
