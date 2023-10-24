@@ -96,17 +96,7 @@ function Ecommerce({ allItems }) {
           ) : (
             visibleCards.map((card, index) => (
               <div key={index}>
-    <CardExample
-  id={card.id}
-  title={card.title}
-  image={card.image}
-  current_stock={card.current_stock}
-  element={element} // Pasa element como propiedad
-  userData={userData} // Pasa userData como propiedad
-  api={api} // Pasa api como propiedad
-  setPostRes={setPostRes} // Pasa setPostRes como propiedad
-/>
-
+    <CardExample title={card.name} text={card.description} image={card.image} id={card.id} current_stock={card.current_stock} />
               </div>
             ))
           )}
