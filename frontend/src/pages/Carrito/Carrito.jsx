@@ -99,7 +99,6 @@ function Carrito() {
             </p>
 
             {/* Renderizar los componentes CartCard */}
-           
 
         {carrito.length > 0 ? (
           carrito.map(item => (
