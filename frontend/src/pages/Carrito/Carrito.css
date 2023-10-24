@@ -1,19 +1,37 @@
-.container-bg{
-  width: 700px;
+.container-bg {
+  width: 43.75rem; 
   height: auto;
-  margin: 50px;
-  margin-top: 100px;
-  border-radius: 10px;
-  padding-top: 15px;
-  padding-bottom: 20px;
+  margin: 3.125rem;
+  margin-top: 6.25rem;
+  border-radius: 0.625rem;
+  padding-top: 0.9375rem; 
+  padding-bottom: 1.25rem; 
   background-color: white;
 }
 
-.div-btn{
-  display: table; text-align: center;
+.btn-style{
+  font-size: 0.938rem;
+  background-color: #58A4B0;
+  border: none;
+  width: 9rem;
+  height: 2.5rem;
 }
 
-.boton{
-  position: absolute;
-  bottom: 0;
+.btn-style:hover{
+  background-color: #528e97;
+}
+
+.date-style{
+  margin-right: 13rem;
+  border-color: #58A4B0;
+  border-radius: 0.3rem;
+  border-width: 0.1rem;
+  padding: 0.3rem;
+  cursor: text;
+}
+.text-center{
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  opacity: 50%;
 }

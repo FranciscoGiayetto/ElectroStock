@@ -699,7 +699,6 @@ def BudgetLogViewSet(request, budget_id):
     if request.method == "DELETE":
             try:
                 print(request.data)
-              
                                 
                 queryset = models.BudgetLog.objects.get(id=budget_id)
                 queryset.delete()
@@ -756,6 +755,4 @@ def BudgetViewSet(request, budget_id=None):
             print(serializer.data)
             return Response(serializer.data)
 
-    return Response(status=405)
-
-    
+    return Response(status=405)   
