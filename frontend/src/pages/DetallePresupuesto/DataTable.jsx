@@ -273,7 +273,7 @@ const DataTable = ({ presupuesto, onUpdate }) => {
             </tr>
           </thead>
           <tbody>
-            {budgetLogs.map((item, index) => (
+            {filteredPresupuesto.map((item, index) => (
               <tr key={item.id} className={getClassByEstado(item.status)}>
                 <td>{index + 1}</td>
                 <td>
