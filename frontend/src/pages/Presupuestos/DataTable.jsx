@@ -6,8 +6,10 @@ import {
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
-
+import { HiPlusCircle } from "react-icons/hi2";
+import useAxios from '../../utils/useAxios';
 const DataTable = ({ presupuestos }) => {
+  let api = useAxios();
   const navigate = useNavigate();
   const handleRowClick = (key) => {
     navigate(`${key}`);
@@ -16,6 +18,7 @@ const DataTable = ({ presupuestos }) => {
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(0);
   const [sortColumn, setSortColumn] = useState(null);
+  const [postRes, setPostRes] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
 
 
@@ -26,6 +29,44 @@ const DataTable = ({ presupuestos }) => {
       return "text-success"; // Verde
     }
     return ""; // El color de texto predeterminado
+  };
+
+
+  const handleNewBudget = async () => {
+
+    const maxNumber = presupuestos.reduce((max, presupuesto) => {
+      const name = presupuesto.name;
+      if (name.startsWith("Presupuesto Sin Nombre ")) {
+        const number = parseInt(name.replace("Presupuesto Sin Nombre ", ""), 10);
+        return !isNaN(number) && number > max ? number : max;
+      }
+      return max;
+    }, 0);
+
+    const nextNum = maxNumber + 1;
+    // Define los datos del nuevo presupuesto
+    const newBudgetData = {
+      name: `Presupuesto Sin Nombre ${nextNum}`,
+      status: "PROGRESO", // O "COMPLETADO" según sea necesario
+      speciality: 1, // Reemplaza 'specialityId' con el ID de la especialidad correspondiente
+    };
+  
+    try {
+      // Realiza la solicitud POST para crear un nuevo presupuesto
+      const response = await api.post('/budget/', newBudgetData);
+      const newBudgetId = response.data.id;
+
+      // Muestra la respuesta del servidor en la consola
+      console.log(response.data);
+  
+      // Realiza una acción de redirección a '/tienda' o ajusta según sea necesario
+      navigate(`${newBudgetId}`);
+    } catch (error) {
+      // En caso de error, muestra el mensaje de error en la consola
+      console.error(error);
+  
+      // Puedes manejar el error y mostrar un mensaje de error al usuario si es necesario
+    }
   };
 
   const handlePageClick = ({ selected }) => {
@@ -67,8 +108,14 @@ const DataTable = ({ presupuestos }) => {
   };
 
   return (
-    <MDBCard className="my-4 p-3">
-      <MDBCardHeader className="bg-primary text-white">Presupuestos</MDBCardHeader>
+    <MDBCard className="my-4 p-3" >
+     <MDBCardHeader style={{fontSize:"2rem"}} className="bg-primary text-white d-flex justify-content-between align-items-center">
+  <span>Presupuestos</span>
+  <div className="hover-scale" onClick={handleNewBudget}>
+  <HiPlusCircle />
+  </div>
+</MDBCardHeader>
+
       <Table responsive striped bordered hover className="mt-3">
         <thead>
           <tr>
