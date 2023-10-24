@@ -53,7 +53,11 @@ function DetalleProducto() {
     try {
       const stockResponse = await api.get(`/stock/${id}/`); 
       console.log(stockResponse);
-  
+    }
+    catch (error) {
+      console.error(error);
+    }
+  }
   const getStock = async () => {
     try {
       const stockResponse = await api.get(`/stock/${id}`);
