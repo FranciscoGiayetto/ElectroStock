@@ -24,6 +24,8 @@ import Col from 'react-bootstrap/Col';
 import './LayoutComponents.css';
 import itsv from '../../assets/itsv.png';
 import { useNavigate } from 'react-router-dom';
+import { useMediaQuery } from '@mui/material';
+
 
 const { Header, Sider } = Layout;
 
@@ -38,30 +40,43 @@ const LayoutComponents = ({ onSearch }) => {
 
   useEffect(() => {
     getElement();
+   
   }, []);
 
   useEffect(() => {
     window.addEventListener("beforeinstallprompt", (event) => {
+      // Prevent the mini-infobar from appearing on mobile.
       event.preventDefault();
       console.log("👍", "beforeinstallprompt", event);
+      // Stash the event so it can be triggered later.
       window.deferredPrompt = event;
+      // Remove the 'hidden' class from the install button container.
       setIsReadyForInstall(true);
     });
   }, []);
 
-  async function downloadApp() {
-    console.log("👍", "butInstall-clicked");
-    const promptEvent = window.deferredPrompt;
-    if (!promptEvent) {
-      console.log("oops, no prompt event guardado en window");
-      return;
-    }
-    promptEvent.prompt();
-    const result = await promptEvent.userChoice;
-    console.log("👍", "userChoice", result);
-    window.deferredPrompt = null;
-    setIsReadyForInstall(false);
+async function downloadApp() {
+  console.log("👍", "butInstall-clicked");
+  const promptEvent = window.deferredPrompt;
+  if (!promptEvent) {
+    // The deferred prompt isn't available.
+    console.log("oops, no prompt event guardado en window");
+    return;
   }
+  // Show the install prompt.
+  promptEvent.prompt();
+  // Log the result
+  const result = await promptEvent.userChoice;
+  console.log("👍", "userChoice", result);
+  // Reset the deferred prompt variable, since
+  // prompt() can only be called once.
+  window.deferredPrompt = null;
+  // Hide the install button.
+  setIsReadyForInstall(false);
+}
+const isSmallScreen = useMediaQuery('(max-width: 1100px)');
+
+
 
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
@@ -84,6 +99,7 @@ const LayoutComponents = ({ onSearch }) => {
     const searchQuery = event.target.elements.searchBar.value;
     onSearch(searchQuery);
     navigate(`/tienda?searchQuery=${searchQuery}`);
+   // console.log(searchQuery)  
   };
 
   const handleToggleSidebar = () => {
@@ -92,8 +108,16 @@ const LayoutComponents = ({ onSearch }) => {
 
   return (
     <div>
-      <Sider trigger={null} collapsible collapsed={collapsed} className='sidebar'>
-        <Menu theme="light" mode="inline" style={{ background: 'white' }}>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        collapsedWidth={0}
+        className='sidebar'
+      >
+
+        {!collapsed && (
+          <Menu theme="light" mode="inline" style={{ background: 'white' }}>
           <Menu.Item
             key="0"
             icon={collapsed ? <MenuIcon style={{ fontSize: '20px' }} /> : <ArrowBackIosIcon style={{ fontSize: '17px' }} />}
@@ -126,68 +150,99 @@ const LayoutComponents = ({ onSearch }) => {
             Cerrar sesión
           </Menu.Item>
         </Menu>
+        )}
       </Sider>
 
+      
       <Header className='navbar'>
-        <Container fluid>
-          <Row>
-            {/* Image */}
-            <Col style={{ marginLeft: '1.5rem' }}>
-              <a href="/">
-                <img src={itsv} alt="itsv" className='logo-img' />
-              </a>
-            </Col>
-
-            {/* Searchbar */}
+          <Container fluid>
+            <Row>
             <Col>
-              <form onSubmit={handleSearch} className='div-form'>
-                <Autocomplete
-                  className='search-input'
-                  freeSolo
-                  style={{ width: '40rem' }}
-                  fullWidth
-                  options={myOptions}
-                  getOptionLabel={(option) => option}
-                  value={selectedOption}
-                  onChange={(event, newValue) => setSelectedOption(newValue)}
-                  renderInput={(params) => (
-                    <TextField
-                      className='search-input'
-                      {...params}
-                      variant="outlined"
-                      name='searchBar'
-                      label="Buscar productos"
-                      InputLabelProps={{
-                        style: { color: 'rgba(235, 235, 235, 0.5)' }
-                      }}
-                    />
-                  )}
-                />
-                <Button variant="primary" type="submit" className='button' style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                  <SearchRoundedIcon />
-                </Button>
-              </form>
-            </Col>
+    <Button
+      variant="primary"
+      type="submit"
+      className='button'
+      onClick={handleToggleSidebar}
+    >
+      {collapsed ? (
+        <MenuUnfoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+      ) : (
+        <MenuFoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+      )}
+    </Button>
+  </Col>
 
-            {/* Buttons */}
-            <Col style={{ marginLeft: '8rem' }}>
-              <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/carrito' }}>
-                <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-              </Button>
-            </Col>
-            <Col style={{ marginLeft: '0' }}>
-              <Button variant="primary" type="submit" className='button' >
-                <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-              </Button>
-            </Col>
-            <Col style={{ marginLeft: '0rem' }}>
-              <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/detalleCuenta' }}>
-                <AccountCircleRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      </Header>
+           
+          
+              {/* Image */}
+              <Col style={{ marginLeft:'1.5rem' }}>  
+              {!isSmallScreen && (
+              
+                <a href="/">
+                  <img src={itsv} alt="itsv" className='logo-img' />
+                </a>   
+              )}           
+              </Col>
+              
+              {/* Searchbar */}
+              <Col >            
+              <form onSubmit={handleSearch} className={`div-form ${isSmallScreen ? 'search-small' : 'search-large'}`}>                
+                  <Autocomplete
+                      className={`search-input ${isSmallScreen ? 'search-small' : 'search-large'}`}
+                    freeSolo
+                    options={myOptions}
+                    getOptionLabel={(option) => option}
+                    value={selectedOption}
+                    onChange={(event, newValue) => setSelectedOption(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        className='search-input'
+                        {...params}
+                        variant="outlined"
+                        name='searchBar'
+                        label="Buscar productos"
+                        InputLabelProps={{
+                          style: { color: 'rgba(235, 235, 235, 0.5)'}  
+                        }}
+                      />
+
+                    )}
+                  />
+                
+                  <Button variant="primary" type="submit" className='button' style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                    <SearchRoundedIcon />
+                  </Button>
+
+                </form> 
+              </Col>
+
+              {/* Buttons */}
+              <Col>
+                {!isSmallScreen && (
+                  <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/carrito' }}>
+                    <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                  </Button>
+                )}
+              </Col>
+
+              <Col style={{ marginLeft:'0'}}>
+              {!isSmallScreen && (
+                <Button variant="primary" type="submit" className='button' >
+                  <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                </Button>
+              )}
+              </Col>
+              <Col style={{ marginLeft:'0rem'}}>   
+              {!isSmallScreen && (
+                <Button variant="primary" type="submit" className='button'  onClick={() => { window.location.href = '/detalleCuenta' }}>
+                  <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
+                </Button>
+              )}
+              </Col>          
+            </Row>
+          </Container>
+        </Header>
+      
     </div>
   );
 };
