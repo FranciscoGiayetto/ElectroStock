@@ -247,3 +247,9 @@ class BudgetLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.BudgetLog
         fields = "__all__"
+
+class BudgetLogCreateSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = models.BudgetLog
+        fields = "__all__"

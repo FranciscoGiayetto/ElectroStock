@@ -720,3 +720,7 @@ def BudgetViewSet(request, budget_id=None):
     return Response(status=405)
 
     
+
+class BudgetLogCreateView(generics.CreateAPIView):
+    queryset = models.BudgetLog.objects.all()
+    serializer_class = BudgetLogCreateSerializer    

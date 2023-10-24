@@ -6,6 +6,7 @@ import {
 } from 'mdb-react-ui-kit';
 import useAxios from '../../utils/useAxios.js';
 import { useParams, useNavigate } from 'react-router-dom';
+import { HiPlusCircle } from "react-icons/hi2";
 
 const DataTable = ({ presupuesto, onUpdate }) => {
   const [budgetStatus,  setBudgetStatus] = useState("");
@@ -14,6 +15,8 @@ const DataTable = ({ presupuesto, onUpdate }) => {
   const [editingRows, setEditingRows] = useState({});
   const [editedValues, setEditedValues] = useState({});
   const [isEditingBudgetName, setIsEditingBudgetName] = useState(false);
+  const [isAddingNewItem, setIsAddingNewItem] = useState(false);
+
   const nameInputRef = useRef(null);
 
   useEffect(() => {
@@ -117,8 +120,52 @@ const DataTable = ({ presupuesto, onUpdate }) => {
       console.error(error);
     }
   };
-
-
+  const handleNewItem = () => {
+    // Comprueba si ya estás en modo de edición del nuevo registro
+    if (!isAddingNewItem) {
+      // Habilita el modo de edición para el nuevo registro
+      setIsAddingNewItem(true);
+    }
+  };
+  
+  const handleConfirmNewItem = async () => {
+    const newLog = {
+      ...editedValues['new'],
+      budget: presupuesto.budget_details.id, // Agrega el presupuesto actual
+      status: "PENDIENTE", // Establece el estado como "PENDIENTE"
+    };
+  
+    // Valida los campos del nuevo registro según el modelo de Django
+    if (!newLog.name || newLog.name.trim() === '') {
+      console.error("El campo 'Nombre' es obligatorio.");
+      return;
+    }
+  
+    if (isNaN(newLog.price) || parseFloat(newLog.price) < 0) {
+      console.error("El campo 'Precio' debe ser un número válido mayor o igual a cero.");
+      return;
+    }
+  
+    if (isNaN(newLog.quantity) || parseInt(newLog.quantity) <= 0) {
+      console.error("El campo 'Cantidad' debe ser un número válido mayor a cero.");
+      return;
+    }
+  
+    // Luego, si todos los campos son válidos, procedes a realizar la solicitud POST
+    try {
+      const response = await api.post("/budgetlog/create/", newLog);
+      const createdItem = response.data;
+  
+      setBudgetLogs([...budgetLogs, createdItem]);
+      setIsAddingNewItem(false);
+      setEditedValues({ ...editedValues, 'new': {} });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  
+  
   const handleItemDelete = async (log_id) => {
     try {
       await api.delete(`/budgetlog/${log_id}`);
@@ -155,55 +202,52 @@ const DataTable = ({ presupuesto, onUpdate }) => {
           overflowY: 'auto',
         }}
       >
-<MDBCardHeader className="bg-primary text-white">
-  <div style={{ display: 'flex', alignItems: 'center' }}>
-    <div>
-      Nombre del Presupuesto :  
-    </div>
-    {isEditingBudgetName ? (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <input
-          ref={nameInputRef}
-          type="text"
-          value={budgetName}
-          onChange={(e) => setBudgetName(e.target.value)}
-          onBlur={saveBudgetName}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              saveBudgetName();
-            }
-          }}
-          style={{
-            border: 'none',
-            outline: 'none',
-            background: 'transparent',
-           
-            color: 'white',
-            fontSize: '1rem',
-            padding: '0.25rem 0.5rem',
-          }}
-        />
-      </div>
-    ) : (
-      <div onDoubleClick={activateBudgetNameEditing}>
-        {budgetName}
-      </div>
-    )}
-    <button
-      onClick={handleBudgetStatusChange}
-      className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
-      style={{
-        marginLeft: 'auto',
-      }}
-    >
-      {budgetStatus === 'PROGRESO' ? 'PROGRESO' : 'COMPLETADO'}
-    </button>
-  </div>
-</MDBCardHeader>
+        <MDBCardHeader className="bg-primary text-white">
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div>
+              Nombre del Presupuesto :
+            </div>
+            {isEditingBudgetName ? (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <input
+                  ref={nameInputRef}
+                  type="text"
+                  value={budgetName}
+                  onChange={(e) => setBudgetName(e.target.value)}
+                  onBlur={saveBudgetName}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      saveBudgetName();
+                    }
+                  }}
+                  style={{
+                    border: 'none',
+                    outline: 'none',
+                    background: 'transparent',
+                    color: 'white',
+                    fontSize: '1rem',
+                    padding: '0.25rem 0.5rem',
+                  }}
+                />
+              </div>
+            ) : (
+              <div onDoubleClick={activateBudgetNameEditing}>
+                {budgetName}
+              </div>
+            )}
+            <button
+              onClick={handleBudgetStatusChange}
+              className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
+              style={{
+                marginLeft: 'auto',
+              }}
+            >
+              {budgetStatus === 'PROGRESO' ? 'PROGRESO' : 'COMPLETADO'}
+            </button>
+          </div>
+        </MDBCardHeader>
 
-
-  
         <div className="text-center mb-3" style={{ paddingTop: '1rem' }}>
           <input
             type="text"
@@ -212,8 +256,11 @@ const DataTable = ({ presupuesto, onUpdate }) => {
             onChange={handleFilterChange}
             style={{ width: '60%', display: 'inline-block' }}
           />
+          <div className="hover-scale" onClick={handleNewItem}>
+            <HiPlusCircle style={{ fontSize: "2rem" }} />
+          </div>
         </div>
-  
+
         <Table responsive striped bordered hover className="mt-3">
           <thead>
             <tr>
@@ -226,14 +273,14 @@ const DataTable = ({ presupuesto, onUpdate }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredPresupuesto.map((item, index) => (
-              <tr key={index} className={getClassByEstado(item.status)}>
+            {budgetLogs.map((item, index) => (
+              <tr key={item.id} className={getClassByEstado(item.status)}>
                 <td>{index + 1}</td>
                 <td>
                   {editingRows[item.id] ? (
                     <input
                       type="text"
-                      style={{maxWidth:"200px"}}
+                      style={{ maxWidth: "200px" }}
                       className="form-control"
                       value={editedValues[item.id]?.name || item.name}
                       onChange={(e) =>
@@ -244,12 +291,12 @@ const DataTable = ({ presupuesto, onUpdate }) => {
                     item.name
                   )}
                 </td>
-                    
+
                 <td>
-                {editingRows[item.id] ? (
+                  {editingRows[item.id] ? (
                     <input
                       type="number"
-                      style={{maxWidth:"150px"}}
+                      style={{ maxWidth: "150px" }}
                       className="form-control"
                       value={editedValues[item.id]?.price || item.price}
                       onChange={(e) =>
@@ -259,14 +306,13 @@ const DataTable = ({ presupuesto, onUpdate }) => {
                   ) : (
                     item.price
                   )}
-                
                 </td>
                 <td>
-                {editingRows[item.id] ? (
+                  {editingRows[item.id] ? (
                     <input
                       type="number"
                       className="form-control"
-                      style={{maxWidth:"100px"}}
+                      style={{ maxWidth: "100px" }}
                       value={editedValues[item.id]?.quantity || item.quantity}
                       onChange={(e) =>
                         handleItemInputChange(item.id, "quantity", e.target.value)
@@ -275,8 +321,6 @@ const DataTable = ({ presupuesto, onUpdate }) => {
                   ) : (
                     item.quantity
                   )}
-                
-                
                 </td>
                 <td>{(item.quantity * parseFloat(item.price)).toFixed(2)}</td>
                 <td>
@@ -310,6 +354,54 @@ const DataTable = ({ presupuesto, onUpdate }) => {
                 </td>
               </tr>
             ))}
+
+            {isAddingNewItem && (
+              <tr className="table-info">
+                <td>{budgetLogs.length + 1}</td>
+                <td>
+                  <input
+                    type="text"
+                    style={{ maxWidth: "200px" }}
+                    className="form-control"
+                    value={editedValues['new']?.name || ""}
+                    onChange={(e) =>
+                      handleItemInputChange('new', "name", e.target.value)
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    style={{ maxWidth: "150px" }}
+                    className="form-control"
+                    value={editedValues['new']?.price || ""}
+                    onChange={(e) =>
+                      handleItemInputChange('new', "price", e.target.value)
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    style={{ maxWidth: "100px" }}
+                    className="form-control"
+                    value={editedValues['new']?.quantity || ""}
+                    onChange={(e) =>
+                      handleItemInputChange('new', "quantity", e.target.value)
+                    }
+                  />
+                </td>
+                <td>{/* Cálculo del total */}</td>
+                <td>
+                  <button
+                    onClick={handleConfirmNewItem}
+                    className="btn btn-success btn-sm"
+                  >
+                    Confirmar nuevo log
+                  </button>
+                </td>
+              </tr>
+            )}
           </tbody>
           <tfoot className="sticky-tfoot">
             <tr>
@@ -323,6 +415,6 @@ const DataTable = ({ presupuesto, onUpdate }) => {
       </MDBCard>
     </div>
   );
-  };
+};
 
 export default DataTable;
