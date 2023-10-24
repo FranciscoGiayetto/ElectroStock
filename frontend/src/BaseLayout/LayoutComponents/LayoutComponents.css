@@ -97,8 +97,8 @@ html, body {
 }
 /* Estilo para pantallas pequeñas */
 .search-small {
-  width: 100%; /* El componente de búsqueda ocupa todo el ancho disponible */
-  max-width: 100%; /* Se ajusta al ancho de su contenedor */
+  width: 10rem; /* El componente de búsqueda ocupa todo el ancho disponible */
+  max-width: 10rem; /* Se ajusta al ancho de su contenedor */
   /* Añade estilos adicionales para hacer la barra más pequeña en pantallas pequeñas */
   padding: 5px; /* Puedes ajustar este valor según tus preferencias */
   font-size: 14px; /* Tamaño de fuente más pequeño */

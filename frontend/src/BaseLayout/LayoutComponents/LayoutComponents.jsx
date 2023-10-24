@@ -188,10 +188,8 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               <Col >            
               <form onSubmit={handleSearch} className={`div-form ${isSmallScreen ? 'search-small' : 'search-large'}`}>                
                   <Autocomplete
-                    className='search-input'
+                      className={`search-input ${isSmallScreen ? 'search-small' : 'search-large'}`}
                     freeSolo
-                    style={{ width:'40rem' }}
-                    fullWidth
                     options={myOptions}
                     getOptionLabel={(option) => option}
                     value={selectedOption}
