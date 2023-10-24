@@ -4,8 +4,6 @@ import './Carrito.css';
 import CartCard from '../../components/cartcard/CartCard';
 import Button from 'react-bootstrap/Button';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 
 import {
   MDBCol,
@@ -59,6 +57,23 @@ function Carrito() {
     }
   };
 
+  const handleCommentChange = (id, newComment) => {
+    console.log(`Changing comments for item ${id} to ${newComment}`);
+    // Find the item in the shopping cart and update its comments
+    const updatedCart = carrito.map(item => {
+      if (item.id === id) {
+        return {
+          ...item,
+          comments: newComment,
+        };
+      }
+      return item;
+    });
+  
+    setCarrito(updatedCart);
+  };
+
+
   const handleQuantityChange = (id, newQuantity) => {
     console.log(`Changing quantity for item ${id} to ${newQuantity}`);
     // Find the item in the shopping cart and update its quantity
@@ -74,19 +89,37 @@ function Carrito() {
 
     setCarrito(updatedCart);
   };
-
   const handleContinue = async () => {
-    let body = {  
-      dateOut: dateInputData
-    };
     try {
-      const response = await api.put(`/logPost/${userData.user_id}/`, body);
-      console.log(response.data.response);
-      navigate('/'); // Navega a "/"
+      for (const item of carrito) {
+        console.log(item)
+        // Crea un objeto con las nuevas cantidad y observaciones
+        const updateData = {
+          quantity: item.quantity,  // Reemplaza con la nueva cantidad
+          observation: item.observation,  // Reemplaza con las observaciones del usuario
+        };
+        console.log(updateData)
+        // Realiza una solicitud PUT para actualizar el registro en el servidor
+        await api.put(`/logCantidad/${item.id}/`, updateData);
+
+      }
+  
+      try {
+        const response = await api.put(`/logPost/${userData.user_id}/`, {dateOut: dateInputData});
+        console.log(response.data.response);
+        navigate('/'); // Navega a "/"
+      } catch (error) {
+        console.log(error);
+      }
+      
+      console.log('Actualizaciones exitosas');
+      navigate('/');
     } catch (error) {
-      console.log(error);
+      console.error('Error al actualizar registros:', error);
     }
-  }
+  };
+  
+  
 
   return (
     <section className="container-bg" style={{fontFamily: 'Roboto, sans-serif'}}>
@@ -111,6 +144,7 @@ function Carrito() {
               quantity={item.quantity}
               handleDelete={handleDelete}
               handleQuantityChange={handleQuantityChange}
+              handleCommentChange={handleCommentChange}
             />
           ))
         ) : (

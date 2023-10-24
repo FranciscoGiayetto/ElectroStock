@@ -797,9 +797,10 @@ def update_log_quantity(request, log_id):
         elif request.method == "PUT":
             # Obtener la nueva cantidad desde la solicitud
             new_quantity = request.data.get("quantity")
-
+            new_observation = request.data.get("observation")
             # Actualizar la cantidad del registro Log
             log.quantity = new_quantity
+            log.observation = new_observation
             log.save()
 
             # Devolver una respuesta exitosa
