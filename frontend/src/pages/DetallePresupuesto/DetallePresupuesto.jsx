@@ -10,7 +10,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import DataTable from "./DataTable.jsx"
 import { useParams, useNavigate } from 'react-router-dom';
-
+import Link from 'antd/es/typography/Link.js';
 function DetallePresupuesto() {
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
@@ -47,6 +47,7 @@ function DetallePresupuesto() {
 
   return (
     <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
+      <Link href='/presupuesto'>Volver</Link>
       <Row>
         <Col style={{ width: '62.5rem' }}>
           <DataTable presupuesto={presupuesto} onUpdate={updateData} />

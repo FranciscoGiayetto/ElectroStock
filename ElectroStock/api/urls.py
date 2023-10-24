@@ -26,6 +26,7 @@ urlpatterns = [
     path('categories_por_especialidad/<str:nombre_especialidad>/', categories_por_especialidad, name='categories_por_especialidad'),
     path("logPost/<int:user_id>/", CambioLog, name="logPost"),
     path("budgetlog/<int:budget_id>/", BudgetLogViewSet, name="budgetlog"),
+    path('budgetlog/create/', BudgetLogCreateView.as_view(), name='create-budget-log'),
     path("budget/", BudgetViewSet, name="budgetList"),
     path("budget/<int:budget_id>/", BudgetViewSet, name="budgetDetail"),
     path("budgetSpeciality/<str:speciality_name>/", BudgetSpecialityViewSet, name="budgetSpeciality"),
