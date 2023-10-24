@@ -96,7 +96,7 @@ function Ecommerce({ allItems }) {
           ) : (
             visibleCards.map((card, index) => (
               <div key={index}>
-    <CardExample title={card.name} text={card.description} image={card.image} id={card.id} inStock={card.inStock} />
+    <CardExample title={card.name} text={card.description} image={card.image} id={card.id} current_stock={card.current_stock} />
               </div>
             ))
           )}
