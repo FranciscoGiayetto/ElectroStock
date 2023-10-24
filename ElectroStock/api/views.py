@@ -14,6 +14,54 @@ from django.contrib.auth import get_user_model, get_user
 from django.contrib.auth.models import Group
 from rest_framework.decorators import api_view
 import json
+
+
+# View para tomar el stock actual segun el id que mandas por la url
+@api_view(["GET", "POST"])
+def get_stock(request, element_id):
+    if request.method == "GET":
+        if element_id is not None:
+            boxes = models.Box.objects.filter(element__id=element_id)
+            box_ids = [box.id for box in boxes]
+
+            total_com = models.Log.objects.filter(
+                box__id__in=box_ids, status="COM"
+            ).aggregate(total=Sum("quantity"))["total"]
+            total_ped = models.Log.objects.filter(
+                box__id__in=box_ids, status="PED"
+            ).aggregate(total=Sum("quantity"))["total"]
+            total_rot = models.Log.objects.filter(
+                box__id__in=box_ids, status="ROT"
+            ).aggregate(total=Sum("quantity"))["total"]
+            total_ap = models.Log.objects.filter(
+                box__id__in=box_ids, status="AP"
+            ).aggregate(total=Sum("quantity"))["total"]
+
+            if total_com is None:
+                total_com = 0
+            if total_ped is None:
+                total_ped = 0
+            if total_ap is None:
+                total_ap = 0
+            if total_rot is None:
+                total_rot = 0
+
+            current_stock = total_com - total_ped - total_ap - total_rot
+
+            queryset = models.Log.objects.filter(box__id__in=box_ids, status="COM")
+            queryset = queryset.annotate(
+                current_stock=Value(current_stock, output_field=IntegerField())
+            )
+
+            serializer = StockSerializer(queryset, many=True)  # Serializar los datos
+
+            return Response(serializer.data)  # Devolver la respuesta serializada
+
+        return Response(
+            []
+        )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
+
+
 class ElementsViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.all()
     permission_classes = [permissions.AllowAny]
@@ -48,6 +96,49 @@ class ProductosEcommerceAPIView(viewsets.ModelViewSet):
     queryset = models.Element.objects.filter(ecommerce=True)
     permission_classes = [permissions.AllowAny]
     serializer_class = ElementEcommerceSerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        
+        for item in response.data:
+            element_id = item['id']
+            if element_id is not None:
+                boxes = models.Box.objects.filter(element__id=element_id)
+                box_ids = [box.id for box in boxes]
+
+                total_com = models.Log.objects.filter(
+                    box__id__in=box_ids, status="COM"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_ped = models.Log.objects.filter(
+                    box__id__in=box_ids, status="PED"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_rot = models.Log.objects.filter(
+                    box__id__in=box_ids, status="ROT"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_ap = models.Log.objects.filter(
+                    box__id__in=box_ids, status="AP"
+                ).aggregate(total=Sum("quantity"))["total"]
+
+                if total_com is None:
+                    total_com = 0
+                if total_ped is None:
+                    total_ped = 0
+                if total_ap is None:
+                    total_ap = 0
+                if total_rot is None:
+                    total_rot = 0
+
+                current_stock = total_com - total_ped - total_ap - total_rot
+
+                queryset = models.Log.objects.filter(box__id__in=box_ids, status="COM")
+                queryset = queryset.annotate(
+                    current_stock=Value(current_stock, output_field=IntegerField())
+                )
+                item['current_stock'] = current_stock
+
+                serializer = StockSerializer(queryset, many=True) 
+
+        return response
 
 
 @api_view(["GET", "POST"])
@@ -574,9 +665,56 @@ def elementos_por_categoria(request, category_id):
     # Obtener todos los elementos que pertenecen a la categoría
     elementos = models.Element.objects.filter(category=categoria)
 
-    # Serializar los elementos y enviarlos en la respuesta
-    serializer = ElementSerializer(elementos, many=True)
+    # Crear una lista para almacenar los elementos con su stock actual
+    elementos_con_stock = []
+
+    for elemento in elementos:
+        element_id = elemento.id
+
+        boxes = models.Box.objects.filter(element__id=element_id)
+        box_ids = [box.id for box in boxes]
+
+        total_com = models.Log.objects.filter(
+            box__id__in=box_ids, status="COM"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_ped = models.Log.objects.filter(
+            box__id__in=box_ids, status="PED"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_rot = models.Log.objects.filter(
+            box__id__in=box_ids, status="ROT"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_ap = models.Log.objects.filter(
+            box__id__in=box_ids, status="AP"
+        ).aggregate(total=Sum("quantity"))["total"]
+
+        if total_com is None:
+            total_com = 0
+        if total_ped is None:
+           total_ped = 0
+        if total_ap is None:
+            total_ap = 0
+        if total_rot is None:
+            total_rot = 0
+
+        current_stock = total_com - total_ped - total_ap - total_rot
+
+        # Crear un diccionario con la información del elemento y su stock actual
+        elemento_con_stock = {
+            "id": elemento.id,
+            "name": elemento.name,
+            "description": elemento.description,
+            "image": elemento.image,
+            "category": elemento.category,
+            "current_stock": current_stock,
+        }
+
+        elementos_con_stock.append(elemento_con_stock)
+
+    # Serializar los elementos con su stock actual y enviarlos en la respuesta
+    serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
     return Response(serializer.data)
+
+    
 
 @api_view(["GET", "POST", "PUT"])
 def CambioLog(request, user_id):
