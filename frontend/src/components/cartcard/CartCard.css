@@ -5,6 +5,11 @@
     box-shadow: none;
 }
 
+.input-style:focus {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: none;
+}
+
 .quantity-style {
     width: 90%;
 }

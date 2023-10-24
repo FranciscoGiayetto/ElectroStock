@@ -4,8 +4,6 @@ import './Carrito.css';
 import CartCard from '../../components/cartcard/CartCard';
 import Button from 'react-bootstrap/Button';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 
 import {
   MDBCol,
