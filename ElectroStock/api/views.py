@@ -94,13 +94,13 @@ class TokenViewSet(viewsets.ModelViewSet):
 class ProductosEcommerceAPIView(viewsets.ModelViewSet):
     queryset = models.Element.objects.filter(ecommerce=True)
     permission_classes = [permissions.AllowAny]
-    serializer_class = ElementEcommerceSerializer
+    serializer_class = ElementEcommerceSerializer2  # Utiliza el serializador correcto
 
     def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        
-        for item in response.data:
-            element_id = item['id']
+        elements = super().list(request, *args, **kwargs).data
+
+        for element in elements:
+            element_id = element['id']
             if element_id is not None:
                 boxes = models.Box.objects.filter(element__id=element_id)
                 box_ids = [box.id for box in boxes]
@@ -129,16 +129,9 @@ class ProductosEcommerceAPIView(viewsets.ModelViewSet):
 
                 current_stock = total_com - total_ped - total_ap - total_rot
 
-                queryset = models.Log.objects.filter(box__id__in=box_ids, status="COM")
-                queryset = queryset.annotate(
-                    current_stock=Value(current_stock, output_field=IntegerField())
-                )
-                item['current_stock'] = current_stock
+                element['current_stock'] = current_stock
 
-                serializer = StockSerializer(queryset, many=True) 
-
-        return response
-
+        return Response(elements)
 
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):

@@ -78,6 +78,50 @@ class ElementEcommerceSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "name", "description", "image", "category","current_stock")
         queryset = models.Element.objects.filter(ecommerce=True)
 
+from django.db.models import Sum
+class ElementEcommerceSerializer2(serializers.ModelSerializer):
+    class Meta:
+        model = models.Element
+        fields = ("id", "name", "description", "image", "category")
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        # Realiza el cálculo del current_stock en la vista
+        element_id = instance.id  # Id del elemento
+        boxes = models.Box.objects.filter(element__id=element_id)
+        box_ids = [box.id for box in boxes]
+
+        total_com = models.Log.objects.filter(
+            box__id__in=box_ids, status="COM"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_ped = models.Log.objects.filter(
+            box__id__in=box_ids, status="PED"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_rot = models.Log.objects.filter(
+            box__id__in=box_ids, status="ROT"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_ap = models.Log.objects.filter(
+            box__id__in=box_ids, status="AP"
+        ).aggregate(total=Sum("quantity"))["total"]
+
+        if total_com is None:
+            total_com = 0
+        if total_ped is None:
+            total_ped = 0
+        if total_ap is None:
+            total_ap = 0
+        if total_rot is None:
+            total_rot = 0
+
+        current_stock = total_com - total_ped - total_ap - total_rot
+
+        # Agrega el campo current_stock al resultado
+        data["current_stock"] = current_stock
+
+        return data
+
+
 # Para ver y editar todos los datos del especialidad
 class SpecialitySerializer(serializers.ModelSerializer):
     class Meta:
