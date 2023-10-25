@@ -253,10 +253,12 @@ class BudgetLogCreateSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.BudgetLog
-        fields = "__all__"class BoxMasLogsRotostSerializer(serializers.ModelSerializer):
+        fields = "__all__"
+class BoxMasLogsRotostSerializer(serializers.ModelSerializer):
     box_nombre = serializers.CharField(source='name')  # Asociar el campo "name" del modelo con "box_nombre"
     cantidad_logs_rotos = serializers.IntegerField(source='total_productos_rotos')  # Asociar el campo "num_logs_rotos" del modelo con "cantidad_logs_rotos"
 
     class Meta:
         model = models.Box
         fields = ("box_nombre", "cantidad_logs_rotos")
+       
