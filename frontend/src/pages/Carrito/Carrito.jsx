@@ -142,6 +142,7 @@ function Carrito() {
               title={item.box.element.name}
               image={item.box.element.image}
               quantity={item.quantity}
+              comments={item.observation}
               handleDelete={handleDelete}
               handleQuantityChange={handleQuantityChange}
               handleCommentChange={handleCommentChange}
