@@ -150,7 +150,7 @@ function Carrito() {
           ))
         ) : (
           
-          <p className='text-center'>¡Agregá tu proximo pedido! </p>
+          <p className='text-center2'>¡Agregá tu proximo pedido! </p>
         )}
 
             {/* Datetime Input */}
