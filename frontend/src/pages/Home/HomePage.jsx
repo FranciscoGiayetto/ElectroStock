@@ -1,34 +1,63 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import officeImage from './office.jpg';
-import './HomePage.css'
-import AdminCard from './AdminCard';
+import './HomePage.css';
+import CardPrestamos from './CardPrestamos';
+import CardVencidos from './CardVencidos';
+import CardPendientes from './CardPendientes';
 import { useAuthStore } from '../../store/auth';
 import { getCurrentToken } from '../../utils/auth';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import CardNotificaciones from './CardNotificaciones';
+
 function HomePage() {
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
-]);
+  ]);
 
+  const token = getCurrentToken();
+  const userData = user();
+  console.log(token.PromiseResult);
 
-  const token = getCurrentToken()
-  const userData = user()
-  console.log(token.PromiseResult)
-
-
-
-  
   return (
-    <div className='container pagecontainer'>
-      <div className='bienvenido col-6'>
-        
-        <h1 id='labelBienvenido'>Bienvenido {userData.username} </h1>
-      </div>
-      <div style={{'paddingTop': '5rem'}}>
-      <AdminCard ></AdminCard>
-    </div>
-    </div>
+    <Container className='pagecontainer container'>
+      <Row>
+        <Col xs={6} style={{ marginRight: '5rem' }}>
+        <h1 style={{ fontWeight: 'bold', color: 'black' }}>
+  ¡Hola {userData.username}!
+</h1>
+
+
+          <Row>
+            <Col xs={6} style={{ marginTop: '1rem' }}>
+              <div className="card shadow-all-over">
+                <CardVencidos />
+              </div>
+            </Col>
+            <Col xs={6} style={{ paddingLeft: '5rem', marginTop: '1rem' }}>
+              <div className="card shadow-all-over">
+                <CardPendientes />
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={6} style={{ marginTop: '2rem' }}>
+              <div className="card shadow-all-over">
+                <CardPrestamos />
+              </div>
+            </Col>
+          </Row>
+        </Col>
+        <Col xs={5} style={{ paddingLeft: '7rem' }} >
+          <div className="card shadow-all-over">
+            <CardNotificaciones />
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

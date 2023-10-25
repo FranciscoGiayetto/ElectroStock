@@ -22,6 +22,7 @@ function DetalleProducto() {
   useEffect(() => {
     console.log(userData);
     getElement();
+    getStockInfo();
     handleLayoutChange();
     window.addEventListener('resize', handleLayoutChange);
     return () => {
@@ -35,11 +36,23 @@ function DetalleProducto() {
       console.log(response);
       let data = await response.data;
       setElement(data);
-      console.log(element);
+      console.log(userData.user_id);
     } catch (error) {
       console.error(error);
     }
   };
+  const getStockInfo = async () => {
+    try {
+      const stockResponse = await api.get(`/stock/${id}/`); 
+      console.log(stockResponse);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+
+  
+
 
   const handleLayoutChange = () => {
     const isMobileLayout = window.innerWidth < 768;
@@ -60,23 +73,26 @@ function DetalleProducto() {
     e.preventDefault();
 
     let body = {
-      box: 1,
-      borrower: 1,
-      lender: null,
+      box: element.id,
+      borrower: userData.user_id,
+      lender: userData.user_id,
       status: 'CAR',
-      quantity: null,
+      quantity: 1,
       observation: null,
       dateIn: null,
       dateOut: null,
     };
 
     try {
-      const response = await api.post('/prestamos/', body);
+      const response = await api.post(`/logPost/${userData.user_id}/`, body);
+      console.log(response.data)
       setPostRes(response.data.response);
+      navigate('/tienda'); 
     } catch (error) {
       setPostRes(error.response.data);
     }
   };
+   
 
   return (
     <div className='container pagecontainer'>
@@ -87,8 +103,8 @@ function DetalleProducto() {
           </div>
 
           <div className='col-md-6 product-details__info-container' style={{ width: '45%' }}>
-            <h1 className='product-details__title'>Nombre: {element.name}</h1>
-            <h1 className='product-details__description'>Descripción: {element.description}</h1>
+            <h1 className='product-details__title'> {element.name}</h1>
+            
             <h1 className='product-details__category'>Categoría: {element.category}</h1>
             <h1 className='product-details__stock'>Stock: 20</h1>
 

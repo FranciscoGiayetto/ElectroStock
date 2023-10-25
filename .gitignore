@@ -35,3 +35,6 @@ yarn-error.log*
 /frontend/node_modules
 /venv
 /ElectroStock/venv
+/frontend/build
+/ElectroStock/db.sqlite3
+.idea

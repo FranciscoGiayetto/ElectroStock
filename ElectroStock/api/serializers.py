@@ -13,6 +13,11 @@ class TokenSerializer(serializers.ModelSerializer):
         model = models.TokenSignup
         fields = "__all__"
 
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Notification
+        fields = "__all__"
+
 # Para ver y editar categorias
 class CategoriaSerializer(serializers.ModelSerializer):
     category = CategoriaPadreSerializer()
@@ -71,18 +76,17 @@ class ElementEcommerceSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "name", "description", "image", "category")
         queryset = models.Element.objects.filter(ecommerce=True)
 
-
-# Para ver y editar todos los datos del laboratorio
-class LaboratorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Laboratory
-        fields = "__all__"
-
-
 # Para ver y editar todos los datos del especialidad
 class SpecialitySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Speciality
+        fields = "__all__"
+
+# Para ver y editar todos los datos del laboratorio
+class LaboratorySerializer(serializers.ModelSerializer):
+    speciality = SpecialitySerializer()
+    class Meta:
+        model = models.Laboratory
         fields = "__all__"
 
 
@@ -115,6 +119,7 @@ class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Log
         fields = (
+            "id",
             "box",
             "borrower",
             "lender",
@@ -125,6 +130,21 @@ class LogSerializer(serializers.ModelSerializer):
             "dateOut",
         )
 
+# Serializer de  los prestamos completmos
+class LogCambio(serializers.ModelSerializer):
+    class Meta:
+        model = models.Log
+        fields = (
+            "id",
+            "box",
+            "borrower",
+            "lender",
+            "status",
+            "quantity",
+            "observation",
+            "dateIn",
+            "dateOut",
+        )
 
 # Se pasa el stock actual de los productos
 class StockSerializer(serializers.Serializer):

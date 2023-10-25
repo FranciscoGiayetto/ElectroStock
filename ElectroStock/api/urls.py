@@ -17,14 +17,21 @@ router.register("location", LocationViewSet, "location")
 router.register("box", BoxViewSet, "box")
 router.register("especialidad", SpecialityViewSet, "especialidad")
 router.register("token", TokenViewSet, "token")
+router.register("log", LogViewSet, "log")
 
 urlpatterns = [
+    path('elementos_por_especialidad/<str:nombre_especialidad>/', boxes_por_especialidad, name='elementos_por_especialidad'),
+    path('categories_por_especialidad/<str:nombre_especialidad>/', categories_por_especialidad, name='categories_por_especialidad'),
+    path("logPost/<int:user_id>/", CambioLog, name="logPost"),
     path("carrito/<int:user_id>/", carrito, name="carrito"),
     path("vencidos/<int:user_id>/", VencidosAPIView, name="vencidos"),
     path("pendientes/<int:user_id>/", PendientesAPIView, name="pendientes"),
     path("presatmosActuales/<int:user_id>/", PrestamosActualesView, name="prestamosActuales"),
     path("prestamosHistorial/<int:user_id>/", PrestamoVerAPIView, name="prestamosHistorial"),
     path("stock/<int:element_id>/", get_stock, name="stock"),
+    path("filtroCategoria/<str:category_id>/", elementos_por_categoria, name="filtroCategoria"),
+    path("pendientes/<int:user_id>/", PrestamoPendientesAPIView, name="pendientes"),
+    path("notificaciones/<int:user_id>/", NotificacionesAPIView, name="notificaciones"),
     path(
         "estadisticas/maspedido/",
         MostRequestedElementView.as_view(),
@@ -40,5 +47,3 @@ urlpatterns = [
     path('estadisticas/avgDate/', DateAvgView.as_view(), name='avg/date'),
     
 ] + router.urls
-
-

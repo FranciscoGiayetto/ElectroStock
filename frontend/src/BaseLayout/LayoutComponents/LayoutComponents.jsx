@@ -6,25 +6,33 @@ import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import { InputGroup, FormControl, Button } from 'react-bootstrap';
+import { InputGroup, Button } from 'react-bootstrap';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import DataUsageIcon from '@mui/icons-material/DataUsage';
+import MenuIcon from '@mui/icons-material/Menu';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import DataUsageRoundedIcon from '@mui/icons-material/DataUsageRounded';
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import './LayoutComponents.css';
-import its from '../../assets/its.png';
+import itsv from '../../assets/itsv.png';
 import { useNavigate } from 'react-router-dom';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
+import { useMediaQuery } from '@mui/material';
+
 
 const { Header, Sider } = Layout;
 
 const LayoutComponents = ({ onSearch }) => {
- 
+  const [isReadyForInstall, setIsReadyForInstall] = useState(false);
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [data, setData] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -32,7 +40,43 @@ const LayoutComponents = ({ onSearch }) => {
 
   useEffect(() => {
     getElement();
+   
   }, []);
+
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", (event) => {
+      // Prevent the mini-infobar from appearing on mobile.
+      event.preventDefault();
+      console.log("👍", "beforeinstallprompt", event);
+      // Stash the event so it can be triggered later.
+      window.deferredPrompt = event;
+      // Remove the 'hidden' class from the install button container.
+      setIsReadyForInstall(true);
+    });
+  }, []);
+
+async function downloadApp() {
+  console.log("👍", "butInstall-clicked");
+  const promptEvent = window.deferredPrompt;
+  if (!promptEvent) {
+    // The deferred prompt isn't available.
+    console.log("oops, no prompt event guardado en window");
+    return;
+  }
+  // Show the install prompt.
+  promptEvent.prompt();
+  // Log the result
+  const result = await promptEvent.userChoice;
+  console.log("👍", "userChoice", result);
+  // Reset the deferred prompt variable, since
+  // prompt() can only be called once.
+  window.deferredPrompt = null;
+  // Hide the install button.
+  setIsReadyForInstall(false);
+}
+const isSmallScreen = useMediaQuery('(max-width: 1100px)');
+
+
 
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
@@ -64,87 +108,141 @@ const LayoutComponents = ({ onSearch }) => {
 
   return (
     <div>
-      <Sider trigger={null} collapsible collapsed={collapsed} className='sidebar'>
-        <Menu theme="light" mode="inline" style={{ background: '#EBEBEB' }}>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        collapsedWidth={0}
+        className='sidebar'
+      >
+
+        {!collapsed && (
+          <Menu theme="light" mode="inline" style={{ background: 'white' }}>
           <Menu.Item
             key="0"
-            icon={collapsed ? <MenuUnfoldOutlined style={{ fontSize: '20px' }} /> : <MenuFoldOutlined style={{ fontSize: '20px' }} />}
+            icon={collapsed ? <MenuIcon style={{ fontSize: '20px' }} /> : <ArrowBackIosIcon style={{ fontSize: '17px' }} />}
             onClick={handleToggleSidebar}
-            style={{ color: 'black' }}
+            className={collapsed ? 'menu-icon-collapsed' : 'menu-icon-expanded'}
+            style={{ color: 'black',
+                     backgroundColor:'transparent' }}
           />
           <Menu.Divider />
           <Menu.Item key="1" icon={<StoreRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/tienda' }}>
             Tienda
           </Menu.Item>
-          <Menu.Item key="2" icon={<CachedRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/prestamo' }}>
+          <Menu.Item key="2" icon={<CachedRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/Prestamos' }}>
             Préstamo
           </Menu.Item>
           <Menu.Item key="3" icon={<PaidRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/presupuesto' }}>
             Presupuesto
           </Menu.Item>
-          <Menu.Item key="4" icon={<DataUsageIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
+          <Menu.Item key="4" icon={<DataUsageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
             Informe
           </Menu.Item>
           <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
             Admin
           </Menu.Item>
           <Menu.Divider />
+          <Menu.Item key="7" icon={<DownloadRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
+            Descargar App
+          </Menu.Item>
           <Menu.Item key="6" icon={<LogoutRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/logout' }}>
             Cerrar sesión
           </Menu.Item>
         </Menu>
+        )}
       </Sider>
 
-      <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
-        <Header className='navbar'>
-          <div className='div-logo'>
-            <a href="/">
-              <img src={its} alt="its" className='logo-img' />
-            </a>
-          </div>
+      
+      <Header className='navbar'>
+          <Container fluid>
+            <Row>
+            <Col>
+    <Button
+      variant="primary"
+      type="submit"
+      className='button'
+      onClick={handleToggleSidebar}
+    >
+      {collapsed ? (
+        <MenuUnfoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+      ) : (
+        <MenuFoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+      )}
+    </Button>
+  </Col>
 
-          <div className='div-form'>
-            <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '10rem' }}>
-              <div className='div-autocomplete'>
-                <Autocomplete
-                className='search-autocomplete'
-                options={myOptions}
-                getOptionLabel={(option) => option}
-                value={selectedOption}
-                onChange={(event, newValue) => setSelectedOption(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                  
-                    name='searchBar'
-                    {...params}
-                    label="Buscar productos"
-                    
-                    
-                    className='search-input'
-                  />
-                )}
-              />
-            </div>
-              <Button className='button hover' variant="primary" type="submit" style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                <SearchRoundedIcon />
-              </Button>
-            </form>
-          </div>
-
-          <div className='div-buttons'>
            
-            <Button variant="primary" type="submit" className='button hover'>
-              <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-            </Button>
-            <Button variant="primary" type="submit" className='button hover'>
-              <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-            </Button>
-            <Button variant="primary" type="submit" className='button hover' onClick={() => { window.location.href = '/detalleCuenta' }}>
-              <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
-            </Button>
-          </div>
+          
+              {/* Image */}
+              <Col style={{ marginLeft:'1.5rem' }}>  
+              {!isSmallScreen && (
+              
+                <a href="/">
+                  <img src={itsv} alt="itsv" className='logo-img' />
+                </a>   
+              )}           
+              </Col>
+              
+              {/* Searchbar */}
+              <Col >            
+              <form onSubmit={handleSearch} className={`div-form ${isSmallScreen ? 'search-small' : 'search-large'}`}>                
+                  <Autocomplete
+                      className={`search-input ${isSmallScreen ? 'search-small' : 'search-large'}`}
+                    freeSolo
+                    options={myOptions}
+                    getOptionLabel={(option) => option}
+                    value={selectedOption}
+                    onChange={(event, newValue) => setSelectedOption(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        className='search-input'
+                        {...params}
+                        variant="outlined"
+                        name='searchBar'
+                        label="Buscar productos"
+                        InputLabelProps={{
+                          style: { color: 'rgba(235, 235, 235, 0.5)'}  
+                        }}
+                      />
+
+                    )}
+                  />
+                
+                  <Button variant="primary" type="submit" className='button' style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                    <SearchRoundedIcon />
+                  </Button>
+
+                </form> 
+              </Col>
+
+              {/* Buttons */}
+              <Col>
+                {!isSmallScreen && (
+                  <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/carrito' }}>
+                    <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                  </Button>
+                )}
+              </Col>
+
+              <Col style={{ marginLeft:'0'}}>
+              {!isSmallScreen && (
+                <Button variant="primary" type="submit" className='button' >
+                  <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                </Button>
+              )}
+              </Col>
+              <Col style={{ marginLeft:'0rem'}}>   
+              {!isSmallScreen && (
+                <Button variant="primary" type="submit" className='button'  onClick={() => { window.location.href = '/detalleCuenta' }}>
+                  <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
+                </Button>
+              )}
+              </Col>          
+            </Row>
+          </Container>
         </Header>
-      </Layout>
+      
     </div>
   );
 };

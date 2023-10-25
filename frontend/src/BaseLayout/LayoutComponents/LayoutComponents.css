@@ -23,7 +23,7 @@ html, body {
 
 .sidebar {
   height: 100vh;
-  background: #EBEBEB;
+  background: white;
   position: fixed;
   left: 0;
   top: 64px;
@@ -32,20 +32,17 @@ html, body {
 }
 
 .search-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #2E5266;
   border-color: rgba(235, 235, 235, 0.5);
   border-radius: 20px;
   margin-right: auto;
   margin-left: 10px;
-  flex: 1;
-  width: 11rem !important;
-  height: 2rem;
-}
-
-.MuiFormControl-fullWidth {
-  width: 8rem !important;
-  margin-right: 2rem;
+  width: 558px !important;
   
+  cursor: auto;
 }
 
 @media (max-width: 576px) {
@@ -53,38 +50,18 @@ html, body {
     width: 6rem;
     height: 1.5rem;
   }
-
-  .MuiFormControl-fullWidth {
-    width: 12rem !important;
-  }
 }
 
-.MuiFormControl-fullWidth {
-  width: 20rem !important;
-  margin-right: 2rem;
-  padding-right: 2rem !important;
-}
-
-.search-input::placeholder {
-  color: rgba(235, 235, 235, 0.5);
-}
-
-.search-input:focus {
-  background: #2E5266;
-  color: rgba(235, 235, 235, 0.5);
-}
-
-.div-logo {
+.centered-column {
   display: flex;
-  justify-content: flex-start;
-  margin-left: 3rem;
+  align-items: center;
+  justify-content: center;
 }
 
 .div-form {
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-left: auto;
-  width: 10rem;
 }
 
 .div-buttons {
@@ -116,5 +93,20 @@ html, body {
 }
 
 .logo-img {
-  width: 100px;
+  width: 150px;
+}
+/* Estilo para pantallas pequeñas */
+.search-small {
+  width: 10rem; /* El componente de búsqueda ocupa todo el ancho disponible */
+  max-width: 10rem; /* Se ajusta al ancho de su contenedor */
+  /* Añade estilos adicionales para hacer la barra más pequeña en pantallas pequeñas */
+  padding: 5px; /* Puedes ajustar este valor según tus preferencias */
+  font-size: 14px; /* Tamaño de fuente más pequeño */
+  /* Otros estilos de tamaño más pequeño que desees aplicar */
+}
+
+/* Estilo para pantallas grandes */
+.search-large {
+  width: 40rem; /* Tamaño fijo para pantallas grandes */
+  max-width: 100%; /* Se ajusta al ancho de su contenedor */
 }
