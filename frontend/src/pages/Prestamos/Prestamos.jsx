@@ -40,10 +40,11 @@ const Prestamos = () => {
             
             <PrestamosCard
               key={index}
+              image={prestamo.box.element.image}
               status={prestamo.status}
               cliente={prestamo.borrower.username}
-              fecha={prestamo.fecha}
-              componente={prestamo.componente}
+              dateIn={prestamo.dateIn}
+              componente={prestamo.box.element.name}
 
             />
           ))

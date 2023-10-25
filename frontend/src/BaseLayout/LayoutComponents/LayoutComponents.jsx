@@ -40,13 +40,17 @@ const LayoutComponents = ({ onSearch }) => {
 
   useEffect(() => {
     getElement();
+   
   }, []);
 
   useEffect(() => {
     window.addEventListener("beforeinstallprompt", (event) => {
+      // Prevent the mini-infobar from appearing on mobile.
       event.preventDefault();
       console.log("👍", "beforeinstallprompt", event);
+      // Stash the event so it can be triggered later.
       window.deferredPrompt = event;
+      // Remove the 'hidden' class from the install button container.
       setIsReadyForInstall(true);
     });
   }, []);
@@ -95,6 +99,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
     const searchQuery = event.target.elements.searchBar.value;
     onSearch(searchQuery);
     navigate(`/tienda?searchQuery=${searchQuery}`);
+   // console.log(searchQuery)  
   };
 
   const handleToggleSidebar = () => {
@@ -148,6 +153,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
         )}
       </Sider>
 
+      
       <Header className='navbar'>
           <Container fluid>
             <Row>

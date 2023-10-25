@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
 export default function CardExample(props) {
-  const { id, title, image } = props;
+  const { id, title, image, current_stock } = props;
   return (
     <div className="container-fluid">
       <div className="row justify-content-end mb-3">
@@ -34,18 +34,11 @@ export default function CardExample(props) {
                     <h4 className="mb-1 me-1">{title}</h4>
                     <span className="text-danger"></span>
                   </div>
-                  <h6 className="text-success">Stock Disponible</h6>
+                  <h6 className={current_stock ?   "text-success" : "text-danger"}>
+        {current_stock ? "Stock Disponible" : "Stock No Disponible"}
+      </h6>
                   <div className="d-flex flex-column mt-4">
-                    <Link to={`/detalleProducto/${id}`}>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        className="w-100"
-                        style={{ backgroundColor: '#58A4B0', border: 'none' }}
-                      >
-                        Agregar al Carrito
-                      </Button>
-                    </Link>
+                    
                     <Link to={`/detalleProducto/${id}`}>
                       <Button
                         variant="outline-primary"

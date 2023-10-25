@@ -8,9 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 import { Container, Row, Col } from 'react-bootstrap';
 import './login.css';
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import ITSVlogin from '../../assets/ITSVlogin.svg';
 
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -31,7 +29,7 @@ const Logout = () => {
                     </p>
                     Cerraste sesión correctamente
                 </p>
-                <div className='text-center'>
+                <div >
                     <Button
                         className='button-style'
                         style={{ marginRight: '1rem' }}

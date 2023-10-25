@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-ff=y)c_ri$c_l3)#zz#%)8&gffn85+^5vo)+enx*6t1jov8*ok
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -91,6 +91,9 @@ ASGI_APPLICATION= "ElectroStock.asgi.application"
 DATABASES = {
     "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
 }
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': 'Backups'}
 
 #aca le digo a django que use de usuario la clase personalizada
 AUTH_USER_MODEL = 'ElectroStockApp.CustomUser'
@@ -392,9 +395,9 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'ElectroStockApp.task.assign_next_year_course',
         'schedule': timedelta(days=365),  # Ejecutar cada 1 año
     },
-    'check_stock_and_add_budget_logs': {
-        'task': 'ElectroStockApp.task.check_stock_and_add_budget_logs',
-        'schedule': timedelta(days=1),  # Ejecutar cada 1 año
+    'backup-task': {
+        'task': 'ElectroStockApp.task.backup_database',
+        'schedule': timedelta(days=7),  # Ejecuta la tarea todos los días a la medianoche
     },
 }
 

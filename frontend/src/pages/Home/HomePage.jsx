@@ -25,22 +25,15 @@ function HomePage() {
   return (
     <Container className='pagecontainer container'>
       <Row>
-        <Col xs={6} style={{ marginRight: '5rem' }}>
-        <h1 style={{ fontWeight: 'bold', color: 'black' }}>
-  ¡Hola {userData.username}!
-</h1>
+      <h1 style={{paddingRight:'10rem'}}>Hola {userData.username}!</h1>
 
-
-          <Row>
+        <Col xs={6} style={{  marginRight: '5rem' }}>
+          <Row >
             <Col xs={6} style={{ marginTop: '1rem' }}>
-              <div className="card shadow-all-over">
-                <CardVencidos />
-              </div>
+              <CardVencidos />
             </Col>
-            <Col xs={6} style={{ paddingLeft: '5rem', marginTop: '1rem' }}>
-              <div className="card shadow-all-over">
-                <CardPendientes />
-              </div>
+            <Col xs={6} style={{ paddingLeft:'5rem', marginTop: '1rem' }}>
+              <CardPendientes />
             </Col>
           </Row>
           <Row>

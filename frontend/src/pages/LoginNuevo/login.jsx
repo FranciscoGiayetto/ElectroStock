@@ -46,12 +46,16 @@ const Login = () => {
     return (
         
       <Container className='font-family'>
+        
         <Row>          
-          <Col xs={12} style={{display:'flex', justifyContent:'center'}}>
+          <Col  style={{display:'flex', justifyContent:'center'}}>
             <div style={{marginTop:'4rem'}}>
               <img src={ITSVlogin} alt="Logo" style={{width:'10rem'}}/>
             </div>
           </Col>
+        </Row>
+
+        <Row>
           <Col className="centered-form">
             <div className="login-container">
               <p className="login-heading">
@@ -81,25 +85,22 @@ const Login = () => {
                     placeholder="Contraseña" className="input-style" />
                   </Form.Group>
 
-                  <div className='text-center' style={{paddingBottom:'1rem'}}>
+                  <div className='text-center'>
                     <Link href='http://127.0.0.1:8000/auth/accounts/password_reset' style={{color:' #2E5266'}} > Olvidaste tu contraseña? </Link>
                   </div>
                   
+                  
+
                   <div className='text-center'>
                     <Button
                       className='button-style'
                       variant='primary'
                       type='submit'
+                      style={{marginRight:'1rem'}}
                     >
                       Ingresar
                     </Button>
-                  </div>
-
-                  <div className='div-hr'>
-                    <hr className='hr-style'/>
-                  </div>
-
-                  <div className='text-center'>
+                  
                     <Button
                       className='button-style'
                       variant='primary'
@@ -108,14 +109,13 @@ const Login = () => {
                       Registrarse
                     </Button>
                   </div>
-                    
-                    
-                  
+
                 </Form>
               </div>
             </div>
           </Col>
         </Row>
+
       </Container>
 
     );

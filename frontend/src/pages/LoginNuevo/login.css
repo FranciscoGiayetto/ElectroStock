@@ -1,3 +1,4 @@
+/* Login css */
 .login-heading {
   text-align: center;
   font-size: 1.25rem;
@@ -52,7 +53,7 @@ box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 
 .button-style {
 font-size: 0.938rem;
-background-color: #58A4B0;
+background-color: #2E5266;
 border: none;
 width: 9.813rem;
 height: 2.5rem;
@@ -60,25 +61,14 @@ box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
 .button-style:hover {
-  background-color: #348e9ce3;
-}
-
-.div-hr {
-display: flex;
-justify-content: center;
-margin-top: -0.2rem;
-margin-bottom: -0.2rem;
-}
-
-.hr-style {
-color: rgba(46, 82, 102);
-width: 7rem;
-display: flex;
+  background-color: #254353;
 }
 
 .font-family {
   font-family: Roboto, sans-serif;
 }
+
+/* Logout css */
 
 .input-style.custom-checkbox {
   display: flex;
