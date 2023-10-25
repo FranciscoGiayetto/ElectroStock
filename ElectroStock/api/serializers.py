@@ -226,7 +226,34 @@ class LenderVencidosStatisticsSerializer(serializers.Serializer):
     lender__username = serializers.CharField()
     vencidos_count = serializers.IntegerField()
 
-class BoxMasLogsRotostSerializer(serializers.ModelSerializer):
+class BudgetSerializer(serializers.ModelSerializer):
+    speciality = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Budget
+        fields = "__all__"
+
+    def get_speciality(self, obj):
+        if isinstance(obj.speciality, int):
+            # Si speciality es un entero, devuelve ese entero
+            return obj.speciality
+        else:
+            # Si speciality es un objeto Speciality, devuelve un diccionario
+            speciality_serializer = SpecialitySerializer(obj.speciality)
+            return speciality_serializer.data
+
+class BudgetLogSerializer(serializers.ModelSerializer):
+    element = ElementSerializer()
+    budget = BudgetSerializer()
+    class Meta:
+        model = models.BudgetLog
+        fields = "__all__"
+
+class BudgetLogCreateSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = models.BudgetLog
+        fields = "__all__"class BoxMasLogsRotostSerializer(serializers.ModelSerializer):
     box_nombre = serializers.CharField(source='name')  # Asociar el campo "name" del modelo con "box_nombre"
     cantidad_logs_rotos = serializers.IntegerField(source='total_productos_rotos')  # Asociar el campo "num_logs_rotos" del modelo con "cantidad_logs_rotos"
 

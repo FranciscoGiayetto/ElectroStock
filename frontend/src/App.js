@@ -23,7 +23,8 @@ import MyComponent from './pages/Prestamos/Prestamos';
 import { Link } from "react-router-dom";
 import Informes from "./pages/Informes/Informes";
 import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
-
+import Presupuestos from "./pages/Presupuestos/Presupuestos";
+import DetallePresupuesto from "./pages/DetallePresupuesto/DetallePresupuesto"
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const handleSearch = (query) => {
@@ -72,6 +73,8 @@ function LayoutWrapper({ onSearch, searchQuery }) {
       <Route path="/detalleCuenta" element={<PrivateRoute>
         <DetalleCuenta />
      </PrivateRoute>} />
+  <Route path="/presupuesto" element={<PrivateRoute><Presupuestos /></PrivateRoute>} />
+  <Route path="/presupuesto/:id" element={<PrivateRoute><DetallePresupuesto /></PrivateRoute>} />
       </Routes>
     </Layout>
   );

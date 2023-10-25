@@ -21,6 +21,7 @@ from django.contrib.auth import get_user_model, get_user
 from django.contrib.auth.models import Group
 from rest_framework.decorators import api_view
 
+import json
 class ElementsViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.all()
     permission_classes = [permissions.AllowAny]
@@ -155,6 +156,7 @@ class SpecialityViewSet(viewsets.ModelViewSet):
 
 
 # View para tomar el stock actual segun el id que mandas por la url
+
 @api_view(["GET", "POST"])
 def get_stock(request, element_id):
     if request.method == "GET":
@@ -685,3 +687,112 @@ def categories_por_especialidad(request, nombre_especialidad):
         categorias_por_especialidad.append(categoria_info)
 
     return Response(categorias_por_especialidad)
+
+@api_view(["GET", "POST", "DELETE", "PUT"])
+def BudgetLogViewSet(request, budget_id):
+    if request.method == "GET":
+        try:
+            # Obtiene todos los BudgetLog relacionados con el budget especificado
+            queryset = models.BudgetLog.objects.filter(budget=budget_id)
+
+            # Serializa los resultados incluyendo información del budget relacionado
+            serializer = BudgetLogSerializer(queryset, many=True, context={"request": request})
+
+            # Construye la respuesta que incluye información del budget
+            response_data = {
+                "budget_id": budget_id,
+                "budget_details": BudgetSerializer(models.Budget.objects.get(id=budget_id)).data,
+                "budget_logs": serializer.data,
+            }
+
+            return Response(response_data)
+        except models.Budget.DoesNotExist:
+            return Response({"message": "Presupuesto no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+        except models.BudgetLog.DoesNotExist:
+            return Response({"message": "No se encontraron registros de BudgetLog para este presupuesto"}, status=status.HTTP_404_NOT_FOUND)
+
+
+    if request.method == "POST":
+        return Response({"message": "Notificaciones agregada"})
+
+    if request.method == "DELETE":
+            try:
+                print(request.data)
+              
+                                
+                queryset = models.BudgetLog.objects.get(id=budget_id)
+                queryset.delete()
+                return Response({"message": "Log eliminado"})
+            except models.BudgetLog.DoesNotExist:
+                return Response({f"message": "Log no encontrado {request.log_id}"}, status=status.HTTP_404_NOT_FOUND)
+    if request.method == "PUT":
+        # Actualiza el estado del presupuesto a "COMPRADO".
+        queryset = models.BudgetLog.objects.get(id=budget_id)
+        serializer = BudgetLogSerializer(queryset, data=request.data, partial= True)
+        if serializer.is_valid():
+            serializer.save()
+            print(serializer.data)
+            return Response(serializer.data)
+    return Response(status=405)
+
+@api_view(["GET", "POST"])
+def BudgetSpecialityViewSet(request, speciality_name):
+    if request.method == "GET":
+        queryset = models.Budget.objects.filter(speciality__name=speciality_name)
+
+
+        serializer = BudgetSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    if request.method == "POST":
+        return Response({"message": "Notificaciones agregada"})
+
+    return Response(status=405)
+
+@api_view(["GET", "POST", "DELETE", "PUT"])
+def BudgetViewSet(request, budget_id=None):
+    if request.method == "GET":
+        queryset = models.Budget.objects.all()
+
+
+        serializer = BudgetSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    if request.method == "POST":
+         # Deserializa los datos de la solicitud POST
+        serializer = BudgetSerializer(data=request.data)
+        
+        # Verifica si los datos son válidos
+        if serializer.is_valid():
+            # Guarda el nuevo objeto Budget en la base de datos
+            serializer.save()
+            
+            # Devuelve una respuesta con los datos del objeto creado
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            # Devuelve una respuesta con errores de validación si los datos no son válidos
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+   
+
+    if request.method == "DELETE":
+            
+            
+            return Response({"message": "Notificaciones agregada"})
+        
+    if request.method == "PUT":
+        # Actualiza el estado del presupuesto a "COMPRADO".
+        queryset = models.Budget.objects.get(id=budget_id)
+        serializer = BudgetSerializer(queryset, data=request.data, partial= True)
+        if serializer.is_valid():
+            serializer.save()
+            print(serializer.data)
+            return Response(serializer.data)
+
+    return Response(status=405)
+
+    
+
+class BudgetLogCreateView(generics.CreateAPIView):
+    queryset = models.BudgetLog.objects.all()
+    serializer_class = BudgetLogCreateSerializer    
