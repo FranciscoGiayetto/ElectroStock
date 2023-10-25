@@ -30,7 +30,6 @@ class CategoryResource(resources.ModelResource):
             "category__name",
         )
 
-
 # Clase de filtros y busqueda de Categoria
 class CategoryAdmin(ImportExportActionModelAdmin):
     resource_class = CategoryResource
