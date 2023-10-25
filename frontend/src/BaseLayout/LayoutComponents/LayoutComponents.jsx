@@ -24,6 +24,8 @@ import Col from 'react-bootstrap/Col';
 import './LayoutComponents.css';
 import itsv from '../../assets/itsv.png';
 import { useNavigate } from 'react-router-dom';
+import { useMediaQuery } from '@mui/material';
+
 
 const { Header, Sider } = Layout;
 
@@ -72,6 +74,7 @@ async function downloadApp() {
   // Hide the install button.
   setIsReadyForInstall(false);
 }
+const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
 
 
@@ -105,8 +108,16 @@ async function downloadApp() {
 
   return (
     <div>
-      <Sider trigger={null} collapsible collapsed={collapsed} className='sidebar'>
-        <Menu theme="light" mode="inline" style={{ background: 'white' }}>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        collapsedWidth={0}
+        className='sidebar'
+      >
+
+        {!collapsed && (
+          <Menu theme="light" mode="inline" style={{ background: 'white' }}>
           <Menu.Item
             key="0"
             icon={collapsed ? <MenuIcon style={{ fontSize: '20px' }} /> : <ArrowBackIosIcon style={{ fontSize: '17px' }} />}
@@ -139,29 +150,46 @@ async function downloadApp() {
             Cerrar sesión
           </Menu.Item>
         </Menu>
+        )}
       </Sider>
 
       
       <Header className='navbar'>
           <Container fluid>
             <Row>
+            <Col>
+    <Button
+      variant="primary"
+      type="submit"
+      className='button'
+      onClick={handleToggleSidebar}
+    >
+      {collapsed ? (
+        <MenuUnfoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+      ) : (
+        <MenuFoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+      )}
+    </Button>
+  </Col>
+
+           
           
               {/* Image */}
               <Col style={{ marginLeft:'1.5rem' }}>  
+              {!isSmallScreen && (
+              
                 <a href="/">
                   <img src={itsv} alt="itsv" className='logo-img' />
-                </a>              
+                </a>   
+              )}           
               </Col>
               
               {/* Searchbar */}
               <Col >            
-                <form onSubmit={handleSearch} className='div-form'>
-                
+              <form onSubmit={handleSearch} className={`div-form ${isSmallScreen ? 'search-small' : 'search-large'}`}>                
                   <Autocomplete
-                    className='search-input'
+                      className={`search-input ${isSmallScreen ? 'search-small' : 'search-large'}`}
                     freeSolo
-                    style={{ width:'40rem' }}
-                    fullWidth
                     options={myOptions}
                     getOptionLabel={(option) => option}
                     value={selectedOption}
@@ -189,20 +217,27 @@ async function downloadApp() {
               </Col>
 
               {/* Buttons */}
-              <Col style={{ marginLeft:'8rem'}}>  
-                <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/carrito' }}>
-                  <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                </Button>
+              <Col>
+                {!isSmallScreen && (
+                  <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/carrito' }}>
+                    <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                  </Button>
+                )}
               </Col>
+
               <Col style={{ marginLeft:'0'}}>
+              {!isSmallScreen && (
                 <Button variant="primary" type="submit" className='button' >
                   <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                 </Button>
+              )}
               </Col>
               <Col style={{ marginLeft:'0rem'}}>   
+              {!isSmallScreen && (
                 <Button variant="primary" type="submit" className='button'  onClick={() => { window.location.href = '/detalleCuenta' }}>
                   <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
                 </Button>
+              )}
               </Col>          
             </Row>
           </Container>
