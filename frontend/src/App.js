@@ -54,28 +54,15 @@ function LayoutWrapper({ onSearch, searchQuery }) {
   return (
     <Layout>
       <Routes>
-      
-      <Route path="/" element={<PrivateRoute>
-                              <HomePage />
-                          </PrivateRoute>} />
-        <Route path= "/tienda" element={<PrivateRoute>
-                              <Ecommerce />
-                          </PrivateRoute>}/>
-        <Route path= "/carrito" element={<PrivateRoute>
-                              <Carrito />
-                          </PrivateRoute>}/>
-        <Route path="/detalleProducto/:id" element={<PrivateRoute>
-                              <DetalleProducto />
-                          </PrivateRoute>} />
-                          <Route path="/informe/" element={<PrivateRoute>
-                              <Informes />
-                          </PrivateRoute>} />  
-      <Route path="/detalleCuenta" element={<PrivateRoute>
-        <DetalleCuenta />
-     </PrivateRoute>} />
-  <Route path="/presupuesto" element={<PrivateRoute><Presupuestos /></PrivateRoute>} />
-  <Route path="/presupuesto/:id" element={<PrivateRoute><DetallePresupuesto /></PrivateRoute>} />
-      </Routes>
+  <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+  <Route path="/tienda" element={<PrivateRoute><Ecommerce allItems={true} /></PrivateRoute>} />
+  <Route path="/tienda/:name" element={<PrivateRoute><Ecommerce allItems={false} /></PrivateRoute>} />                          
+  <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
+  <Route path="/detalleProducto/:id" element={<PrivateRoute><DetalleProducto /></PrivateRoute>} />
+  <Route path="/detalleCuenta" element={<PrivateRoute><DetalleCuenta /></PrivateRoute>} />
+  <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
+</Routes>
+
     </Layout>
   );
 }
