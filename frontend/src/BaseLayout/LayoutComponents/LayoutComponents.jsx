@@ -13,6 +13,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuIcon from '@mui/icons-material/Menu';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -108,6 +109,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
   return (
     <div>
+      {/* SIDEBAR */}
       <Sider
         trigger={null}
         collapsible
@@ -153,24 +155,20 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
         )}
       </Sider>
 
-      
+      {/* NAVBAR */}
       <Header className='navbar'>
           <Container fluid>
             <Row>
             <Col>
-    <Button
-      variant="primary"
-      type="submit"
-      className='button'
-      onClick={handleToggleSidebar}
-    >
-      {collapsed ? (
-        <MenuUnfoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-      ) : (
-        <MenuFoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-      )}
-    </Button>
-  </Col>
+              <Button
+                variant="primary"
+                type="submit"
+                className='button'
+                onClick={handleToggleSidebar}
+              >
+                <MenuRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+              </Button>
+            </Col>
 
            
           
