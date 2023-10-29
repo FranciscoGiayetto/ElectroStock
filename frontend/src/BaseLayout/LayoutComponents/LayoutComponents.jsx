@@ -74,7 +74,12 @@ async function downloadApp() {
   // Hide the install button.
   setIsReadyForInstall(false);
 }
-const isSmallScreen = useMediaQuery('(max-width: 1100px)');
+const isSmallScreen = useMediaQuery('(max-width: 830px)');
+const isSmallScreen2 = useMediaQuery('(max-width: 1200px)');
+const isSmallScreen3 = useMediaQuery('(max-width: 1100px)');
+const isSmallScreen4 = useMediaQuery('(max-width: 970px)');
+
+
 
 
 
@@ -176,7 +181,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
           
               {/* Image */}
               <Col style={{ marginLeft:'1.5rem' }}>  
-              {!isSmallScreen && (
+              {!isSmallScreen4 && (
               
                 <a href="/">
                   <img src={itsv} alt="itsv" className='logo-img' />
@@ -188,7 +193,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               <Col >            
               <form onSubmit={handleSearch} className={`div-form ${isSmallScreen ? 'search-small' : 'search-large'}`}>                
                   <Autocomplete
-                      className={`search-input ${isSmallScreen ? 'search-small' : 'search-large'}`}
+                    className={`search-input ${isSmallScreen ? 'search-small' : 'search-large'}`}
                     freeSolo
                     options={myOptions}
                     getOptionLabel={(option) => option}
@@ -218,7 +223,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
               {/* Buttons */}
               <Col>
-                {!isSmallScreen && (
+                {!isSmallScreen2 && (
                   <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/carrito' }}>
                     <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                   </Button>
@@ -226,14 +231,14 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               </Col>
 
               <Col style={{ marginLeft:'0'}}>
-              {!isSmallScreen && (
+              {!isSmallScreen3 && (
                 <Button variant="primary" type="submit" className='button' >
                   <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                 </Button>
               )}
               </Col>
               <Col style={{ marginLeft:'0rem'}}>   
-              {!isSmallScreen && (
+              {!isSmallScreen2 && (
                 <Button variant="primary" type="submit" className='button'  onClick={() => { window.location.href = '/detalleCuenta' }}>
                   <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
                 </Button>
