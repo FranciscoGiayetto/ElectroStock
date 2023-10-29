@@ -85,12 +85,10 @@ const Login = () => {
                     placeholder="Contraseña" className="input-style" />
                   </Form.Group>
 
-                  <div className='text-center'>
-                    <Link href='http://127.0.0.1:8000/auth/accounts/password_reset' style={{color:' #2E5266'}} > Olvidaste tu contraseña? </Link>
+                  <div className='text-center' style={{marginBottom:'1rem'}}>
+                    <Link href='http://127.0.0.1:8000/auth/accounts/password_reset' style={{color:' #2E5266'}} > ¿Olvidaste tu contraseña? </Link>
                   </div>
                   
-                  
-
                   <div className='text-center'>
                     <Button
                       className='button-style'

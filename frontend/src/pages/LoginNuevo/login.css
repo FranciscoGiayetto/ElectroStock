@@ -53,7 +53,7 @@ box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 
 .button-style {
 font-size: 0.938rem;
-background-color: #2E5266;
+background-color: #58A4B0;
 border: none;
 width: 9.813rem;
 height: 2.5rem;
@@ -61,7 +61,7 @@ box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
 .button-style:hover {
-  background-color: #254353;
+  background-color: #528e97;
 }
 
 .font-family {
