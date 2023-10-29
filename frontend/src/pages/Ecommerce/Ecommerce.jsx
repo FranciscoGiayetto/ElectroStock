@@ -7,6 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Spinner from 'react-bootstrap/Spinner'; // Importa el Spinner
 import useAxios from '../../utils/useAxios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
@@ -22,6 +23,7 @@ function Ecommerce({ allItems }) {
   const [showLoadMoreButton, setShowLoadMoreButton] = useState(true);
   const { name } = useParams();
   const [showWordList, setShowWordList] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Nuevo estado para controlar la carga
 
   useEffect(() => {
     getElement();
@@ -55,18 +57,25 @@ function Ecommerce({ allItems }) {
   const getElement = async () => {
     const endpoint = allItems ? 'elementsEcommerce/' : `filtroCategoria/${encodeURIComponent(name)}/`;
 
-    const response = await api.get(`${endpoint}`);
-    let data = await response.data;
-    console.log(data)
+    try {
+      const response = await api.get(`${endpoint}`);
+      let data = await response.data;
+      console.log(data);
 
-    // Replace null or empty images with the default image
-    const updatedData = data.map((card) => ({
-      ...card,
-      image: card.image || defaultpicture,
-    }));
+      // Replace null or empty images with the default image
+      const updatedData = data.map((card) => ({
+        ...card,
+        image: card.image || defaultpicture,
+      }));
 
-    setCards(updatedData);
-    setLoadMore(updatedData.length > 9);
+      setCards(updatedData);
+      setLoadMore(updatedData.length > 9);
+      setIsLoading(false); // Indica que la carga ha terminado
+    } catch (error) {
+      // Manejar errores aquí
+      console.error('Error al obtener datos:', error);
+      setIsLoading(false); // Asegúrate de desactivar la carga en caso de error
+    }
   };
 
   const filterCards = () => {
@@ -93,43 +102,52 @@ function Ecommerce({ allItems }) {
     <Container style={{ marginTop: '5rem' }}>
       <Row>
         {/* Show WordList on md and larger screens */}
-        <Col xs={12} md={2} className="d-none d-md-block">
-          <WordList />
+        <Col xs={12} md={2} className={`d-none d-md-block`}>
+        {!showWordList && !isLoading && (
+  <WordList />
+        )}
         </Col>
+
         <Col xs={12} md={10}>
           {/* Toggle WordList visibility on smaller screens */}
-          {showWordList && (
+          {showWordList &&(
             <div>
               <WordList />
             </div>
           )}
-          {visibleCards.length === 0 ? (
+          {isLoading ? ( // Muestra el Spinner mientras se carga
             <div className="text-center">
-              <h2>No hay productos disponibles para esta categoría.</h2>
-              <a href="/tienda" className="btn btn-primary">
-                Volver a la tienda
-              </a>
+              <Spinner animation="border" variant="primary" />
             </div>
           ) : (
-            visibleCards.map((card, index) => (
-              <div key={index}>
-    <CardExample title={card.name} text={card.description} image={card.image} id={card.id} current_stock={card.current_stock} />
+            visibleCards.length === 0 ? (
+              <div className="text-center">
+                <h2>No hay productos disponibles para esta categoría.</h2>
+                <a href="/tienda" className="btn btn-primary">
+                  Volver a la tienda
+                </a>
               </div>
-            ))
+            ) : (
+              visibleCards.map((card, index) => (
+                <div key={index}>
+                  <CardExample title={card.name} text={card.description} image={card.image} id={card.id} current_stock={card.current_stock} />
+                </div>
+              ))
+            )
           )}
         </Col>
       </Row>
-      {showLoadMoreButton && (
-        <div className="row">
-          <div className="col-12 text-center">
-            <button className="btn btn-primary cargarMas" onClick={handleLoadMore}>
-              Cargar más
-            </button>
-          </div>
-        </div>
-      )}
+      {showLoadMoreButton && !isLoading && (
+  <div className="row">
+    <div className="col-12 text-center">
+      <button className="btn btn-primary cargarMas" onClick={handleLoadMore}>
+        Cargar más
+      </button>
+    </div>
+  </div>
+)}
     </Container>
   );
-};
+}
 
 export default Ecommerce;
