@@ -26,6 +26,29 @@ function DetallePrestamo() {
     getOrders();
   }, []);
 
+  const handleApproval = async () => {
+    try {
+      // Realiza una solicitud PUT para aprobar los registros del usuario en el servidor
+      await api.put(`/aprobadoPost/${userData.user_id}/`);
+      // Vuelve a cargar los préstamos actualizados después de la aprobación
+      getOrders();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  const handleRejection = async () => {
+    try {
+      // Realiza una solicitud PUT para rechazar los registros del usuario en el servidor
+      await api.put(`/desaprobadoPost/${userData.user_id}/`);
+      // Vuelve a cargar los préstamos actualizados después del rechazo
+      getOrders();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+
   const getOrders = async () => {
     try {
       console.log(userData.user_id);
@@ -63,10 +86,10 @@ function DetallePrestamo() {
 
             {/* Botones de confirmar y rechazar */}
             <div className="d-flex justify-content-end align-items-center mt-3">
-              <button className="btn btn-success me-2">
+              <button className="btn btn-success me-2" onClick={handleApproval}>
                 <span role="img" aria-label="Checkmark">✅</span> Confirmar
               </button>
-              <button className="btn btn-danger">
+              <button className="btn btn-danger" onClick={handleRejection}>
                 <span role="img" aria-label="Cross">❌</span> Rechazar
               </button>
             </div>
