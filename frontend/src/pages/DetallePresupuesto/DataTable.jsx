@@ -7,8 +7,8 @@ import {
 import useAxios from '../../utils/useAxios.js';
 import { useParams, useNavigate } from 'react-router-dom';
 import { HiPlusCircle } from "react-icons/hi2";
-
-const DataTable = ({ presupuesto, onUpdate }) => {
+import ModalListItems from './ModalListItems'; 
+const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const [budgetStatus,  setBudgetStatus] = useState("");
   const [budgetName,  setBudgetName] = useState("");
   const [budgetLogs, setBudgetLogs] = useState([]);
@@ -16,9 +16,8 @@ const DataTable = ({ presupuesto, onUpdate }) => {
   const [editedValues, setEditedValues] = useState({});
   const [isEditingBudgetName, setIsEditingBudgetName] = useState(false);
   const [isAddingNewItem, setIsAddingNewItem] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const nameInputRef = useRef(null);
-
   useEffect(() => {
     try {
      
@@ -121,11 +120,22 @@ const DataTable = ({ presupuesto, onUpdate }) => {
     }
   };
   const handleNewItem = () => {
+    
     // Comprueba si ya estás en modo de edición del nuevo registro
     if (!isAddingNewItem) {
       // Habilita el modo de edición para el nuevo registro
       setIsAddingNewItem(true);
     }
+  };
+  
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+
+  const handleItemSelect = (selectedItem) => {
+    // Realiza alguna acción con el elemento seleccionado (por ejemplo, actualización del estado)
+    console.log('Elemento seleccionado:', selectedItem);
   };
   
   const handleConfirmNewItem = async () => {
@@ -268,7 +278,7 @@ const DataTable = ({ presupuesto, onUpdate }) => {
               <th>Nombre</th>
               <th>Precio</th>
               <th>Stock</th>
-              <th>Total</th>
+              <th>Subtotal</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -358,16 +368,19 @@ const DataTable = ({ presupuesto, onUpdate }) => {
             {isAddingNewItem && (
               <tr className="table-info">
                 <td>{budgetLogs.length + 1}</td>
-                <td>
+                <td style={{ display: "flex"}}>
                   <input
                     type="text"
-                    style={{ maxWidth: "200px" }}
+                    style={{ maxWidth: "200px",paddingRigt:"1rem" }}
                     className="form-control"
                     value={editedValues['new']?.name || ""}
                     onChange={(e) =>
                       handleItemInputChange('new', "name", e.target.value)
                     }
                   />
+                 <button onClick={() => setIsModalOpen(true)} className="btn btn-sm">
+            <HiPlusCircle style={{ fontSize: "1rem" }} />
+            </button>
                 </td>
                 <td>
                   <input
@@ -405,7 +418,7 @@ const DataTable = ({ presupuesto, onUpdate }) => {
           </tbody>
           <tfoot className="sticky-tfoot">
             <tr>
-              <td colSpan="4"></td>
+              <td colSpan="3"></td>
               <th>Total:</th>
               <td>{calcularPrecioTotal()}</td>
               <td></td>
@@ -413,7 +426,15 @@ const DataTable = ({ presupuesto, onUpdate }) => {
           </tfoot>
         </Table>
       </MDBCard>
+      {isModalOpen && (
+  <ModalListItems
+    elements={elements}
+    onItemSelect={handleItemSelect}
+    onClose={handleModalClose}
+  />
+)}
     </div>
+    
   );
 };
 
