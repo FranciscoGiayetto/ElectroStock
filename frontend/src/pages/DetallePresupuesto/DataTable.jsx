@@ -437,14 +437,14 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                         onClick={() => handleItemSave(item.id)}
                         className="btn btn-success btn-sm"
                       >
-                        Guardar
+                        <HiMiniCheck></HiMiniCheck>
                       </button>
                     ) : (
                       <button
                         onClick={() => handleItemEdit(item.id)}
                         className="btn btn-primary btn-sm"
                       >
-                        Editar
+                        <HiPencil></HiPencil>
                       </button>
                     )}
                     <button
@@ -452,7 +452,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                       className="btn btn-danger btn-sm ml-2"
                       disabled={budgetStatus === 'COMPLETADO'}
                     >
-                      Eliminar
+                      <HiOutlineXMark></HiOutlineXMark>
                     </button>
                     <button
                       onClick={() => handleItemCompra(item.id, item.status)}
