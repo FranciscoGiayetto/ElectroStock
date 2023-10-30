@@ -17,17 +17,53 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const [isEditingBudgetName, setIsEditingBudgetName] = useState(false);
   const [isAddingNewItem, setIsAddingNewItem] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [customName, setCustomName] = useState(true);
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const nameInputRef = useRef(null);
   useEffect(() => {
     try {
-     
-        setBudgetName(presupuesto.budget_details.name);
-        setBudgetStatus(presupuesto.budget_details.status);
-        setBudgetLogs(presupuesto.budget_logs)
+      setBudgetName(presupuesto.budget_details.name);
+      setBudgetStatus(presupuesto.budget_details.status);
+      // Agregar el campo "isNew" a los elementos del presupuesto
+      const budgetLogsWithIsNewFlag = presupuesto.budget_logs.map((item) => ({
+        ...item,
+        isNew: !item.element, // Comprueba si el campo "element" está presente o no
+      }));
+      setBudgetLogs(budgetLogsWithIsNewFlag);
     } catch (error) {
       console.error(error);
     }
   }, [presupuesto]);
+
+  const renderNameField = (item) => {
+    if (editingRows[item.id]) {
+      if (item.isNew) {
+        return (
+          <input
+            type="text"
+            style={{ maxWidth: "200px" }}
+            className="form-control"
+            value={editedValues[item.id]?.name || item.name}
+            onChange={(e) => handleItemInputChange(item.id, "name", e.target.value)}
+          />
+        );
+      } else {
+        return (
+          <input
+            type="text"
+            style={{ maxWidth: "200px" }}
+            className="form-control disabled-input"
+            value={item.name}
+            disabled
+            />
+          );
+      }
+    } else {
+      return item.name;
+    }
+  };
+
 
   const getClassByEstado = (estado) => {
     if (estado === "COMPRADO") {
@@ -134,45 +170,89 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
 
 
   const handleItemSelect = (selectedItem) => {
-    // Realiza alguna acción con el elemento seleccionado (por ejemplo, actualización del estado)
     console.log('Elemento seleccionado:', selectedItem);
+    setSelectedItem(selectedItem);
+    setCustomName(false);
+    // Actualiza el input del Nombre con el nombre del elemento seleccionado
+    setEditedValues({
+      ...editedValues,
+      'new': {
+        ...editedValues['new'],
+        'name': selectedItem.name,
+      },
+    });
+    // Deshabilita la edición del campo "Nombre"
+    
   };
-  
   const handleConfirmNewItem = async () => {
-    const newLog = {
-      ...editedValues['new'],
-      budget: presupuesto.budget_details.id, // Agrega el presupuesto actual
-      status: "PENDIENTE", // Establece el estado como "PENDIENTE"
-    };
+    if (customName) {
+      const newLog = {
+        ...editedValues['new'],
+        budget: presupuesto.budget_details.id,
+        status: "PENDIENTE",
+      
+      };
+      // Caso de nombre personalizado
+      // Valida los campos y realiza la solicitud POST si son válidos
+      if (!editedValues['new']?.name || editedValues['new']?.name.trim() === '') {
+        console.error("El campo 'Nombre' es obligatorio.");
+        return;
+      }
   
-    // Valida los campos del nuevo registro según el modelo de Django
-    if (!newLog.name || newLog.name.trim() === '') {
-      console.error("El campo 'Nombre' es obligatorio.");
-      return;
-    }
+      if (!editedValues['new']?.price || isNaN(parseFloat(editedValues['new']?.price)) || parseFloat(editedValues['new']?.price) < 0) {
+        console.error("El campo 'Precio' debe ser un número válido mayor o igual a cero.");
+        return;
+      }
   
-    if (isNaN(newLog.price) || parseFloat(newLog.price) < 0) {
-      console.error("El campo 'Precio' debe ser un número válido mayor o igual a cero.");
-      return;
-    }
+      if (!editedValues['new']?.quantity || isNaN(parseInt(editedValues['new']?.quantity)) || parseInt(editedValues['new']?.quantity) <= 0) {
+        console.error("El campo 'Cantidad' debe ser un número válido mayor a cero.");
+        return;
+      }
   
-    if (isNaN(newLog.quantity) || parseInt(newLog.quantity) <= 0) {
-      console.error("El campo 'Cantidad' debe ser un número válido mayor a cero.");
-      return;
-    }
+      // Luego, si todos los campos son válidos, procedes a realizar la solicitud POST
+      try {
+        const response = await api.post("/budgetlog/create/", newLog);
+        const createdItem = response.data;
   
-    // Luego, si todos los campos son válidos, procedes a realizar la solicitud POST
-    try {
-      const response = await api.post("/budgetlog/create/", newLog);
-      const createdItem = response.data;
+        setBudgetLogs([...budgetLogs, createdItem]);
+        setIsAddingNewItem(false);
+        setEditedValues({ ...editedValues, 'new': {} });
+      } catch (error) {
+        console.error(error);
+      }
+    } else if (selectedItem) {
+      // Caso de elemento seleccionado
+      const newLog = {
+        ...editedValues['new'],
+        budget: presupuesto.budget_details.id,
+        status: "PENDIENTE",
+        element: selectedItem.id, // Agrega la FK del elemento seleccionado
+      };
   
-      setBudgetLogs([...budgetLogs, createdItem]);
-      setIsAddingNewItem(false);
-      setEditedValues({ ...editedValues, 'new': {} });
-    } catch (error) {
-      console.error(error);
+      // Valida los campos del nuevo registro según el modelo de Django
+      if (!newLog.price || isNaN(parseFloat(newLog.price)) || parseFloat(newLog.price) < 0) {
+        console.error("El campo 'Precio' debe ser un número válido mayor o igual a cero.");
+        return;
+      }
+  
+      if (!newLog.quantity || isNaN(parseInt(newLog.quantity)) || parseInt(newLog.quantity) <= 0) {
+        console.error("El campo 'Cantidad' debe ser un número válido mayor a cero.");
+        return;
+      }
+  
+      try {
+        const response = await api.post("/budgetlog/create/", newLog);
+        const createdItem = response.data;
+  
+        setBudgetLogs([...budgetLogs, createdItem]);
+        setIsAddingNewItem(false);
+        setEditedValues({ ...editedValues, 'new': {} });
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
+  
   
   
   
@@ -257,7 +337,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
             </button>
           </div>
         </MDBCardHeader>
-
+  
         <div className="text-center mb-3" style={{ paddingTop: '1rem' }}>
           <input
             type="text"
@@ -270,7 +350,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
             <HiPlusCircle style={{ fontSize: "2rem" }} />
           </div>
         </div>
-
+  
         <Table responsive striped bordered hover className="mt-3">
           <thead>
             <tr>
@@ -286,22 +366,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
             {filteredPresupuesto.map((item, index) => (
               <tr key={item.id} className={getClassByEstado(item.status)}>
                 <td>{index + 1}</td>
-                <td>
-                  {editingRows[item.id] ? (
-                    <input
-                      type="text"
-                      style={{ maxWidth: "200px" }}
-                      className="form-control"
-                      value={editedValues[item.id]?.name || item.name}
-                      onChange={(e) =>
-                        handleItemInputChange(item.id, "name", e.target.value)
-                      }
-                    />
-                  ) : (
-                    item.name
-                  )}
-                </td>
-
+                <td>{renderNameField(item)}</td>
                 <td>
                   {editingRows[item.id] ? (
                     <input
@@ -364,20 +429,21 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                 </td>
               </tr>
             ))}
-
+  
             {isAddingNewItem && (
               <tr className="table-info">
                 <td>{budgetLogs.length + 1}</td>
                 <td style={{ display: "flex"}}>
                   <input
-                    type="text"
-                    style={{ maxWidth: "200px",paddingRigt:"1rem" }}
-                    className="form-control"
-                    value={editedValues['new']?.name || ""}
-                    onChange={(e) =>
-                      handleItemInputChange('new', "name", e.target.value)
-                    }
-                  />
+                  type="text"
+                  className={`form-control ${isAddingNewItem && customName ? '' : 'disabled-input'}`}
+                  style={{ maxWidth: "200px", paddingRight: "1rem" }}
+                  value={customName ? (editedValues['new']?.name || "") : selectedItem?.name}
+                  onChange={(e) =>
+                    handleItemInputChange('new', "name", e.target.value)
+                  }
+                  disabled={!customName}
+                />
                  <button onClick={() => setIsModalOpen(true)} className="btn btn-sm">
             <HiPlusCircle style={{ fontSize: "1rem" }} />
             </button>
@@ -427,15 +493,15 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
         </Table>
       </MDBCard>
       {isModalOpen && (
-  <ModalListItems
-    elements={elements}
-    onItemSelect={handleItemSelect}
-    onClose={handleModalClose}
-  />
-)}
+        <ModalListItems
+          elements={elements}
+          onItemSelect={handleItemSelect}
+          onClose={handleModalClose}
+        />
+      )}
     </div>
-    
   );
+  
 };
 
 export default DataTable;
