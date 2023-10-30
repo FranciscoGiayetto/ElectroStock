@@ -59,11 +59,11 @@ const CardNotificaciones = () => {
   };
 
   return (
-    <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', minHeight: '100vh' }}>
+    <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', width:'100%', minHeight:'41.5rem'}}>
       <MDBCardHeader style={{ color: 'white' }}>Notificaciones</MDBCardHeader>
       {element.length === 0 ? (
         <div style={{ padding: '20px', textAlign: 'center' }}>
-          <p>No hay notificaciones.</p>
+          <p>No recibiste ninguna notificación.</p>
         </div>
       ) : (
         <Table hover style={{ marginBottom: '0', height: '100%' }}>     
