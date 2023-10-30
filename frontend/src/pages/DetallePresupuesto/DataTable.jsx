@@ -6,7 +6,7 @@ import {
 } from 'mdb-react-ui-kit';
 import useAxios from '../../utils/useAxios.js';
 import { useParams, useNavigate } from 'react-router-dom';
-import { HiPlusCircle } from "react-icons/hi2";
+import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
 import ModalListItems from './ModalListItems'; 
 const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const [budgetStatus,  setBudgetStatus] = useState("");
@@ -315,39 +315,47 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
         }}
       >
         <MDBCardHeader className="bg-primary text-white">
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div>
-              Nombre del Presupuesto :
-            </div>
-            {isEditingBudgetName ? (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <input
-                  ref={nameInputRef}
-                  type="text"
-                  value={budgetName}
-                  onChange={(e) => setBudgetName(e.target.value)}
-                  onBlur={saveBudgetName}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      saveBudgetName();
-                    }
-                  }}
-                  style={{
-                    border: 'none',
-                    outline: 'none',
-                    background: 'transparent',
-                    color: 'white',
-                    fontSize: '1rem',
-                    padding: '0.25rem 0.5rem',
-                  }}
-                />
-              </div>
-            ) : (
-              <div onDoubleClick={activateBudgetNameEditing}>
-                {budgetName}
-              </div>
-            )}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ margin: '0 10px 0 0' }}>
+      Nombre del Presupuesto:
+    </div>
+    {isEditingBudgetName ? (
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <input
+          className="form-control"
+          ref={nameInputRef}
+          type="text"
+          value={budgetName}
+          onChange={(e) => setBudgetName(e.target.value)}
+          onBlur={saveBudgetName}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              saveBudgetName();
+            }
+          }}
+          style={{
+            maxWidth: "300px"
+          }}
+        />
+          <HiMiniCheck
+      onClick={saveBudgetName} // Hacer clic en el ícono aceptará el input
+      style={{ cursor: 'pointer', marginLeft: '0.5rem' }}
+    />
+      </div>
+    ) : (
+      <div
+        style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginLeft: '6px' }}
+        onDoubleClick={activateBudgetNameEditing}
+      >
+        {budgetName}
+        <HiPencil
+          onClick={() => setIsEditingBudgetName(true)}
+          style={{ cursor: 'pointer', marginLeft: '1rem' }}
+        />
+      </div>
+    )}
+            
             <button
               onClick={handleBudgetStatusChange}
               className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
