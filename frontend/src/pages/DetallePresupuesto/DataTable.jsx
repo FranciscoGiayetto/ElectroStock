@@ -19,7 +19,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [customName, setCustomName] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
-
+ 
   const nameInputRef = useRef(null);
   useEffect(() => {
     try {
@@ -42,7 +42,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
         return (
           <input
             type="text"
-            style={{ maxWidth: "200px" }}
+            style={{ maxWidth: "300px" }}
             className="form-control"
             value={editedValues[item.id]?.name || item.name}
             onChange={(e) => handleItemInputChange(item.id, "name", e.target.value)}
@@ -52,7 +52,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
         return (
           <input
             type="text"
-            style={{ maxWidth: "200px" }}
+            style={{ maxWidth: "300px" }}
             className="form-control disabled-input"
             value={item.name}
             disabled
@@ -161,8 +161,24 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
     if (!isAddingNewItem) {
       // Habilita el modo de edición para el nuevo registro
       setIsAddingNewItem(true);
+    
     }
   };
+
+
+  const handleCancelNewItem = () => {
+    setIsAddingNewItem(false); // Cancela la adición de un nuevo elemento
+  
+    // Borra los valores del elemento nuevo para restablecerlos
+    setEditedValues({ ...editedValues, 'new': {} });
+  
+    // Restablece el estado de customName a true para habilitar el campo de entrada del nombre
+    setCustomName(true);
+  
+    // Reinicia el estado del elemento seleccionado a null
+    setSelectedItem(null);
+  };
+  
   
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -371,7 +387,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                   {editingRows[item.id] ? (
                     <input
                       type="number"
-                      style={{ maxWidth: "150px" }}
+                      style={{ maxWidth: "100px" }}
                       className="form-control"
                       value={editedValues[item.id]?.price || item.price}
                       onChange={(e) =>
@@ -451,7 +467,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                 <td>
                   <input
                     type="number"
-                    style={{ maxWidth: "150px" }}
+                    style={{ maxWidth: "100px" }}
                     className="form-control"
                     value={editedValues['new']?.price || ""}
                     onChange={(e) =>
@@ -472,6 +488,12 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                 </td>
                 <td>{/* Cálculo del total */}</td>
                 <td>
+                <button
+                onClick={handleCancelNewItem}
+                className="btn btn-danger btn-sm"
+              >
+                Cancelar
+              </button>
                   <button
                     onClick={handleConfirmNewItem}
                     className="btn btn-success btn-sm"
