@@ -243,7 +243,7 @@ const DataTable = ({ presupuesto, onUpdate }) => {
                 marginLeft: 'auto',
               }}
             >
-              {budgetStatus === 'PROGRESO' ? 'PROGRESO' : 'COMPLETADO'}
+              {budgetStatus === 'PROGRESO' ? 'EN PROGRESO' : 'COMPLETADO'}
             </button>
           </div>
         </MDBCardHeader>
