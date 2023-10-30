@@ -268,11 +268,13 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   
         setBudgetLogs([...budgetLogs, createdItem]);
         setIsAddingNewItem(false);
+        setCustomName(true);
         setEditedValues({ ...editedValues, 'new': {} });
       } catch (error) {
         console.error(error);
       }
     }
+    
   };
   
   
