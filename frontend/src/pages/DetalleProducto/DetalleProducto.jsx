@@ -7,6 +7,7 @@ import useAxios from '../../utils/useAxios';
 import defaultpicture from '../../assets/images/defaultpicture.png';
 import './DetalleProducto.css';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import TextField from '@mui/material/TextField';
 
 // Lista de categorías con nombres correspondientes a los IDs
 const categorias = [
@@ -16,6 +17,12 @@ const categorias = [
 ];
 
 function DetalleProducto() {
+  const [observation, setObservation] = useState(''); // Estado para la observación
+
+  const handleObservationChange = (value) => {
+    setObservation(value);
+  };
+
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const [posRes, setPostRes] = useState('');
@@ -37,7 +44,8 @@ function DetalleProducto() {
       window.removeEventListener('resize', handleLayoutChange);
     };
   }, [id]);
-  
+
+
   const getElement = async () => {
     try {
       const response = await api.get(`/elements/${id}/`);
@@ -96,18 +104,18 @@ function DetalleProducto() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     let body = {
       box: element.id,
       borrower: userData.user_id,
       lender: userData.user_id,
       status: 'CAR',
       quantity: 1,
-      observation: null,
+      observation: observation, // Incluye el valor de la observación
       dateIn: null,
       dateOut: null,
     };
-
+  
     try {
       const response = await api.post(`/logPost/${userData.user_id}/`, body);
       console.log(response.data);
@@ -133,36 +141,52 @@ function DetalleProducto() {
         </Button>
       </div>
       {element && (
-        <div className={`row product-details ${isVerticalLayout ? 'vertical-layout' : ''}`}>
-          <div className="col-md-6 product-details__image-container">
-            <img
-              src={element.image || defaultpicture}
-              alt="Imagen"
-              className="img-fluid product-details__image"
-            />
-          </div>
+  <div className={`row product-details ${isVerticalLayout ? 'vertical-layout' : ''}`}>
+    <div className="col-md-6 product-details__image-container">
+      <img
+        src={element.image || defaultpicture}
+        alt="Imagen"
+        className="img-fluid product-details__image"
+      />
+    </div>
 
-          <div className="col-md-6 product-details__info-container" style={{ width: '45%' }}>
-            <h1 className="product-details__title">Nombre: {element.name}</h1>
-            <h1 className="product-details__description">Descripción: {element.description}</h1>
-            <h1 className="product-details__category">
-              Categoría: {element.category.name}
-            </h1>
-            <h1 className="product-details__stock">Stock: {element.stock || 'No disponible'}</h1>
+    <div className="col-md-6 product-details__info-container" style={{ width: '45%' }}>
+      <h1 className="product-details__title">Nombre: {element.name}</h1>
+      <h1 className="product-details__description">Descripción: {element.description}</h1>
+      <h1 className="product-details__category">
+        Categoría: {element.category.name}
+      </h1>
+      <h1 className="product-details__stock">Stock: {element.stock || 'No disponible'}</h1>
 
-            <Button
-              className="botonCarrito"
-              size="lg"
-              style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0', left: '5px' }}
-              variant="primary"
-              type="submit"
-              onClick={handleSubmit}
-            >
-              Agregar al carrito
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* Campo de observación */}
+      <TextField
+  label="Observación"
+  variant="outlined"
+  fullWidth
+  margin="normal"
+  color="primary"
+  placeholder="Escribe tu observación"
+  value={observation}
+  onChange={(e) => handleObservationChange(e.target.value)}
+  sx={{ width: '80%' }}
+/>
+
+
+
+      <Button
+        className="botonCarrito"
+        size="lg"
+        style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0', left: '5px' }}
+        variant="primary"
+        type="submit"
+        onClick={handleSubmit}
+      >
+        Agregar al carrito
+      </Button>
+    </div>
+  </div>
+)}
+
       <div className={`product-details__separator ${isVerticalLayout ? 'vertical-separator' : ''}`}></div>
     </div>
   );
