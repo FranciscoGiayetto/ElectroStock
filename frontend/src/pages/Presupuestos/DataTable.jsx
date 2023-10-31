@@ -112,7 +112,7 @@ const DataTable = ({ presupuestos }) => {
      <MDBCardHeader style={{fontSize:"2rem"}} className="bg-primary text-white d-flex justify-content-between align-items-center">
   <span>Presupuestos</span>
   <div className="hover-scale" onClick={handleNewBudget}>
-  <HiPlusCircle />
+  <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
   </div>
 </MDBCardHeader>
 

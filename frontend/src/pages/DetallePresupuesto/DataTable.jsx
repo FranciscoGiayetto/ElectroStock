@@ -205,7 +205,7 @@ const DataTable = ({ presupuesto, onUpdate }) => {
         <MDBCardHeader className="bg-primary text-white">
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div>
-              Nombre del Presupuesto :
+              Nombre del Presupuesto:
             </div>
             {isEditingBudgetName ? (
               <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -240,8 +240,9 @@ const DataTable = ({ presupuesto, onUpdate }) => {
               onClick={handleBudgetStatusChange}
               className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
               style={{
-                marginLeft: 'auto',
+                marginLeft: 'auto'
               }}
+              data-toggle="tooltip" data-placement="top" title="Estado del presupuesto"
             >
               {budgetStatus === 'PROGRESO' ? 'PROGRESO' : 'COMPLETADO'}
             </button>
@@ -257,7 +258,7 @@ const DataTable = ({ presupuesto, onUpdate }) => {
             style={{ width: '60%', display: 'inline-block' }}
           />
           <div className="hover-scale" onClick={handleNewItem}>
-            <HiPlusCircle style={{ fontSize: "2rem" }} />
+            <HiPlusCircle data-toggle="tooltip" data-placement="top" title="Agregar" style={{ fontSize: "2rem" }} />
           </div>
         </div>
 

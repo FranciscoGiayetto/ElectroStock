@@ -41,7 +41,7 @@ function Presupuestos() {
   return (
     <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
       <Row>
-        <Col style={{ width: '62.5rem' }}>
+        <Col>
           <DataTable presupuestos={presupuestos} />
         </Col>
       </Row>
