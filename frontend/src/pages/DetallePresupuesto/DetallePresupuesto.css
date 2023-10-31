@@ -23,3 +23,17 @@
     justify-content: center;
     width: 40px;
   }
+
+
+
+  .modal-content {
+    max-height: 800px; /* Establece la altura máxima del modal */
+    overflow-y: auto; /* Permite desplazamiento vertical dentro del modal */
+  }
+  
+  .modal-header {
+    position: sticky; /* Fija el encabezado en la parte superior */
+    top: 0; /* Punto de fijación en la parte superior */
+    background-color: #fff; /* Fondo blanco para la barra de búsqueda */
+    z-index: 1; /* Asegura que la barra de búsqueda esté por encima del contenido desplazable */
+  }  
