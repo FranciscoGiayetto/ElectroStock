@@ -548,11 +548,11 @@ class VencidoStatisticsView(generics.ListAPIView):
         )
 
         # Calcula el porcentaje de registros vencidos
-        total_logs = statistics['approved_logs']
+        total_logs = statistics['total_logs']
         expired_logs = statistics['expired_logs']
         print(total_logs)
         print(expired_logs)
-        vencido_percentage = (expired_logs / total_logs) * 100 if total_logs > 0 else 0
+        vencido_percentage = ((expired_logs * 100)/ total_logs ) if total_logs > 0 else 0
 
         # Agrega el porcentaje correcto al diccionario de estadísticas
         statistics['vencido_percentage'] = vencido_percentage
