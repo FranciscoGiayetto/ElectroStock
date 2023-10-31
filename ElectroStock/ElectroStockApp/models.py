@@ -239,6 +239,9 @@ class Box(models.Model):
         return self.name
 
     class Meta:
+        indexes = [
+            models.Index(fields=['name']),  
+        ]
         verbose_name_plural = "Boxes"
         verbose_name = "Box"
 
@@ -306,6 +309,9 @@ class Log(models.Model):
     # Conecta el método a la señal post_save del modelo Log
 
     class Meta:
+        indexes = [
+            models.Index(fields=['quantity', 'status','box']),  
+        ]
         verbose_name_plural = "Prestamos y movimientos"
         verbose_name = "Prestamo y movimientos"
 

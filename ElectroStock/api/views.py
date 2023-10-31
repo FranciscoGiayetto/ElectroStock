@@ -693,6 +693,39 @@ def CambioAprobado(request, user_id):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(["GET","PUT"])
+def CambioDevuelto(request, user_id):
+    if request.method == "GET":
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.DEVUELTO
+        )
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "PUT":
+        # Agregar código para manejar la solicitud PUT
+        logs_pedido = models.Log.objects.filter(lender=user_id, status=models.Log.Status.APROBADO)
+        new_status = models.Log.Status.DEVUELTO
+        for log in logs_pedido:
+            log.status = new_status
+            log.save()
+        serializer = LogSerializer(logs_pedido, many=True)
+
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.DEVUELTO
+        )
+        # Agregar código para manejar la solicitud PUT
+        logs_pedido = models.Log.objects.filter(lender=user_id, status=models.Log.Status.VENCIDO)
+        new_status = models.Log.Status.DEVUELTOTARDIO
+        for log in logs_pedido:
+            log.status = new_status
+            log.save()
+        serializer = LogSerializer(logs_pedido, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["GET","PUT"])
 def CambioDesaprobado(request, user_id):
     if request.method == "GET":
         # Agregar código para manejar la solicitud GET si es necesario
