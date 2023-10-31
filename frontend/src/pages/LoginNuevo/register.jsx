@@ -165,7 +165,7 @@ function Register() {
                                             name="secretTokenField"
                                             value={secretTokenField}
                                             onChange={(e) => setSecretTokenField(e.target.value)}
-                                            placeholder="Token único" className="input-style"
+                                            placeholder="Token único proveido por el profesor" className="input-style"
                                         />
                                     </Form.Group>
 
