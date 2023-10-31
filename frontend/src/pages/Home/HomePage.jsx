@@ -11,6 +11,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import CardNotificaciones from './CardNotificaciones';
+import HoverButton from './HoverButton';
 
 function HomePage() {
   const [isLoggedIn, user] = useAuthStore((state) => [
@@ -50,6 +51,7 @@ function HomePage() {
           </div>
         </Col>
       </Row>
+      <HoverButton />
     </Container>
   );
 }

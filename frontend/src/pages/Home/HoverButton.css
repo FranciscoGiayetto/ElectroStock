@@ -1,0 +1,27 @@
+/* HoverButton.css */
+.hover-button {
+    position: fixed;
+    top: 100px; /* Adjust this value to position the button below the navbar */
+    right: 20px; /* Adjust this value to position the button at the top-right corner */
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .hover-button:hover {
+    background-color: #0056b3; /* Change the background color on hover */
+  }
+  
+  /* Media query for small screens (e.g., mobile phones) */
+  @media (max-width: 768px) {
+    .hover-button {
+      top: 50%; /* Position the button at the vertical middle on small screens */
+      transform: translateY(-50%); /* Center the button vertically */
+      right: 20px; /* Adjust this value if necessary */
+    }
+  }
+  
