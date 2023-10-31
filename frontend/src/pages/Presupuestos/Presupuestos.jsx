@@ -17,6 +17,7 @@ function Presupuestos() {
   ]);
   const [element, setElement] = useState([]);
   const [presupuestos, setPresupuestos] = useState([]);
+  const[especialidades, setEspecialidades] = useState([]);
   const api = useAxios();
   const userData = user();
   const id = userData.user_id;
@@ -34,15 +35,27 @@ function Presupuestos() {
     }
   };
 
+
+  const getEspecialidades = async () => {
+    try {
+      const response = await api.get(`/especialidad/`);
+      let data = await response.data;
+      console.log(data)
+      setEspecialidades(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
     getPresupuesto();
+    getEspecialidades();
   }, []);
 
   return (
     <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
       <Row>
         <Col style={{ width: '62.5rem' }}>
-          <DataTable presupuestos={presupuestos} />
+          <DataTable presupuestos={presupuestos} especialidades={especialidades} />
         </Col>
       </Row>
     </Container>

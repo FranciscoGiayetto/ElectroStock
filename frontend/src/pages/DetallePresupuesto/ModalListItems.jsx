@@ -1,64 +1,71 @@
-import React, { useState } from 'react';
-import { Modal } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Dropdown from 'react-bootstrap/Dropdown';
 
-const listItemStyle = {
-  borderBottom: '1px solid #ddd',
-  padding: '8px',
-  cursor: 'pointer',
-};
+const ModalNewBudget = ({ isOpen, onClose, onSubmit, specialities }) => {
+  const [budgetName, setBudgetName] = useState('');
+  const [selectedSpeciality, setSelectedSpeciality] = useState('');
 
-const highlightedItemStyle = {
-  ...listItemStyle,
-  backgroundColor: '#f5f5f5', // Color de fondo cuando el mouse pasa por encima
-};
+  useEffect(() => {
+    // Establecer la especialidad predeterminada si hay especialidades disponibles
+    if (specialities && specialities.length > 0) {
+      setSelectedSpeciality(specialities[0].id);
+    }
+  }, [specialities]);
 
-const ModalListItems = ({ elements, onItemSelect, onClose }) => {
-  const [hoveredItem, setHoveredItem] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const filteredElements = elements.filter((element) =>
-    element.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleFormSubmit = () => {
+    const newBudgetData = {
+      name: budgetName,
+      status: 'PROGRESO',
+      speciality: selectedSpeciality,
+    };
+    onSubmit(newBudgetData);
+  };
 
   return (
-    <Modal show={true} onHide={onClose}>
-   <Modal.Header closeButton>
-        <div>
-          <Modal.Title>Selecciona un elemento de la lista:</Modal.Title>
-          <input
-            type="text"
-            placeholder="Buscar elemento..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: '100%' }}
-          />
-        </div>
+    <Modal show={isOpen} onHide={onClose} backdrop="static">
+      <Modal.Header closeButton>
+        <Modal.Title>Nuevo Presupuesto</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-       
-        <ul style={{ listStyleType: 'none', padding: 0 }}>
-          {filteredElements.map((element) => (
-            <li
-              key={element.id}
-              style={element === hoveredItem ? highlightedItemStyle : listItemStyle}
-              onClick={() => {
-                onItemSelect(element);
-                onClose();
-              }}
-              onMouseEnter={() => setHoveredItem(element)}
-              onMouseLeave={() => setHoveredItem(null)}
-            >
-              {element.name}
-            </li>
-          ))}
-        </ul>
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Nombre del Presupuesto:</Form.Label>
+            <Form.Control
+              type="text"
+              value={budgetName}
+              onChange={(e) => setBudgetName(e.target.value)}
+            />
+          </Form.Group>
+          {specialities && specialities.length > 0 && (
+            <Form.Group className="mb-3">
+              <Form.Label>Especialidad:</Form.Label>
+              <Form.Select
+                value={selectedSpeciality}
+                onChange={(e) => setSelectedSpeciality(e.target.value)}
+              >
+                {specialities.map((speciality) => (
+                  <option key={speciality.id} value={speciality.id}>
+                    {speciality.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          )}
+        </Form>
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn btn-secondary" onClick={onClose}>
-          Cerrar
-        </button>
+        <Button variant="secondary" onClick={onClose}>
+          Cancelar
+        </Button>
+        <Button variant="primary" onClick={handleFormSubmit}>
+          Crear
+        </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-export default ModalListItems;
+export default ModalNewBudget;
