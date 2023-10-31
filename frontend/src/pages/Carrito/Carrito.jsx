@@ -102,13 +102,7 @@ function Carrito() {
         try {
           // Realiza una solicitud PUT para actualizar el registro en el servidor
           await api.put(`/logCantidad/${item.id}/`, updateData);
-        } catch (error) {
-          // Maneja el error y muestra una alerta
-          console.error('Error en la solicitud PUT:', error);
-          alert('No hay stock disponible');
-        }
-      }
-  
+
       try {
         const response = await api.put(`/logPost/${userData.user_id}/`, { dateOut: dateInputData });
         console.log(response.data.response);
@@ -121,8 +115,17 @@ function Carrito() {
       navigate('/');
     } catch (error) {
       console.error('Error al actualizar registros:', error);
+      alert('No hay stock disponible');
+
     }
   }
+  
+        } catch (error) {
+          // Maneja el error y muestra una alerta
+          console.error('Error en la solicitud PUT:', error);
+          alert('No hay stock disponible');
+        }
+      }
   
 
   
