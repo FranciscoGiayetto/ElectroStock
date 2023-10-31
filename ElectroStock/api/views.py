@@ -950,34 +950,57 @@ def BudgetViewSet(request, budget_id=None):
 
     return Response(status=405)
 
-@api_view(["GET", "PUT"])
+def check_stock_sufficiency(element_id, new_quantity):
+    boxes = models.Box.objects.filter(element__id=element_id)
+    box_ids = [box.id for box in boxes]
+
+    total_com = models.Log.objects.filter(box__id__in=box_ids, status="COM").aggregate(total=Sum("quantity"))["total"]
+    total_ped = models.Log.objects.filter(box__id__in=box_ids, status="PED").aggregate(total=Sum("quantity"))["total"]
+    total_rot = models.Log.objects.filter(box__id__in=box_ids, status="ROT").aggregate(total=Sum("quantity"))["total"]
+    total_ap = models.Log.objects.filter(box__id__in=box_ids, status="AP").aggregate(total=Sum("quantity"))["total"]
+
+    if total_com is None:
+        total_com = 0
+    if total_ped is None:
+        total_ped = 0
+    if total_ap is None:
+        total_ap = 0
+    if total_rot is None:
+        total_rot = 0
+
+    current_stock = total_com - total_ped - total_ap - total_rot
+
+    return current_stock >= new_quantity
+
+@api_view(["PUT"])
 def update_log_quantity(request, log_id):
     try:
         # Buscar el registro Log por ID
         log = models.Log.objects.get(pk=log_id)
 
-        if request.method == "GET":
-            # Serializar y devolver los detalles del registro Log
-            serializer = LogSerializer(log)
-            return Response(serializer.data)
-
-        elif request.method == "PUT":
+        if request.method == "PUT":
             # Obtener la nueva cantidad desde la solicitud
             new_quantity = request.data.get("quantity")
             new_observation = request.data.get("observation")
-            # Actualizar la cantidad del registro Log
-            log.quantity = new_quantity
-            log.observation = new_observation
-            log.save()
 
-            # Devolver una respuesta exitosa
-            return Response({"message": "Cantidad del registro actualizada correctamente"})
+            # Verificar si hay suficiente stock antes de actualizar
+            enough_stock = check_stock_sufficiency(log.box.element.id, new_quantity)
+
+            if enough_stock:
+                # Actualizar la cantidad del registro Log si hay suficiente stock
+                log.quantity = new_quantity
+                log.observation = new_observation
+                log.save()
+
+                # Devolver una respuesta exitosa
+                return Response({"message": "Cantidad del registro actualizada correctamente"})
+            else:
+                return Response({"message": "No hay suficiente stock disponible"}, status=status.HTTP_400_BAD_REQUEST)
 
     except models.Log.DoesNotExist:
         return Response({"message": "El registro Log no existe"}, status=status.HTTP_404_NOT_FOUND)
 
-    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)   
-
+    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 class BudgetLogCreateView(generics.CreateAPIView):
     queryset = models.BudgetLog.objects.all()
