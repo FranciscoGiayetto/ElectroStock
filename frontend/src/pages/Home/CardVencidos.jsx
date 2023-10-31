@@ -68,7 +68,7 @@ const CardVencidos = () => {
   return (
     
     <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', width: '100%', minHeight:'20rem'}}>       
-      <MDBCardHeader style={{ color: 'white' }}>Vencidos</MDBCardHeader>
+      <MDBCardHeader style={{ color: 'white' }}>Préstamos Vencidos</MDBCardHeader>
       {element.length === 0 ? (
         <div style={{ padding: '20px', textAlign: 'center' }}>
           <p>No hay préstamos vencidos. </p>

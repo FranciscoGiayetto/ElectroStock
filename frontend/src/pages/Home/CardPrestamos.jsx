@@ -67,7 +67,7 @@ const CardPrestamos = () => {
   };
   return (
     <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', minHeight:'20rem', marginTop:'1.5rem', width:'100%'}}>
-      <MDBCardHeader style={{ color: 'white' }}>Activos</MDBCardHeader>
+      <MDBCardHeader style={{ color: 'white' }}>Préstamos Activos</MDBCardHeader>
 
       {element.length === 0 ? (
         <div style={{ padding: '20px', textAlign: 'center' }}>

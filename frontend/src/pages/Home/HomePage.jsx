@@ -38,7 +38,7 @@ function HomePage() {
 
         </Col>
 
-        <Col md={3}> <CardNotificaciones/> </Col> 
+        <Col md={3} className="d-none d-md-block"> <CardNotificaciones/> </Col> 
       </Row>
 
     </Container>
