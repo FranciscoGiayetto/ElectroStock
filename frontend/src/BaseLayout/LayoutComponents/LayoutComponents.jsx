@@ -12,6 +12,7 @@ import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import SettingsIcon from '@mui/icons-material/Settings';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -206,8 +207,8 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
                     )}
                   />
-                
-                  <Button variant="primary" type="submit" className='button' style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                 
+                  <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Buscar" style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
                     <SearchRoundedIcon />
                   </Button>
 
@@ -217,7 +218,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               {/* Buttons */}
               <Col>
                 {!isSmallScreen && (
-                  <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/carrito' }}>
+                  <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Carrito" onClick={() => { window.location.href = '/carrito' }}>
                     <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                   </Button>
                 )}
@@ -225,15 +226,15 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
               <Col style={{ marginLeft:'0'}}>
               {!isSmallScreen && (
-                <Button variant="primary" type="submit" className='button' >
+                <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
                   <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                 </Button>
               )}
               </Col>
               <Col style={{ marginLeft:'0rem'}}>   
               {!isSmallScreen && (
-                <Button variant="primary" type="submit" className='button'  onClick={() => { window.location.href = '/detalleCuenta' }}>
-                  <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
+                <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
+                  <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
                 </Button>
               )}
               </Col>          
