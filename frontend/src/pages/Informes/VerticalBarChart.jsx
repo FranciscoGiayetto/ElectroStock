@@ -8,8 +8,13 @@ const VerticalBarChart = ({ data }) => {
   useEffect(() => {
     if (data.length === 0) return;
 
-    const labels = data.map(item => item.box_nombre);
-    const values = data.map(item => item.cantidad_logs_rotos);
+    let labels = [];
+let values = [];
+
+if (Array.isArray(data)) {
+  labels = data.map(item => item.box_nombre);
+  values = data.map(item => item.cantidad_logs_rotos);
+}
 
     const ctx = chartRef.current.getContext('2d');
 
