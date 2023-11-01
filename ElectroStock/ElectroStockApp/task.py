@@ -61,17 +61,21 @@ def assign_next_year_course():
                 logging.warning(f"No course found for year {next_year}")
                 user.delete()  # Eliminar el usuario si el curso no existe
 
-<<<<<<< HEAD
 from django.core.management import call_command
 from celery import shared_task
 from django.core.management import call_command
 import os
+import datetime
 
 @shared_task
 def backup_database():
     try:
         # Ejecuta el comando dumpdata para exportar los datos de la base de datos
-        backup_filename = 'backup_data.json'  # Nombre del archivo de copia de seguridad
+        # Obtener la fecha de hoy
+        fecha_hoy = datetime.datetime.now().strftime('%Y-%m-%d')  # Formato: Año-Mes-Día
+
+        # Nombre del archivo de copia de seguridad con la fecha de hoy
+        backup_filename = f'backup_data_{fecha_hoy}.json'
         call_command('dumpdata', output=backup_filename)
 
         # Mueve el archivo de copia de seguridad a un directorio específico
@@ -80,7 +84,6 @@ def backup_database():
     except Exception as e:
         # Maneja cualquier excepción que pueda ocurrir durante el respaldo
         raise e
-=======
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum
 
@@ -150,4 +153,3 @@ def check_stock_and_add_budget_logs():
 
 
 
->>>>>>> d595c6803bd5c4cd3076aa51b409cc78402fd205
