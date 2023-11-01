@@ -73,14 +73,6 @@ const CardPendientes = () => {
           </tr>
         </thead>
         <tbody>
-          {element.slice(-3).map((item, index) => (
-            <tr key={index}>
-              <td>{formatDate(item.dateOut)}</td>
-        
-              <td>{formatBoxName(item.box.name)}</td>
-                            <td>{item.quantity}</td>
-            </tr>
-          ))}
         </tbody>
       </Table>
     </MDBCard>
