@@ -51,7 +51,7 @@ id,status,quantity,box,observation
 50,COM,1,50,planilla excel 2023
 51,COM,1,51,planilla excel 2023
 52,COM,1,52,planilla excel 2023
-53,COM,,53,planilla excel 2023
+53,COM,0,53,planilla excel 2023
 54,COM,1,54,planilla excel 2023
 55,COM,1,55,planilla excel 2023
 56,COM,1,56,planilla excel 2023
@@ -744,7 +744,7 @@ id,status,quantity,box,observation
 743,COM,14,743,planilla excel 2023
 744,COM,1,744,planilla excel 2023
 745,COM,1,745,planilla excel 2023
-746,COM,"0,5",746,planilla excel 2023
+746,COM,1,746,planilla excel 2023
 747,COM,3,747,planilla excel 2023
 748,COM,3,748,planilla excel 2023
 749,COM,2,749,planilla excel 2023
@@ -760,7 +760,7 @@ id,status,quantity,box,observation
 759,COM,0,759,planilla excel 2023
 760,COM,2,760,planilla excel 2023
 761,COM,6,761,planilla excel 2023
-762,COM,"0,2",762,planilla excel 2023
+762,COM,2,762,planilla excel 2023
 763,COM,1,763,planilla excel 2023
 764,COM,2,764,planilla excel 2023
 765,COM,1,765,planilla excel 2023
