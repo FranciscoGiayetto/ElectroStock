@@ -256,7 +256,43 @@ def carrito(request, user_id):
 
     return Response(status=405)
 
+@api_view(["GET", "POST"])
+def cantCarrito(request, user_id):
+    if request.method == "GET":
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.CARRITO
+        )
+        
+        # Contar la cantidad de elementos en el carrito
+        count = queryset.count()
+        
+        return Response({count})
 
+    if request.method == "POST":
+        return Response({"message": "Elemento agregado al carrito"})
+
+    return Response(status=405)
+
+@api_view(["GET", "POST"])
+def cantNotificaciones(request, user_id):
+    if request.method == "GET":
+        queryset = models.Notification.objects.filter(
+            user_revoker= user_id
+        )
+        
+        # Contar la cantidad de elementos en el carrito
+        count = queryset.count()
+        
+        return Response({count})
+
+    if request.method == "POST":
+        return Response({"message": "Elemento agregado al carrito"})
+
+    return Response(status=405)
+
+
+
+from collections import defaultdict
 @api_view(["GET", "POST"])
 def VencidosAPIView(request, user_id):
     if request.method == "GET":
@@ -264,7 +300,14 @@ def VencidosAPIView(request, user_id):
             lender=user_id, status=models.Log.Status.VENCIDO
         )
         serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
+        
+        # Agrupar logs por fecha y hora de creación
+        grouped_logs = defaultdict(list)
+        for log in queryset:
+            creation_date = log.dateIn.strftime('%Y-%m-%d %H:%M')  # Formatear fecha y hora
+            grouped_logs[creation_date].append(LogSerializer(log).data)
+        
+        return Response(grouped_logs)
 
     if request.method == "POST":
         # Realiza acciones necesarias para agregar elementos al carrito
@@ -275,6 +318,7 @@ def VencidosAPIView(request, user_id):
     return Response(status=405)
 
 
+
 @api_view(["GET", "POST"])
 def PendientesAPIView(request, user_id):
     if request.method == "GET":
@@ -282,7 +326,14 @@ def PendientesAPIView(request, user_id):
             lender=user_id, status=models.Log.Status.PEDIDO
         )
         serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
+        
+        # Agrupar logs por fecha y hora de creación
+        grouped_logs = defaultdict(list)
+        for log in queryset:
+            creation_date = log.dateIn.strftime('%Y-%m-%d %H:%M')  # Formatear fecha y hora
+            grouped_logs[creation_date].append(LogSerializer(log).data)
+        
+        return Response(grouped_logs)
 
     if request.method == "POST":
         # Realiza acciones necesarias para agregar elementos al carrito
@@ -316,12 +367,16 @@ def PrestamosActualesView(request, user_id):
 
         queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
-        serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
+        # Agrupar logs por fecha y hora de creación
+        grouped_logs = defaultdict(list)
+        for log in queryset:
+            creation_date = log.dateIn.strftime('%Y-%m-%d %H:%M')  # Formatear fecha y hora
+            grouped_logs[creation_date].append(LogSerializer(log).data)
+        
+        return Response(grouped_logs)
 
     if request.method == "POST":
         return Response({"message": "Elemento agregado al carrito"})
-
     return Response(status=405)
 
 
