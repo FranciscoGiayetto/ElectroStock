@@ -43,7 +43,7 @@ const PrestamosCard = ({ status, image, cliente, dateIn, name }) => {
                   <span>Componente: {name}</span>
                   <br />
                   <p className="text-truncate mb-4 mb-md-0">
-                  © Colegio ITS Villada. Todos los derechos reservados. Prohibida la reproducción total o parcial sin autorización escrita.
+                  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                   </p>
                 </div>
                 <div className="col-md-8 col-lg-3 border-start">
