@@ -275,36 +275,6 @@ def VencidosAPIView(request, user_id):
     return Response(status=405)
 
 
-@api_view(["GET", "POST"])
-def PendientesAPIView(request, user_id):
-    if request.method == "GET":
-        queryset = models.Log.objects.filter(
-            lender=user_id, status=models.Log.Status.PEDIDO
-        )
-        serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-
-        return Response({"message": "Elemento agregado al carrito"})
-
-    return Response(status=405)
-
-
-# View para todos los logs del usuario actual
-
-
-class PrestamosAPIView(viewsets.ModelViewSet):
-    serializer_class = LogSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        return models.Log.objects.filter(lender=user)
-
 
 @api_view(["GET", "POST"])
 def PrestamosActualesView(request, user_id):
@@ -693,39 +663,6 @@ def CambioAprobado(request, user_id):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(["GET","PUT"])
-def CambioDevuelto(request, user_id):
-    if request.method == "GET":
-        # Agregar código para manejar la solicitud GET si es necesario
-        queryset = models.Log.objects.filter(
-            lender=user_id, status=models.Log.Status.DEVUELTO
-        )
-        serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
-    
-    if request.method == "PUT":
-        # Agregar código para manejar la solicitud PUT
-        logs_pedido = models.Log.objects.filter(lender=user_id, status=models.Log.Status.APROBADO)
-        new_status = models.Log.Status.DEVUELTO
-        for log in logs_pedido:
-            log.status = new_status
-            log.save()
-        serializer = LogSerializer(logs_pedido, many=True)
-
-        # Agregar código para manejar la solicitud GET si es necesario
-        queryset = models.Log.objects.filter(
-            lender=user_id, status=models.Log.Status.DEVUELTO
-        )
-        # Agregar código para manejar la solicitud PUT
-        logs_pedido = models.Log.objects.filter(lender=user_id, status=models.Log.Status.VENCIDO)
-        new_status = models.Log.Status.DEVUELTOTARDIO
-        for log in logs_pedido:
-            log.status = new_status
-            log.save()
-        serializer = LogSerializer(logs_pedido, many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-@api_view(["GET","PUT"])
 def CambioDesaprobado(request, user_id):
     if request.method == "GET":
         # Agregar código para manejar la solicitud GET si es necesario
@@ -982,3 +919,63 @@ def update_log_quantity(request, log_id):
 class BudgetLogCreateView(generics.CreateAPIView):
     queryset = models.BudgetLog.objects.all()
     serializer_class = BudgetLogCreateSerializer    
+
+
+
+import datetime
+@api_view(["GET", "PUT"])
+def CambioDevuelto(request, user_id, date):
+    if request.method == "GET":
+        # Código para manejar la solicitud GET si es necesario
+        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.APROBADO, dateIn=date)
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    elif request.method == "PUT":
+        # Código para manejar la solicitud PUT
+        logs_pedido_aprobados = models.Log.objects.filter(lender=user_id, status=models.Log.Status.APROBADO, dateIn=date)
+        
+        for log in logs_pedido_aprobados:
+            log.status = models.Log.Status.DEVUELTO
+            log.save()
+
+        logs_pedido_vencidos = models.Log.objects.filter(lender=user_id, status=models.Log.Status.VENCIDO, dateIn=date)
+        
+        for log in logs_pedido_vencidos:
+            log.status = models.Log.Status.DEVUELTOTARDIO
+            log.save()
+
+        # Actualizar los logs obtenidos después de la modificación
+        updated_logs = models.Log.objects.filter(lender=user_id, dateIn=date)
+        serializer = LogSerializer(updated_logs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+from collections import defaultdict
+
+@api_view(["GET", "POST"])
+def PendientesAPIView(request, user_id):
+    if request.method == "GET":
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.PEDIDO
+        )
+        serializer = LogSerializer(queryset, many=True)
+        
+        # Agrupar logs por fecha y hora de creación
+        grouped_logs = defaultdict(list)
+        for log in queryset:
+            creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z')  # Formatear fecha y hora
+            log_data = LogSerializer(log).data
+            log_data['dateIn'] = creation_date  # Actualizar la clave 'dateIn' al string formateado
+            grouped_logs[creation_date].append(log_data)
+        
+        return Response(grouped_logs)
+
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+
+        return Response({"message": "Elemento agregado al carrito"})
+
+    return Response(status=405)
+
+
