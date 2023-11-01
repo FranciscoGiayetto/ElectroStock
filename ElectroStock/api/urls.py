@@ -17,6 +17,7 @@ router.register("location", LocationViewSet, "location")
 router.register("box", BoxViewSet, "box")
 router.register("especialidad", SpecialityViewSet, "especialidad")
 router.register("token", TokenViewSet, "token")
+router.register("grupos", GroupViewSet, "grupos")
 router.register("log", LogViewSet, "log")
 
 
@@ -26,7 +27,7 @@ urlpatterns = [
     path('categories_por_especialidad/<str:nombre_especialidad>/', categories_por_especialidad, name='categories_por_especialidad'),
     path("logPost/<int:user_id>/", CambioLog, name="logPost"),
     path("desaprobadoPost/<int:user_id>/", CambioDesaprobado, name="desaprobado"),
-    path("devueltoPost/<int:user_id>/", CambioDevuelto, name="devuelto"),
+    path("devueltoPost/<int:user_id>/<str:date>/", CambioDevuelto, name="devuelto"),
     path("aprobadoPost/<int:user_id>/",CambioAprobado , name="aprobado"),
     path("budgetlog/<int:budget_id>/", BudgetLogViewSet, name="budgetlog"),
     path("cantCarrito/<int:user_id>/", cantCarrito, name="cantCarrito"),
