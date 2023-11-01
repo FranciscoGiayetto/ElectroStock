@@ -362,8 +362,9 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
               onClick={handleBudgetStatusChange}
               className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
               style={{
-                marginLeft: 'auto',
+                marginLeft: 'auto'
               }}
+              data-toggle="tooltip" data-placement="top" title="Estado del presupuesto"
             >
               {budgetStatus === 'PROGRESO' ? 'EN PROGRESO' : 'COMPLETADO'}
             </button>

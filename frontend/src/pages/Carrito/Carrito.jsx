@@ -92,32 +92,42 @@ function Carrito() {
   const handleContinue = async () => {
     try {
       for (const item of carrito) {
-        console.log(item)
-        // Crea un objeto con las nuevas cantidad y observaciones
+        console.log(item);
         const updateData = {
-          quantity: item.quantity,  // Reemplaza con la nueva cantidad
-          observation: item.observation,  // Reemplaza con las observaciones del usuario
+          quantity: item.quantity,
+          observation: item.observation,
         };
-        console.log(updateData)
-        // Realiza una solicitud PUT para actualizar el registro en el servidor
-        await api.put(`/logCantidad/${item.id}/`, updateData);
-
-      }
+        console.log(updateData);
   
+        try {
+          // Realiza una solicitud PUT para actualizar el registro en el servidor
+          await api.put(`/logCantidad/${item.id}/`, updateData);
+
       try {
-        const response = await api.put(`/logPost/${userData.user_id}/`, {dateOut: dateInputData});
+        const response = await api.put(`/logPost/${userData.user_id}/`, { dateOut: dateInputData });
         console.log(response.data.response);
-        navigate('/'); // Navega a "/"
+        navigate('/');
       } catch (error) {
         console.log(error);
       }
-      
+  
       console.log('Actualizaciones exitosas');
       navigate('/');
     } catch (error) {
       console.error('Error al actualizar registros:', error);
+      alert('No hay stock disponible');
+
     }
-  };
+  }
+  
+        } catch (error) {
+          // Maneja el error y muestra una alerta
+          console.error('Error en la solicitud PUT:', error);
+          alert('No hay stock disponible');
+        }
+      }
+  
+
   
   
 

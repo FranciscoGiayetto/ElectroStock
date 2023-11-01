@@ -29,19 +29,19 @@ export default function CardMyData(props) {
           <tr>
             <th scope='col'>Email:</th>
             <td scope='col'>{props.email}</td>
-            <td scope='col'><EditIcon style={{color:'#2E5266', fontSize:'0.938rem'}} /></td>
+            <td scope='col'></td>
           </tr>
           
           <tr>
             <th scope='col'>Usuario:</th>
             <td scope='col'>{props.username}</td>
-            <td scope='col'><EditIcon style={{color:'#2E5266', fontSize:'0.938rem'}} /></td>
+            <td scope='col'></td>
           </tr>
 
-          <tr style={{borderBottomLeftRadius:'3rem', borderBottomRightRadius:'3rem'}}>
+          <tr>
             <th scope='col'>Contraseña:</th>
             <td scope='col'>**********</td>
-            <td scope='col'><EditIcon style={{color:'#2E5266', fontSize:'0.938rem'}} /></td>
+            <td scope='col'></td>
           </tr>
         </tbody>
       </Table>

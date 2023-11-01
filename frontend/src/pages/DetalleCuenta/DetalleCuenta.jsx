@@ -99,7 +99,7 @@ function DetalleCuenta() {
           ))
         ) : (
           
-          <p>No hay prestamos</p>
+          <p className='text-center2'>No hay prestamos.</p>
         )}
         </Col>
       </Row>
