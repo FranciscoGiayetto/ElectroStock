@@ -7,13 +7,16 @@ import {
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { HiPlusCircle } from "react-icons/hi2";
+import { AiFillQuestionCircle } from "react-icons/ai";
 import useAxios from '../../utils/useAxios';
+
 const DataTable = ({ presupuestos }) => {
   let api = useAxios();
   const navigate = useNavigate();
   const handleRowClick = (key) => {
     navigate(`${key}`);
   }
+  const [showText, setShowText] = useState(false);
 
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(0);
@@ -47,7 +50,7 @@ const DataTable = ({ presupuestos }) => {
     // Define los datos del nuevo presupuesto
     const newBudgetData = {
       name: `Presupuesto Sin Nombre ${nextNum}`,
-      status: "PROGRESO", // O "COMPLETADO" según sea necesario
+      status: "EN PROGRESO", // O "COMPLETADO" según sea necesario
       speciality: 1, // Reemplaza 'specialityId' con el ID de la especialidad correspondiente
     };
   
@@ -107,14 +110,16 @@ const DataTable = ({ presupuestos }) => {
     }
   };
 
-  return (
-    <MDBCard className="my-4 p-3" >
-     <MDBCardHeader style={{fontSize:"2rem"}} className="bg-primary text-white d-flex justify-content-between align-items-center">
-  <span>Presupuestos</span>
-  <div className="hover-scale" onClick={handleNewBudget}>
-  <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
-  </div>
-</MDBCardHeader>
+    return (
+      <MDBCard className="my-4 p-3">
+      <MDBCardHeader style={{fontSize:"2rem"}} className="bg-primary text-white d-flex justify-content-between align-items-center">
+        <span>Presupuestos</span>
+        <div className="hover-scale">
+          <AiFillQuestionCircle onClick={() => setShowText(!showText)} />
+          {showText && <span>Tu texto aquí</span>}
+          <HiPlusCircle onClick={handleNewBudget} />
+        </div>
+      </MDBCardHeader>
 
       <Table responsive striped bordered hover className="mt-3">
         <thead>
