@@ -274,6 +274,40 @@ def VencidosAPIView(request, user_id):
 
     return Response(status=405)
 
+@api_view(["GET", "POST"])
+def cantCarrito(request, user_id):
+    if request.method == "GET":
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.CARRITO
+        )
+        
+        # Contar la cantidad de elementos en el carrito
+        count = queryset.count()
+        
+        return Response({count})
+
+    if request.method == "POST":
+        return Response({"message": "Elemento agregado al carrito"})
+
+    return Response(status=405)
+
+@api_view(["GET", "POST"])
+def cantNotificaciones(request, user_id):
+    if request.method == "GET":
+        queryset = models.Notification.objects.filter(
+            user_revoker= user_id
+        )
+        
+        # Contar la cantidad de elementos en el carrito
+        count = queryset.count()
+        
+        return Response({count})
+
+    if request.method == "POST":
+        return Response({"message": "Elemento agregado al carrito"})
+
+    return Response(status=405)
+
 
 @api_view(["GET", "POST"])
 def PendientesAPIView(request, user_id):
