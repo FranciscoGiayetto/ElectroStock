@@ -3,6 +3,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, VideoCameraOutlined
 import { Layout, Menu } from 'antd';
 import AddModeratorRoundedIcon from '@mui/icons-material/AddModeratorRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
+import { Badge } from 'antd';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
@@ -27,11 +28,16 @@ import './LayoutComponents.css';
 import itsv from '../../assets/itsv.png';
 import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
+import useAxios from "../../utils/useAxios";
+import { useAuthStore } from '../../store/auth';
+
 
 
 const { Header, Sider } = Layout;
 
 const LayoutComponents = ({ onSearch }) => {
+  const api = useAxios();
+  
   const [isReadyForInstall, setIsReadyForInstall] = useState(false);
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
@@ -39,10 +45,16 @@ const LayoutComponents = ({ onSearch }) => {
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [myOptions, setMyOptions] = useState([]);
+  const [cantCarrito, setCantCarrito] = useState(0);
+  const [isLoggedIn, user] = useAuthStore((state) => [
+    state.isLoggedIn,
+    state.user,
+  ]);
+  const userData = user();
 
   useEffect(() => {
     getElement();
-   
+    getCantCarrito();
   }, []);
 
   useEffect(() => {
@@ -106,6 +118,17 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);
+  };
+
+  const getCantCarrito = async () => {
+    try {
+      const response = await api.get(`/cantCarrito/${userData.user_id}/`);
+      let data = await response.data;
+      console.log(data)
+      setCantCarrito(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -218,8 +241,16 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               {/* Buttons */}
               <Col>
                 {!isSmallScreen && (
-                  <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Carrito" onClick={() => { window.location.href = '/carrito' }}>
-                    <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    className='button'
+                    data-toggle="tooltip" data-placement="right" title="Carrito"
+                    onClick={() => { window.location.href = '/carrito' }}
+                  >
+                    <Badge count={cantCarrito} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                      <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                    </Badge>
                   </Button>
                 )}
               </Col>
@@ -227,9 +258,11 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               <Col style={{ marginLeft:'0'}}>
               {!isSmallScreen && (
                 <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
-                  <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                  <Badge count={10} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                    <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                  </Badge>
                 </Button>
-              )}
+              )}.
               </Col>
               <Col style={{ marginLeft:'0rem'}}>   
               {!isSmallScreen && (
