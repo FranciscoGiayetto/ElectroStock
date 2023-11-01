@@ -36,6 +36,7 @@ urlpatterns = [
     path("carrito/<int:user_id>/", carrito, name="carrito"),
     path("vencidos/<int:user_id>/", VencidosAPIView, name="vencidos"),
     path("pendientes/<int:user_id>/", PendientesAPIView, name="pendientes"),
+    path("logsFiltros/<str:status>/<int:user_id>/", FiltrosPresatmosAPIView, name="logsFiltros"),
     path("presatmosActuales/<int:user_id>/", PrestamosActualesView, name="prestamosActuales"),
     path("prestamosHistorial/<int:user_id>/", PrestamoVerAPIView, name="prestamosHistorial"),
     path("stock/<int:element_id>/", get_stock, name="stock"),

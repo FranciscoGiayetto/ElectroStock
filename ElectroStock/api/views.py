@@ -324,6 +324,20 @@ def PrestamosActualesView(request, user_id):
 
     return Response(status=405)
 
+@api_view(["GET", "POST"])
+def FiltrosPresatmosAPIView(request, status, user_id):
+    if request.method == "GET":
+
+        queryset = models.Log.objects.filter(lender=user_id, status=status)
+
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    if request.method == "POST":
+        return Response({"message": "Elemento agregado al carrito"})
+
+    return Response(status=405)
+
 
 # View para las estadisticas de los productos mas pedidos
 class MostRequestedElementView(generics.ListAPIView):
