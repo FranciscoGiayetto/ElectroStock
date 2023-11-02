@@ -5,10 +5,13 @@ import {
   MDBCardHeader,
 } from 'mdb-react-ui-kit';
 import useAxios from '../../utils/useAxios.js';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import ModalListItems from './ModalListItems'; 
+
+
 const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const [budgetStatus,  setBudgetStatus] = useState("");
   const [budgetName,  setBudgetName] = useState("");
@@ -356,11 +359,18 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           onClick={() => setIsEditingBudgetName(true)}
           style={{ cursor: 'pointer', marginLeft: '1rem' }}
         />
-        <button className="btn btn-primary btn-sm sub-blue-its">
-          <DeleteRoundedIcon/>
-        </button>
+        
+          <DeleteRoundedIcon style={{marginLeft:'15px'}}/>
+        
       </div>
     )}
+            <Link href='/presupuesto'>
+            <IosShareIcon 
+            data-toggle="tooltip" data-placement="right" title="Exportar"
+            style={{marginLeft: '325px'}} 
+            />
+            </Link>
+            
             
             <button
               onClick={handleBudgetStatusChange}
