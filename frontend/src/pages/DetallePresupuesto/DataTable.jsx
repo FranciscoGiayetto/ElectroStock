@@ -316,7 +316,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           overflowY: 'auto',
         }}
       >
-        <MDBCardHeader className="bg-primary text-white">
+        <MDBCardHeader className="text-white sub-blue-its">
         <div style={{ display: 'flex', alignItems: 'center' }}>
     <div style={{ margin: '0 10px 0 0' }}>
       Nombre del Presupuesto:
@@ -445,7 +445,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     ) : (
                       <button
                         onClick={() => handleItemEdit(item.id)}
-                        className="btn btn-primary btn-sm"
+                        className="btn btn-primary btn-sm sub-blue-its"
                       >
                         <HiPencil></HiPencil>
                       </button>

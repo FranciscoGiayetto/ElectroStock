@@ -163,8 +163,8 @@ const DataTable = ({ presupuestos }) => {
         <ReactPaginate
           activeClassName={'active'}
           breakClassName={'item break-me'}
-          previousLabel={' Anterior '}
-          nextLabel={' Siguiente '}
+          previousLabel={'⬅️'}
+          nextLabel={'➡️'}
           breakLabel={'...'}
           pageCount={Math.ceil(presupuestos.length / itemsPerPage)}
           marginPagesDisplayed={2}
