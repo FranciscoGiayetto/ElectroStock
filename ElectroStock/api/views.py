@@ -122,25 +122,34 @@ def PrestamoVerAPIView(request, user_id):
 
     return Response(status=405)
 
-@api_view(["GET", "POST"])
-def PrestamoPendientesAPIView(request, user_id):
-    if request.method == "GET":
-        valid_statuses = [
-            models.Log.Status.PEDIDO,
-        ]
-        
-        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+from collections import defaultdict
 
+@api_view(["GET", "POST"])
+def PendientesAPIView(request, user_id):
+    if request.method == "GET":
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.PEDIDO
+        )
         serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
-    
+        
+        # Agrupar logs por fecha y hora de creación
+        grouped_logs = defaultdict(list)
+        for log in queryset:
+            creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z')  # Formatear fecha y hora
+            log_data = LogSerializer(log).data
+            log_data['dateIn'] = creation_date  # Actualizar la clave 'dateIn' al string formateado
+            grouped_logs[creation_date].append(log_data)
+        
+        return Response(grouped_logs)
+
     if request.method == "POST":
         # Realiza acciones necesarias para agregar elementos al carrito
         # ...
 
         return Response({"message": "Elemento agregado al carrito"})
-    
+
     return Response(status=405)
+
 
 # View para las categorias
 class CategoriaViewSet(viewsets.ModelViewSet):
