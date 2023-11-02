@@ -110,13 +110,50 @@ class BoxSerializer(serializers.ModelSerializer):
         model = models.Box
         fields = "__all__"
 
+class BoxSerializerPrueba(serializers.ModelSerializer):
+    current_stock = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Box
+        fields = ('id', 'element', 'location', 'minimumStock', 'name', 'responsable', 'current_stock')
+
+    def get_current_stock(self, instance):
+        # Realiza el cálculo del current_stock para la instancia actual (instance)
+        element_id = instance.id  # Id del elemento actual
+        boxes = models.Box.objects.filter(element__id=element_id)
+        box_ids = [box.id for box in boxes]
+
+        total_com = models.Log.objects.filter(
+            box__id__in=box_ids, status="COM"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_ped = models.Log.objects.filter(
+            box__id__in=box_ids, status="PED"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_rot = models.Log.objects.filter(
+            box__id__in=box_ids, status="ROT"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_ap = models.Log.objects.filter(
+            box__id__in=box_ids, status="AP"
+        ).aggregate(total=Sum("quantity"))["total"]
+
+        if total_com is None:
+            total_com = 0
+        if total_ped is None:
+            total_ped = 0
+        if total_ap is None:
+            total_ap = 0
+        if total_rot is None:
+            total_rot = 0
+
+        current_stock = total_com - total_ped - total_ap - total_rot
+
+        return current_stock    
 
 # Serializer de  los prestamos completmos
 class LogSerializer(serializers.ModelSerializer):
-    box = BoxSerializer()
+    box = BoxSerializerPrueba()
     borrower = UsersSerializer()
     lender = UsersSerializer()
-    box= BoxSerializer()
     borrower= UsersSerializer()
     class Meta:
         model = models.Log
