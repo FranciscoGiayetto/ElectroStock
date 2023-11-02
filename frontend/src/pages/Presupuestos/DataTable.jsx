@@ -8,18 +8,25 @@ import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { HiPlusCircle } from "react-icons/hi2";
 import useAxios from '../../utils/useAxios';
+
+import { AiFillQuestionCircle } from "react-icons/ai";
+import Tooltip from '@mui/material/Tooltip';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+
 const DataTable = ({ presupuestos }) => {
   let api = useAxios();
   const navigate = useNavigate();
   const handleRowClick = (key) => {
     navigate(`${key}`);
   }
-
+  
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(0);
   const [sortColumn, setSortColumn] = useState(null);
   const [postRes, setPostRes] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
+
+  const [tooltipOpen, setTooltipOpen] = useState(false);
 
 
   const getRowTextColor = (estado) => {
@@ -107,14 +114,38 @@ const DataTable = ({ presupuestos }) => {
     }
   };
 
+  const handleTooltipClose = () => {
+    setTooltipOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setTooltipOpen(true);
+  };
+
+
   return (
-    <MDBCard className="my-4 p-3" >
-     <MDBCardHeader style={{fontSize:"2rem"}} className="bg-primary text-white d-flex justify-content-between align-items-center">
-  <span>Presupuestos</span>
-  <div className="hover-scale" onClick={handleNewBudget}>
-  <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
-  </div>
-</MDBCardHeader>
+    <MDBCard className="my-4 p-3">
+      <MDBCardHeader style={{ fontSize: "2rem" }} className="bg-primary text-white d-flex justify-content-between align-items-center">
+        <span>Presupuestos</span>
+        <div className="hover-scale">
+          <ClickAwayListener onClickAway={handleTooltipClose}>
+            <Tooltip
+              PopperProps={{
+                disablePortal: true,
+              }}
+              onClose={handleTooltipClose}
+              open={tooltipOpen}
+              disableFocusListener
+              disableHoverListener
+              disableTouchListener
+              title="Agregar presupuesto"
+            >
+              <AiFillQuestionCircle onClick={handleTooltipOpen} />
+            </Tooltip>
+          </ClickAwayListener>
+          <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto" onClick={handleNewBudget} />
+        </div>
+      </MDBCardHeader>
 
       <Table responsive striped bordered hover className="mt-3">
         <thead>
