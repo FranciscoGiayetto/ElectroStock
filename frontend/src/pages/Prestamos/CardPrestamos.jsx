@@ -1,8 +1,8 @@
 // CardPrestamos.jsx
 import React from 'react';
-import './PrestamosCard.css'; // Importa tu archivo CSS
 
 const PrestamosCard = ({ status, image, cliente, dateIn, name }) => {
+  const detallePrestamoURL = '/DetallePrestamo';
   return (
     <div className='prestamo-card'>
       <div className='img-container'>
@@ -49,7 +49,10 @@ const PrestamosCard = ({ status, image, cliente, dateIn, name }) => {
                 <div className="col-md-8 col-lg-3 border-start">
                   <h6 className="text-success"> •  • </h6>
                   <div className="d-flex flex-column mt-4">
-                    <button className="btn btn-primary btn-sm">Ver prestamo</button>
+                  </div>
+                  <div className="d-flex flex-column mt-4">
+                  <a href={detallePrestamoURL} className="btn btn-primary btn-sm">Ver prestamo</a>                  </div>
+                  <div className="d-flex flex-column mt-4">
                   </div>
                 </div>
               </div>
