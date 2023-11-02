@@ -113,15 +113,18 @@ const DataTable = ({ presupuestos }) => {
 
   return (
     <MDBCard className="my-4 p-3" >
-     <MDBCardHeader style={{fontSize:"2rem"}} className="bg-primary text-white d-flex justify-content-between align-items-center">
+     <MDBCardHeader style={{fontSize:"2rem"}} className="sub-blue-its text-white d-flex justify-content-between align-items-center">
+      <div>
   <span>Presupuestos</span>
+  <Tooltip tooltip={<AiFillQuestionCircle style={{marginLeft:'10px'}}></AiFillQuestionCircle>}>
+      Para editar hacer click en la fila del presupuesto.
+    </Tooltip>
+    </div>
   
   <div className="hover-scale" onClick={handleNewBudget}>
   <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
   </div>
-  <Tooltip tooltip={<AiFillQuestionCircle ></AiFillQuestionCircle>}>
-      Para editar hacer click en la fila del presupuesto.
-    </Tooltip>
+  
 </MDBCardHeader>
 
       <Table responsive striped bordered hover className="mt-3">
