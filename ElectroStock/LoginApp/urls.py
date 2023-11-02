@@ -10,6 +10,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', views.RegisterView.as_view(), name='auth_register'),
     path('test/', views.testEndPoint, name='test'),
+    path("usersFiltro/<str:name>/", views.UsersFiltros, name="users"),
    
     path('', views.getRoutes),
     path("accounts/", include("django.contrib.auth.urls")), 

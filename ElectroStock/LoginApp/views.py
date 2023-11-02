@@ -13,8 +13,19 @@ import json
 from django.contrib.auth.models import User
 from django.urls import reverse
 from ElectroStockApp import models
+from api import serializers
+
+@api_view(["GET"])
+def UsersFiltros(request, name):
+    if request.method == "GET":
+        queryset = models.CustomUser.objects.filter(
+            username=name
+        )
+        serializer = serializers.UsersSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
+    return Response(status=405)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
