@@ -89,28 +89,27 @@ function App() {
   );
 }
 
-function LayoutWrapper({ onSearch, searchQuery,isProfessor }) {
- 
-
+function LayoutWrapper({ onSearch, searchQuery, isProfessor }) {
   return (
-    <Layout>
+    <Layout isProfessor={isProfessor}>
       <Routes>
-      {isProfessor ? (
-          <Route path="/" element={<PrivateRoute><Informes isProfessor={isProfessor} /></PrivateRoute>} />
-        ) : (
-          <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
-        )}
+        {isProfessor ? (
+          <Route path="/informe" element={<PrivateRoute><Informes isProfessor={isProfessor} /></PrivateRoute>} />
+        ) : null}
+        <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
         <Route path="/tienda" element={<PrivateRoute><Ecommerce allItems={true} /></PrivateRoute>} />
         <Route path="/tienda/:name" element={<PrivateRoute><Ecommerce allItems={false} /></PrivateRoute>} />                          
         <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
         <Route path="/detalleProducto/:id" element={<PrivateRoute><DetalleProducto /></PrivateRoute>} />
         <Route path="/detalleCuenta" element={<PrivateRoute><DetalleCuenta /></PrivateRoute>} />
-        <Route path="/presupuesto" element={<PrivateRoute><Presupuestos /></PrivateRoute>} />
-        <Route path="/presupuesto/:id" element={<PrivateRoute><DetallePresupuesto /></PrivateRoute>} />
-        <Route path="/informe" element={<PrivateRoute><Informes isProfessor={isProfessor}/></PrivateRoute>} />
+        {isProfessor ? (
+          <Route path="/presupuesto" element={<PrivateRoute><Presupuestos /></PrivateRoute>} />
+        ) : null}
+        {isProfessor ? (
+          <Route path="/presupuesto/:id" element={<PrivateRoute><DetallePresupuesto /></PrivateRoute>} />
+        ) : null}
         <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
         <Route path="/Prestamos" element={<PrivateRoute><Prestamos /></PrivateRoute>} />
-        <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
       </Routes>
     </Layout>
   );

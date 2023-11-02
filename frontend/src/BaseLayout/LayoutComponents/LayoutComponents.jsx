@@ -30,7 +30,7 @@ import { useMediaQuery } from '@mui/material';
 
 const { Header, Sider } = Layout;
 
-const LayoutComponents = ({ onSearch }) => {
+const LayoutComponents = ({ onSearch, isProfessor }) => {
   const [isReadyForInstall, setIsReadyForInstall] = useState(false);
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
@@ -135,16 +135,25 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
           <Menu.Item key="2" icon={<CachedRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/Prestamos' }}>
             Préstamo
           </Menu.Item>
-          <Menu.Item key="3" icon={<PaidRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/presupuesto' }}>
-            Presupuesto
-          </Menu.Item>
-          <Menu.Item key="4" icon={<DataUsageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
-            Informe
-          </Menu.Item>
-          <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
-            Admin
-          </Menu.Item>
+    
+          {isProfessor && (
+              <Menu.Item key="3" icon={<PaidRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/presupuesto' }}>
+                Presupuesto
+              </Menu.Item>
+            )}
+            {isProfessor && (
+              <Menu.Item key="4" icon={<DataUsageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
+                Informe
+              </Menu.Item>
+            )}
+            {isProfessor && (
+            <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
+              Admin
+            </Menu.Item>
+               )}
           <Menu.Divider />
+     
+          
           <Menu.Item key="7" icon={<DownloadRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
             Descargar App
           </Menu.Item>
