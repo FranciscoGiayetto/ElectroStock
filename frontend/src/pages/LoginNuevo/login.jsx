@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 import { Container, Row, Col } from 'react-bootstrap';
 import './login.css';
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import ITSVlogin from '../../assets/ITSVlogin.svg';
@@ -20,6 +22,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
     useEffect(() => {
@@ -76,13 +79,24 @@ const Login = () => {
 
                   <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label className='color'>Contraseña *</Form.Label>
-                    <Form.Control 
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Contraseña" className="input-style" />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Form.Control 
+                            type={showPassword ? 'text' : 'password'}
+                            id="password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Contraseña"
+                            className="input-style"
+                        />
+                        <Button 
+                            onClick={() => setShowPassword(!showPassword)} 
+                            variant="light" 
+                            style={{ marginLeft: '10px' }}
+                        >
+                            {showPassword ? <VisibilityOffRoundedIcon /> : <VisibilityRoundedIcon />}
+                        </Button>
+                    </div>
                   </Form.Group>
 
                   <div className='text-center' style={{marginBottom:'1rem'}}>
