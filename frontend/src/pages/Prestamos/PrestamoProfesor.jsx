@@ -4,7 +4,7 @@ import useAxios from '../../utils/useAxios';
 import './Prestamos.css';
 import { useAuthStore } from '../../store/auth';
 
-const Prestamos = () => {
+const PrestamoProfesor = () => {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const api = useAxios();
@@ -20,7 +20,7 @@ const Prestamos = () => {
   }, []   );
   const getPrestamos = async () => {
     try {
-      const response = await api.get(`/presatmosActuales/${user_id}/`);
+      const response = await api.get(`/prestamosHistorial/${user_id}/`);
       console.log(response.data); // Verifica la respuesta de la API
       const data = response.data;
       setPrestamos(data);
@@ -28,19 +28,23 @@ const Prestamos = () => {
       console.error(error);
     }
   };
-  return (
-    <div className='container pagecontainer'>
+  return (<div className='container pagecontainer'>
+            <h1 className='textito'>Mis prestamos</h1>
+
       <div className='prestamos-list'>
         
-        
+
         {prestamos.length > 0 ? (
           prestamos.map((prestamo, index) => (
             
             <PrestamosCard
               key={index}
+              image={prestamo.box.element.image}
               status={prestamo.status}
               cliente={prestamo.borrower.username}
-              fecha={prestamo.fecha}
+              dateIn={prestamo.dateIn}
+              componente={prestamo.box.element.name}
+
             />
           ))
         ) : (
@@ -52,4 +56,5 @@ const Prestamos = () => {
   );
 };
 
-export default Prestamos;
+
+export default PrestamoProfesor;

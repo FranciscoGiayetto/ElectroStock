@@ -23,6 +23,7 @@ import Prestamos from './pages/Prestamos/Prestamos';
 import { Link } from "react-router-dom";
 import Informes from "./pages/Informes/Informes";
 import DetallePrestamo from "./pages/DetallePrestamo/DetallePrestamo";
+import PrestamoProfesor from "./pages/Prestamos/PrestamoProfesor";
 
 import Presupuestos from "./pages/Presupuestos/Presupuestos";
 import DetallePresupuesto from "./pages/DetallePresupuesto/DetallePresupuesto"
@@ -65,9 +66,9 @@ function LayoutWrapper({ onSearch, searchQuery }) {
   <Route path="/presupuesto/:id" element={<PrivateRoute><DetallePresupuesto /></PrivateRoute>} />
   <Route path="/informe" element={<PrivateRoute><Informes /></PrivateRoute>} />
   <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
-  <Route path="/Prestamos" element={<PrivateRoute>
-        <Prestamos />
-     </PrivateRoute>} />
+  <Route path="/Prestamos" element={<PrivateRoute><Prestamos/></PrivateRoute>} />
+  <Route path="/prestamoProfesor" element={<PrivateRoute><PrestamoProfesor /></PrivateRoute>} />
+
   <Route path="/detallePrestamo" element={<PrivateRoute><DetallePrestamo /></PrivateRoute>} />
 </Routes>
 
