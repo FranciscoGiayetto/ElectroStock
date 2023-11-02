@@ -81,7 +81,7 @@ class ElementAdmin(ImportExportActionModelAdmin):
         "category",
         "ecommerce",
     )
-    search_fields = ["name", "ecommerce", "category"]
+    search_fields = ["name"]
 
 
 from django.db.models import Max
