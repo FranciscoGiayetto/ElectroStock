@@ -3,7 +3,6 @@ import Table from 'react-bootstrap/Table';
 import {
   MDBCard,
   MDBCardHeader,
-  MDBTooltip,
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
@@ -11,22 +10,14 @@ import { HiPlusCircle } from "react-icons/hi2";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import useAxios from '../../utils/useAxios';
 
+import Tooltip from 'react-png-tooltip'
+
 const DataTable = ({ presupuestos }) => {
   let api = useAxios();
   const navigate = useNavigate();
-
-  const [tooltipVisible, setTooltipVisible] = useState(false);
-  const [tooltipText, setTooltipText] = useState('');
-
   const handleRowClick = (key) => {
     navigate(`${key}`);
-  };
-
-  const handleTooltipMouseEnter = (text) => {
-    setTooltipText(text);
-    setTooltipVisible(true);
-  };
-  
+  }
 
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(0);
@@ -124,21 +115,13 @@ const DataTable = ({ presupuestos }) => {
     <MDBCard className="my-4 p-3" >
      <MDBCardHeader style={{fontSize:"2rem"}} className="bg-primary text-white d-flex justify-content-between align-items-center">
   <span>Presupuestos</span>
-
-  <div className="hover-scale">
-  <MDBTooltip placement="right" tooltipContent={tooltipText} isVisible={tooltipVisible}>
-    <AiFillQuestionCircle
-      className="text-primary"
-      size={20}
-      onMouseEnter={() => handleTooltipMouseEnter('Agregar presupuesto')}  // Establece el texto del tooltip
-      onMouseLeave={() => setTooltipVisible(false)}  // Oculta el tooltip al salir
-    />
-  </MDBTooltip>
-</div>
-
+  
   <div className="hover-scale" onClick={handleNewBudget}>
   <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
   </div>
+  <Tooltip tooltip={<AiFillQuestionCircle ></AiFillQuestionCircle>}>
+      Para editar hacer click en la fila del presupuesto.
+    </Tooltip>
 </MDBCardHeader>
 
       <Table responsive striped bordered hover className="mt-3">
