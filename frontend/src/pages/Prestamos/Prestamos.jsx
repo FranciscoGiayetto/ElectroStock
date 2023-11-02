@@ -1,24 +1,37 @@
+// En Prestamos.js
 import React, { useState, useEffect } from 'react';
 import PrestamosCard from './CardPrestamos';
 import useAxios from '../../utils/useAxios';
 import { useAuthStore } from '../../store/auth';
+import WordList from './WordList.jsx'; // Asegúrate de importar WordList desde la ubicación correcta
 
 const Prestamos = () => {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const api = useAxios();
   const [prestamos, setPrestamos] = useState([]);
-  const [filtroEstado, setFiltroEstado] = useState(''); // Estado actual del filtro
   const user_id = userData.user_id;
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     getPrestamos();
-  }, [filtroEstado]); // Actualiza la lista cuando cambia el filtro de estado
+  }, []);
+
+  useEffect(() => {
+    // Aquí puedes aplicar el filtro a los préstamos si se selecciona una categoría.
+    if (selectedCategory !== null) {
+      // Filtra los préstamos en base a la categoría seleccionada.
+      const filteredPrestamos = prestamos.filter((prestamo) => prestamo.categoria === selectedCategory);
+      setPrestamos(filteredPrestamos);
+    } else {
+      // Vuelve a cargar todos los préstamos si no hay una categoría seleccionada.
+      getPrestamos();
+    }
+  }, [selectedCategory]);
 
   const getPrestamos = async () => {
     try {
-      // Incluye el filtro de estado en la solicitud
-      const response = await api.get(`/prestamosHistorial/${user_id}/?estado=${filtroEstado}`);
+      const response = await api.get(`/prestamosHistorial/${user_id}/`);
       console.log(response.data);
       const data = response.data;
       setPrestamos(data);
@@ -27,30 +40,16 @@ const Prestamos = () => {
     }
   };
 
-  // Función para manejar cambios en el filtro de estado
-  const handleFiltroEstadoChange = (event) => {
-    const selectedEstado = event.target.value;
-    setFiltroEstado(selectedEstado);
+  const handleCategorySelect = (categoryId) => {
+    setSelectedCategory(categoryId);
   };
 
   return (
     <div className="container pagecontainer">
       <h1 className="textito">Mis préstamos</h1>
-
-      <div className="filtro-container">
-        <label htmlFor="filtroEstado">Filtrar por Estado:</label>
-        <select
-          id="filtroEstado"
-          value={filtroEstado}
-          onChange={handleFiltroEstadoChange}
-        >
-          <option value="">Todos</option>
-          <option value="Aprobado">Aprobado</option>
-          <option value="Desaprobado">Desaprobado</option>
-          {/* Agrega más opciones de estado aquí */}
-        </select>
+      <div className="prestamos-filter">
+        <WordList onCategorySelect={handleCategorySelect} />
       </div>
-
       <div className="prestamos-list">
         {prestamos.length > 0 ? (
           prestamos.map((prestamo, index) => (

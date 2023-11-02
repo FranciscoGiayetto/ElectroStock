@@ -43,13 +43,13 @@ const PrestamosCard = ({ status, image, cliente, dateIn, name }) => {
                   <span>Componente: {name}</span>
                   <br />
                   <p className="text-truncate mb-4 mb-md-0">
-                  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                   </p>
                 </div>
                 <div className="col-md-8 col-lg-3 border-start">
                   <h6 className="text-success"> •  • </h6>
                   <div className="d-flex flex-column mt-4">
-                    <button className="btn btn-primary btn-sm">Ver prestamo</button>
+                    <button className="btn btn-primary btn-sm">Ver préstamo</button>
                   </div>
                 </div>
               </div>
@@ -62,6 +62,3 @@ const PrestamosCard = ({ status, image, cliente, dateIn, name }) => {
 };
 
 export default PrestamosCard;
-
-
-
