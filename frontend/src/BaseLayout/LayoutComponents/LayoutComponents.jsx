@@ -46,6 +46,7 @@ const LayoutComponents = ({ onSearch }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [myOptions, setMyOptions] = useState([]);
   const [cantCarrito, setCantCarrito] = useState(0);
+  const [cantNotificaciones, setCantNotificaciones] = useState(0);
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
@@ -55,7 +56,16 @@ const LayoutComponents = ({ onSearch }) => {
   useEffect(() => {
     getElement();
     getCantCarrito();
+    getCantNotificaciones();
   }, []);
+
+  useEffect(() => {
+    getCantCarrito();
+  }, [cantCarrito]);
+
+  useEffect(() => {
+    getCantNotificaciones();
+  }, [cantNotificaciones]);
 
   useEffect(() => {
     window.addEventListener("beforeinstallprompt", (event) => {
@@ -126,6 +136,16 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
       let data = await response.data;
       console.log(data)
       setCantCarrito(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getCantNotificaciones = async () => {
+    try {
+      const response = await api.get(`/cantNotificaciones/${userData.user_id}/`);
+      const data = await response.data;
+      setCantNotificaciones(data);
     } catch (error) {
       console.error(error);
     }
@@ -248,7 +268,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
                     data-toggle="tooltip" data-placement="right" title="Carrito"
                     onClick={() => { window.location.href = '/carrito' }}
                   >
-                    <Badge count={cantCarrito} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                    <Badge count={parseInt(cantCarrito)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
                       <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                     </Badge>
                   </Button>
@@ -258,12 +278,13 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               <Col style={{ marginLeft:'0'}}>
               {!isSmallScreen && (
                 <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
-                  <Badge count={10} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                  <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' showZero style={{backgroundColor:'#EE8F37'}}>
                     <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                   </Badge>
                 </Button>
               )}.
               </Col>
+
               <Col style={{ marginLeft:'0rem'}}>   
               {!isSmallScreen && (
                 <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
