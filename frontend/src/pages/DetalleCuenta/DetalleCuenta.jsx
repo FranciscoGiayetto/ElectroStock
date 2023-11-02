@@ -82,27 +82,6 @@ function DetalleCuenta() {
           <CardMyData email={element.email} username={element.username}></CardMyData>
         </Col>
       </Row>
-      <Row style={{marginTop:'2rem'}}>
-        <Col className='hidden-card'>
-        {prestamos.length > 0 ? (
-          prestamos.map((prestamos, index) => (
-            <CardPrestamos
-                key={index}
-                status={prestamos.status}
-                quantity={prestamos.quantity}
-                profeNombre={prestamos.borrower.first_name}
-                profeApellido={prestamos.borrower.last_name}
-                specialties={prestamos.lender.specialties}
-                dateIn={prestamos.dateIn}
-                image={prestamos.image}
-              ></CardPrestamos>  
-          ))
-        ) : (
-          
-          <p className='text-center2'>No hay prestamos.</p>
-        )}
-        </Col>
-      </Row>
     </Container>
   );
 }
