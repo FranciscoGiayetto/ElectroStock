@@ -62,27 +62,36 @@ const CardPendientes = () => {
   };
 
   return (
-    <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', width: '33%', minHeight: '35vh', maxHeight: '50vh', minWidth: '50vh' }}>       
-     <MDBCardHeader style={{ color: 'white' }}>Pendientes</MDBCardHeader>
-      <Table hover style={{ marginBottom: '0', height: '100%' }}>
-        <thead>
-          <tr>
-            <th scope='col'>Fecha</th>
-            <th scope='col'>Producto</th>
-            <th scope='col'>Cantidad</th>
-          </tr>
-        </thead>
-        <tbody>
-          {element.slice(-3).map((item, index) => (
-            <tr key={index}>
-              <td>{formatDate(item.dateOut)}</td>
-        
-              <td>{formatBoxName(item.box.name)}</td>
-                            <td>{item.quantity}</td>
+    <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', width: '100%', minHeight:'20rem'}}>       
+     <MDBCardHeader style={{ color: 'white' }}>Préstamos Pendientes</MDBCardHeader>
+
+     {element.length === 0 ? (
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <p>No hay préstamos pendientes.</p>
+        </div>
+      ) : ( 
+        <Table hover style={{ marginBottom: '0', height: '100%' }}>
+          <thead>
+            <tr>
+              <th scope='col'>Fecha</th>
+              <th scope='col'>Producto</th>
+              <th scope='col'>Cantidad</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+
+          <tbody>
+            {element.slice(-3).map((item, index) => (
+              <tr key={index}>
+                <td>{formatDate(item.dateOut)}</td>
+          
+                <td>{formatBoxName(item.box.name)}</td>
+                              <td>{item.quantity}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
+      
     </MDBCard>
   );
 };

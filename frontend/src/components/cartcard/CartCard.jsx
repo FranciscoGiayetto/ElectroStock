@@ -12,7 +12,7 @@ import {
 import Button from 'react-bootstrap/Button';
 
 export default function CartCard(props) {
-  const { id, name, title, image, quantity, handleDelete, handleQuantityChange, handleCommentChange, comments } = props;
+  const { id, name, title, image, quantity, handleDelete, handleQuantityChange, handleCommentChange, comments, currentStock } = props;
 
   // Inicializa el estado local 'observation' con la observación existente de las props.
   const [observation, setObservation] = useState(comments);
@@ -56,6 +56,7 @@ export default function CartCard(props) {
           >
             <MDBInput
               min={0}
+              max={currentStock}
               value={quantity}
               onChange={handleInputChange}
               type="number"

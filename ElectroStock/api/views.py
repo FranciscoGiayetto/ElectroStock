@@ -62,10 +62,24 @@ def get_stock(request, element_id):
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
 
-class ElementsViewSet(viewsets.ModelViewSet):
+# class ElementsViewSet(viewsets.ModelViewSet):
+#     queryset = models.Element.objects.all()
+#     permission_classes = [permissions.AllowAny]
+#     serializer_class = ElementSerializer
+from rest_framework import generics
+from rest_framework.response import Response
+@api_view(['GET'])
+def ElementsViewSet(request, page):
     queryset = models.Element.objects.all()
-    permission_classes = [permissions.AllowAny]
-    serializer_class = ElementSerializer
+    page_size = 10  # Número de elementos por página
+
+    start_index = (page - 1) * page_size
+    end_index = page * page_size
+
+    paginated_data = queryset[start_index:end_index]
+    serializer = ElementSerializer(paginated_data, many=True)
+
+    return Response(serializer.data)
 
 from cryptography.fernet import Fernet
 
@@ -92,11 +106,23 @@ class TokenViewSet(viewsets.ModelViewSet):
 
 
 # View para los elementos que estan en el ecommerce
-class ProductosEcommerceAPIView(viewsets.ModelViewSet):
-    queryset = models.Element.objects.filter(ecommerce=True)
-    permission_classes = [permissions.AllowAny]
-    serializer_class = ElementEcommerceSerializer2  # Utiliza el serializador correcto
+# class ProductosEcommerceAPIView(viewsets.ModelViewSet):
+#     queryset = models.Element.objects.filter(ecommerce=True)
+#     permission_classes = [permissions.AllowAny]
+#     serializer_class = ElementEcommerceSerializer2  # Utiliza el serializador correcto
 
+@api_view(['GET'])
+def ProductosEcommerceAPIView(request, page):
+    queryset = models.Element.objects.filter(ecommerce=True)
+    page_size = 10  # Número de elementos por página
+
+    start_index = (page - 1) * page_size
+    end_index = page * page_size
+
+    paginated_data = queryset[start_index:end_index]
+    serializer = ElementEcommerceSerializer2(paginated_data, many=True)
+
+    return Response(serializer.data)
 
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
@@ -253,6 +279,21 @@ def carrito(request, user_id):
 
     if request.method == "POST":
         return Response({"message": "Elemento agregado al carrito"})
+
+    return Response(status=405)
+
+
+
+
+@api_view(["GET"])
+def UsersFiltros(request, name):
+    if request.method == "GET":
+        queryset = models.CustomUser.objects.filter(
+            username=name
+        )
+        serializer = UsersSerializer(queryset, many=True)
+        return Response(serializer.data)
+
 
     return Response(status=405)
 
@@ -548,11 +589,11 @@ class VencidoStatisticsView(generics.ListAPIView):
         )
 
         # Calcula el porcentaje de registros vencidos
-        total_logs = statistics['approved_logs']
+        total_logs = statistics['total_logs']
         expired_logs = statistics['expired_logs']
         print(total_logs)
         print(expired_logs)
-        vencido_percentage = (expired_logs / total_logs) * 100 if total_logs > 0 else 0
+        vencido_percentage = ((expired_logs * 100)/ total_logs ) if total_logs > 0 else 0
 
         # Agrega el porcentaje correcto al diccionario de estadísticas
         statistics['vencido_percentage'] = vencido_percentage
@@ -613,19 +654,33 @@ class BoxMasLogsRotos(generics.ListAPIView):
             )
         
 from django.shortcuts import get_object_or_404
+from rest_framework.pagination import PageNumberPagination
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @api_view(["GET"])
-def elementos_por_categoria(request, category_id):
+def elementos_por_categoria(request, category_id, page):
     # Obtener la categoría correspondiente o devolver un error 404 si no existe
     categoria = get_object_or_404(models.Category, name=category_id)
 
     # Obtener todos los elementos que pertenecen a la categoría
     elementos = models.Element.objects.filter(category=categoria)
 
-    # Crear una lista para almacenar los elementos con su stock actual
+    page_size = 10  # Número de elementos por página
+
+    paginator = Paginator(elementos, page_size)
+    
+    try:
+        paginated_elements = paginator.page(page)
+    except PageNotAnInteger:
+        # Si la página no es un entero, entrega la primera página
+        paginated_elements = paginator.page(1)
+    except EmptyPage:
+        # Si la página está fuera de rango, entrega la última página de resultados
+        paginated_elements = paginator.page(paginator.num_pages)
+
     elementos_con_stock = []
 
-    for elemento in elementos:
+    for elemento in paginated_elements:
         element_id = elemento.id
 
         boxes = models.Box.objects.filter(element__id=element_id)
@@ -671,8 +726,81 @@ def elementos_por_categoria(request, category_id):
     serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
     return Response(serializer.data)
 
-    
 
+    
+@api_view(["GET","PUT"])
+def CambioAprobado(request, user_id):
+    if request.method == "GET":
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.PEDIDO
+        )
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "PUT":
+        # Agregar código para manejar la solicitud PUT
+        logs_pedido = models.Log.objects.filter(lender=user_id, status=models.Log.Status.PEDIDO)
+        new_status = models.Log.Status.APROBADO
+        for log in logs_pedido:
+            log.status = new_status
+            log.save()
+        serializer = LogSerializer(logs_pedido, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["GET","PUT"])
+def CambioDevuelto(request, user_id):
+    if request.method == "GET":
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.DEVUELTO
+        )
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "PUT":
+        # Agregar código para manejar la solicitud PUT
+        logs_pedido = models.Log.objects.filter(lender=user_id, status=models.Log.Status.APROBADO)
+        new_status = models.Log.Status.DEVUELTO
+        for log in logs_pedido:
+            log.status = new_status
+            log.save()
+        serializer = LogSerializer(logs_pedido, many=True)
+
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.DEVUELTO
+        )
+        # Agregar código para manejar la solicitud PUT
+        logs_pedido = models.Log.objects.filter(lender=user_id, status=models.Log.Status.VENCIDO)
+        new_status = models.Log.Status.DEVUELTOTARDIO
+        for log in logs_pedido:
+            log.status = new_status
+            log.save()
+        serializer = LogSerializer(logs_pedido, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["GET","PUT"])
+def CambioDesaprobado(request, user_id):
+    if request.method == "GET":
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Log.objects.filter(
+            lender=user_id, status=models.Log.Status.PEDIDO
+        )
+        serializer = LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "PUT":
+        # Agregar código para manejar la solicitud PUT
+        logs_pedido = models.Log.objects.filter(lender=user_id, status=models.Log.Status.PEDIDO)
+        new_status = models.Log.Status.DESAPROBADO
+        for log in logs_pedido:
+            log.status = new_status
+            log.save()
+        serializer = LogSerializer(logs_pedido, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 @api_view(["GET", "POST", "PUT"])
 def CambioLog(request, user_id):
     if request.method == "GET":
@@ -753,7 +881,7 @@ def boxes_por_especialidad(request, nombre_especialidad):
     return Response(elementos_por_especialidad)
 
 @api_view(["GET"])
-def categories_por_especialidad(request, nombre_especialidad):
+def categories_por_especialidad(request, nombre_especialidad,date):
     # Obtén la especialidad especificada en la URL
     especialidad = get_object_or_404(models.Speciality, name=nombre_especialidad)
 
@@ -878,34 +1006,57 @@ def BudgetViewSet(request, budget_id=None):
 
     return Response(status=405)
 
-@api_view(["GET", "PUT"])
+def check_stock_sufficiency(element_id, new_quantity):
+    boxes = models.Box.objects.filter(element__id=element_id)
+    box_ids = [box.id for box in boxes]
+
+    total_com = models.Log.objects.filter(box__id__in=box_ids, status="COM").aggregate(total=Sum("quantity"))["total"]
+    total_ped = models.Log.objects.filter(box__id__in=box_ids, status="PED").aggregate(total=Sum("quantity"))["total"]
+    total_rot = models.Log.objects.filter(box__id__in=box_ids, status="ROT").aggregate(total=Sum("quantity"))["total"]
+    total_ap = models.Log.objects.filter(box__id__in=box_ids, status="AP").aggregate(total=Sum("quantity"))["total"]
+
+    if total_com is None:
+        total_com = 0
+    if total_ped is None:
+        total_ped = 0
+    if total_ap is None:
+        total_ap = 0
+    if total_rot is None:
+        total_rot = 0
+
+    current_stock = total_com - total_ped - total_ap - total_rot
+
+    return current_stock >= new_quantity
+
+@api_view(["PUT"])
 def update_log_quantity(request, log_id):
     try:
         # Buscar el registro Log por ID
         log = models.Log.objects.get(pk=log_id)
 
-        if request.method == "GET":
-            # Serializar y devolver los detalles del registro Log
-            serializer = LogSerializer(log)
-            return Response(serializer.data)
-
-        elif request.method == "PUT":
+        if request.method == "PUT":
             # Obtener la nueva cantidad desde la solicitud
             new_quantity = request.data.get("quantity")
             new_observation = request.data.get("observation")
-            # Actualizar la cantidad del registro Log
-            log.quantity = new_quantity
-            log.observation = new_observation
-            log.save()
 
-            # Devolver una respuesta exitosa
-            return Response({"message": "Cantidad del registro actualizada correctamente"})
+            # Verificar si hay suficiente stock antes de actualizar
+            enough_stock = check_stock_sufficiency(log.box.element.id, new_quantity)
+
+            if enough_stock:
+                # Actualizar la cantidad del registro Log si hay suficiente stock
+                log.quantity = new_quantity
+                log.observation = new_observation
+                log.save()
+
+                # Devolver una respuesta exitosa
+                return Response({"message": "Cantidad del registro actualizada correctamente"})
+            else:
+                return Response({"message": "No hay suficiente stock disponible"}, status=status.HTTP_400_BAD_REQUEST)
 
     except models.Log.DoesNotExist:
         return Response({"message": "El registro Log no existe"}, status=status.HTTP_404_NOT_FOUND)
 
-    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)   
-
+    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 class BudgetLogCreateView(generics.CreateAPIView):
     queryset = models.BudgetLog.objects.all()

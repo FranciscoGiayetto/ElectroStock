@@ -81,7 +81,7 @@ class ElementAdmin(ImportExportActionModelAdmin):
         "category",
         "ecommerce",
     )
-    search_fields = ["name", "ecommerce", "category"]
+    search_fields = ["name"]
 
 
 from django.db.models import Max
@@ -232,23 +232,15 @@ class LogResource(resources.ModelResource):
             "id",
             "status",
             "quantity",
-            "borrower__username",
-            "lender__username",
-            "box__name",
+            "box",
             "observation",
-            "dateIn",
-            "dateOut",
         )
         export_order = (
             "id",
             "status",
             "quantity",
-            "borrower__username",
-            "lender__username",
-            "box__name",
+            "box",
             "observation",
-            "dateIn",
-            "dateOut",
         )
 
 

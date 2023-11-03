@@ -16,13 +16,34 @@ function DetallePresupuesto() {
     state.isLoggedIn,
     state.user,
   ]);
-  const [element, setElement] = useState([]);
+  const [elements, setElements] = useState([]);
   const [presupuesto, setPresupuesto] = useState([]);
   const api = useAxios();
   const userData = user();
   const {id} = useParams();
 
  
+
+
+
+  const getElements = async () => {
+  
+
+    try {
+      const response = await api.get('elementsEcommerce/');
+      let data = await response.data;
+      console.log(data);
+     setElements(data);
+
+    
+    } catch (error) {
+      // Manejar errores aquí
+      console.error('Error al obtener datos:', error);
+     
+    }
+  };
+
+
 
   const getPresupuesto = async () => {
     try {
@@ -43,6 +64,7 @@ function DetallePresupuesto() {
 
   useEffect(() => {
     getPresupuesto();
+    getElements();
   }, []);
 
   return (
@@ -50,7 +72,7 @@ function DetallePresupuesto() {
       <Link href='/presupuesto'>Volver</Link>
       <Row>
         <Col style={{ width: '62.5rem' }}>
-          <DataTable presupuesto={presupuesto} onUpdate={updateData} />
+          <DataTable presupuesto={presupuesto} onUpdate={updateData} elements={elements}/>
         </Col>
       </Row>
     </Container>

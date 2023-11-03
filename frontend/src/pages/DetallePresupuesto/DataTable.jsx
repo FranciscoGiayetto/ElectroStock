@@ -6,9 +6,9 @@ import {
 } from 'mdb-react-ui-kit';
 import useAxios from '../../utils/useAxios.js';
 import { useParams, useNavigate } from 'react-router-dom';
-import { HiPlusCircle } from "react-icons/hi2";
-
-const DataTable = ({ presupuesto, onUpdate }) => {
+import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
+import ModalListItems from './ModalListItems'; 
+const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const [budgetStatus,  setBudgetStatus] = useState("");
   const [budgetName,  setBudgetName] = useState("");
   const [budgetLogs, setBudgetLogs] = useState([]);
@@ -16,19 +16,54 @@ const DataTable = ({ presupuesto, onUpdate }) => {
   const [editedValues, setEditedValues] = useState({});
   const [isEditingBudgetName, setIsEditingBudgetName] = useState(false);
   const [isAddingNewItem, setIsAddingNewItem] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [customName, setCustomName] = useState(true);
+  const [selectedItem, setSelectedItem] = useState(null);
+ 
   const nameInputRef = useRef(null);
-
   useEffect(() => {
     try {
-     
-        setBudgetName(presupuesto.budget_details.name);
-        setBudgetStatus(presupuesto.budget_details.status);
-        setBudgetLogs(presupuesto.budget_logs)
+      setBudgetName(presupuesto.budget_details.name);
+      setBudgetStatus(presupuesto.budget_details.status);
+      // Agregar el campo "isNew" a los elementos del presupuesto
+      const budgetLogsWithIsNewFlag = presupuesto.budget_logs.map((item) => ({
+        ...item,
+        isNew: !item.element, // Comprueba si el campo "element" está presente o no
+      }));
+      setBudgetLogs(budgetLogsWithIsNewFlag);
     } catch (error) {
       console.error(error);
     }
   }, [presupuesto]);
+
+  const renderNameField = (item) => {
+    if (editingRows[item.id]) {
+      if (item.isNew) {
+        return (
+          <input
+            type="text"
+            style={{ maxWidth: "300px" }}
+            className="form-control"
+            value={editedValues[item.id]?.name || item.name}
+            onChange={(e) => handleItemInputChange(item.id, "name", e.target.value)}
+          />
+        );
+      } else {
+        return (
+          <input
+            type="text"
+            style={{ maxWidth: "300px" }}
+            className="form-control disabled-input"
+            value={item.name}
+            disabled
+            />
+          );
+      }
+    } else {
+      return item.name;
+    }
+  };
+
 
   const getClassByEstado = (estado) => {
     if (estado === "COMPRADO") {
@@ -115,54 +150,133 @@ const DataTable = ({ presupuesto, onUpdate }) => {
       const nuevoEstado = budgetStatus === 'PROGRESO' ? 'COMPLETADO' : 'PROGRESO';
       setBudgetStatus(nuevoEstado);
       await api.put(`/budget/${id}/`, { status: nuevoEstado });
-      
+
+      if (nuevoEstado === 'COMPLETADO') {
+        // Cuando se completa el presupuesto, desactiva la edición de todos los elementos
+        // y cambia su estado a "COMPRADO"
+        setEditingRows({});
+       
+      }
     } catch (error) {
       console.error(error);
     }
   };
   const handleNewItem = () => {
+    
     // Comprueba si ya estás en modo de edición del nuevo registro
     if (!isAddingNewItem) {
       // Habilita el modo de edición para el nuevo registro
       setIsAddingNewItem(true);
+    
     }
   };
+
+
+  const handleCancelNewItem = () => {
+    setIsAddingNewItem(false); // Cancela la adición de un nuevo elemento
   
+    // Borra los valores del elemento nuevo para restablecerlos
+    setEditedValues({ ...editedValues, 'new': {} });
+  
+    // Restablece el estado de customName a true para habilitar el campo de entrada del nombre
+    setCustomName(true);
+  
+    // Reinicia el estado del elemento seleccionado a null
+    setSelectedItem(null);
+  };
+  
+  
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+
+  const handleItemSelect = (selectedItem) => {
+    console.log('Elemento seleccionado:', selectedItem);
+    setSelectedItem(selectedItem);
+    setCustomName(false);
+    // Actualiza el input del Nombre con el nombre del elemento seleccionado
+    setEditedValues({
+      ...editedValues,
+      'new': {
+        ...editedValues['new'],
+        'name': selectedItem.name,
+      },
+    });
+    // Deshabilita la edición del campo "Nombre"
+    
+  };
   const handleConfirmNewItem = async () => {
-    const newLog = {
-      ...editedValues['new'],
-      budget: presupuesto.budget_details.id, // Agrega el presupuesto actual
-      status: "PENDIENTE", // Establece el estado como "PENDIENTE"
-    };
+    if (customName) {
+      const newLog = {
+        ...editedValues['new'],
+        budget: presupuesto.budget_details.id,
+        status: "PENDIENTE",
+      
+      };
+      // Caso de nombre personalizado
+      // Valida los campos y realiza la solicitud POST si son válidos
+      if (!editedValues['new']?.name || editedValues['new']?.name.trim() === '') {
+        console.error("El campo 'Nombre' es obligatorio.");
+        return;
+      }
   
-    // Valida los campos del nuevo registro según el modelo de Django
-    if (!newLog.name || newLog.name.trim() === '') {
-      console.error("El campo 'Nombre' es obligatorio.");
-      return;
+      if (!editedValues['new']?.price || isNaN(parseFloat(editedValues['new']?.price)) || parseFloat(editedValues['new']?.price) < 0) {
+        console.error("El campo 'Precio' debe ser un número válido mayor o igual a cero.");
+        return;
+      }
+  
+      if (!editedValues['new']?.quantity || isNaN(parseInt(editedValues['new']?.quantity)) || parseInt(editedValues['new']?.quantity) <= 0) {
+        console.error("El campo 'Cantidad' debe ser un número válido mayor a cero.");
+        return;
+      }
+  
+      // Luego, si todos los campos son válidos, procedes a realizar la solicitud POST
+      try {
+        const response = await api.post("/budgetlog/create/", newLog);
+        const createdItem = response.data;
+  
+        setBudgetLogs([...budgetLogs, createdItem]);
+        setIsAddingNewItem(false);
+        setEditedValues({ ...editedValues, 'new': {} });
+      } catch (error) {
+        console.error(error);
+      }
+    } else if (selectedItem) {
+      // Caso de elemento seleccionado
+      const newLog = {
+        ...editedValues['new'],
+        budget: presupuesto.budget_details.id,
+        status: "PENDIENTE",
+        element: selectedItem.id, // Agrega la FK del elemento seleccionado
+      };
+  
+      // Valida los campos del nuevo registro según el modelo de Django
+      if (!newLog.price || isNaN(parseFloat(newLog.price)) || parseFloat(newLog.price) < 0) {
+        console.error("El campo 'Precio' debe ser un número válido mayor o igual a cero.");
+        return;
+      }
+  
+      if (!newLog.quantity || isNaN(parseInt(newLog.quantity)) || parseInt(newLog.quantity) <= 0) {
+        console.error("El campo 'Cantidad' debe ser un número válido mayor a cero.");
+        return;
+      }
+  
+      try {
+        const response = await api.post("/budgetlog/create/", newLog);
+        const createdItem = response.data;
+  
+        setBudgetLogs([...budgetLogs, createdItem]);
+        setIsAddingNewItem(false);
+        setCustomName(true);
+        setEditedValues({ ...editedValues, 'new': {} });
+      } catch (error) {
+        console.error(error);
+      }
     }
-  
-    if (isNaN(newLog.price) || parseFloat(newLog.price) < 0) {
-      console.error("El campo 'Precio' debe ser un número válido mayor o igual a cero.");
-      return;
-    }
-  
-    if (isNaN(newLog.quantity) || parseInt(newLog.quantity) <= 0) {
-      console.error("El campo 'Cantidad' debe ser un número válido mayor a cero.");
-      return;
-    }
-  
-    // Luego, si todos los campos son válidos, procedes a realizar la solicitud POST
-    try {
-      const response = await api.post("/budgetlog/create/", newLog);
-      const createdItem = response.data;
-  
-      setBudgetLogs([...budgetLogs, createdItem]);
-      setIsAddingNewItem(false);
-      setEditedValues({ ...editedValues, 'new': {} });
-    } catch (error) {
-      console.error(error);
-    }
+    
   };
+  
   
   
   
@@ -203,51 +317,59 @@ const DataTable = ({ presupuesto, onUpdate }) => {
         }}
       >
         <MDBCardHeader className="bg-primary text-white">
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div>
-              Nombre del Presupuesto :
-            </div>
-            {isEditingBudgetName ? (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <input
-                  ref={nameInputRef}
-                  type="text"
-                  value={budgetName}
-                  onChange={(e) => setBudgetName(e.target.value)}
-                  onBlur={saveBudgetName}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      saveBudgetName();
-                    }
-                  }}
-                  style={{
-                    border: 'none',
-                    outline: 'none',
-                    background: 'transparent',
-                    color: 'white',
-                    fontSize: '1rem',
-                    padding: '0.25rem 0.5rem',
-                  }}
-                />
-              </div>
-            ) : (
-              <div onDoubleClick={activateBudgetNameEditing}>
-                {budgetName}
-              </div>
-            )}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ margin: '0 10px 0 0' }}>
+      Nombre del Presupuesto:
+    </div>
+    {isEditingBudgetName ? (
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <input
+          className="form-control"
+          ref={nameInputRef}
+          type="text"
+          value={budgetName}
+          onChange={(e) => setBudgetName(e.target.value)}
+          onBlur={saveBudgetName}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              saveBudgetName();
+            }
+          }}
+          style={{
+            maxWidth: "300px"
+          }}
+        />
+          <HiMiniCheck
+      onClick={saveBudgetName} // Hacer clic en el ícono aceptará el input
+      style={{ cursor: 'pointer', marginLeft: '0.5rem' }}
+    />
+      </div>
+    ) : (
+      <div
+        style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginLeft: '6px' }}
+        onDoubleClick={activateBudgetNameEditing}
+      >
+        {budgetName}
+        <HiPencil
+          onClick={() => setIsEditingBudgetName(true)}
+          style={{ cursor: 'pointer', marginLeft: '1rem' }}
+        />
+      </div>
+    )}
+            
             <button
               onClick={handleBudgetStatusChange}
               className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
               style={{
-                marginLeft: 'auto',
+                marginLeft: 'auto'
               }}
+              data-toggle="tooltip" data-placement="top" title="Estado del presupuesto"
             >
-              {budgetStatus === 'PROGRESO' ? 'PROGRESO' : 'COMPLETADO'}
+              {budgetStatus === 'PROGRESO' ? 'EN PROGRESO' : 'COMPLETADO'}
             </button>
           </div>
         </MDBCardHeader>
-
         <div className="text-center mb-3" style={{ paddingTop: '1rem' }}>
           <input
             type="text"
@@ -256,11 +378,12 @@ const DataTable = ({ presupuesto, onUpdate }) => {
             onChange={handleFilterChange}
             style={{ width: '60%', display: 'inline-block' }}
           />
-          <div className="hover-scale" onClick={handleNewItem}>
-            <HiPlusCircle style={{ fontSize: "2rem" }} />
-          </div>
+          {!isAddingNewItem && budgetStatus !== 'COMPLETADO' && (
+            <div className="hover-scale" onClick={handleNewItem}>
+              <HiPlusCircle style={{ fontSize: "2rem" }} />
+            </div>
+          )}
         </div>
-
         <Table responsive striped bordered hover className="mt-3">
           <thead>
             <tr>
@@ -268,40 +391,26 @@ const DataTable = ({ presupuesto, onUpdate }) => {
               <th>Nombre</th>
               <th>Precio</th>
               <th>Stock</th>
-              <th>Total</th>
-              <th>Acciones</th>
+              <th>Subtotal</th>
+              {budgetStatus !== 'COMPLETADO' && <th>Acciones</th>}
             </tr>
           </thead>
           <tbody>
             {filteredPresupuesto.map((item, index) => (
               <tr key={item.id} className={getClassByEstado(item.status)}>
                 <td>{index + 1}</td>
-                <td>
-                  {editingRows[item.id] ? (
-                    <input
-                      type="text"
-                      style={{ maxWidth: "200px" }}
-                      className="form-control"
-                      value={editedValues[item.id]?.name || item.name}
-                      onChange={(e) =>
-                        handleItemInputChange(item.id, "name", e.target.value)
-                      }
-                    />
-                  ) : (
-                    item.name
-                  )}
-                </td>
-
+                <td>{renderNameField(item)}</td>
                 <td>
                   {editingRows[item.id] ? (
                     <input
                       type="number"
-                      style={{ maxWidth: "150px" }}
+                      style={{ maxWidth: "100px" }}
                       className="form-control"
                       value={editedValues[item.id]?.price || item.price}
                       onChange={(e) =>
                         handleItemInputChange(item.id, "price", e.target.value)
                       }
+                      disabled={budgetStatus === 'COMPLETADO'}
                     />
                   ) : (
                     item.price
@@ -317,67 +426,76 @@ const DataTable = ({ presupuesto, onUpdate }) => {
                       onChange={(e) =>
                         handleItemInputChange(item.id, "quantity", e.target.value)
                       }
+                      disabled={budgetStatus === 'COMPLETADO'}
                     />
                   ) : (
                     item.quantity
                   )}
                 </td>
                 <td>{(item.quantity * parseFloat(item.price)).toFixed(2)}</td>
-                <td>
-                  {editingRows[item.id] ? (
+                {budgetStatus !== 'COMPLETADO' && (
+                  <td>
+                    {editingRows[item.id] ? (
+                      <button
+                        onClick={() => handleItemSave(item.id)}
+                        className="btn btn-success btn-sm"
+                      >
+                        <HiMiniCheck></HiMiniCheck>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleItemEdit(item.id)}
+                        className="btn btn-primary btn-sm"
+                      >
+                        <HiPencil></HiPencil>
+                      </button>
+                    )}
                     <button
-                      onClick={() => handleItemSave(item.id)}
-                      className="btn btn-success btn-sm"
+                      onClick={() => handleItemDelete(item.id)}
+                      className="btn btn-danger btn-sm ml-2"
+                      disabled={budgetStatus === 'COMPLETADO'}
                     >
-                      Guardar
+                      <HiOutlineXMark></HiOutlineXMark>
                     </button>
-                  ) : (
                     <button
-                      onClick={() => handleItemEdit(item.id)}
-                      className="btn btn-primary btn-sm"
+                      onClick={() => handleItemCompra(item.id, item.status)}
+                      className={`btn btn-sm ${item.status === 'COMPRADO' ? 'btn-success' : 'btn-warning'}`}
+                      disabled={budgetStatus === 'COMPLETADO'}
                     >
-                      Editar
+                      {item.status === 'COMPRADO' ? 'COMPRADO' : 'PENDIENTE'}
                     </button>
-                  )}
-                  <button
-                    onClick={() => handleItemDelete(item.id)}
-                    className="btn btn-danger btn-sm ml-2"
-                  >
-                    Eliminar
-                  </button>
-                  <button
-                    onClick={() => handleItemCompra(item.id, item.status)}
-                    className={`btn btn-sm ${item.status === 'COMPRADO' ? 'btn-success' : 'btn-warning'}`}
-                  >
-                    {item.status === 'COMPRADO' ? 'COMPRADO' : 'PENDIENTE'}
-                  </button>
-                </td>
+                  </td>
+                )}
               </tr>
             ))}
-
             {isAddingNewItem && (
               <tr className="table-info">
                 <td>{budgetLogs.length + 1}</td>
-                <td>
+                <td style={{ display: "flex"}}>
                   <input
                     type="text"
-                    style={{ maxWidth: "200px" }}
-                    className="form-control"
-                    value={editedValues['new']?.name || ""}
+                    className={`form-control ${isAddingNewItem && customName ? '' : 'disabled-input'}`}
+                    style={{ maxWidth: "200px", paddingRight: "1rem" }}
+                    value={customName ? (editedValues['new']?.name || "") : selectedItem?.name}
                     onChange={(e) =>
                       handleItemInputChange('new', "name", e.target.value)
                     }
+                    disabled={!customName || budgetStatus === 'COMPLETADO'}
                   />
+                  <button onClick={() => setIsModalOpen(true)} className="btn btn-sm">
+                    <HiPlusCircle style={{ fontSize: "1rem" }} />
+                  </button>
                 </td>
                 <td>
                   <input
                     type="number"
-                    style={{ maxWidth: "150px" }}
+                    style={{ maxWidth: "100px" }}
                     className="form-control"
                     value={editedValues['new']?.price || ""}
                     onChange={(e) =>
                       handleItemInputChange('new', "price", e.target.value)
                     }
+                    disabled={budgetStatus === 'COMPLETADO'}
                   />
                 </td>
                 <td>
@@ -389,23 +507,32 @@ const DataTable = ({ presupuesto, onUpdate }) => {
                     onChange={(e) =>
                       handleItemInputChange('new', "quantity", e.target.value)
                     }
+                    disabled={budgetStatus === 'COMPLETADO'}
                   />
                 </td>
                 <td>{/* Cálculo del total */}</td>
-                <td>
-                  <button
-                    onClick={handleConfirmNewItem}
-                    className="btn btn-success btn-sm"
-                  >
-                    Confirmar nuevo log
-                  </button>
-                </td>
+                {budgetStatus !== 'COMPLETADO' && (
+                  <td>
+                    <button
+                      onClick={handleCancelNewItem}
+                      className="btn btn-danger btn-sm"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleConfirmNewItem}
+                      className="btn btn-success btn-sm"
+                    >
+                      Confirmar nuevo log
+                    </button>
+                  </td>
+                )}
               </tr>
             )}
           </tbody>
           <tfoot className="sticky-tfoot">
             <tr>
-              <td colSpan="4"></td>
+              <td colSpan="3"></td>
               <th>Total:</th>
               <td>{calcularPrecioTotal()}</td>
               <td></td>
@@ -413,6 +540,13 @@ const DataTable = ({ presupuesto, onUpdate }) => {
           </tfoot>
         </Table>
       </MDBCard>
+      {isModalOpen && (
+        <ModalListItems
+          elements={elements}
+          onItemSelect={handleItemSelect}
+          onClose={handleModalClose}
+        />
+      )}
     </div>
   );
 };

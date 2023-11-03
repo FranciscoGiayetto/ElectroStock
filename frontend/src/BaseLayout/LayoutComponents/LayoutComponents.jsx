@@ -13,6 +13,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuIcon from '@mui/icons-material/Menu';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -29,7 +30,7 @@ import { useMediaQuery } from '@mui/material';
 
 const { Header, Sider } = Layout;
 
-const LayoutComponents = ({ onSearch }) => {
+const LayoutComponents = ({ onSearch, isProfessor }) => {
   const [isReadyForInstall, setIsReadyForInstall] = useState(false);
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
@@ -108,6 +109,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
   return (
     <div>
+      {/* SIDEBAR */}
       <Sider
         trigger={null}
         collapsible
@@ -133,16 +135,25 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
           <Menu.Item key="2" icon={<CachedRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/Prestamos' }}>
             Préstamo
           </Menu.Item>
-          <Menu.Item key="3" icon={<PaidRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/presupuesto' }}>
-            Presupuesto
-          </Menu.Item>
-          <Menu.Item key="4" icon={<DataUsageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
-            Informe
-          </Menu.Item>
-          <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
-            Admin
-          </Menu.Item>
+    
+          {isProfessor && (
+              <Menu.Item key="3" icon={<PaidRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/presupuesto' }}>
+                Presupuesto
+              </Menu.Item>
+            )}
+            {isProfessor && (
+              <Menu.Item key="4" icon={<DataUsageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
+                Informe
+              </Menu.Item>
+            )}
+            {isProfessor && (
+            <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
+              Admin
+            </Menu.Item>
+               )}
           <Menu.Divider />
+     
+          
           <Menu.Item key="7" icon={<DownloadRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
             Descargar App
           </Menu.Item>
@@ -153,24 +164,20 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
         )}
       </Sider>
 
-      
+      {/* NAVBAR */}
       <Header className='navbar'>
           <Container fluid>
             <Row>
             <Col>
-    <Button
-      variant="primary"
-      type="submit"
-      className='button'
-      onClick={handleToggleSidebar}
-    >
-      {collapsed ? (
-        <MenuUnfoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-      ) : (
-        <MenuFoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-      )}
-    </Button>
-  </Col>
+              <Button
+                variant="primary"
+                type="submit"
+                className='button'
+                onClick={handleToggleSidebar}
+              >
+                <MenuRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+              </Button>
+            </Col>
 
            
           

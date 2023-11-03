@@ -38,7 +38,6 @@ function DetalleCuenta() {
   const userData = user();
   const id = userData.user_id;
 
-  console.log(id)
 
   const getUser = async () => {
     try {
@@ -46,8 +45,10 @@ function DetalleCuenta() {
       let data = await response.data;
       console.log(data)
       setElement(data);
+      
     } catch (error) {
       console.error(error);
+
     }
   };
   
@@ -74,7 +75,7 @@ function DetalleCuenta() {
     <Container fluid style={{marginTop:'6rem', marginBottom:'5rem'}}>
       <Row>
         <Col>
-          <CardUser first_name={element.first_name} last_name={element.last_name} course={element.course}></CardUser>
+          <CardUser first_name={element.first_name} last_name={element.last_name}  course={element.course ? element.course.grade : ''}></CardUser>
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
@@ -99,7 +100,7 @@ function DetalleCuenta() {
           ))
         ) : (
           
-          <p>No hay prestamos</p>
+          <p className='text-center2'>No hay prestamos.</p>
         )}
         </Col>
       </Row>

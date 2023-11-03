@@ -26,9 +26,9 @@
   }
 }
 
-@media screen and (max-width: 450px) {
-
-  .hidden-card{
-    display: none;
-  }
+.text-center2{
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  opacity: 50%;
 }
