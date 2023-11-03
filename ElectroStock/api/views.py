@@ -62,10 +62,24 @@ def get_stock(request, element_id):
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
 
-class ElementsViewSet(viewsets.ModelViewSet):
+# class ElementsViewSet(viewsets.ModelViewSet):
+#     queryset = models.Element.objects.all()
+#     permission_classes = [permissions.AllowAny]
+#     serializer_class = ElementSerializer
+from rest_framework import generics
+from rest_framework.response import Response
+@api_view(['GET'])
+def ElementsViewSet(request, page):
     queryset = models.Element.objects.all()
-    permission_classes = [permissions.AllowAny]
-    serializer_class = ElementSerializer
+    page_size = 10  # Número de elementos por página
+
+    start_index = (page - 1) * page_size
+    end_index = page * page_size
+
+    paginated_data = queryset[start_index:end_index]
+    serializer = ElementSerializer(paginated_data, many=True)
+
+    return Response(serializer.data)
 
 from cryptography.fernet import Fernet
 
@@ -92,11 +106,23 @@ class TokenViewSet(viewsets.ModelViewSet):
 
 
 # View para los elementos que estan en el ecommerce
-class ProductosEcommerceAPIView(viewsets.ModelViewSet):
-    queryset = models.Element.objects.filter(ecommerce=True)
-    permission_classes = [permissions.AllowAny]
-    serializer_class = ElementEcommerceSerializer2  # Utiliza el serializador correcto
+# class ProductosEcommerceAPIView(viewsets.ModelViewSet):
+#     queryset = models.Element.objects.filter(ecommerce=True)
+#     permission_classes = [permissions.AllowAny]
+#     serializer_class = ElementEcommerceSerializer2  # Utiliza el serializador correcto
 
+@api_view(['GET'])
+def ProductosEcommerceAPIView(request, page):
+    queryset = models.Element.objects.filter(ecommerce=True)
+    page_size = 10  # Número de elementos por página
+
+    start_index = (page - 1) * page_size
+    end_index = page * page_size
+
+    paginated_data = queryset[start_index:end_index]
+    serializer = ElementEcommerceSerializer2(paginated_data, many=True)
+
+    return Response(serializer.data)
 
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
