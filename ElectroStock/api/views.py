@@ -62,10 +62,20 @@ def get_stock(request, element_id):
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
 
-class ElementsViewSet(viewsets.ModelViewSet):
+from rest_framework import generics
+from rest_framework.response import Response
+@api_view(['GET'])
+def ElementsViewSet(request, page):
     queryset = models.Element.objects.all()
-    permission_classes = [permissions.AllowAny]
-    serializer_class = ElementSerializer
+    page_size = 10  # Número de elementos por página
+
+    start_index = (page - 1) * page_size
+    end_index = page * page_size
+
+    paginated_data = queryset[start_index:end_index]
+    serializer = ElementSerializer(paginated_data, many=True)
+
+    return Response(serializer.data)
 
 from cryptography.fernet import Fernet
 
@@ -91,11 +101,19 @@ class TokenViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-# View para los elementos que estan en el ecommerce
-class ProductosEcommerceAPIView(viewsets.ModelViewSet):
+@api_view(['GET'])
+def ProductosEcommerceAPIView(request, page):
     queryset = models.Element.objects.filter(ecommerce=True)
-    permission_classes = [permissions.AllowAny]
-    serializer_class = ElementEcommerceSerializer2  # Utiliza el serializador correcto
+    page_size = 10  # Número de elementos por página
+
+    start_index = (page - 1) * page_size
+    end_index = page * page_size
+
+    paginated_data = queryset[start_index:end_index]
+    serializer = ElementEcommerceSerializer2(paginated_data, many=True)
+
+    return Response(serializer.data)
+
 
 
 @api_view(["GET", "POST"])
@@ -614,18 +632,33 @@ class BoxMasLogsRotos(generics.ListAPIView):
         
 from django.shortcuts import get_object_or_404
 
+from rest_framework.pagination import PageNumberPagination
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 @api_view(["GET"])
-def elementos_por_categoria(request, category_id):
+def elementos_por_categoria(request, category_id, page):
     # Obtener la categoría correspondiente o devolver un error 404 si no existe
     categoria = get_object_or_404(models.Category, name=category_id)
 
     # Obtener todos los elementos que pertenecen a la categoría
     elementos = models.Element.objects.filter(category=categoria)
 
-    # Crear una lista para almacenar los elementos con su stock actual
+    page_size = 10  # Número de elementos por página
+
+    paginator = Paginator(elementos, page_size)
+    
+    try:
+        paginated_elements = paginator.page(page)
+    except PageNotAnInteger:
+        # Si la página no es un entero, entrega la primera página
+        paginated_elements = paginator.page(1)
+    except EmptyPage:
+        # Si la página está fuera de rango, entrega la última página de resultados
+        paginated_elements = paginator.page(paginator.num_pages)
+
     elementos_con_stock = []
 
-    for elemento in elementos:
+    for elemento in paginated_elements:
         element_id = elemento.id
 
         boxes = models.Box.objects.filter(element__id=element_id)
