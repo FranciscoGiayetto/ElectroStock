@@ -283,6 +283,21 @@ def carrito(request, user_id):
     return Response(status=405)
 
 
+
+
+@api_view(["GET"])
+def UsersFiltros(request, name):
+    if request.method == "GET":
+        queryset = models.CustomUser.objects.filter(
+            username=name
+        )
+        serializer = UsersSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+    return Response(status=405)
+
+
 @api_view(["GET", "POST"])
 def VencidosAPIView(request, user_id):
     if request.method == "GET":

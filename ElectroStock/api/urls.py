@@ -27,6 +27,7 @@ urlpatterns = [
     path('elementos_por_especialidad/<str:nombre_especialidad>/', boxes_por_especialidad, name='elementos_por_especialidad'),
     path('categories_por_especialidad/<str:nombre_especialidad>/', categories_por_especialidad, name='categories_por_especialidad'),
     path("logPost/<int:user_id>/", CambioLog, name="logPost"),
+    path("usersFiltro/<str:name>/", UsersFiltros, name="users"),
     path("desaprobadoPost/<int:user_id>/", CambioDesaprobado, name="desaprobado"),
     path("devueltoPost/<int:user_id>/", CambioDevuelto, name="devuelto"),
     path("aprobadoPost/<int:user_id>/",CambioAprobado , name="aprobado"),

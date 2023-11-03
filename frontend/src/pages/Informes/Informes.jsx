@@ -8,10 +8,10 @@ import TiempoPorPrestamo from './TiempoPorPrestamo';
 import HorizontalBarChart from './HorizontalBarChart';
 import VerticalBarChart from './VerticalBarChart';
 
-function Informes() {
+function Informes({ isProfessor }) {
   const [deudorData, setDeudorData] = useState([]);
   const [boxData, setBoxData] = useState([]);
-
+  console.log(isProfessor)
   useEffect(() => {
     fetch('/api/estadisticas/mayordeudor/')
       .then(response => response.json())
@@ -34,6 +34,7 @@ function Informes() {
         <div className="col-md-4">
           <TasaAprobacion endpoint="estadisticas/aprobado/" />
         </div>
+        
         <div className="col-md-4">
   <div className="d-flex flex-column align-items-start" style={{ marginLeft: '11px' }}>
     <TiempoPorPrestamo />

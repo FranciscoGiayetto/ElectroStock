@@ -51,7 +51,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
 # Para todos los usuarios
 class UsersSerializer(serializers.ModelSerializer):
-    groups = GroupSerializer()
+    groups = serializers.StringRelatedField(many= True)
     course = CourseSerializer()
 
     class Meta:
