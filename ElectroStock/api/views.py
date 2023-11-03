@@ -62,20 +62,10 @@ def get_stock(request, element_id):
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
 
-from rest_framework import generics
-from rest_framework.response import Response
-@api_view(['GET'])
-def ElementsViewSet(request, page):
+class ElementsViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.all()
-    page_size = 10  # Número de elementos por página
-
-    start_index = (page - 1) * page_size
-    end_index = page * page_size
-
-    paginated_data = queryset[start_index:end_index]
-    serializer = ElementSerializer(paginated_data, many=True)
-
-    return Response(serializer.data)
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ElementEcommerceSerializer
 
 from cryptography.fernet import Fernet
 
@@ -101,18 +91,11 @@ class TokenViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-@api_view(['GET'])
-def ProductosEcommerceAPIView(request, page):
-    queryset = models.Element.objects.filter(ecommerce=True)
-    page_size = 10  # Número de elementos por página
 
-    start_index = (page - 1) * page_size
-    end_index = page * page_size
-
-    paginated_data = queryset[start_index:end_index]
-    serializer = ElementEcommerceSerializer2(paginated_data, many=True)
-
-    return Response(serializer.data)
+class ProductosEcommerceAPIView(viewsets.ModelViewSet):
+    queryset = models.Element.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ElementEcommerceSerializer2
 
 
 
@@ -700,9 +683,18 @@ def elementos_por_categoria(request, category_id, page):
 
         elementos_con_stock.append(elemento_con_stock)
 
-    # Serializar los elementos con su stock actual y enviarlos en la respuesta
+    # Calcular el número total de páginas
+    total_pages = paginator.num_pages
+
+    # Serializar los elementos con su stock actual
     serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
-    return Response(serializer.data)
+
+    # Construir el objeto de respuesta JSON que incluye los elementos paginados y el número total de páginas
+    response_data = {
+        "results": serializer.data,
+        "count": total_pages,
+    }
+    return Response(response_data)
 
     
 
