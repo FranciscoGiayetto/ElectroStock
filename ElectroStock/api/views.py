@@ -654,19 +654,33 @@ class BoxMasLogsRotos(generics.ListAPIView):
             )
         
 from django.shortcuts import get_object_or_404
+from rest_framework.pagination import PageNumberPagination
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @api_view(["GET"])
-def elementos_por_categoria(request, category_id):
+def elementos_por_categoria(request, category_id, page):
     # Obtener la categoría correspondiente o devolver un error 404 si no existe
     categoria = get_object_or_404(models.Category, name=category_id)
 
     # Obtener todos los elementos que pertenecen a la categoría
     elementos = models.Element.objects.filter(category=categoria)
 
-    # Crear una lista para almacenar los elementos con su stock actual
+    page_size = 10  # Número de elementos por página
+
+    paginator = Paginator(elementos, page_size)
+    
+    try:
+        paginated_elements = paginator.page(page)
+    except PageNotAnInteger:
+        # Si la página no es un entero, entrega la primera página
+        paginated_elements = paginator.page(1)
+    except EmptyPage:
+        # Si la página está fuera de rango, entrega la última página de resultados
+        paginated_elements = paginator.page(paginator.num_pages)
+
     elementos_con_stock = []
 
-    for elemento in elementos:
+    for elemento in paginated_elements:
         element_id = elemento.id
 
         boxes = models.Box.objects.filter(element__id=element_id)
@@ -711,6 +725,7 @@ def elementos_por_categoria(request, category_id):
     # Serializar los elementos con su stock actual y enviarlos en la respuesta
     serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
     return Response(serializer.data)
+
 
     
 @api_view(["GET","PUT"])
@@ -866,7 +881,7 @@ def boxes_por_especialidad(request, nombre_especialidad):
     return Response(elementos_por_especialidad)
 
 @api_view(["GET"])
-def categories_por_especialidad(request, nombre_especialidad):
+def categories_por_especialidad(request, nombre_especialidad,date):
     # Obtén la especialidad especificada en la URL
     especialidad = get_object_or_404(models.Speciality, name=nombre_especialidad)
 
