@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PrestamosCard from './CardPrestamos';
+import PrestamosCardProfes from './CardPrestamosProfesor';
 import useAxios from '../../utils/useAxios';
 import './Prestamos.css';
 import { useAuthStore } from '../../store/auth';
@@ -37,7 +37,7 @@ const PrestamoProfesor = () => {
         {prestamos.length > 0 ? (
           prestamos.map((prestamo, index) => (
             
-            <PrestamosCard
+            <PrestamosCardProfes
               key={index}
               image={prestamo.box.element.image}
               status={prestamo.status}
