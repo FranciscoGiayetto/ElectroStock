@@ -120,7 +120,7 @@ const DataTable = ({ presupuestos }) => {
 <Table responsive striped bordered hover className="mt-3 table-responsive">
         <thead>
           <tr>
-            <th scope='col' onClick={() => handleSortChange('id')} className="d-none d-sm-table-cell">
+            <th scope='col' onClick={() => handleSortChange('id')}>
               ID {sortColumn === 'id' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
             <th scope='col' onClick={() => handleSortChange('name')}>
@@ -143,7 +143,10 @@ const DataTable = ({ presupuestos }) => {
             >
               <td>{presupuesto.id}</td>
               <td>{presupuesto.name}</td>
-              <td className={`${getRowTextColor(presupuesto.status)}`}>{presupuesto.status}</td>
+              <td className={`progress-abbreviate ${getRowTextColor(presupuesto.status)}`}>
+                {presupuesto.status}
+              </td>
+
               <td >{presupuesto.speciality.name}</td>
             </tr>
           ))}
