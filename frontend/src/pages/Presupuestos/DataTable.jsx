@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { HiPlusCircle } from "react-icons/hi2";
 import useAxios from '../../utils/useAxios';
+import './DataTable.css'
 const DataTable = ({ presupuestos }) => {
   let api = useAxios();
   const navigate = useNavigate();
@@ -116,10 +117,10 @@ const DataTable = ({ presupuestos }) => {
   </div>
 </MDBCardHeader>
 
-      <Table responsive striped bordered hover className="mt-3">
+<Table responsive striped bordered hover className="mt-3 table-responsive">
         <thead>
           <tr>
-            <th scope='col' onClick={() => handleSortChange('id')}>
+            <th scope='col' onClick={() => handleSortChange('id')} className="d-none d-sm-table-cell">
               ID {sortColumn === 'id' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
             <th scope='col' onClick={() => handleSortChange('name')}>

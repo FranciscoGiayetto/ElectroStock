@@ -1,0 +1,24 @@
+/* Hide the ID column */
+td:first-child,
+th:first-child {
+  display: none;
+}
+
+/* Adjust the column width as needed */
+th {
+  width: 0%; /* You can adjust the width as needed */
+}
+
+td {
+  width: 0%; /* You can adjust the width as needed */
+}
+
+@media (max-width: 576px) {
+    .progress-abbreviate {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 3em;
+    }
+  }
+  
