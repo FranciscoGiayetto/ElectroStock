@@ -13,7 +13,7 @@ import {
   MDBBtn, 
 } from 'mdb-react-ui-kit';
 
-const PrestamosCard = ({ status,image, cliente,dateIn,name}) => {
+const PrestamosCard = ({ status,image, cliente,clienteId,dateIn,name}) => {
   return (
     <div className='prestamo-card'>
         <div className='img-container'>
