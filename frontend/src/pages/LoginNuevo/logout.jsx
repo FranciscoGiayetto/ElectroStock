@@ -10,6 +10,8 @@ import { Container, Row, Col } from 'react-bootstrap';
 import './login.css';
 import Button from 'react-bootstrap/Button';
 
+
+
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
@@ -17,9 +19,11 @@ import Button from 'react-bootstrap/Button';
 </head>
 
 const Logout = () => {
+    const navigate = useNavigate();
     useEffect(() => {
         logout();
-    }, []);
+        navigate('/login');
+    }, [navigate]);
     return (
         <Container className='font-family' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', minWidth:'100' }}>
             <div className='text-center'>
