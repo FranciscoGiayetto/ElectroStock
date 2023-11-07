@@ -112,7 +112,16 @@ def PrestamoVerAPIView(request, user_id):
         queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
         serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
+
+        # Agrupar logs por fecha y hora de creación en PrestamoVerAPIView
+        grouped_logs = defaultdict(list)
+        for log in queryset:
+            creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z')  # Formatear fecha y hora
+            log_data = LogSerializer(log).data
+            log_data['dateIn'] = creation_date  # Actualizar la clave 'dateIn' al string formateado
+            grouped_logs[creation_date].append(log_data)
+
+        return Response(grouped_logs)
 
     if request.method == "POST":
         # Realiza acciones necesarias para agregar elementos al carrito
