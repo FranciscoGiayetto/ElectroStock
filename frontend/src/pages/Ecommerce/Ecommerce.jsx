@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 
 function Ecommerce({ allItems }) {
   const api = useAxios();
+  const [count, setCount] = useState(1);
   const [cards, setCards] = useState([]);
   const [filteredCards, setFilteredCards] = useState([]);
   const [searchParams] = useSearchParams();
@@ -22,33 +23,41 @@ function Ecommerce({ allItems }) {
   const { name } = useParams();
   const [showWordList, setShowWordList] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+
   const pageSize = 10; // Number of cards per page
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     getElement();
-  }, [currentPage]);
+    
+  }, [page]);
+  
 
   useEffect(() => {
     console.log('CAMBIO LA SEARCH QUERY', searchQuery);
     filterCards();
-  }, [searchQuery, cards]);
+  }, [searchQuery]);
 
   const getElement = async () => {
-    const endpoint = allItems ? 'elementsEcommerce/' : `filtroCategoria/${encodeURIComponent(name)}/`;
+    const endpoint = allItems
+      ? `elementsEcommerce/?page=${page}`
+      : `filtroCategoria/${encodeURIComponent(name)}/${page}`;
 
     try {
       const response = await api.get(`${endpoint}`);
       let data = await response.data;
+      setCount(data.count);
       console.log(data);
-
+      let results = data.results;
       // Replace null or empty images with the default image
-      const updatedData = data.map((card) => ({
+      const updatedData = results.map((card) => ({
         ...card,
         image: card.image || defaultpicture,
       }));
 
       setCards(updatedData);
+      setFilteredCards(updatedData);
+      
       setIsLoading(false);
     } catch (error) {
       console.error('Error al obtener datos:', error);
@@ -72,7 +81,7 @@ function Ecommerce({ allItems }) {
     setShowWordList(!showWordList);
   };
 
-  const startIndex = (currentPage - 1) * pageSize;
+  const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const visibleCards = filteredCards.slice(startIndex, endIndex);
 
@@ -108,7 +117,7 @@ function Ecommerce({ allItems }) {
               </a>
             </div>
           ) : (
-            visibleCards.map((card, index) => (
+            filteredCards.map((card, index) => (
               <div key={index}>
                 <CardExample
                   title={card.name}
@@ -123,16 +132,19 @@ function Ecommerce({ allItems }) {
         </Col>
       </Row>
       <Row>
-        <Col xs={12} className="text-center">
-          <Pagination
-            totalRecords={filteredCards.length}
-            pageLimit={pageSize}
-            pageNeighbours={1}
-            currentPage={currentPage}
-            onPageChanged={setCurrentPage}
-          />
-        </Col>
-      </Row>
+  <Col xs={12} className="text-center">
+    <div className="pagination-container">
+      <Pagination
+        totalRecords={count}
+        pageLimit={pageSize}
+        pageNeighbours={1}
+        currentPage={page}
+        onPageChanged={setPage}
+      />
+    </div>
+  </Col>
+</Row>
+
     </Container>
   );
 }
