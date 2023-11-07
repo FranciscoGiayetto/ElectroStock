@@ -116,7 +116,7 @@ def PrestamoVerAPIView(request, user_id):
         # Agrupar logs por fecha y hora de creación en PrestamoVerAPIView
         grouped_logs = defaultdict(list)
         for log in queryset:
-            creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z')  # Formatear fecha y hora
+            creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M')  # Formatear fecha y hora
             log_data = LogSerializer(log).data
             log_data['dateIn'] = creation_date  # Actualizar la clave 'dateIn' al string formateado
             grouped_logs[creation_date].append(log_data)
