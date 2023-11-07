@@ -37,20 +37,13 @@ html, body {
   justify-content: center;
   background-color: #2E5266;
   border-color: rgba(235, 235, 235, 0.5);
-  border-radius: 20px;
+  border-radius: auto;
   margin-right: auto;
-  margin-left: 10px;
-  width: 558px !important;
-  
-  cursor: auto;
+  margin-left: auto;
+  width: 100%;
 }
 
-@media (max-width: 576px) {
-  .search-input {
-    width: 6rem;
-    height: 1.5rem;
-  }
-}
+
 
 .centered-column {
   display: flex;
