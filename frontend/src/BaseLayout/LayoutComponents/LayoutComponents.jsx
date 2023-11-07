@@ -278,7 +278,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               <Col style={{ marginLeft:'0'}}>
               {!isSmallScreen && (
                 <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
-                  <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' showZero style={{backgroundColor:'#EE8F37'}}>
+                  <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
                     <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                   </Badge>
                 </Button>
