@@ -163,7 +163,7 @@ class Category(models.Model):
 
 
 class Element(models.Model):
-    name = models.CharField(max_length=30, verbose_name="Nombre")
+    name = models.CharField(max_length=255, verbose_name="Nombre")
     description = models.TextField(null=True, blank=True, verbose_name="Descripcion")
     image = models.ImageField(upload_to="img-prod/", blank=True, verbose_name="Foto")
     category = models.ForeignKey(

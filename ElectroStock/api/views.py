@@ -111,25 +111,43 @@ def PrestamoVerAPIView(request, user_id):
 
         queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
-        serializer = LogSerializer(queryset, many=True)
+        # Si hay logs en el queryset
+        if queryset.exists():
+            primer_log = queryset.first()
 
-        # Agrupar logs por fecha y hora de creación en PrestamoVerAPIView
-        grouped_logs = defaultdict(list)
-        for log in queryset:
-            creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z')  # Formatear fecha y hora
-            log_data = LogSerializer(log).data
-            log_data['dateIn'] = creation_date  # Actualizar la clave 'dateIn' al string formateado
-            grouped_logs[creation_date].append(log_data)
+            dateIn_primer_log = primer_log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z') if primer_log.dateIn else None
+            dateOut_primer_log = primer_log.dateOut
 
-        return Response(grouped_logs)
+            cantidad_de_logs = queryset.count()
 
+            logs_data = []
+            for log in queryset:
+                log_creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+                log_data = LogSerializer(log).data
+                log_data['dateIn'] = log_creation_date
+                logs_data.append(log_data)
+
+            imagen_primer_log = None
+            if primer_log.box and primer_log.box.element and primer_log.box.element.image and primer_log.box.element.image.file:
+                imagen_primer_log = primer_log.box.element.image.url
+            
+            response_data = {
+                'dateOut': dateOut_primer_log,
+                'dateIn': dateIn_primer_log,
+                'count': cantidad_de_logs,
+                'lista': logs_data,
+                'imagen': imagen_primer_log
+            }
+
+            return Response(response_data)
+        else:
+             return Response("No se encontraron logs para este usuario.")   
+        
     if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-
+    # Realiza acciones necesarias para agregar elementos al carrito
+    # ...
         return Response({"message": "Elemento agregado al carrito"})
 
-    return Response(status=405)
 
 @api_view(["GET", "POST"])
 def PrestamoPendientesAPIView(request, user_id):
