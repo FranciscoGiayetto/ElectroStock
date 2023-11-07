@@ -34,18 +34,7 @@ const ModalDetallePrestamo = () => {
        
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           {filteredElements.map((element) => (
-            <li
-              key={element.id}
-              style={element === hoveredItem ? highlightedItemStyle : listItemStyle}
-              onClick={() => {
-                onItemSelect(element);
-                onClose();
-              }}
-              onMouseEnter={() => setHoveredItem(element)}
-              onMouseLeave={() => setHoveredItem(null)}
-            >
-              {element.name}
-            </li>
+           <h1>hola</h1>
           ))}
         </ul>
       </Modal.Body>
