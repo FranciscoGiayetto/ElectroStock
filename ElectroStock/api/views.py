@@ -62,10 +62,20 @@ def get_stock(request, element_id):
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
 
+from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import permissions
+
+class CustomPagination(PageNumberPagination):
+    page_size = 10  # Cantidad de elementos por página
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 class ElementsViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.all()
+    serializer_class = ElementEcommerceSerializer2
     permission_classes = [permissions.AllowAny]
-    serializer_class = ElementEcommerceSerializer
+    pagination_class = CustomPagination
 
 from cryptography.fernet import Fernet
 
@@ -93,9 +103,10 @@ class TokenViewSet(viewsets.ModelViewSet):
 
 
 class ProductosEcommerceAPIView(viewsets.ModelViewSet):
-    queryset = models.Element.objects.all()
+    queryset = models.Element.objects.filter(ecommerce=True)
     permission_classes = [permissions.AllowAny]
     serializer_class = ElementEcommerceSerializer2
+    pagination_class = CustomPagination
 
 
 
@@ -620,6 +631,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @api_view(["GET"])
 def elementos_por_categoria(request, category_id, page):
+    pagination_class = CustomPagination
     # Obtener la categoría correspondiente o devolver un error 404 si no existe
     categoria = get_object_or_404(models.Category, name=category_id)
 
