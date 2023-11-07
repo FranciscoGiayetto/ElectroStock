@@ -8,10 +8,12 @@ class CategoriaPadreSerializer(serializers.ModelSerializer):
         model = models.Category
         fields = "__all__"
 
+
+
 class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TokenSignup
-        fields = "__all__"
+        fields = ['id','name']
 
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:

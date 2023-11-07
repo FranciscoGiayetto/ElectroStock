@@ -77,28 +77,31 @@ class ElementsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     pagination_class = CustomPagination
 
-from cryptography.fernet import Fernet
+
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
+import base64
+
+def encrypt(info):
+    key = '1616161616161616'  # Asegúrate de que tu clave secreta sea de 16 bytes
+    cipher = AES.new(key.encode('utf-8'), AES.MODE_CBC)
+    ct_bytes = cipher.encrypt(pad(info.encode('utf-8'), AES.block_size))
+    ct = base64.b64encode(cipher.iv + ct_bytes).decode('utf-8')
+    return ct
+
 
 class TokenViewSet(viewsets.ModelViewSet):
     queryset = models.TokenSignup.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = TokenSerializer
 
-    def encrypt_data(self, data, key):
-        fernet = Fernet(key)
-        encrypted_data = fernet.encrypt(data.encode())
-        return encrypted_data
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = TokenSerializer(queryset, many=True)
+        serialized_data = json.dumps(serializer.data)  # Convertir los datos a una cadena de texto
+        encrypted_data = encrypt(serialized_data)
+        return Response(encrypted_data)
 
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        encrypted_data = self.encrypt_data(data['name'], 'pepe1234')  # Replace 'your-secret-key' with your actual key
-        encrypted_data_base64 = encrypted_data.decode('utf-8')
-        data['encrypted_name'] = encrypted_data_base64
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 
