@@ -497,6 +497,13 @@ class BudgetLogAdmin(ImportExportActionModelAdmin):
         "quantity",
     ]
 
+class BudgetAdmin(ImportExportActionModelAdmin):
+    list_display = [
+        "name",
+        "status",
+        "speciality",
+    ]
+    
 # Registramos los filtros y busquedas de las clases
 admin.site.register(Element, ElementAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
@@ -511,5 +518,5 @@ admin.site.register(Speciality)
 #SACAR ESTE
 admin.site.register(TokenSignup, TokenAdmin)
 admin.site.register(Notification)
-admin.site.register(Budget)
+admin.site.register(Budget, BudgetAdmin)
 admin.site.register(BudgetLog,BudgetLogAdmin)
