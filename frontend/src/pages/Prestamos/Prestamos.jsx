@@ -43,6 +43,7 @@ const Prestamos = () => {
               image={prestamo.box.element.image}
               status={prestamo.status}
               cliente={prestamo.borrower.username}
+              clienteId = {prestamo.borrower.user_id}
               dateIn={prestamo.dateIn}
               componente={prestamo.box.element.name}
 
