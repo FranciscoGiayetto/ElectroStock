@@ -21,6 +21,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import DataUsageRoundedIcon from '@mui/icons-material/DataUsageRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import Tooltip from '@mui/material/Tooltip';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -250,46 +251,54 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
                     )}
                   />
-                 
-                  <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Buscar" style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                    <SearchRoundedIcon />
-                  </Button>
-
+                  <Tooltip title="Buscar" arrow placement="bottom">
+                    <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                      <SearchRoundedIcon />
+                    </Button>
+                  </Tooltip>
                 </form> 
               </Col>
 
               {/* Buttons */}
               <Col>
                 {!isSmallScreen && (
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    className='button'
-                    data-toggle="tooltip" data-placement="right" title="Carrito"
-                    onClick={() => { window.location.href = '/carrito' }}
-                  >
-                    <Badge count={parseInt(cantCarrito)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
-                      <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                    </Badge>
-                  </Button>
+                  <Tooltip title="Carrito" arrow placement="bottom">
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      className='button'
+                      data-toggle="tooltip" data-placement="right" title="Carrito"
+                      onClick={() => { window.location.href = '/carrito' }}
+                    >
+                      <Badge count={parseInt(cantCarrito)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                        <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                      </Badge>
+                    </Button>
+                  </Tooltip>
+                  
                 )}
               </Col>
 
               <Col style={{ marginLeft:'0'}}>
               {!isSmallScreen && (
-                <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
-                  <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
-                    <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                  </Badge>
-                </Button>
+                <Tooltip title="Notificaciones" arrow placement="bottom">
+                  <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
+                    <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                      <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                    </Badge>
+                  </Button>
+                </Tooltip>
+                
               )}.
               </Col>
 
               <Col style={{ marginLeft:'0rem'}}>   
               {!isSmallScreen && (
-                <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
-                  <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
-                </Button>
+                <Tooltip title="Configuración" arrow placement="bottom">
+                  <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
+                    <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
+                  </Button>
+                </Tooltip>
               )}
               </Col>          
             </Row>

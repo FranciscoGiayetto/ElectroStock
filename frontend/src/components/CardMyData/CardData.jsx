@@ -3,6 +3,8 @@ import Table from 'react-bootstrap/Table';
 import EditRoundedIcon from '@mui/icons-material/Edit';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import Tooltip from '@mui/material/Tooltip';
+import LaunchRoundedIcon from '@mui/icons-material/Launch';
 import {
   MDBCard,
   MDBCardHeader,
@@ -75,7 +77,13 @@ export default function CardMyData(props) {
                   {confirmIcon} {cancelIcon}
                 </div>
               ) : (
-                <EditRoundedIcon onClick={() => handleEdit('email')} style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} />
+                <Tooltip title="Editar" arrow placement="right">
+                  <EditRoundedIcon
+                    onClick={() => handleEdit('username')}
+                    style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }}
+                  />
+                </Tooltip>
+                
               )}
             </td>
           </tr>
@@ -95,7 +103,10 @@ export default function CardMyData(props) {
                   {confirmIcon} {cancelIcon}
                 </div>
               ) : (
-                <EditRoundedIcon onClick={() => handleEdit('username')} style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} />
+                <Tooltip title="Editar" arrow placement="right">
+                  <EditRoundedIcon onClick={() => handleEdit('username')} style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} />
+                </Tooltip>
+                
               )}
             </td>
           </tr>
@@ -115,7 +126,10 @@ export default function CardMyData(props) {
                   {confirmIcon} {cancelIcon}
                 </div>
               ) : (
-                <EditRoundedIcon onClick={() => handleEdit('password')} style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} />
+                <Tooltip title="Editar" arrow placement="right">
+                  <LaunchRoundedIcon onClick={() => { window.location.href = 'http://127.0.0.1:8000/auth/accounts/password_reset' }} style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} />
+                </Tooltip>
+                
               )}
             </td>
           </tr>
