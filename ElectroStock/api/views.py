@@ -633,83 +633,66 @@ from rest_framework.pagination import PageNumberPagination
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @api_view(["GET"])
-def elementos_por_categoria(request, category_id, page):
-    pagination_class = CustomPagination
+def elementos_por_categoria(request, category_id):
+    pagination_class = CustomPagination()
+    #pagination_class.page_size = 10  # Número de elementos por página
+
     # Obtener la categoría correspondiente o devolver un error 404 si no existe
     categoria = get_object_or_404(models.Category, name=category_id)
 
     # Obtener todos los elementos que pertenecen a la categoría
     elementos = models.Element.objects.filter(category=categoria)
 
-    page_size = 10  # Número de elementos por página
-
-    paginator = Paginator(elementos, page_size)
-    
-    try:
-        paginated_elements = paginator.page(page)
-    except PageNotAnInteger:
-        # Si la página no es un entero, entrega la primera página
-        paginated_elements = paginator.page(1)
-    except EmptyPage:
-        # Si la página está fuera de rango, entrega la última página de resultados
-        paginated_elements = paginator.page(paginator.num_pages)
+    # Paginar los elementos
+    paginated_elements = pagination_class.paginate_queryset(elementos, request)
 
     elementos_con_stock = []
 
-    for elemento in paginated_elements:
-        element_id = elemento.id
+    if paginated_elements is not None:
+        for elemento in paginated_elements:
+            element_id = elemento.id
 
-        boxes = models.Box.objects.filter(element__id=element_id)
-        box_ids = [box.id for box in boxes]
+            boxes = models.Box.objects.filter(element__id=element_id)
+            box_ids = [box.id for box in boxes]
 
-        total_com = models.Log.objects.filter(
-            box__id__in=box_ids, status="COM"
-        ).aggregate(total=Sum("quantity"))["total"]
-        total_ped = models.Log.objects.filter(
-            box__id__in=box_ids, status="PED"
-        ).aggregate(total=Sum("quantity"))["total"]
-        total_rot = models.Log.objects.filter(
-            box__id__in=box_ids, status="ROT"
-        ).aggregate(total=Sum("quantity"))["total"]
-        total_ap = models.Log.objects.filter(
-            box__id__in=box_ids, status="AP"
-        ).aggregate(total=Sum("quantity"))["total"]
+            total_com = models.Log.objects.filter(
+                box__id__in=box_ids, status="COM"
+            ).aggregate(total=Sum("quantity"))["total"]
+            total_ped = models.Log.objects.filter(
+                box__id__in=box_ids, status="PED"
+            ).aggregate(total=Sum("quantity"))["total"]
+            total_rot = models.Log.objects.filter(
+                box__id__in=box_ids, status="ROT"
+            ).aggregate(total=Sum("quantity"))["total"]
+            total_ap = models.Log.objects.filter(
+                box__id__in=box_ids, status="AP"
+            ).aggregate(total=Sum("quantity"))["total"]
 
-        if total_com is None:
-            total_com = 0
-        if total_ped is None:
-           total_ped = 0
-        if total_ap is None:
-            total_ap = 0
-        if total_rot is None:
-            total_rot = 0
+            if total_com is None:
+                total_com = 0
+            if total_ped is None:
+               total_ped = 0
+            if total_ap is None:
+                total_ap = 0
+            if total_rot is None:
+                total_rot = 0
 
-        current_stock = total_com - total_ped - total_ap - total_rot
+            current_stock = total_com - total_ped - total_ap - total_rot
 
-        # Crear un diccionario con la información del elemento y su stock actual
-        elemento_con_stock = {
-            "id": elemento.id,
-            "name": elemento.name,
-            "description": elemento.description,
-            "image": elemento.image,
-            "category": elemento.category,
-            "current_stock": current_stock,
-        }
+            elemento_con_stock = {
+                "id": elemento.id,
+                "name": elemento.name,
+                "description": elemento.description,
+                "image": elemento.image,
+                "category": elemento.category,
+                "current_stock": current_stock,
+            }
 
-        elementos_con_stock.append(elemento_con_stock)
+            elementos_con_stock.append(elemento_con_stock)
 
-    # Calcular el número total de páginas
-    total_pages = paginator.num_pages
-
-    # Serializar los elementos con su stock actual
     serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
 
-    # Construir el objeto de respuesta JSON que incluye los elementos paginados y el número total de páginas
-    response_data = {
-        "results": serializer.data,
-        "count": total_pages,
-    }
-    return Response(response_data)
+    return pagination_class.get_paginated_response(serializer.data)
 
     
 
