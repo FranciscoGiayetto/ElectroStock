@@ -50,9 +50,14 @@ const PrestamosCardProfe = ({ status, image, cliente, dateIn, name }) => {
                   <h6 className="text-success"> •  • </h6>
                   <div className="d-flex flex-column mt-4">
                   </div>
-                  <div className="d-flex flex-column mt-4">
-                  <a href={detallePrestamoURL} className="btn btn-primary btn-sm">Ver prestamo</a>                  </div>
-                  <div className="d-flex flex-column mt-4">
+                  <div className="d-flex flex-column ">
+                  <button className="btn btn-success me-2" >
+                <span role="img" aria-label="Checkmark">✅</span> Confirmar
+              </button>
+              <span>⠀⠀⠀⠀⠀⠀</span>
+              <button className="btn btn-danger">
+                <span role="img" aria-label="Cross">❌</span> Rechazar
+              </button>                  
                   </div>
                 </div>
               </div>
