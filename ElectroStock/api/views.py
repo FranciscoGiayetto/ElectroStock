@@ -133,6 +133,10 @@ def PrestamoVerAPIView(request, user_id):
             
             response_data = {
                 'dateOut': dateOut_primer_log,
+                'usuario':primer_log.borrower.username,
+                'nombre': primer_log.borrower.first_name,
+                'apellido': primer_log.borrower.last_name,
+                'estado': primer_log.status,
                 'dateIn': dateIn_primer_log,
                 'count': cantidad_de_logs,
                 'lista': logs_data,
@@ -437,6 +441,7 @@ class BorrowerStatisticsView(generics.ListAPIView):
         return Response(borrower_statistics)
 
 
+from django.db.models.functions import TruncDate
 # view para la estadistica de los dias con mayor prestamos
 class DateStatisticsView(generics.ListAPIView):
     serializer_class = DateStatisticsSerializer
@@ -444,9 +449,11 @@ class DateStatisticsView(generics.ListAPIView):
     def get_queryset(self):
         current_year = timezone.now().year
         queryset = (
-            models.Log.objects.filter(dateIn__year=current_year)
-            .values("dateIn")
-            .annotate(total_datein_logs=Count("dateIn"))
+            models.Log.objects
+            .annotate(dateIn_date=TruncDate('dateIn'))  # Convierte dateIn a un campo de tipo date
+            .filter(dateIn__year=current_year)
+            .values("dateIn_date")
+            .annotate(total_datein_logs=Count("dateIn_date"))
             .order_by("-total_datein_logs")[:1]
         )
         return queryset
