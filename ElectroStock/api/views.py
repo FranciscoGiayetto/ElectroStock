@@ -127,7 +127,7 @@ def PrestamoVerAPIView(request, user_id):
                 primer_log = logs_data[0]
                 primer_log_prueba = queryset.first()
 
-                dateIn_primer_log_prueba = primer_log_prueba.dateIn.strftime('%Y-%m-%d') if primer_log_prueba.dateIn else None
+                dateIn_primer_log_prueba = primer_log_prueba.dateIn.strftime('%Y-%m-%d %H:%M') if primer_log_prueba.dateIn else None
                 dateOut_primer_log = primer_log.get('dateOut', '') if primer_log else None
                 
                 
