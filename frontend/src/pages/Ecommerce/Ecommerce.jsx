@@ -38,7 +38,7 @@ function Ecommerce({ allItems }) {
   const getElement = async () => {
     const endpoint = allItems
       ? `elementsEcommerce/?page=${page}`
-      : `filtroCategoria/${encodeURIComponent(name)}/${page}`;
+      : `filtroCategoria/${encodeURIComponent(name)}/?page=${page}`;
 
     try {
       const response = await api.get(`${endpoint}`);
