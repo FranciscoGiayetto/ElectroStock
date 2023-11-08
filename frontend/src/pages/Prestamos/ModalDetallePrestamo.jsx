@@ -1,21 +1,13 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
+import PrestamosCard from './CardPrestamos'; // Import the PrestamosCard component
 
-const listItemStyle = {
-  borderBottom: '1px solid #ddd',
-  padding: '8px',
-  cursor: 'pointer',
-};
-
-
-
-const ModalDetallePrestamo = ({lista}) => {
-
-
+const ModalDetallePrestamo = ({ lista, onClose }) => {
+  const [searchTerm, setSearchTerm] = useState('');
 
   return (
     <Modal show={true} onHide={onClose}>
-   <Modal.Header closeButton>
+      <Modal.Header closeButton>
         <div>
           <Modal.Title>Prestamos:</Modal.Title>
           <input
@@ -28,10 +20,15 @@ const ModalDetallePrestamo = ({lista}) => {
         </div>
       </Modal.Header>
       <Modal.Body>
-       
         <ul style={{ listStyleType: 'none', padding: 0 }}>
-          {lista.map((element) => (
-           <h1>hola</h1>
+          {lista.map((element, index) => (
+            <PrestamosCard
+              key={index}
+              status={element.status}
+              image={element.box.element.image}
+              cliente={element.box.element.image}
+              component={element.box.element.name}
+            />
           ))}
         </ul>
       </Modal.Body>
@@ -44,4 +41,4 @@ const ModalDetallePrestamo = ({lista}) => {
   );
 };
 
-export default ModalListItems;
+export default ModalDetallePrestamo;

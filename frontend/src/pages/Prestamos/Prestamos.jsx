@@ -4,12 +4,14 @@ import useAxios from '../../utils/useAxios';
 import './Prestamos.css';
 import { useAuthStore } from '../../store/auth';
 import PrestamosCardPackage from './PrestamosCardPackage';
+import ModalDetallePrestamo from './ModalDetallePrestamo';
 const Prestamos = () => {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const api = useAxios();
   const [data, setData] = useState([]);
-
+  const [selectedPackage, setSelectedPackage] = useState(null); // State to store selected package
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   const user_id = userData.user_id;
   
   useEffect(() => {
@@ -28,6 +30,17 @@ const Prestamos = () => {
     }
   };
 
+  const openModal = (packageData) => {
+    console.log("Click registrado")
+    setSelectedPackage(packageData);
+    setIsModalOpen(true);
+  };
+
+  // Function to close the modal
+  const closeModal = () => {
+    setSelectedPackage(null);
+    setIsModalOpen(false);
+  };
   return (
     <div className="container pagecontainer">
       <h1 className="textito">Mis prestamos</h1>
@@ -37,15 +50,15 @@ const Prestamos = () => {
       {data.length > 0 ? (
             data.map((prestamo, index) => (
               <PrestamosCardPackage
-              onClick={ABRIRMODAL}
+              onClick={() => openModal(prestamo)}
                 key={index}
-                image={prestamo.image}
+                image={prestamo.imagen}
                 status={prestamo.estado}
                 name={prestamo.nombre}
                 dateIn={prestamo.dateIn}
                 dateOut={prestamo.dateOut}
                 count={prestamo.count}
-
+                lista={prestamo.lista}
                 
               />
             
@@ -54,7 +67,9 @@ const Prestamos = () => {
           <p>Cargando préstamos...</p>
           )}
       
-
+      {isModalOpen && (
+        <ModalDetallePrestamo lista={selectedPackage.lista} onClose={closeModal} />
+      )}
     </div>
     );
   };
