@@ -116,7 +116,7 @@ def PrestamoVerAPIView(request, user_id):
             grouped_logs = defaultdict(list)
 
             for log in queryset:
-                creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z') if log.dateIn else None
+                creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M') if log.dateIn else None
                 log_data = LogSerializer(log).data
                 log_data['dateIn'] = creation_date
                 grouped_logs[creation_date].append(log_data)
