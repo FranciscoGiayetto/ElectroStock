@@ -29,12 +29,9 @@ function Ecommerce({ allItems }) {
 
   useEffect(() => {
     getElement();
-    
   }, [page]);
-  
 
   useEffect(() => {
-    console.log('CAMBIO LA SEARCH QUERY', searchQuery);
     filterCards();
   }, [searchQuery]);
 
@@ -47,7 +44,6 @@ function Ecommerce({ allItems }) {
       const response = await api.get(`${endpoint}`);
       let data = await response.data;
       setCount(data.count);
-      console.log(data);
       let results = data.results;
       // Replace null or empty images with the default image
       const updatedData = results.map((card) => ({
@@ -57,7 +53,6 @@ function Ecommerce({ allItems }) {
 
       setCards(updatedData);
       setFilteredCards(updatedData);
-      
       setIsLoading(false);
     } catch (error) {
       console.error('Error al obtener datos:', error);
@@ -77,39 +72,26 @@ function Ecommerce({ allItems }) {
     setFilteredCards(filteredCardsData);
   };
 
-  const toggleWordList = () => {
-    setShowWordList(!showWordList);
-  };
-
-  const startIndex = (page - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const visibleCards = filteredCards.slice(startIndex, endIndex);
-
-  const toggleWordListVisibility = () => {
-    setShowWordList(!showWordList);
-  };
-
   return (
     <Container style={{ marginTop: '5rem' }}>
       <Row>
-      <Col xs={12} md={2} className={`d-none d-md-block`}>
-  {!isLoading && (
-    <>
-      <button onClick={toggleWordListVisibility}>
-        {showWordList ? "Ocultar Categorías" : "Mostrar Categorías"}
-      </button>
-      {showWordList && <WordList />}
-    </>
-  )}
-</Col>
+        <Col xs={12} md={2} className={`d-none d-md-block`}>
+          {!isLoading && (
+            <>
+              <button onClick={() => setShowWordList(!showWordList)}>
+                {showWordList ? "Ocultar Categorías" : "Mostrar Categorías"}
+              </button>
+              {showWordList && <WordList />}
+            </>
+          )}
+        </Col>
 
         <Col xs={12} md={10}>
-  
           {isLoading ? (
             <div className="text-center">
               <Spinner animation="border" variant="primary" />
             </div>
-          ) : visibleCards.length === 0 ? (
+          ) : filteredCards.length === 0 ? (
             <div className="text-center">
               <h2>No hay productos disponibles para esta categoría.</h2>
               <a href="/tienda" className="btn btn-primary">
@@ -132,19 +114,18 @@ function Ecommerce({ allItems }) {
         </Col>
       </Row>
       <Row>
-  <Col xs={12} className="text-center">
-    <div className="pagination-container">
-      <Pagination
-        totalRecords={count}
-        pageLimit={pageSize}
-        pageNeighbours={1}
-        currentPage={page}
-        onPageChanged={setPage}
-      />
-    </div>
-  </Col>
-</Row>
-
+        <Col xs={12} className="text-center">
+          <div className="pagination-container">
+            <Pagination
+              totalRecords={count}
+              pageLimit={pageSize}
+              pageNeighbours={1}
+              currentPage={page}
+              onPageChanged={setPage}
+            />
+          </div>
+        </Col>
+      </Row>
     </Container>
   );
 }
@@ -154,4 +135,3 @@ Ecommerce.propTypes = {
 };
 
 export default Ecommerce;
-
