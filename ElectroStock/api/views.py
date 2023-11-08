@@ -97,6 +97,7 @@ class ProductosEcommerceAPIView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = ElementEcommerceSerializer2  # Utiliza el serializador correcto
 
+from datetime import datetime   
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
     if request.method == "GET":
@@ -124,15 +125,15 @@ def PrestamoVerAPIView(request, user_id):
 
             for creation_date, logs_data in grouped_logs.items():
                 primer_log = logs_data[0]
+                primer_log_prueba = queryset.first()
 
+                dateIn_primer_log_prueba = primer_log_prueba.dateIn.strftime('%Y-%m-%d') if primer_log_prueba.dateIn else None
                 dateOut_primer_log = primer_log.get('dateOut', '') if primer_log else None
-                dateIn_primer_log = primer_log.get('dateIn', '') if primer_log else None
-
-                if primer_log and isinstance(primer_log, dict) and primer_log.get('box') and isinstance(primer_log['box'], dict) and primer_log['box'].get('element') and isinstance(primer_log['box']['element'], dict) and primer_log['box']['element'].get('image') and isinstance(primer_log['box']['element']['image'], dict) and primer_log['box']['element']['image'].get('file'):
-                    imagen_primer_log = primer_log['box']['element']['image']['file']
-                else:
-                    imagen_primer_log = None
-
+                
+                
+                imagen_primer_log = None
+                if primer_log_prueba.box and primer_log_prueba.box.element and primer_log_prueba.box.element.image and primer_log_prueba.box.element.image.file:
+                    imagen_primer_log = primer_log_prueba.box.element.image.url
 
                 count_logs = len(logs_data) if logs_data else 0
 
@@ -142,7 +143,7 @@ def PrestamoVerAPIView(request, user_id):
                     'nombre': primer_log['borrower']['first_name'] if primer_log else None,
                     'apellido': primer_log['borrower']['last_name'] if primer_log else None,
                     'estado': primer_log['status'] if primer_log else None,
-                    'dateIn': dateIn_primer_log,
+                    'dateIn': dateIn_primer_log_prueba,
                     'imagen': imagen_primer_log,
                     'count': count_logs,
                     'lista': logs_data
