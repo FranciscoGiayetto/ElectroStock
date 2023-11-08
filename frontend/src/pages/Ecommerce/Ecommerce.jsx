@@ -12,6 +12,11 @@ import useAxios from '../../utils/useAxios';
 import { useParams } from 'react-router-dom';
 import Pagination from '../../components/pagination/Paginacion'; // Import the Pagination component
 import PropTypes from 'prop-types';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import IconButton from '@mui/material/IconButton';
+
+
 
 function Ecommerce({ allItems }) {
   const api = useAxios();
@@ -75,16 +80,19 @@ function Ecommerce({ allItems }) {
   return (
     <Container style={{ marginTop: '5rem' }}>
       <Row>
-        <Col xs={12} md={2} className={`d-none d-md-block`}>
-          {!isLoading && (
-            <>
-              <button onClick={() => setShowWordList(!showWordList)}>
-                {showWordList ? "Ocultar Categorías" : "Mostrar Categorías"}
-              </button>
-              {showWordList && <WordList />}
-            </>
-          )}
-        </Col>
+      <Col xs={12} md={2} className={`d-none d-md-block`}>
+  {!isLoading && (
+    <>
+      <IconButton
+        onClick={() => setShowWordList(!showWordList)}
+        aria-label={showWordList ? "Ocultar Categorías" : "Mostrar Categorías"}
+      >
+        {showWordList ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+      </IconButton>
+      {showWordList && <WordList />}
+    </>
+  )}
+</Col>
 
         <Col xs={12} md={10}>
           {isLoading ? (
