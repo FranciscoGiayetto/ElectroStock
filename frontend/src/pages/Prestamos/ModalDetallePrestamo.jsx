@@ -7,12 +7,9 @@ const listItemStyle = {
   cursor: 'pointer',
 };
 
-const highlightedItemStyle = {
-  ...listItemStyle,
-  backgroundColor: '#f5f5f5', // Color de fondo cuando el mouse pasa por encima
-};
 
-const ModalDetallePrestamo = () => {
+
+const ModalDetallePrestamo = ({lista}) => {
 
 
 
@@ -33,7 +30,7 @@ const ModalDetallePrestamo = () => {
       <Modal.Body>
        
         <ul style={{ listStyleType: 'none', padding: 0 }}>
-          {filteredElements.map((element) => (
+          {lista.map((element) => (
            <h1>hola</h1>
           ))}
         </ul>
