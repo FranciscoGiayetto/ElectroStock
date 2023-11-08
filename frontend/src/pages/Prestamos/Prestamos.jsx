@@ -37,6 +37,7 @@ const Prestamos = () => {
       {data.length > 0 ? (
             data.map((prestamo, index) => (
               <PrestamosCardPackage
+              onClick={ABRIRMODAL}
                 key={index}
                 image={prestamo.image}
                 status={prestamo.estado}
@@ -44,6 +45,8 @@ const Prestamos = () => {
                 dateIn={prestamo.dateIn}
                 dateOut={prestamo.dateOut}
                 count={prestamo.count}
+
+                
               />
             
          

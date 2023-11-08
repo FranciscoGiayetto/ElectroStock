@@ -13,7 +13,7 @@ import {
   MDBBtn, 
 } from 'mdb-react-ui-kit';
 
-const PrestamosCardPackage = ({cliente,dateIn,dateOut,count,name,status}) => {
+const PrestamosCardPackage = ({cliente,dateIn,dateOut,count,name,status,image}) => {
   return (
     <div className='prestamo-card'>
         <div className='img-container'>
@@ -28,7 +28,7 @@ const PrestamosCardPackage = ({cliente,dateIn,dateOut,count,name,status}) => {
                     rippleTag="div"
                     className="bg-image rounded hover-zoom hover-overlay">
                     <MDBCardImage
-                      src="image"
+                      src={image}
                       fluid
                       className="w-100"
                     />
@@ -61,7 +61,7 @@ const PrestamosCardPackage = ({cliente,dateIn,dateOut,count,name,status}) => {
                     </span>
 
                     <span>
-                      Componente:{name}
+                      Cantidad de Componentes:{count}
                       <br />
                     </span>
                     <div>
@@ -79,9 +79,7 @@ const PrestamosCardPackage = ({cliente,dateIn,dateOut,count,name,status}) => {
                     <MDBBtn color="primary" size="sm">
                       Ver prestamo.
                     </MDBBtn>
-                    <MDBBtn outline color="primary" size="sm" className="mt-2">
-                      Aniadir al carrito
-                    </MDBBtn>
+                    
                   </div>
                 </MDBCol>
               </MDBRow>
