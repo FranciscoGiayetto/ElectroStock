@@ -28,7 +28,7 @@ const PrestamosCard = ({ status,image, cliente,clienteId,dateIn,name}) => {
                     rippleTag="div"
                     className="bg-image rounded hover-zoom hover-overlay">
                     <MDBCardImage
-                      src="image"
+                      src={image}
                       fluid
                       className="w-100"
                     />
