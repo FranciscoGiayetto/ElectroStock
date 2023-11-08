@@ -13,7 +13,7 @@ import {
   MDBBtn, 
 } from 'mdb-react-ui-kit';
 
-const PrestamosCardPackage = ({cliente,dateIn,dateOut,count,name}) => {
+const PrestamosCardPackage = ({cliente,dateIn,dateOut,count,name,status}) => {
   return (
     <div className='prestamo-card'>
         <div className='img-container'>
@@ -41,7 +41,7 @@ const PrestamosCardPackage = ({cliente,dateIn,dateOut,count,name}) => {
                   </MDBRipple>
                 </MDBCol>
                 <MDBCol md="6">
-                  <h5>Prestamo de {cliente}</h5>
+                  <h5>Prestamo de {name}</h5>
                   <div className="d-flex flex-row">
                     <div className="text-danger mb-1 me-2">
                       <MDBIcon fas icon="star" />

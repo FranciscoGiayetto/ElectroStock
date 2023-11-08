@@ -9,7 +9,7 @@ const Prestamos = () => {
   const userData = user();
   const api = useAxios();
   const [data, setData] = useState([]);
-  const [dates, setDates] = useState([]);
+
   const user_id = userData.user_id;
   
   useEffect(() => {
@@ -39,9 +39,8 @@ const Prestamos = () => {
               <PrestamosCardPackage
                 key={index}
                 image={prestamo.image}
-                status={prestamo.status}
-                cliente={"prestamo.borrower.username"}
-                
+                status={prestamo.estado}
+                name={prestamo.nombre}
                 dateIn={prestamo.dateIn}
                 dateOut={prestamo.dateOut}
                 count={prestamo.count}
