@@ -3,13 +3,13 @@ import PrestamosCard from './CardPrestamos';
 import useAxios from '../../utils/useAxios';
 import './Prestamos.css';
 import { useAuthStore } from '../../store/auth';
-
+import PrestamosCardPackage from './PrestamosCardPackage';
 const Prestamos = () => {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const api = useAxios();
   const [data, setData] = useState([]);
-  const [dates, setDates] = useState([]);
+
   const user_id = userData.user_id;
   
   useEffect(() => {
@@ -22,7 +22,7 @@ const Prestamos = () => {
       console.log(response.data); // Verify the response from the API
       const data = response.data;
       setData(data);
-      setDates(Object.keys(data)); // Extract the dates from the response
+      // Extract the dates from the response
     } catch (error) {
       console.error(error);
     }
@@ -32,28 +32,29 @@ const Prestamos = () => {
     <div className="container pagecontainer">
       <h1 className="textito">Mis prestamos</h1>
 
-      {dates.length > 0 ? (
-        dates.map((date) => (
-          <div key={date} className="prestamos-list">
-            <h2>{date}</h2>
-            {data[date].map((prestamo, index) => (
-              <PrestamosCard
+   
+      
+      {data.length > 0 ? (
+            data.map((prestamo, index) => (
+              <PrestamosCardPackage
                 key={index}
-                image={prestamo.box.element.image}
-                status={prestamo.status}
-                cliente={prestamo.borrower.username}
-                clienteId={prestamo.borrower.user_id}
+                image={prestamo.image}
+                status={prestamo.estado}
+                name={prestamo.nombre}
                 dateIn={prestamo.dateIn}
-                componente={prestamo.box.element.name}
+                dateOut={prestamo.dateOut}
+                count={prestamo.count}
               />
-            ))}
-          </div>
-        ))
-      ) : (
-        <p>Cargando préstamos...</p>
-      )}
+            
+         
+        ))): (
+          <p>Cargando préstamos...</p>
+          )}
+      
+
     </div>
-  );
-};
+    );
+  };
+  
 
 export default Prestamos;
