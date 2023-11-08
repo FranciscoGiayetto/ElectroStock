@@ -97,7 +97,6 @@ class ProductosEcommerceAPIView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = ElementEcommerceSerializer2  # Utiliza el serializador correcto
 
-
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
     if request.method == "GET":
@@ -111,45 +110,51 @@ def PrestamoVerAPIView(request, user_id):
 
         queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
-        # Si hay logs en el queryset
         if queryset.exists():
-            primer_log = queryset.first()
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
 
-            dateIn_primer_log = primer_log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z') if primer_log.dateIn else None
-            dateOut_primer_log = primer_log.dateOut
-
-            cantidad_de_logs = queryset.count()
-
-            logs_data = []
             for log in queryset:
-                log_creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+                creation_date = log.dateIn.strftime('%Y-%m-%dT%H:%M:%S.%f%z') if log.dateIn else None
                 log_data = LogSerializer(log).data
-                log_data['dateIn'] = log_creation_date
-                logs_data.append(log_data)
+                log_data['dateIn'] = creation_date
+                grouped_logs[creation_date].append(log_data)
 
-            imagen_primer_log = None
-            if primer_log.box and primer_log.box.element and primer_log.box.element.image and primer_log.box.element.image.file:
-                imagen_primer_log = primer_log.box.element.image.url
-            
-            response_data = {
-                'dateOut': dateOut_primer_log,
-                'usuario':primer_log.borrower.username,
-                'nombre': primer_log.borrower.first_name,
-                'apellido': primer_log.borrower.last_name,
-                'estado': primer_log.status,
-                'dateIn': dateIn_primer_log,
-                'count': cantidad_de_logs,
-                'lista': logs_data,
-                'imagen': imagen_primer_log
-            }
+            response_data = []
+
+            for creation_date, logs_data in grouped_logs.items():
+                primer_log = logs_data[0]
+
+                dateOut_primer_log = primer_log.get('dateOut', '') if primer_log else None
+                dateIn_primer_log = primer_log.get('dateIn', '') if primer_log else None
+
+                if primer_log and isinstance(primer_log, dict) and primer_log.get('box') and isinstance(primer_log['box'], dict) and primer_log['box'].get('element') and isinstance(primer_log['box']['element'], dict) and primer_log['box']['element'].get('image') and isinstance(primer_log['box']['element']['image'], dict) and primer_log['box']['element']['image'].get('file'):
+                    imagen_primer_log = primer_log['box']['element']['image']['file']
+                else:
+                    imagen_primer_log = None
+
+
+                count_logs = len(logs_data) if logs_data else 0
+
+                response_data.append({
+                    'dateOut': dateOut_primer_log,
+                    'usuario': primer_log['borrower']['username'] if primer_log else None,
+                    'nombre': primer_log['borrower']['first_name'] if primer_log else None,
+                    'apellido': primer_log['borrower']['last_name'] if primer_log else None,
+                    'estado': primer_log['status'] if primer_log else None,
+                    'dateIn': dateIn_primer_log,
+                    'imagen': imagen_primer_log,
+                    'count': count_logs,
+                    'lista': logs_data
+                })
 
             return Response(response_data)
         else:
-             return Response("No se encontraron logs para este usuario.")   
-        
+            return Response("No se encontraron logs para este usuario.")
+
     if request.method == "POST":
-    # Realiza acciones necesarias para agregar elementos al carrito
-    # ...
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
         return Response({"message": "Elemento agregado al carrito"})
 
 
@@ -1001,6 +1006,7 @@ def PendientesAPIView(request, user_id):
             log_data = LogSerializer(log).data
             log_data['dateIn'] = creation_date  # Actualizar la clave 'dateIn' al string formateado
             grouped_logs[creation_date].append(log_data)
+        
         
         return Response(grouped_logs)
 
