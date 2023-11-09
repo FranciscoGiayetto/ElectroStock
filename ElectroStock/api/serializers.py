@@ -65,6 +65,8 @@ class UsersSerializer(serializers.ModelSerializer):
         fields = (
             "__all__"
         )
+    
+
 
 
 # Solo para la previsualizacion de los elementos en el ecommerce

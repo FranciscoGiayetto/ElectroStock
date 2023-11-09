@@ -33,10 +33,11 @@ function DetalleCuenta() {
 ]);
   const [element, setElement] = useState([]);
   const [prestamos, setPrestamos] = useState([]);
+  const [specialtiesName, setSpecialtiesName] = useState('');
+  const [courseName, setCourseName] = useState('');
   const api = useAxios();
   const userData = user();
   const id = userData.user_id;
-
   console.log(id)
 
   const getUser = async () => {
@@ -45,6 +46,13 @@ function DetalleCuenta() {
       let data = await response.data;
       console.log(data)
       setElement(data);
+      if (data.specialties && data.specialties.name) {
+        setSpecialtiesName(data.specialties.name);
+      }
+
+      if (data.course && data.course.name) {
+        setCourseName(data.course.name);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -73,7 +81,7 @@ function DetalleCuenta() {
     <Container fluid style={{marginTop:'6rem', marginBottom:'5rem'}}>
       <Row>
         <Col>
-          <CardUser first_name={element.first_name} last_name={element.last_name} course={element.course}></CardUser>
+          <CardUser first_name={element.first_name} last_name={element.last_name} course={courseName} specialties={specialtiesName}></CardUser>
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
