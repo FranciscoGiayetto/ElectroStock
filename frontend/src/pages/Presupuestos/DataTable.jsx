@@ -62,6 +62,7 @@ const DataTable = ({ presupuestos }) => {
   
       // Realiza una acción de redirección a '/tienda' o ajusta según sea necesario
       navigate(`${newBudgetId}`);
+      
     } catch (error) {
       // En caso de error, muestra el mensaje de error en la consola
       console.error(error);

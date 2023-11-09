@@ -7,3 +7,9 @@
     transform: scale(1.1); /* Aumenta el tamaño en un 10% (puedes ajustar este valor) */
     cursor: pointer; /* Cambia el cursor a una mano para indicar que es interactivo */
   }
+
+/* CSS to limit the container width */
+.container {
+  max-width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}

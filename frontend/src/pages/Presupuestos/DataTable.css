@@ -9,12 +9,5 @@ td {
   width: 0%; /* You can adjust the width as needed */
 }
 
-@media (max-width: 200px) {
-    .progress-abbreviate {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 3em;
-    }
-  }
+  
   
