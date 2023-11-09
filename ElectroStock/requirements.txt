@@ -3,7 +3,7 @@ APScheduler==3.10.1
 asgiref==3.6.0
 async-timeout==4.0.2
 <<<<<<< HEAD
-backports.zoneinfo==0.2.1 #borrar si causa problemas
+
 =======
 
 >>>>>>> informes-view-3
