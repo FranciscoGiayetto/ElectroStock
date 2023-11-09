@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 
 import CardMyData from '../../components/CardMyData/CardData.jsx';
 import CardUser from '../../components/CardUser/CardUser.jsx';
-import CardPrestamos from '../../components/CardPrestamos/CardPrestamos.jsx';
 import './DetalleCuenta.css'
 import useAxios from '../../utils/useAxios';
 import { useAuthStore } from '../../store/auth';
@@ -34,10 +33,11 @@ function DetalleCuenta() {
 ]);
   const [element, setElement] = useState([]);
   const [prestamos, setPrestamos] = useState([]);
+  const [specialtiesName, setSpecialtiesName] = useState('');
+  const [courseName, setCourseName] = useState('');
   const api = useAxios();
   const userData = user();
   const id = userData.user_id;
-
 
   const getUser = async () => {
     try {
@@ -45,7 +45,13 @@ function DetalleCuenta() {
       let data = await response.data;
       console.log(data)
       setElement(data);
-      
+      if (data.specialties && data.specialties.name) {
+        setSpecialtiesName(data.specialties.name);
+      }
+
+      if (data.course && data.course.name) {
+        setCourseName(data.course.name);
+      }
     } catch (error) {
       console.error(error);
 
@@ -75,33 +81,12 @@ function DetalleCuenta() {
     <Container fluid style={{marginTop:'6rem', marginBottom:'5rem'}}>
       <Row>
         <Col>
-          <CardUser first_name={element.first_name} last_name={element.last_name}  course={element.course ? element.course.grade : ''}></CardUser>
+          <CardUser first_name={element.first_name} last_name={element.last_name} course={element.course}></CardUser>
         </Col>
       </Row>
       <Row style={{marginTop:'2rem'}}>
         <Col>
           <CardMyData email={element.email} username={element.username}></CardMyData>
-        </Col>
-      </Row>
-      <Row style={{marginTop:'2rem'}}>
-        <Col className='hidden-card'>
-        {prestamos.length > 0 ? (
-          prestamos.map((prestamos, index) => (
-            <CardPrestamos
-                key={index}
-                status={prestamos.status}
-                quantity={prestamos.quantity}
-                profeNombre={prestamos.borrower.first_name}
-                profeApellido={prestamos.borrower.last_name}
-                specialties={prestamos.lender.specialties}
-                dateIn={prestamos.dateIn}
-                image={prestamos.image}
-              ></CardPrestamos>  
-          ))
-        ) : (
-          
-          <p className='text-center2'>No hay prestamos.</p>
-        )}
         </Col>
       </Row>
     </Container>

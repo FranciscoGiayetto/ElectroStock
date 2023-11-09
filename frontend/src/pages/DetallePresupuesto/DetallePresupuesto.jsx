@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CardMyData from '../../components/CardMyData/CardData.jsx';
 import CardUser from '../../components/CardUser/CardUser.jsx';
-import CardPrestamos from '../../components/CardPrestamos/CardPrestamos.jsx';
 import './DetallePresupuesto.css';
 import useAxios from '../../utils/useAxios.js';
 import { useAuthStore } from '../../store/auth.js';
