@@ -7,7 +7,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { HiPlusCircle } from "react-icons/hi2";
+import { AiFillQuestionCircle } from "react-icons/ai";
 import useAxios from '../../utils/useAxios';
+
+import Tooltip from 'react-png-tooltip'
+
 const DataTable = ({ presupuestos }) => {
   let api = useAxios();
   const navigate = useNavigate();
@@ -109,11 +113,18 @@ const DataTable = ({ presupuestos }) => {
 
   return (
     <MDBCard className="my-4 p-3" >
-     <MDBCardHeader style={{fontSize:"2rem"}} className="bg-primary text-white d-flex justify-content-between align-items-center">
+     <MDBCardHeader style={{fontSize:"2rem"}} className="sub-blue-its text-white d-flex justify-content-between align-items-center">
+      <div>
   <span>Presupuestos</span>
+  <Tooltip tooltip={<AiFillQuestionCircle style={{marginLeft:'10px'}}></AiFillQuestionCircle>}>
+      Para editar hacer click en la fila del presupuesto.
+    </Tooltip>
+    </div>
+  
   <div className="hover-scale" onClick={handleNewBudget}>
   <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
   </div>
+  
 </MDBCardHeader>
 
       <Table responsive striped bordered hover className="mt-3">
@@ -152,8 +163,8 @@ const DataTable = ({ presupuestos }) => {
         <ReactPaginate
           activeClassName={'active'}
           breakClassName={'item break-me'}
-          previousLabel={' Anterior '}
-          nextLabel={' Siguiente '}
+          previousLabel={'⬅️'}
+          nextLabel={'➡️'}
           breakLabel={'...'}
           pageCount={Math.ceil(presupuestos.length / itemsPerPage)}
           marginPagesDisplayed={2}

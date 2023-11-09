@@ -5,9 +5,16 @@ import {
   MDBCardHeader,
 } from 'mdb-react-ui-kit';
 import useAxios from '../../utils/useAxios.js';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import ModalListItems from './ModalListItems'; 
+
+import * as XLSX from 'xlsx';
+
+
+
 const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const [budgetStatus,  setBudgetStatus] = useState("");
   const [budgetName,  setBudgetName] = useState("");
@@ -305,6 +312,54 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const filteredPresupuesto = budgetLogs.filter((item) =>
     item.name.toLowerCase().includes(filter.toLowerCase())
   );
+
+  const exportToExcel = () => {
+    const data = filteredPresupuesto.map((item, index) => {
+      return {
+        'N°': index + 1,
+        'Nombre': item.name,
+        'Precio': item.price,
+        'Stock': item.quantity,
+        'Subtotal': (item.quantity * parseFloat(item.price)).toFixed(2),
+      };
+    });
+  
+    // Agregar una fila vacía de separación
+    data.push({});
+  
+    // Agregar una fila al final con el total
+    const total = data.reduce((sum, row) => sum + parseFloat(row['Subtotal'] || 0), 0);
+    data.push({ 'Nombre': 'Total', 'Subtotal': total.toFixed(2) });
+  
+    const ws = XLSX.utils.json_to_sheet(data);
+  
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, `presupuesto (${budgetName})`); // Aquí se establece el nombre del archivo
+  
+    // Write the workbook as a binary string
+    const binaryString = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+  
+    // Convert the binary string to an ArrayBuffer
+    const buffer = new ArrayBuffer(binaryString.length);
+    const view = new Uint8Array(buffer);
+    for (let i = 0; i != binaryString.length; ++i) {
+      view[i] = binaryString.charCodeAt(i) & 0xFF;
+    }
+  
+    // Create a Blob from the ArrayBuffer
+    const blob = new Blob([buffer], { type: 'application/octet-stream' });
+  
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `presupuesto: (${budgetName}).xlsx`; // Establecer el nombre de descarga del archivo
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+  
+  
+  
+  
   
   return (
     <div>
@@ -316,7 +371,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           overflowY: 'auto',
         }}
       >
-        <MDBCardHeader className="bg-primary text-white">
+        <MDBCardHeader className="text-white sub-blue-its">
         <div style={{ display: 'flex', alignItems: 'center' }}>
     <div style={{ margin: '0 10px 0 0' }}>
       Nombre del Presupuesto:
@@ -355,8 +410,20 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           onClick={() => setIsEditingBudgetName(true)}
           style={{ cursor: 'pointer', marginLeft: '1rem' }}
         />
+        
+          <DeleteRoundedIcon style={{marginLeft:'15px'}}/>
+        
       </div>
     )}
+            <IosShareIcon
+  data-toggle="tooltip"
+  data-placement="right"
+  title="Exportar"
+  style={{ marginLeft: '325px', cursor: 'pointer' }}
+  onClick={exportToExcel}
+/>
+
+            
             
             <button
               onClick={handleBudgetStatusChange}
@@ -445,7 +512,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     ) : (
                       <button
                         onClick={() => handleItemEdit(item.id)}
-                        className="btn btn-primary btn-sm"
+                        className="btn btn-primary btn-sm sub-blue-its"
                       >
                         <HiPencil></HiPencil>
                       </button>

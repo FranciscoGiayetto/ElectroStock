@@ -11,6 +11,9 @@ import Col from 'react-bootstrap/Col';
 import DataTable from "./DataTable.jsx"
 import { useParams, useNavigate } from 'react-router-dom';
 import Link from 'antd/es/typography/Link.js';
+import {IoCaretBackCircleSharp} from 'react-icons/io5';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+
 function DetallePresupuesto() {
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
@@ -69,7 +72,7 @@ function DetallePresupuesto() {
 
   return (
     <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
-      <Link href='/presupuesto'>Volver</Link>
+      <Link href='/presupuesto'><ArrowBackRoundedIcon/></Link>
       <Row>
         <Col style={{ width: '62.5rem' }}>
           <DataTable presupuesto={presupuesto} onUpdate={updateData} elements={elements}/>

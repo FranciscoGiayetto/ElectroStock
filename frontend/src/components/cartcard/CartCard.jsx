@@ -12,7 +12,17 @@ import {
 import Button from 'react-bootstrap/Button';
 
 export default function CartCard(props) {
-  const { id, name, title, image, quantity, handleDelete, handleQuantityChange, handleCommentChange, comments, currentStock } = props;
+  const {
+    id,
+    name,
+    title,
+    image,
+    quantity,
+    handleDelete,
+    handleQuantityChange,
+    handleCommentChange,
+    comments,
+  } = props;
 
   // Inicializa el estado local 'observation' con la observación existente de las props.
   const [observation, setObservation] = useState(comments);
@@ -36,11 +46,7 @@ export default function CartCard(props) {
       <MDBCardBody className="p-4">
         <MDBRow className="align-items-center">
           <MDBCol md="2" lg="2" xl="2">
-            <MDBCardImage
-              className="rounded-3"
-              fluid
-              src={image}
-            />
+            {/* ... (other code) */}
           </MDBCol>
           <MDBCol md="3" lg="3" xl="6">
             <p className="lead fw-normal mb-2">{title}</p>
