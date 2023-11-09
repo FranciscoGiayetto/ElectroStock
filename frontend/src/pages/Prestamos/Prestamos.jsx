@@ -32,53 +32,39 @@ const Prestamos = () => {
   
   
 
-  return (<div className='container pagecontainer'>
-            <h1 className='textito'>Mis prestamos</h1>
-            <div className="filter-section">
-            <Form >
-      <Form.Group controlId="searchText">
-        <Form.Control
-          type="text"
-          placeholder="Buscar..."
-        />
-      </Form.Group>
-      <select class="form-select" aria-label="Default select example">
-  <option selected>Open this select menu</option>
-  <option value="1">One</option>
-  <option value="2">Two</option>
-  <option value="3">Three</option>
-</select>
-          
-      <Button variant="primary" type="submit">
-        Buscar
-      </Button>
-    </Form>
+  return (
+    
+    <div className='container pagecontainer'>
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"></link>
+
+    <h1 className='textito'>Mis prestamos</h1>
   
- 
-</div>
-
-      <div className='prestamos-list'>
-        
-
-        {prestamos.length > 0 ? (
-          prestamos.map((prestamo, index) => (
-            
-            <PrestamosCard
-              key={index}
-              image={prestamo.box.element.image}
-              status={prestamo.status}
-              cliente={prestamo.borrower.username}
-              dateIn={prestamo.dateIn}
-              componente={prestamo.box.element.name}
-
-            />
-          ))
-        ) : (
-          
-          <p>Cargando préstamos...</p>
-        )}
-      </div>
+    <div className="filter-section">
+      <input type="text" placeholder="buscar"></input>
+     
+        <div class="btn" >
+        <i class="fa fa-search" ></i>
+        </div>
+    
     </div>
+  
+    <div className='prestamos-list'>
+      {prestamos.length > 0 ? (
+        prestamos.map((prestamo, index) => (
+          <PrestamosCard
+            key={index}
+            image={prestamo.box.element.image}
+            status={prestamo.status}
+            cliente={prestamo.borrower.username}
+            dateIn={prestamo.dateIn}
+            componente={prestamo.box.element.name}
+          />
+        ))
+      ) : (
+        <p>Cargando préstamos...</p>
+      )}
+    </div>
+  </div>
   );
 };
 

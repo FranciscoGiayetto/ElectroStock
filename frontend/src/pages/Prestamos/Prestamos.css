@@ -1,0 +1,68 @@
+.filter-section Form.Control:hover {
+    border-color: #007bff; /* Puedes cambiar este color según tus preferencias */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Efecto de sombra al hacer hover */
+  }
+
+  .textito {
+    margin-top: 0;
+    margin-bottom: 20px; /* Puedes ajustar este valor según sea necesario */
+  }
+  
+  .filter-section{
+    position:absolute;
+    top:17%;
+  }
+
+  input {
+	outline: none;
+	box-sizing: border-box;
+	height: 40px;
+	width: 0px;
+	padding: 0 20px;
+	color: #000;
+	border-radius: 50px;
+	font-size: 20px;
+	border: 1px solid #787171;
+	transition: all .7s ease;
+}
+
+::placeholder {
+	color: rgb(255, 255, 255);
+}
+
+
+.botoncito{
+   position: absolute;
+	right: 0px;
+	top: 0px;
+	width: 50px;
+	height: 50px;
+	background: #0a4791;
+	line-height: 50px;
+	border-radius: 50%;
+	text-align: center;
+	cursor: pointer;
+	transition: .5s;
+}
+
+.btn i {
+	font-size: 25px;
+	color: rgb(0, 0, 0);
+	transition: all .7s ease;
+}
+
+.filter-section:hover input {
+	width: 350px;
+}
+
+.filter-section:hover i{
+	transform: rotate(-360deg);
+    
+}
+
+.botoncito:hover{
+	background: #0069cc;
+    border-radius: 65%;
+
+
+}
