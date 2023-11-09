@@ -64,14 +64,15 @@ function Carrito() {
       if (item.id === id) {
         return {
           ...item,
-          comments: newComment,
+          observation: newComment, // Update the observation in the shopping cart
         };
       }
       return item;
     });
-  
+
     setCarrito(updatedCart);
   };
+
 
 
   const handleQuantityChange = (id, newQuantity) => {
@@ -127,7 +128,9 @@ function Carrito() {
         }
       }
   
-
+  const handleObservationChangeInCartCard = (id, newObservation) => {
+        handleCommentChange(id, newObservation);
+      };
   
   
 
@@ -143,25 +146,24 @@ function Carrito() {
 
             {/* Renderizar los componentes CartCard */}
 
-        {carrito.length > 0 ? (
-          carrito.map(item => (
-            <CartCard
-              key={item.id}
-              id={item.id}
-              name={item.box.name}
-              title={item.box.element.name}
-              image={item.box.element.image}
-              quantity={item.quantity}
-              comments={item.observation}
-              handleDelete={handleDelete}
-              handleQuantityChange={handleQuantityChange}
-              handleCommentChange={handleCommentChange}
-            />
-          ))
-        ) : (
-          
-          <p className='text-center'>¡Agregá tu proximo pedido! </p>
-        )}
+            {carrito.length > 0 ? (
+        carrito.map((item) => (
+          <CartCard
+            key={item.id}
+            id={item.id}
+            name={item.box.name}
+            title={item.box.element.name}
+            image={item.box.element.image}
+            quantity={item.quantity}
+            comments={item.observation}
+            handleDelete={handleDelete}
+            handleQuantityChange={handleQuantityChange}
+            handleCommentChange={handleObservationChangeInCartCard} // Ensure this line is correct
+          />
+        ))
+      ) : (
+        <p className="text-center">¡Agregá tu próximo pedido! </p>
+      )}
 
             {/* Datetime Input */}
             <div className="mb-2 d-flex justify-content-between">
