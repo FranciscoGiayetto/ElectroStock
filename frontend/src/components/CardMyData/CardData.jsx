@@ -1,58 +1,43 @@
+// CardMyData.js
 import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import EditRoundedIcon from '@mui/icons-material/Edit';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import Tooltip from '@mui/material/Tooltip';
 import LaunchRoundedIcon from '@mui/icons-material/Launch';
+import Tooltip from '@mui/material/Tooltip';
+import axios from 'axios';
 import {
   MDBCard,
   MDBCardHeader,
 } from 'mdb-react-ui-kit';
 
 export default function CardMyData(props) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedEmail, setEditedEmail] = useState(props.email);
-  const [editedUsername, setEditedUsername] = useState(props.username);
-  const [editedPassword, setEditedPassword] = useState('**********'); // Por seguridad, no almacenes contraseñas en texto claro.
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [email, setEmail] = useState(props.email);
+  const [username, setUsername] = useState(props.username);
+  const [userData, setUserData] = useState({ email: props.email, username: props.username }); // User data state
 
-  const handleEdit = (field) => {
-    if (field === 'email') {
-      setEditedEmail(props.email); // Restablecer el campo editado al valor original al cancelar.
-    } else if (field === 'username') {
-      setEditedUsername(props.username);
-    } else if (field === 'password') {
-      setEditedPassword('**********');
-    }
-    setIsEditing(field);
-  };
-
-  const handleSave = (field) => {
-    if (field === 'email') {
-      // Aquí puedes enviar una solicitud para guardar el nuevo email.
-      console.log('Guardar Email:', editedEmail);
-    } else if (field === 'username') {
-      // Aquí puedes enviar una solicitud para guardar el nuevo usuario.
-      console.log('Guardar Usuario:', editedUsername);
-    } else if (field === 'password') {
-      // Aquí puedes enviar una solicitud para guardar la nueva contraseña.
-      console.log('Guardar Contraseña:', editedPassword);
-    }
-    setIsEditing(false);
-  };
-
-  const handleInputChange = (event, field) => {
-    if (field === 'email') {
-      setEditedEmail(event.target.value);
-    } else if (field === 'username') {
-      setEditedUsername(event.target.value);
-    } else if (field === 'password') {
-      setEditedPassword(event.target.value);
+  const handleEmailUpdate = async () => {
+    try {
+      await axios.put(`http://localhost:8000/api/users/${props.id}/`, userData);
+      setIsEditingEmail(false);
+      props.setEmail(userData.email); // Actualizar el estado de email en el componente padre
+    } catch (error) {
+      console.error("Error updating email:", error);
     }
   };
 
-  const confirmIcon = <CheckRoundedIcon style={{ color: 'green', cursor: 'pointer', fontSize: '0.938rem' }} />;
-  const cancelIcon = <CloseRoundedIcon style={{ color: 'red', cursor: 'pointer', fontSize: '0.938rem' }}/>;
+  const handleUsernameUpdate = async () => {
+    try {
+      await axios.put(`http://localhost:8000/api/users/${props.id}/`, userData);
+      setIsEditingUsername(false);
+      props.setUsername(userData.username); // Actualizar el estado de username en el componente padre
+    } catch (error) {
+      console.error("Error updating username:", error);
+    }
+  };
 
   return (
     <MDBCard className="card-user" alignment='left' border='none' style={{ fontFamily: 'Roboto, sans-serif' }}>
@@ -64,73 +49,93 @@ export default function CardMyData(props) {
         <tbody>
           <tr>
             <th scope='col'>Email:</th>
-            {isEditing === 'email' ? (
-              <td scope='col'>
-                <input value={editedEmail} onChange={(e) => handleInputChange(e, 'email')} />
-              </td>
+            {!isEditingEmail ? (
+              <>
+                <td scope='col'>{props.email}</td>
+                <td scope='col'>
+                  <Tooltip title="Editar" arrow placement="right">
+                    <EditRoundedIcon style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} onClick={() => setIsEditingEmail(true)} />
+                  </Tooltip>
+                </td>
+              </>
             ) : (
-              <td scope='col'>{props.email}</td>
-            )}
-            <td scope='col'>
-              {isEditing === 'email' ? (
-                <div>
-                  {confirmIcon} {cancelIcon}
-                </div>
-              ) : (
-                <Tooltip title="Editar" arrow placement="right">
-                  <EditRoundedIcon
-                    onClick={() => handleEdit('username')}
-                    style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }}
+              <>
+                <td scope='col'>
+                  <input
+                    type="text"
+                    value={userData.email}
+                    onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                   />
-                </Tooltip>
-                
-              )}
-            </td>
+                </td>
+                <td scope='col'>
+                  <Tooltip title="Guardar" arrow placement="right">
+                    <CheckRoundedIcon
+                      style={{ color: 'green', cursor: 'pointer', fontSize: '0.938rem' }}
+                      onClick={handleEmailUpdate}
+                    />
+                  </Tooltip>
+                  <Tooltip title="Cancelar" arrow placement="right">
+                    <CloseRoundedIcon
+                      style={{ color: 'red', cursor: 'pointer', fontSize: '0.938rem' }}
+                      onClick={() => {
+                        setIsEditingEmail(false);
+                        setUserData({ ...userData, email: props.email });
+                      }}
+                    />
+                  </Tooltip>
+                </td>
+              </>
+            )}
           </tr>
 
           <tr>
             <th scope='col'>Usuario:</th>
-            {isEditing === 'username' ? (
-              <td scope='col'>
-                <input value={editedUsername} onChange={(e) => handleInputChange(e, 'username')} />
-              </td>
+            {!isEditingUsername ? (
+              <>
+                <td scope='col'>{props.username}</td>
+                <td scope='col'>
+                  <Tooltip title="Editar" arrow placement="right">
+                    <EditRoundedIcon style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} onClick={() => setIsEditingUsername(true)} />
+                  </Tooltip>
+                </td>
+              </>
             ) : (
-              <td scope='col'>{props.username}</td>
+              <>
+                <td scope='col'>
+                  <input
+                    type="text"
+                    value={userData.username}
+                    onChange={(e) => setUserData({ ...userData, username: e.target.value })}
+                  />
+                </td>
+                <td scope='col'>
+                  <Tooltip title="Guardar" arrow placement="right">
+                    <CheckRoundedIcon
+                      style={{ color: 'green', cursor: 'pointer', fontSize: '0.938rem' }}
+                      onClick={handleUsernameUpdate}
+                    />
+                  </Tooltip>
+                  <Tooltip title="Cancelar" arrow placement="right">
+                    <CloseRoundedIcon
+                      style={{ color: 'red', cursor: 'pointer', fontSize: '0.938rem' }}
+                      onClick={() => {
+                        setIsEditingUsername(false);
+                        setUserData({ ...userData, username: props.username });
+                      }}
+                    />
+                  </Tooltip>
+                </td>
+              </>
             )}
-            <td scope='col'>
-              {isEditing === 'username' ? (
-                <div>
-                  {confirmIcon} {cancelIcon}
-                </div>
-              ) : (
-                <Tooltip title="Editar" arrow placement="right">
-                  <EditRoundedIcon onClick={() => handleEdit('username')} style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} />
-                </Tooltip>
-                
-              )}
-            </td>
           </tr>
 
           <tr>
             <th scope='col'>Contraseña:</th>
-            {isEditing === 'password' ? (
-              <td scope='col'>
-                <input type="password" value={editedPassword} onChange={(e) => handleInputChange(e, 'password')} />
-              </td>
-            ) : (
-              <td scope='col'>**********</td>
-            )}
+            <td scope='col'>**********</td>
             <td scope='col'>
-              {isEditing === 'password' ? (
-                <div>
-                  {confirmIcon} {cancelIcon}
-                </div>
-              ) : (
-                <Tooltip title="Editar" arrow placement="right">
-                  <LaunchRoundedIcon onClick={() => { window.location.href = 'http://127.0.0.1:8000/auth/accounts/password_reset' }} style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} />
-                </Tooltip>
-                
-              )}
+              <Tooltip title="Editar" arrow placement="right">
+                <LaunchRoundedIcon onClick={() => { window.location.href = 'http://127.0.0.1:8000/auth/accounts/password_reset' }} style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} />
+              </Tooltip>
             </td>
           </tr>
         </tbody>
