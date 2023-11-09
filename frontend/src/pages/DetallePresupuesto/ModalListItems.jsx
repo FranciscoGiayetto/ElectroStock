@@ -20,7 +20,7 @@ const ModalListItems = ({ elements, onItemSelect, onClose }) => {
   );
 
   return (
-    <Modal show={true} onHide={onClose}>
+    <Modal show={true} onHide={onClose} className='modal-presupuesto'>
    <Modal.Header closeButton>
         <div>
           <Modal.Title>Selecciona un elemento de la lista:</Modal.Title>

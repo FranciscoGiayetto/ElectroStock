@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
+import PrestamosCard from './CardPrestamos';
 
-const listItemStyle = {
-  borderBottom: '1px solid #ddd',
-  padding: '8px',
-  cursor: 'pointer',
-};
+const ModalDetallePrestamo = ({ lista, onClose }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredLista, setFilteredLista] = useState(lista);
 
-
-
-const ModalDetallePrestamo = ({lista}) => {
-
-
+  // Función para actualizar la lista filtrada cuando se cambia el término de búsqueda
+  useEffect(() => {
+    const filtered = lista.filter((element) =>
+      element.box.element.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredLista(filtered);
+  }, [searchTerm, lista]);
 
   return (
-    <Modal show={true} onHide={onClose}>
-   <Modal.Header closeButton>
+    <Modal show={true} onHide={onClose} size="lg" contentClassName='custom-modal-content '>
+      <Modal.Header closeButton>
         <div>
           <Modal.Title>Prestamos:</Modal.Title>
           <input
             type="text"
-            placeholder="Buscar Prestamo..."
+            placeholder="Buscar Componente..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ width: '100%' }}
@@ -28,10 +29,15 @@ const ModalDetallePrestamo = ({lista}) => {
         </div>
       </Modal.Header>
       <Modal.Body>
-       
         <ul style={{ listStyleType: 'none', padding: 0 }}>
-          {lista.map((element) => (
-           <h1>hola</h1>
+          {filteredLista.map((element, index) => (
+            <PrestamosCard
+              key={index}
+              status={element.status}
+              image={element.box.element.image}
+              cliente={element.box.element.image}
+              component={element.box.element.name}
+            />
           ))}
         </ul>
       </Modal.Body>
@@ -44,4 +50,4 @@ const ModalDetallePrestamo = ({lista}) => {
   );
 };
 
-export default ModalListItems;
+export default ModalDetallePrestamo;

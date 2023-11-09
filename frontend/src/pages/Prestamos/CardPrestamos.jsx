@@ -13,7 +13,7 @@ import {
   MDBBtn, 
 } from 'mdb-react-ui-kit';
 
-const PrestamosCard = ({ status,image, cliente,clienteId,dateIn,name}) => {
+const PrestamosCard = ({ status,image, cliente,component}) => {
   return (
     <div className='prestamo-card'>
         <div className='img-container'>
@@ -41,51 +41,30 @@ const PrestamosCard = ({ status,image, cliente,clienteId,dateIn,name}) => {
                   </MDBRipple>
                 </MDBCol>
                 <MDBCol md="6">
-                  <h5>Prestamo de {cliente}</h5>
+                 
                   <div className="d-flex flex-row">
                     <div className="text-danger mb-1 me-2">
-                      <MDBIcon fas icon="star" />
+                     
                       
                     </div>
                   </div>
                   <div className="mt-1 mb-0 text-muted" >
                     <span><p>Estado: {status}</p></span>
-                    <span className="text-primary"> • </span>
-                    <span className="text-primary"> • </span>
+                    
                   </div>
-                    <span>Fecha:{dateIn}</span>
-                    <span className="text-primary"> • </span>
-                    <span className="text-primary"> • </span>
-                    <span>
+                    
 
-                    </span>
+                    
 
                     <span>
-                      Componente:{name}
+                      Componente:{component}
                       <br />
                     </span>
                     <div>
-                  <p className="text-truncate mb-4 mb-md-0">
-                  © Colegio ITS Villada. Todos los derechos reservados. Prohibida la reproducción total o parcial sin autorización escrita.
-                  </p>
-                  </div>
-                </MDBCol>
-                <MDBCol
-                  md="6"
-                  lg="3"
-                  className="border-sm-start-none border-start"
-                >
                  
-                  <h6 className="text-success"> •  • </h6>
-                  <div className="d-flex flex-column mt-4">
-                    <MDBBtn color="primary" size="sm">
-                      Ver prestamo.
-                    </MDBBtn>
-                    <MDBBtn outline color="primary" size="sm" className="mt-2">
-                      Aniadir al carrito
-                    </MDBBtn>
                   </div>
                 </MDBCol>
+               
               </MDBRow>
             </MDBCardBody>
           </MDBCard>
