@@ -43,11 +43,15 @@ const Prestamos = () => {
   };
   return (
     <div className="container pagecontainer">
-      <h1 className="textito">Mis prestamos</h1>
+   <div className="title-container">
+    <h1 className="textito">Mis prestamos</h1>
+  </div>
 
    
-      
+           
+  <div>
       {data.length > 0 ? (
+       
             data.map((prestamo, index) => (
               <PrestamosCardPackage
               onClick={() => openModal(prestamo)}
@@ -61,12 +65,13 @@ const Prestamos = () => {
                 lista={prestamo.lista}
                 
               />
-            
-         
+             
+             
         ))): (
+          
           <p>Cargando préstamos...</p>
           )}
-      
+       </div>
       {isModalOpen && (
         <ModalDetallePrestamo lista={selectedPackage.lista} onClose={closeModal} />
       )}

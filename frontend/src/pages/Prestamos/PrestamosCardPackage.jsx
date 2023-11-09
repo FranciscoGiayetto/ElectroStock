@@ -14,7 +14,7 @@ import {
 const PrestamosCardPackage = ({ onClick, cliente, dateIn, dateOut, count, name, status, image, lista }) => {
   const renderComponentList = () => {
     return lista.slice(0, 5).map((item, index) => {
-      const componentName = item.box.name.length > 18 ? item.box.name.slice(0, 18) + '...' : item.box.name;
+      const componentName = item.box.element.name.length > 18 ? item.box.element.name.slice(0, 18) + '...' : item.box.name;
       return (
         <p key={index}>{componentName}</p>
       );
@@ -31,7 +31,7 @@ const PrestamosCardPackage = ({ onClick, cliente, dateIn, dateOut, count, name, 
             <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3">
               <MDBCardBody>
                 <MDBRow>
-                  <MDBCol md="12" lg="3" className="mb-4 mb-lg-0">
+                  <MDBCol md="12" lg="3"  className="mb-4 mb-lg-0">
                     <MDBRipple
                       rippleColor="light"
                       rippleTag="div"

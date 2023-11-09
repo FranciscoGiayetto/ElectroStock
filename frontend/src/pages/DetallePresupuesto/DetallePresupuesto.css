@@ -26,8 +26,9 @@
 
 
 
-  .modal-content {
-    max-height: 800px; /* Establece la altura máxima del modal */
+  .modal-presupuesto  {
+    max-height: 800px;
+    /* Establece la altura máxima del modal */
     overflow-y: auto; /* Permite desplazamiento vertical dentro del modal */
   }
   
