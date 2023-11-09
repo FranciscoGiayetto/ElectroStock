@@ -125,8 +125,6 @@ def PrestamoVerAPIView(request, user_id):
 
             for creation_date, logs_data in grouped_logs.items():
                 primer_log = logs_data[0]
-                print(logs_data[0])
-                print(primer_log.get('id', '') )
                 primer_log_prueba = models.Log.objects.get(id=primer_log.get('id', '') )
 
                 dateIn_primer_log_prueba = primer_log_prueba.dateIn.strftime('%Y-%m-%d %H:%M') if primer_log_prueba.dateIn else None
