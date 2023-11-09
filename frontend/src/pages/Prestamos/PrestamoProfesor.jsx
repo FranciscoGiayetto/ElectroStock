@@ -28,6 +28,7 @@ const PrestamoProfesor = () => {
       console.error(error);
     }
   };
+  
   return (<div className='container pagecontainer'>
             <h1 className='textito'>Mis prestamos</h1>
 

@@ -3,7 +3,7 @@ import PrestamosCard from './CardPrestamos';
 import useAxios from '../../utils/useAxios';
 import './Prestamos.css';
 import { useAuthStore } from '../../store/auth';
-
+import { Form, Button, Accordion, Card } from 'react-bootstrap';
 
 const Prestamos = () => {
   const [user] = useAuthStore((state) => [state.user]);
@@ -29,8 +29,33 @@ const Prestamos = () => {
       console.error(error);
     }
   };
+  
+  
+
   return (<div className='container pagecontainer'>
             <h1 className='textito'>Mis prestamos</h1>
+            <div className="filter-section">
+            <Form >
+      <Form.Group controlId="searchText">
+        <Form.Control
+          type="text"
+          placeholder="Buscar..."
+        />
+      </Form.Group>
+      <select class="form-select" aria-label="Default select example">
+  <option selected>Open this select menu</option>
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</select>
+          
+      <Button variant="primary" type="submit">
+        Buscar
+      </Button>
+    </Form>
+  
+ 
+</div>
 
       <div className='prestamos-list'>
         

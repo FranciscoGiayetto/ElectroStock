@@ -1,8 +1,68 @@
 // CardPrestamos.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import OrderCard from '../../components/ordercard/OrderCard';
+import {
+  MDBCol,
+  MDBContainer,
+  MDBRow,
+} from "mdb-react-ui-kit";
+import useAxios from "../../utils/useAxios";
+import { useAuthStore } from '../../store/auth';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const PrestamosCardProfe = ({ status, image, cliente, dateIn, name }) => {
+    const api = useAxios();
+    const [orders, setOrders] = useState([]);
+    const [isLoggedIn, user] = useAuthStore((state) => [
+      state.isLoggedIn,
+      state.user,
+    ]);
+    const userData = user();
+    const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log('SE EJECUTÓ EL USE');
+    getOrders();
+  }, []);
+
+  
   const detallePrestamoURL = '/DetallePrestamo';
+  const handleApproval = async () => {
+    try {
+      // Realiza una solicitud PUT para aprobar los registros del usuario en el servidor
+      await api.put(`/aprobadoPost/${userData.user_id}/`);
+      // Vuelve a cargar los préstamos actualizados después de la aprobación
+      getOrders();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  const handleRejection = async () => {
+    try {
+      // Realiza una solicitud PUT para rechazar los registros del usuario en el servidor
+      await api.put(`/desaprobadoPost/${userData.user_id}/`);
+      // Vuelve a cargar los préstamos actualizados después del rechazo
+      getOrders();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+
+  const getOrders = async () => {
+    try {
+      console.log(userData.user_id);
+      const response = await api.get(`/p/${userData.user_id}`);
+      let data = await response.data;
+      setOrders(data);
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className='prestamo-card'>
       <div className='img-container'>
