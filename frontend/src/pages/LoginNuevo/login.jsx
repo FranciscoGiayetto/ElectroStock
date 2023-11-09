@@ -89,17 +89,20 @@ const Login = () => {
                             placeholder="Contraseña"
                             className="input-style"
                         />
-                        <Button 
-                            onClick={() => setShowPassword(!showPassword)} 
-                            variant="light" 
-                            style={{ marginLeft: '10px' }}
-                        >
-                            {showPassword ? <VisibilityOffRoundedIcon /> : <VisibilityRoundedIcon />}
-                        </Button>
                     </div>
                   </Form.Group>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Button
+                            onClick={() => setShowPassword(!showPassword)}
+                            variant="light"
+                            style={{ display: 'flex', alignItems: 'center' }}
+                        >
+                            {showPassword ? <VisibilityRoundedIcon style={{ fontSize: '1rem' }} /> : <VisibilityOffRoundedIcon style={{ fontSize: '1rem' }} />}
+                        </Button>
+                        <p style={{ margin: '0 0 0 0.3rem', fontSize: '0.875rem', opacity:'70%' }}>Mostrar Contraseña</p>
+                    </div>
 
-                  <div className='text-center' style={{marginBottom:'1rem'}}>
+                  <div className='text-center' style={{marginTop:'0.5rem', marginBottom:'1rem'}}>
                     <Link href='http://127.0.0.1:8000/auth/accounts/password_reset' style={{color:' #2E5266'}} > ¿Olvidaste tu contraseña? </Link>
                   </div>
                   
