@@ -240,7 +240,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               <Col >            
               <form onSubmit={handleSearch} className={`div-form ${isSmallScreen ? 'search-small' : 'search-large'}`}>                
                   <Autocomplete
-                      className={`search-input ${isSmallScreen ? 'search-small' : 'search-large'}`}
+                      className={`search-input`}
                     freeSolo
                     options={myOptions}
                     getOptionLabel={(option) => option}
@@ -287,6 +287,12 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
                   
                 )}
               </Col>
+              <Col>
+              <Button variant="primary" type="submit" className='button' style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                    <SearchRoundedIcon />
+                  </Button>
+              </Col>
+              
 
               <Col style={{ marginLeft:'0'}}>
               {!isSmallScreen && (

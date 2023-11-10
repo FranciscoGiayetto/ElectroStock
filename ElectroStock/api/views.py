@@ -62,24 +62,19 @@ def get_stock(request, element_id):
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
 
-# class ElementsViewSet(viewsets.ModelViewSet):
-#     queryset = models.Element.objects.all()
-#     permission_classes = [permissions.AllowAny]
-#     serializer_class = ElementSerializer
-from rest_framework import generics
-from rest_framework.response import Response
-@api_view(['GET'])
-def ElementsViewSet(request, page):
+from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import permissions
+
+class CustomPagination(PageNumberPagination):
+    page_size = 10  # Cantidad de elementos por página
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+class ElementsViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.all()
-    page_size = 10  # Número de elementos por página
-
-    start_index = (page - 1) * page_size
-    end_index = page * page_size
-
-    paginated_data = queryset[start_index:end_index]
-    serializer = ElementSerializer(paginated_data, many=True)
-
-    return Response(serializer.data)
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ElementSerializer
 
 from cryptography.fernet import Fernet
 
@@ -88,41 +83,23 @@ class TokenViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = TokenSerializer
 
-    def encrypt_data(self, data, key):
-        fernet = Fernet(key)
-        encrypted_data = fernet.encrypt(data.encode())
-        return encrypted_data
-
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        encrypted_data = self.encrypt_data(data['name'], 'pepe1234')  # Replace 'your-secret-key' with your actual key
-        encrypted_data_base64 = encrypted_data.decode('utf-8')
-        data['encrypted_name'] = encrypted_data_base64
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = TokenSerializer(queryset, many=True)
+        serialized_data = json.dumps(serializer.data)  # Convertir los datos a una cadena de texto
+        encrypted_data = encrypt(serialized_data)
+        return Response(encrypted_data)
 
 
-# View para los elementos que estan en el ecommerce
-# class ProductosEcommerceAPIView(viewsets.ModelViewSet):
-#     queryset = models.Element.objects.filter(ecommerce=True)
-#     permission_classes = [permissions.AllowAny]
-#     serializer_class = ElementEcommerceSerializer2  # Utiliza el serializador correcto
 
-@api_view(['GET'])
-def ProductosEcommerceAPIView(request, page):
+
+class ProductosEcommerceAPIView(viewsets.ModelViewSet):
     queryset = models.Element.objects.filter(ecommerce=True)
-    page_size = 10  # Número de elementos por página
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ElementEcommerceSerializer2
+    pagination_class = CustomPagination
 
-    start_index = (page - 1) * page_size
-    end_index = page * page_size
 
-    paginated_data = queryset[start_index:end_index]
-    serializer = ElementEcommerceSerializer2(paginated_data, many=True)
-
-    return Response(serializer.data)
 
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
@@ -688,75 +665,68 @@ class BoxMasLogsRotos(generics.ListAPIView):
             )
         
 from django.shortcuts import get_object_or_404
+
 from rest_framework.pagination import PageNumberPagination
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @api_view(["GET"])
-def elementos_por_categoria(request, category_id, page):
+def elementos_por_categoria(request, category_id):
+    pagination_class = CustomPagination()
+    #pagination_class.page_size = 10  # Número de elementos por página
+
     # Obtener la categoría correspondiente o devolver un error 404 si no existe
     categoria = get_object_or_404(models.Category, name=category_id)
 
     # Obtener todos los elementos que pertenecen a la categoría
     elementos = models.Element.objects.filter(category=categoria)
 
-    page_size = 10  # Número de elementos por página
-
-    paginator = Paginator(elementos, page_size)
-    
-    try:
-        paginated_elements = paginator.page(page)
-    except PageNotAnInteger:
-        # Si la página no es un entero, entrega la primera página
-        paginated_elements = paginator.page(1)
-    except EmptyPage:
-        # Si la página está fuera de rango, entrega la última página de resultados
-        paginated_elements = paginator.page(paginator.num_pages)
+    # Paginar los elementos
+    paginated_elements = pagination_class.paginate_queryset(elementos, request)
 
     elementos_con_stock = []
 
-    for elemento in paginated_elements:
-        element_id = elemento.id
+    if paginated_elements is not None:
+        for elemento in paginated_elements:
+            element_id = elemento.id
 
-        boxes = models.Box.objects.filter(element__id=element_id)
-        box_ids = [box.id for box in boxes]
+            boxes = models.Box.objects.filter(element__id=element_id)
+            box_ids = [box.id for box in boxes]
 
-        total_com = models.Log.objects.filter(
-            box__id__in=box_ids, status="COM"
-        ).aggregate(total=Sum("quantity"))["total"]
-        total_ped = models.Log.objects.filter(
-            box__id__in=box_ids, status="PED"
-        ).aggregate(total=Sum("quantity"))["total"]
-        total_rot = models.Log.objects.filter(
-            box__id__in=box_ids, status="ROT"
-        ).aggregate(total=Sum("quantity"))["total"]
-        total_ap = models.Log.objects.filter(
-            box__id__in=box_ids, status="AP"
-        ).aggregate(total=Sum("quantity"))["total"]
+            total_com = models.Log.objects.filter(
+                box__id__in=box_ids, status="COM"
+            ).aggregate(total=Sum("quantity"))["total"]
+            total_ped = models.Log.objects.filter(
+                box__id__in=box_ids, status="PED"
+            ).aggregate(total=Sum("quantity"))["total"]
+            total_rot = models.Log.objects.filter(
+                box__id__in=box_ids, status="ROT"
+            ).aggregate(total=Sum("quantity"))["total"]
+            total_ap = models.Log.objects.filter(
+                box__id__in=box_ids, status="AP"
+            ).aggregate(total=Sum("quantity"))["total"]
 
-        if total_com is None:
-            total_com = 0
-        if total_ped is None:
-           total_ped = 0
-        if total_ap is None:
-            total_ap = 0
-        if total_rot is None:
-            total_rot = 0
+            if total_com is None:
+                total_com = 0
+            if total_ped is None:
+               total_ped = 0
+            if total_ap is None:
+                total_ap = 0
+            if total_rot is None:
+                total_rot = 0
 
-        current_stock = total_com - total_ped - total_ap - total_rot
+            current_stock = total_com - total_ped - total_ap - total_rot
 
-        # Crear un diccionario con la información del elemento y su stock actual
-        elemento_con_stock = {
-            "id": elemento.id,
-            "name": elemento.name,
-            "description": elemento.description,
-            "image": elemento.image,
-            "category": elemento.category,
-            "current_stock": current_stock,
-        }
+            elemento_con_stock = {
+                "id": elemento.id,
+                "name": elemento.name,
+                "description": elemento.description,
+                "image": elemento.image,
+                "category": elemento.category,
+                "current_stock": current_stock,
+            }
 
-        elementos_con_stock.append(elemento_con_stock)
+            elementos_con_stock.append(elemento_con_stock)
 
-    # Serializar los elementos con su stock actual y enviarlos en la respuesta
     serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
     return Response(serializer.data)
 

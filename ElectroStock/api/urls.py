@@ -22,8 +22,8 @@ router.register("log", LogViewSet, "log")
 
 
 urlpatterns = [
-    path("elements/<int:page>/", ElementsViewSet, name="element"),
-    path("elementsEcommerce/<int:page>/", ProductosEcommerceAPIView, name="elementsEcommerce"),
+    #path("elements/<int:page>/", ElementsViewSet, name="element"),
+    #path("elementsEcommerce/", ProductosEcommerceAPIView, name="elementsEcommerce"),
     path('elementos_por_especialidad/<str:nombre_especialidad>/', boxes_por_especialidad, name='elementos_por_especialidad'),
     path('categories_por_especialidad/<str:nombre_especialidad>/', categories_por_especialidad, name='categories_por_especialidad'),
     path("logPost/<int:user_id>/", CambioLog, name="logPost"),
