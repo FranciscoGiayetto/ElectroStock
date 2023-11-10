@@ -15,10 +15,10 @@ const Prestamos = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   const user_id = userData.user_id;
 
-  const handleApproval = async () => {
+  const handleApproval = async (dateIn) => {
     try {
       // Realiza una solicitud PUT para aprobar los registros del usuario en el servidor
-      await api.put(`/aprobadoPost/${userData.user_id}/`);
+      await api.put(`/aprobadoPost/${userData.user_id}/${dateIn}`);
       // Vuelve a cargar los préstamos actualizados después de la aprobación
       getPrestamos();
     } catch (error) {
@@ -26,10 +26,10 @@ const Prestamos = () => {
     }
   };
 
-  const handleRejection = async () => {
+  const handleRejection = async (dateIn) => {
     try {
       // Realiza una solicitud PUT para rechazar los registros del usuario en el servidor
-      await api.put(`/desaprobadoPost/${userData.user_id}/`);
+      await api.put(`/desaprobadoPost/${userData.user_id}/${dateIn}`);
       // Vuelve a cargar los préstamos actualizados después del rechazo
       getPrestamos();
     } catch (error) {
@@ -92,14 +92,14 @@ const Prestamos = () => {
         )}
       </div>
       {isModalOpen && (
-        <ModalDetallePrestamo
-          onHandleApproval={handleApproval}
-          onHandleRejection={handleRejection}
-          dateOut={selectedPackage.dateOut}
-          lista={selectedPackage.lista}
-          onClose={closeModal}
-        />
-      )}
+  <ModalDetallePrestamo
+    onHandleApproval={() => handleApproval(selectedPackage.dateIn)}
+    onHandleRejection={() => handleRejection(selectedPackage.dateIn)}
+    dateOut={selectedPackage.dateOut}
+    lista={selectedPackage.lista}
+    onClose={closeModal}
+  />
+)}
     </div>
   );
 };
