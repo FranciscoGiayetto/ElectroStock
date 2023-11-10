@@ -57,7 +57,7 @@ class SpecialitySerializer(serializers.ModelSerializer):
 class UsersSerializer(serializers.ModelSerializer):
     groups = serializers.StringRelatedField(many= True)
     course = CourseSerializer()
-    specialties= SpecialitySerializer()
+    specialties = serializers.StringRelatedField(many= True)
 
 
     class Meta:
