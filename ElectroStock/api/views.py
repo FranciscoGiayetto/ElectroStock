@@ -77,6 +77,8 @@ class ElementsViewSet(viewsets.ModelViewSet):
     serializer_class = ElementSerializer
 
 from cryptography.fernet import Fernet
+# Función para encriptar
+
 
 class TokenViewSet(viewsets.ModelViewSet):
     queryset = models.TokenSignup.objects.all()
@@ -87,8 +89,8 @@ class TokenViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
         serializer = TokenSerializer(queryset, many=True)
         serialized_data = json.dumps(serializer.data)  # Convertir los datos a una cadena de texto
-        encrypted_data = encrypt(serialized_data)
-        return Response(encrypted_data)
+        #encrypted_data = encrypt(serialized_data)
+        return Response("ARREGLAR")
 
 
 
