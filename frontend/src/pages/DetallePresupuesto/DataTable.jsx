@@ -10,6 +10,7 @@ import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/h
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ModalListItems from './ModalListItems'; 
+import "./DataTable2.css";
 
 import * as XLSX from 'xlsx';
 
@@ -451,14 +452,16 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
             </div>
           )}
         </div>
-        <Table responsive striped bordered hover className="mt-3">
+
+        <div style={{ overflowX: 'auto' }}>
+        <Table responsive striped bordered hover className="mt-3 table-responsive">
           <thead>
             <tr>
               <th>N°</th>
               <th>Nombre</th>
               <th>Precio</th>
               <th>Stock</th>
-              <th>Subtotal</th>
+              <th className="d-none d-md-table-cell">Subtotal</th>
               {budgetStatus !== 'COMPLETADO' && <th>Acciones</th>}
             </tr>
           </thead>
@@ -499,7 +502,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     item.quantity
                   )}
                 </td>
-                <td>{(item.quantity * parseFloat(item.price)).toFixed(2)}</td>
+                <td className="d-none d-md-table-cell">{(item.quantity * parseFloat(item.price)).toFixed(2)}</td>
                 {budgetStatus !== 'COMPLETADO' && (
                   <td>
                     {editingRows[item.id] ? (
@@ -577,7 +580,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     disabled={budgetStatus === 'COMPLETADO'}
                   />
                 </td>
-                <td>{/* Cálculo del total */}</td>
+                <td className="d-none d-md-table-cell">{/* Cálculo del total */}</td>
                 {budgetStatus !== 'COMPLETADO' && (
                   <td>
                     <button
@@ -606,6 +609,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
             </tr>
           </tfoot>
         </Table>
+        </div>
       </MDBCard>
       {isModalOpen && (
         <ModalListItems

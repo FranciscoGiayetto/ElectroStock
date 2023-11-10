@@ -12,6 +12,7 @@ import useAxios from '../../utils/useAxios';
 
 import Tooltip from 'react-png-tooltip'
 
+import './DataTable.css'
 const DataTable = ({ presupuestos }) => {
   let api = useAxios();
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ const DataTable = ({ presupuestos }) => {
   
       // Realiza una acción de redirección a '/tienda' o ajusta según sea necesario
       navigate(`${newBudgetId}`);
+      
     } catch (error) {
       // En caso de error, muestra el mensaje de error en la consola
       console.error(error);
@@ -127,7 +129,7 @@ const DataTable = ({ presupuestos }) => {
   
 </MDBCardHeader>
 
-      <Table responsive striped bordered hover className="mt-3">
+<Table responsive striped bordered hover className="mt-3 table-responsive">
         <thead>
           <tr>
             <th scope='col' onClick={() => handleSortChange('id')}>
@@ -153,7 +155,10 @@ const DataTable = ({ presupuestos }) => {
             >
               <td>{presupuesto.id}</td>
               <td>{presupuesto.name}</td>
-              <td className={`${getRowTextColor(presupuesto.status)}`}>{presupuesto.status}</td>
+              <td className={`progress-abbreviate ${getRowTextColor(presupuesto.status)}`}>
+                {presupuesto.status}
+              </td>
+
               <td >{presupuesto.speciality.name}</td>
             </tr>
           ))}
