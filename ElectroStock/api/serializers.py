@@ -116,8 +116,6 @@ class LogSerializer(serializers.ModelSerializer):
     box = BoxSerializer()
     borrower = UsersSerializer()
     lender = UsersSerializer()
-    box= BoxSerializer()
-    borrower= UsersSerializer()
     class Meta:
         model = models.Log
         fields = (
