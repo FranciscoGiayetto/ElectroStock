@@ -684,8 +684,78 @@ def elementos_por_categoria(request, category_id):
 from django.utils.dateparse import parse_datetime
 from dateutil.parser import parse as dateparse
 from pytz import timezone, utc
+@api_view(["GET", "PUT"])
+def CambioAprobado(request, user_id, date_in):
+    if request.method == "GET":
+        valid_statuses = [models.Log.Status.PEDIDO]
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+
+        if queryset.exists():
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
+
+            for log in queryset:
+                creation_date = log.dateIn.strftime('%Y-%m-%d %H:%M') if log.dateIn else None
+                log_data = LogSerializer(log).data
+                log_data['dateIn'] = creation_date
+                grouped_logs[creation_date].append(log_data)
+
+            # Verificar si hay logs para la fecha proporcionada y cambiar su estado a APROBADO
+            logs_to_approve = grouped_logs.get(date_in, [])
+
+            if logs_to_approve:
+                # Recopilar los IDs de los logs aprobados
+                log_ids_to_approve = [log['id'] for log in logs_to_approve]
+
+                # Obtener las instancias de los logs aprobados por sus IDs
+                logs_instances_to_approve = models.Log.objects.filter(id__in=log_ids_to_approve)
+
+                # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
+                serializer = LogSerializer(logs_instances_to_approve, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response("No se encontraron logs para esta fecha y este usuario.")
+
+        else:
+            return Response("No se encontraron logs para este usuario con status APROBADO o PEDIDO.")
+
+    if request.method == "PUT":
+        valid_statuses = [models.Log.Status.PEDIDO]
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+
+        if queryset.exists():
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
+
+            for log in queryset:
+                creation_date = log.dateIn.strftime('%Y-%m-%d %H:%M') if log.dateIn else None
+                log_data = LogSerializer(log).data
+                log_data['dateIn'] = creation_date
+                grouped_logs[creation_date].append(log_data)
+
+            # Verificar si hay logs para la fecha proporcionada y cambiar su estado a APROBADO
+            logs_to_approve = grouped_logs.get(date_in, [])
+            print('creacion_date ',creation_date, 'date_in ', date_in )
+            if creation_date == date_in:
+                # Recopilar los IDs de los logs aprobados
+                log_ids_to_approve = [log['id'] for log in logs_to_approve]
+
+                # Obtener las instancias de los logs aprobados por sus IDs
+                logs_instances_to_approve = models.Log.objects.filter(id__in=log_ids_to_approve)
+                logs_instances_to_approve.update(status=models.Log.Status.APROBADO)
+
+                # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
+                serializer = LogSerializer(logs_instances_to_approve, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response("No se encontraron logs para esta fecha y este usuario.")
+
+        else:
+            return Response("No se encontraron logs para este usuario con status APROBADO o PEDIDO.")     
+        
+
 @api_view(["GET","PUT"])
-def CambioAprobado(request, user_id,date_in):
+def CambioDesaprobado(request, user_id,date_in):
     if request.method == "GET":
         valid_statuses = [models.Log.Status.PEDIDO]
         queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
@@ -742,7 +812,7 @@ def CambioAprobado(request, user_id,date_in):
 
                 # Obtener las instancias de los logs aprobados por sus IDs
                 logs_instances_to_approve = models.Log.objects.filter(id__in=log_ids_to_approve)
-                logs_instances_to_approve.update(status=models.Log.Status.APROBADO)
+                logs_instances_to_approve.update(status=models.Log.Status.DESAPROBADO)
 
                 # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
                 serializer = LogSerializer(logs_instances_to_approve, many=True)
@@ -751,28 +821,8 @@ def CambioAprobado(request, user_id,date_in):
                 return Response("No se encontraron logs para esta fecha y este usuario.")
 
         else:
-            return Response("No se encontraron logs para este usuario con status APROBADO o PEDIDO.")     
-        
+            return Response("No se encontraron logs para este usuario con status DESAPROBADO o PEDIDO.")     
 
-@api_view(["GET","PUT"])
-def CambioDesaprobado(request, user_id):
-    if request.method == "GET":
-        # Agregar código para manejar la solicitud GET si es necesario
-        queryset = models.Log.objects.filter(
-            lender=user_id, status=models.Log.Status.PEDIDO
-        )
-        serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
-    
-    if request.method == "PUT":
-        # Agregar código para manejar la solicitud PUT
-        logs_pedido = models.Log.objects.filter(lender=user_id, status=models.Log.Status.PEDIDO)
-        new_status = models.Log.Status.DESAPROBADO
-        for log in logs_pedido:
-            log.status = new_status
-            log.save()
-        serializer = LogSerializer(logs_pedido, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
     
 @api_view(["GET", "POST", "PUT"])
 def CambioLog(request, user_id):
@@ -1014,33 +1064,83 @@ class BudgetLogCreateView(generics.CreateAPIView):
 
 
 
-import datetime
-@api_view(["GET", "PUT"])
-def CambioDevuelto(request, user_id, date):
+@api_view(["GET","PUT"])
+def CambioDevuelto(request, user_id,date_in):
     if request.method == "GET":
-        # Código para manejar la solicitud GET si es necesario
-        queryset = models.Log.objects.filter(lender=user_id, status=models.Log.Status.APROBADO, dateIn=date)
-        serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
+        valid_statuses = [models.Log.Status.APROBADO, models.Log.Status.VENCIDO]
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
-    elif request.method == "PUT":
-        # Código para manejar la solicitud PUT
-        logs_pedido_aprobados = models.Log.objects.filter(lender=user_id, status=models.Log.Status.APROBADO, dateIn=date)
-        
-        for log in logs_pedido_aprobados:
-            log.status = models.Log.Status.DEVUELTO
-            log.save()
+        if queryset.exists():
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
 
-        logs_pedido_vencidos = models.Log.objects.filter(lender=user_id, status=models.Log.Status.VENCIDO, dateIn=date)
-        
-        for log in logs_pedido_vencidos:
-            log.status = models.Log.Status.DEVUELTOTARDIO
-            log.save()
+            for log in queryset:
+                creation_date = log.dateIn.strftime('%Y-%m-%d %H:%M') if log.dateIn else None
+                log_data = LogSerializer(log).data
+                log_data['dateIn'] = creation_date
+                grouped_logs[creation_date].append(log_data)
 
-        # Actualizar los logs obtenidos después de la modificación
-        updated_logs = models.Log.objects.filter(lender=user_id, dateIn=date)
-        serializer = LogSerializer(updated_logs, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            # Verificar si hay logs para la fecha proporcionada y cambiar su estado a APROBADO
+            logs_to_approve = grouped_logs.get(date_in, [])
+            print('creacion_date ',creation_date, 'date_in ', date_in )
+            if creation_date == date_in:
+                # Recopilar los IDs de los logs aprobados
+                log_ids_to_approve = [log['id'] for log in logs_to_approve]
+
+                # Obtener las instancias de los logs aprobados por sus IDs
+                logs_instances_to_approve = models.Log.objects.filter(id__in=log_ids_to_approve)
+
+                # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
+                serializer = LogSerializer(logs_instances_to_approve, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response("No se encontraron logs para esta fecha y este usuario.")
+
+        else:
+            return Response("No se encontraron logs para este usuario con status APROBADO o PEDIDO.")
+    if request.method == "PUT":
+        valid_statuses = [models.Log.Status.APROBADO, models.Log.Status.VENCIDO]
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+
+        if queryset.exists():
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
+
+            for log in queryset:
+                creation_date = log.dateIn.strftime('%Y-%m-%d %H:%M') if log.dateIn else None
+                log_data = LogSerializer(log).data
+                log_data['dateIn'] = creation_date
+                grouped_logs[creation_date].append(log_data)
+
+            # Verificar si hay logs para la fecha proporcionada y cambiar su estado a APROBADO o DEVUELTOTARDIO
+            logs_to_approve = grouped_logs.get(date_in, [])
+            print('creacion_date ', creation_date, 'date_in ', date_in)
+            if creation_date == date_in:
+                # Recopilar los IDs de los logs aprobados y vencidos
+                log_ids_to_approve = [log['id'] for log in logs_to_approve if log['status'] == models.Log.Status.APROBADO]
+                log_ids_to_return_late = [log['id'] for log in logs_to_approve if log['status'] == models.Log.Status.VENCIDO]
+
+                # Obtener las instancias de los logs aprobados y vencidos por sus IDs y actualizar sus estados
+                if log_ids_to_approve:
+                    logs_instances_to_approve = models.Log.objects.filter(id__in=log_ids_to_approve)
+                    logs_instances_to_approve.update(status=models.Log.Status.DEVUELTO)
+
+                if log_ids_to_return_late:
+                    logs_instances_to_return_late = models.Log.objects.filter(id__in=log_ids_to_return_late)
+                    logs_instances_to_return_late.update(status=models.Log.Status.DEVUELTOTARDIO)
+
+                # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
+                serializer_approve = LogSerializer(logs_instances_to_approve, many=True)
+                serializer_return_late = LogSerializer(logs_instances_to_return_late, many=True)
+
+                return Response(
+                    {"logs_aprobados": serializer_approve.data, "logs_devueltotardio": serializer_return_late.data},
+                    status=status.HTTP_200_OK
+                )
+            else:
+                return Response("No se encontraron logs para esta fecha y este usuario.")
+        else:
+            return Response("No se encontraron logs para este usuario con status APROBADO o VENCIDO.")        
 
 from collections import defaultdict
 
