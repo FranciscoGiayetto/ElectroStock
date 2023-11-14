@@ -9,6 +9,7 @@ router = routers.DefaultRouter()
 # Registro todas las urls
 router.register("elements", ElementsViewSet, "elements")
 router.register("elementsEcommerce", ProductosEcommerceAPIView, "elementsEcommerce")
+router.register("ecommercePaginacion", ecommercePaginacionAPIView, "ecommercePaginacion")
 router.register("category", CategoriaViewSet, "category")
 router.register("users", UsersViewSet, "users")
 router.register("course", CourseViewSet, "course")
