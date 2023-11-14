@@ -730,7 +730,8 @@ def elementos_por_categoria(request, category_id):
             elementos_con_stock.append(elemento_con_stock)
 
     serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
-    return Response(serializer.data)
+
+    return pagination_class.get_paginated_response(serializer.data)
 
 
     
