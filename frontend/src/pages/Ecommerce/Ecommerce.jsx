@@ -26,7 +26,7 @@ function Ecommerce({ allItems }) {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('searchQuery');
   const { name } = useParams();
-  const [showWordList, setShowWordList] = useState(false);
+  const [showWordList, setShowWordList] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   const pageSize = 10; // Number of cards per page
@@ -84,6 +84,7 @@ function Ecommerce({ allItems }) {
   {!isLoading && (
     <>
       <IconButton
+      title="Visualizar Filtros"
         onClick={() => setShowWordList(!showWordList)}
         aria-label={showWordList ? "Ocultar Categorías" : "Mostrar Categorías"}
       >
