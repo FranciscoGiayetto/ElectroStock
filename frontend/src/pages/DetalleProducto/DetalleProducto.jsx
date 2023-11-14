@@ -8,15 +8,16 @@ import defaultpicture from '../../assets/images/defaultpicture.png';
 import './DetalleProducto.css';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TextField from '@mui/material/TextField';
-
+import { EventEmitter } from 'events';
 // Lista de categorías con nombres correspondientes a los IDs
 const categorias = [
   { id: 1, nombre: "Electrónica" },
   { id: 2, nombre: "Ropa" },
   // Agrega más categorías según sea necesario
 ];
-
+export const cartEventEmitter = new EventEmitter();
 function DetalleProducto() {
+  
   const [observation, setObservation] = useState(''); // Estado para la observación
 
   const handleObservationChange = (value) => {
@@ -120,6 +121,7 @@ function DetalleProducto() {
       const response = await api.post(`/logPost/${userData.user_id}/`, body);
       console.log(response.data);
       setPostRes(response.data.response);
+      cartEventEmitter.emit('updateCart');
       navigate('/tienda');
     } catch (error) {
       setPostRes(error.response.data);

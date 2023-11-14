@@ -31,6 +31,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
 import useAxios from "../../utils/useAxios";
 import { useAuthStore } from '../../store/auth';
+import { cartEventEmitter } from '../../pages/DetalleProducto/DetalleProducto';
 
 
 
@@ -60,13 +61,20 @@ const LayoutComponents = ({ onSearch, isProfessor }) => {
     getCantNotificaciones();
   }, []);
 
+ 
   useEffect(() => {
-    getCantCarrito();
-  }, [cantCarrito]);
+    // Suscríbete al evento del carrito para actualizar la cantidad del carrito
+    const updateCart = () => {
+      getCantCarrito();
+    };
 
-  useEffect(() => {
-    getCantNotificaciones();
-  }, [cantNotificaciones]);
+    cartEventEmitter.on('updateCart', updateCart);
+
+    // Limpia la suscripción cuando se desmonta el componente
+    return () => {
+      cartEventEmitter.off('updateCart', updateCart);
+    };
+  }, []);
 
   useEffect(() => {
     window.addEventListener("beforeinstallprompt", (event) => {
