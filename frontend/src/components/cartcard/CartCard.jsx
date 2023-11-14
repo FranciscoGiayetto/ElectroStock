@@ -22,6 +22,7 @@ export default function CartCard(props) {
     handleQuantityChange,
     handleCommentChange,
     comments,
+    currentStock,
   } = props;
 
   // Inicializa el estado local 'observation' con la observación existente de las props.
