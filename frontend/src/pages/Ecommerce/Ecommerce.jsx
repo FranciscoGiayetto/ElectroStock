@@ -80,20 +80,20 @@ function Ecommerce({ allItems }) {
   return (
     <Container style={{ marginTop: '5rem' }}>
       <Row>
-      <Col xs={12} md={2} className={`d-none d-md-block`}>
-  {!isLoading && (
-    <>
-      <IconButton
-      title="Visualizar Filtros"
-        onClick={() => setShowWordList(!showWordList)}
-        aria-label={showWordList ? "Ocultar Categorías" : "Mostrar Categorías"}
-      >
-        {showWordList ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-      </IconButton>
-      {showWordList && <WordList />}
-    </>
-  )}
-</Col>
+        <Col xs={12} md={2} className={`d-none d-md-block`}>
+          {!isLoading && (
+            <>
+              <IconButton
+                title="Visualizar Filtros"
+                onClick={() => setShowWordList(!showWordList)}
+                aria-label={showWordList ? 'Ocultar Categorías' : 'Mostrar Categorías'}
+              >
+                {showWordList ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+              {showWordList && <WordList />}
+            </>
+          )}
+        </Col>
 
         <Col xs={12} md={10}>
           {isLoading ? (
@@ -108,31 +108,29 @@ function Ecommerce({ allItems }) {
               </a>
             </div>
           ) : (
-            filteredCards.map((card, index) => (
-              <div key={index}>
-                <CardExample
-                  title={card.name}
-                  text={card.description}
-                  image={card.image}
-                  id={card.id}
-                  current_stock={card.current_stock}
+            <>
+              {filteredCards.map((card, index) => (
+                <div key={index}>
+                  <CardExample
+                    title={card.name}
+                    text={card.description}
+                    image={card.image}
+                    id={card.id}
+                    current_stock={card.current_stock}
+                  />
+                </div>
+              ))}
+              <div className="d-flex justify-content-center mt-4">
+                <Pagination
+                  totalRecords={count}
+                  pageLimit={pageSize}
+                  pageNeighbours={1}
+                  currentPage={page}
+                  onPageChanged={setPage}
                 />
               </div>
-            ))
+            </>
           )}
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={12} className="text-center">
-          <div className="pagination-container">
-            <Pagination
-              totalRecords={count}
-              pageLimit={pageSize}
-              pageNeighbours={1}
-              currentPage={page}
-              onPageChanged={setPage}
-            />
-          </div>
         </Col>
       </Row>
     </Container>
