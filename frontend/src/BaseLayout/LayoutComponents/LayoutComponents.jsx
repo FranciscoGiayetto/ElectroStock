@@ -287,12 +287,6 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
                   
                 )}
               </Col>
-              <Col>
-              <Button variant="primary" type="submit" className='button' style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                    <SearchRoundedIcon />
-                  </Button>
-              </Col>
-              
 
               <Col style={{ marginLeft:'0'}}>
               {!isSmallScreen && (
@@ -304,7 +298,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
                   </Button>
                 </Tooltip>
                 
-              )}.
+              )}
               </Col>
 
               <Col style={{ marginLeft:'0rem'}}>   
