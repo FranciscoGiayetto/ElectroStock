@@ -21,6 +21,8 @@ const Prestamos = () => {
       await api.put(`/aprobadoPost/${userData.user_id}/${dateIn}/`);
       // Vuelve a cargar los préstamos actualizados después de la aprobación
       getPrestamos();
+      // Actualiza el estado del modal
+      closeModal();
     } catch (error) {
       console.error(error);
     }
@@ -32,10 +34,13 @@ const Prestamos = () => {
       await api.put(`/desaprobadoPost/${userData.user_id}/${dateIn}/`);
       // Vuelve a cargar los préstamos actualizados después del rechazo
       getPrestamos();
+      // Actualiza el estado del modal
+      closeModal();
     } catch (error) {
       console.error(error);
     }
   };
+
 
   useEffect(() => {
     getPrestamos();
