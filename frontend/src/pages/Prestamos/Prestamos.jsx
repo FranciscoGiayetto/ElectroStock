@@ -18,7 +18,7 @@ const Prestamos = () => {
   const handleApproval = async (dateIn) => {
     try {
       // Realiza una solicitud PUT para aprobar los registros del usuario en el servidor
-      await api.put(`/aprobadoPost/${userData.user_id}/${dateIn}`);
+      await api.put(`/aprobadoPost/${userData.user_id}/${dateIn}/`);
       // Vuelve a cargar los préstamos actualizados después de la aprobación
       getPrestamos();
     } catch (error) {
@@ -29,7 +29,7 @@ const Prestamos = () => {
   const handleRejection = async (dateIn) => {
     try {
       // Realiza una solicitud PUT para rechazar los registros del usuario en el servidor
-      await api.put(`/desaprobadoPost/${userData.user_id}/${dateIn}`);
+      await api.put(`/desaprobadoPost/${userData.user_id}/${dateIn}/`);
       // Vuelve a cargar los préstamos actualizados después del rechazo
       getPrestamos();
     } catch (error) {
