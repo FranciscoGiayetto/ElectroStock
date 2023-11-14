@@ -10,7 +10,7 @@ import { getCurrentToken } from '../../utils/auth';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+import ClockPage from './ClockPage';
 
 function HomePage() {
   const [isLoggedIn, user] = useAuthStore((state) => [
@@ -27,18 +27,11 @@ function HomePage() {
       <Row>
         <Col md={9}>
 
-          <Row >
-            <Col> <CardVencidos/> </Col>
-            <Col> <CardPendientes/> </Col>
-          </Row>
-
-          <Row >
-            <Col> <CardPrestamos/> </Col>
-          </Row>
+         
+        <h1>Bienvenido {userData.username}!</h1>
 
         </Col>
-
-        <Col md={3} className="d-none d-md-block"> <CardNotificaciones/> </Col> 
+      <ClockPage></ClockPage>
       </Row>
 
     </Container>
