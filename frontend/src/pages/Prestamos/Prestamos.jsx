@@ -5,7 +5,6 @@ import './Prestamos.css';
 import { useAuthStore } from '../../store/auth';
 import PrestamosCardPackage from './PrestamosCardPackage';
 import ModalDetallePrestamo from './ModalDetallePrestamo';
-
 const Prestamos = () => {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
@@ -21,6 +20,8 @@ const Prestamos = () => {
       await api.put(`/aprobadoPost/${userData.user_id}/${dateIn}/`);
       // Vuelve a cargar los préstamos actualizados después de la aprobación
       getPrestamos();
+      // Actualiza el estado del modal
+      closeModal();
     } catch (error) {
       console.error(error);
     }
@@ -32,15 +33,17 @@ const Prestamos = () => {
       await api.put(`/desaprobadoPost/${userData.user_id}/${dateIn}/`);
       // Vuelve a cargar los préstamos actualizados después del rechazo
       getPrestamos();
+      // Actualiza el estado del modal
+      closeModal();
     } catch (error) {
       console.error(error);
     }
   };
 
+
   useEffect(() => {
     getPrestamos();
   }, []);
-  
 
   const getPrestamos = async () => {
     try {
@@ -55,7 +58,7 @@ const Prestamos = () => {
   };
 
   const openModal = (packageData) => {
-    console.log("Click registrado");
+    console.log("Click registrado")
     setSelectedPackage(packageData);
     setIsModalOpen(true);
   };
@@ -65,32 +68,37 @@ const Prestamos = () => {
     setSelectedPackage(null);
     setIsModalOpen(false);
   };
-
   return (
     <div className="container pagecontainer">
-      <div className="title-container">
-        <h1 className="textito">Mis préstamos</h1>
-      </div>
+   <div className="title-container">
+    <h1 className="textito">Mis prestamos</h1>
+  </div>
 
-      <div>
-        {data.length > 0 ? (
-          data.map((prestamo, index) => (
-            <PrestamosCardPackage
+   
+           
+  <div>
+      {data.length > 0 ? (
+       
+            data.map((prestamo, index) => (
+              <PrestamosCardPackage
               onClick={() => openModal(prestamo)}
-              key={index}
-              image={prestamo.imagen}
-              status={prestamo.estado}
-              name={prestamo.nombre}
-              dateIn={prestamo.dateIn}
-              dateOut={prestamo.dateOut}
-              count={prestamo.count}
-              lista={prestamo.lista}
-            />
-          ))
-        ) : (
+                key={index}
+                image={prestamo.imagen}
+                status={prestamo.estado}
+                name={prestamo.nombre}
+                dateIn={prestamo.dateIn}
+                dateOut={prestamo.dateOut}
+                count={prestamo.count}
+                lista={prestamo.lista}
+                
+              />
+             
+             
+        ))): (
+          
           <p>Cargando préstamos...</p>
-        )}
-      </div>
+          )}
+       </div>
       {isModalOpen && (
   <ModalDetallePrestamo
     onHandleApproval={() => handleApproval(selectedPackage.dateIn)}
@@ -101,7 +109,8 @@ const Prestamos = () => {
   />
 )}
     </div>
-  );
-};
+    );
+  };
+  
 
 export default Prestamos;
