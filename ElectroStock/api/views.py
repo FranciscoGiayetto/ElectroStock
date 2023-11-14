@@ -99,9 +99,13 @@ class ProductosEcommerceAPIView(viewsets.ModelViewSet):
     queryset = models.Element.objects.filter(ecommerce=True)
     permission_classes = [permissions.AllowAny]
     serializer_class = ElementEcommerceSerializer2
+
+
+class ecommercePaginacionAPIView(viewsets.ModelViewSet):
+    queryset = models.Element.objects.filter(ecommerce=True)
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ElementEcommerceSerializer2
     pagination_class = CustomPagination
-
-
 
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
