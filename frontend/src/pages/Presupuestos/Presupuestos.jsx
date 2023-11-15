@@ -38,9 +38,9 @@ function Presupuestos() {
   }, []);
 
   return (
-    <Container fluid className="text-center mt-5 mb-5" style={{ padding: '10px' }}>
+    <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
       <Row>
-        <Col xs={12}>
+        <Col style={{ width: '62.5rem' }}>
           <DataTable presupuestos={presupuestos} />
         </Col>
       </Row>
