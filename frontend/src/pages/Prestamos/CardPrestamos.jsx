@@ -1,7 +1,16 @@
 // CardPrestamos.jsx
 import React from 'react';
 import './PrestamosCard.css'; // Importa tu archivo CSS
-
+import {
+  MDBCard,
+  MDBCardBody,
+  MDBCardImage,
+  MDBRow,
+  MDBCol,
+  MDBIcon,
+  MDBRipple,
+  MDBBtn, 
+} from 'mdb-react-ui-kit';
 const PrestamosCard = ({ status,image, cliente,component}) => {
   return (
     <div className='prestamo-card'>

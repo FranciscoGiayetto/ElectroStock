@@ -70,7 +70,7 @@ const Prestamos = () => {
   };
   return (
     <div className="container pagecontainer">
-   <div className="title-container">
+   <div className="title-container" >
     <h1 className="textito">Mis prestamos</h1>
   </div>
 

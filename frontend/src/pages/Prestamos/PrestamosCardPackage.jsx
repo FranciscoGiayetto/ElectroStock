@@ -14,7 +14,7 @@ import {
 const PrestamosCardPackage = ({ onClick, cliente, dateIn, dateOut, count, name, status, image, lista }) => {
   const renderComponentList = () => {
     return lista.slice(0, 4).map((item, index) => {
-      const componentName = item.box.element.name.length > 18 ? item.box.element.name.slice(0, 18) + '...' : item.box.name;
+      const componentName = item.box.name.length > 18 ? item.box.name.slice(0, 18) + '...' : item.box.name;
       return (
         <p key={index}>{componentName}</p>
       );

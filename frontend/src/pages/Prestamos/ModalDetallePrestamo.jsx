@@ -9,7 +9,7 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
   // Función para actualizar la lista filtrada cuando se cambia el término de búsqueda
   useEffect(() => {
     const filtered = lista.filter((element) =>
-      element.box.element.name.toLowerCase().includes(searchTerm.toLowerCase())
+      element.box.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredLista(filtered);
   }, [searchTerm, lista]);
@@ -44,9 +44,9 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
             <PrestamosCard
               key={index}
               status={element.status}
-              image={element.box.element.image}
-              cliente={element.box.element.image}
-              component={element.box.element.name}
+              image={element.box.image}
+              
+              component={element.box.name}
             />
           ))}
         </ul>
