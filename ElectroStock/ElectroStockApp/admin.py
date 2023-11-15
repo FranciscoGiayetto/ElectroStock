@@ -74,7 +74,6 @@ class ElementAdmin(ImportExportActionModelAdmin):
     list_display = (
         "name",
         "description",
-        "price_usd",
         "category",
         "ecommerce",
     )
@@ -82,7 +81,7 @@ class ElementAdmin(ImportExportActionModelAdmin):
         "category",
         "ecommerce",
     )
-    search_fields = ["name", "price_usd", "ecommerce", "category"]
+    search_fields = ["name"]
 
 
 from django.db.models import Max
@@ -233,23 +232,15 @@ class LogResource(resources.ModelResource):
             "id",
             "status",
             "quantity",
-            "borrower__username",
-            "lender__username",
-            "box__name",
+            "box",
             "observation",
-            "dateIn",
-            "dateOut",
         )
         export_order = (
             "id",
             "status",
             "quantity",
-            "borrower__username",
-            "lender__username",
-            "box__name",
+            "box",
             "observation",
-            "dateIn",
-            "dateOut",
         )
 
 
@@ -496,8 +487,23 @@ class LocationAdmin(ImportExportActionModelAdmin):
 class TokenAdmin(ImportExportActionModelAdmin):
     list_display = ("name",)
 
+class BudgetLogAdmin(ImportExportActionModelAdmin):
+    list_display = [
+        "name",
+        "element",
+        "status",
+        "budget",
+        "price",
+        "quantity",
+    ]
 
-
+class BudgetAdmin(ImportExportActionModelAdmin):
+    list_display = [
+        "name",
+        "status",
+        "speciality",
+    ]
+    
 # Registramos los filtros y busquedas de las clases
 admin.site.register(Element, ElementAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
@@ -512,3 +518,5 @@ admin.site.register(Speciality)
 #SACAR ESTE
 admin.site.register(TokenSignup, TokenAdmin)
 admin.site.register(Notification)
+admin.site.register(Budget, BudgetAdmin)
+admin.site.register(BudgetLog,BudgetLogAdmin)

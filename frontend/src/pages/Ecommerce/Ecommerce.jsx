@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Ecommerce.css';
 import CardExample from '../../components/card/CardExample';
 import WordList from '../../components/card/filtros';
@@ -7,113 +7,138 @@ import { useSearchParams } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Spinner from 'react-bootstrap/Spinner';
 import useAxios from '../../utils/useAxios';
-import { useParams, useNavigate, Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { useParams } from 'react-router-dom';
+import Pagination from '../../components/pagination/Paginacion'; // Import the Pagination component
+import PropTypes from 'prop-types';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import IconButton from '@mui/material/IconButton';
+
+
+
 function Ecommerce({ allItems }) {
-  console.log(allItems)
-  const api = useAxios()
+  const api = useAxios();
+  const [count, setCount] = useState(1);
   const [cards, setCards] = useState([]);
-  const [visibleCards, setVisibleCards] = useState([]);
   const [filteredCards, setFilteredCards] = useState([]);
-  const loadMoreRef = useRef(null);
-  const [loadMore, setLoadMore] = useState(false);
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('searchQuery');
-  const [showLoadMoreButton, setShowLoadMoreButton] = useState(true);
   const { name } = useParams();
+  const [showWordList, setShowWordList] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const pageSize = 10; // Number of cards per page
+  const [page, setPage] = useState(1);
+
   useEffect(() => {
     getElement();
-  }, []);
+  }, [page]);
 
   useEffect(() => {
-    console.log('CAMBIO LA SEARCH QUERY', searchQuery)
     filterCards();
-  }, [searchQuery, loadMore]);
-
-  useEffect(() => {
-    handleButtonVisibility();
-  }, [visibleCards]);
-
-  const handleLoadMore = () => {
-    const nextCards = filteredCards.slice(visibleCards.length, visibleCards.length + 9);
-    setVisibleCards(prevVisibleCards => [...prevVisibleCards, ...nextCards]);
-  };
-
-  const handleButtonVisibility = () => {
-    if (filteredCards.length === visibleCards.length && visibleCards.length !== 0) {
-      setShowLoadMoreButton(false);
-    } else {
-      setShowLoadMoreButton(true);
-    }
-  };
+  }, [searchQuery]);
 
   const getElement = async () => {
-    const baseUrl = 'http://127.0.0.1:8000';
-    const endpoint = allItems ? 'elementsEcommerce/' : `filtroCategoria/${encodeURIComponent(name)}/`;
+    const endpoint = allItems
+      ? `ecommercePaginacion/?page=${page}`
+      : `filtroCategoria/${encodeURIComponent(name)}/?page=${page}`;
 
-    const response = await api.get(`${endpoint}`);
-    let data = await response.data;
+    try {
+      const response = await api.get(`${endpoint}`);
+      let data = await response.data;
+      setCount(data.count);
+      let results = data.results;
+      // Replace null or empty images with the default image
+      const updatedData = results.map((card) => ({
+        ...card,
+        image: card.image || defaultpicture,
+      }));
 
-    // Reemplazar las imágenes nulas o vacías por la imagen por defecto
-    const updatedData = data.map(card => ({
-      ...card,
-      image: card.image || defaultpicture,
-    }));
-
-    setCards(updatedData);
-    setLoadMore(updatedData.length > 9);
+      setCards(updatedData);
+      setFilteredCards(updatedData);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error al obtener datos:', error);
+      setIsLoading(false);
+    }
   };
 
   const filterCards = () => {
-    if (!searchQuery || searchQuery.trim() === '') {
-      setFilteredCards(cards);
-      setVisibleCards(cards.slice(0, 9));
-      setLoadMore(cards.length > 9);
-    } else {
-      const filteredCardsData = cards.filter(card =>
+    let filteredCardsData = cards;
+
+    if (searchQuery && searchQuery.trim() !== '') {
+      filteredCardsData = cards.filter((card) =>
         card.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredCards(filteredCardsData);
-      setVisibleCards(filteredCardsData.slice(0, 9));
-      setLoadMore(filteredCardsData.length > 9);
     }
+
+    setFilteredCards(filteredCardsData);
   };
 
   return (
     <Container style={{ marginTop: '5rem' }}>
       <Row>
-        <Col xs={2}>
-          <WordList />
+        <Col xs={12} md={2} className={`d-none d-md-block`}>
+          {!isLoading && (
+            <>
+              <IconButton
+                title="Visualizar Filtros"
+                onClick={() => setShowWordList(!showWordList)}
+                aria-label={showWordList ? 'Ocultar Categorías' : 'Mostrar Categorías'}
+              >
+                {showWordList ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+              {showWordList && <WordList />}
+            </>
+          )}
         </Col>
-        <Col xs={10}>
-          {visibleCards.length === 0 ? (
-            <div className="text-center"> {/* Center the content */}
+
+        <Col xs={12} md={10}>
+          {isLoading ? (
+            <div className="text-center">
+              <Spinner animation="border" variant="primary" />
+            </div>
+          ) : filteredCards.length === 0 ? (
+            <div className="text-center">
               <h2>No hay productos disponibles para esta categoría.</h2>
               <a href="/tienda" className="btn btn-primary">
                 Volver a la tienda
               </a>
             </div>
           ) : (
-            visibleCards.map((card, index) => (
-              <div key={index}>
-                <CardExample title={card.name} text={card.description} image={card.image} id={card.id} />
+            <>
+              {filteredCards.map((card, index) => (
+                <div key={index}>
+                  <CardExample
+                    title={card.name}
+                    text={card.description}
+                    image={card.image}
+                    id={card.id}
+                    current_stock={card.current_stock}
+                  />
+                </div>
+              ))}
+              <div className="d-flex justify-content-center mt-4">
+                <Pagination
+                  totalRecords={count}
+                  pageLimit={pageSize}
+                  pageNeighbours={1}
+                  currentPage={page}
+                  onPageChanged={setPage}
+                />
               </div>
-            ))
+            </>
           )}
         </Col>
       </Row>
-      {showLoadMoreButton && (
-        <div className='row'>
-          <div className='col-12 text-center'>
-            <button className='btn btn-primary cargarMas' onClick={handleLoadMore}>
-              Cargar más
-            </button>
-          </div>
-        </div>
-      )}
     </Container>
   );
-};
+}
 
+Ecommerce.propTypes = {
+  allItems: PropTypes.bool,
+};
 
 export default Ecommerce;

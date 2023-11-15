@@ -1,0 +1,10 @@
+
+  .prestamo-card {
+  height: 100%; /* Ajusta la altura según tus necesidades */
+  display: flex;
+  flex-direction: column;
+}
+
+.img-container {
+  flex: 1;
+}

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from ElectroStockApp import models
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Serializer para heredar de categorias
@@ -8,15 +9,18 @@ class CategoriaPadreSerializer(serializers.ModelSerializer):
         model = models.Category
         fields = "__all__"
 
+
 class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TokenSignup
-        fields = "__all__"
+        fields = ["id", "name"]
+
 
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Notification
         fields = "__all__"
+
 
 # Para ver y editar categorias
 class CategoriaSerializer(serializers.ModelSerializer):
@@ -29,6 +33,8 @@ class CategoriaSerializer(serializers.ModelSerializer):
 
 # Para ver y editar todos los elementos
 class ElementSerializer(serializers.ModelSerializer):
+    category = CategoriaSerializer()
+
     class Meta:
         model = models.Element
         fields = "__all__"
@@ -48,46 +54,48 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+# Para ver y editar todos los datos del especialidad
+class SpecialitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Speciality
+        fields = "__all__"
+
+
 # Para todos los usuarios
 class UsersSerializer(serializers.ModelSerializer):
-    groups = GroupSerializer()
+    groups = serializers.StringRelatedField(many=True)
     course = CourseSerializer()
+    specialties = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = models.CustomUser
-        fields = (
-            "username",
-            "first_name",
-            "last_name",
-            "email",
-            "is_active",
-            "course",
-            "groups",
-            "last_login",
-            "specialties",
-        )
+        fields = "__all__"
 
 
 # Solo para la previsualizacion de los elementos en el ecommerce
 class ElementEcommerceSerializer(serializers.ModelSerializer):
+    current_stock = serializers.IntegerField()
+
     class Meta:
         model = models.Element
-        fields = ("id", "name", "description", "image", "category")
-        read_only_fields = ("id", "name", "description", "image", "category")
+        fields = ("id", "name", "description", "image", "category", "current_stock")
+        read_only_fields = (
+            "id",
+            "name",
+            "description",
+            "image",
+            "category",
+            "current_stock",
+        )
         queryset = models.Element.objects.filter(ecommerce=True)
 
 
 # Para ver y editar todos los datos del laboratorio
 class LaboratorySerializer(serializers.ModelSerializer):
+    speciality = SpecialitySerializer()
+
     class Meta:
         model = models.Laboratory
-        fields = "__all__"
-
-
-# Para ver y editar todos los datos del especialidad
-class SpecialitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Speciality
         fields = "__all__"
 
 
@@ -110,13 +118,78 @@ class BoxSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+from django.core.exceptions import ObjectDoesNotExist
+
+
+class BoxSerializerPrueba(serializers.ModelSerializer):
+    current_stock = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Box
+        fields = (
+            "id",
+            "element",
+            "location",
+            "minimumStock",
+            "name",
+            "responsable",
+            "current_stock",
+            "image",
+        )
+
+    def get_current_stock(self, instance):
+        # Realiza el cálculo del current_stock para la instancia actual (instance)
+        element_id = instance.id  # Id del elemento actual
+
+        boxes = models.Box.objects.filter(element__id=element_id)
+        box_ids = [box.id for box in boxes]
+
+        total_com = models.Log.objects.filter(
+            box__id__in=box_ids, status="COM"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_ped = models.Log.objects.filter(
+            box__id__in=box_ids, status="PED"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_rot = models.Log.objects.filter(
+            box__id__in=box_ids, status="ROT"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_ap = models.Log.objects.filter(
+            box__id__in=box_ids, status="AP"
+        ).aggregate(total=Sum("quantity"))["total"]
+
+        if total_com is None:
+            total_com = 0
+        if total_ped is None:
+            total_ped = 0
+        if total_ap is None:
+            total_ap = 0
+        if total_rot is None:
+            total_rot = 0
+
+        current_stock = total_com - total_ped - total_ap - total_rot
+
+        return current_stock
+
+    def get_image(self, instance):
+        try:
+            element_id = instance.id
+            element = models.Element.objects.get(id=element_id)
+            if element.image:
+                image_url = element.image.url
+                return image_url
+            return None
+        except ObjectDoesNotExist:
+            return None
+
+
 # Serializer de  los prestamos completmos
 class LogSerializer(serializers.ModelSerializer):
-    box = BoxSerializer()
+    box = BoxSerializerPrueba()
     borrower = UsersSerializer()
     lender = UsersSerializer()
-    box= BoxSerializer()
-    borrower= UsersSerializer()
+    borrower = UsersSerializer()
+
     class Meta:
         model = models.Log
         fields = (
@@ -130,6 +203,7 @@ class LogSerializer(serializers.ModelSerializer):
             "dateIn",
             "dateOut",
         )
+
 
 # Serializer de  los prestamos completmos
 class LogCambio(serializers.ModelSerializer):
@@ -146,6 +220,7 @@ class LogCambio(serializers.ModelSerializer):
             "dateIn",
             "dateOut",
         )
+
 
 # Se pasa el stock actual de los productos
 class StockSerializer(serializers.Serializer):
@@ -207,6 +282,7 @@ class VencidoStatisticsSerializer(serializers.Serializer):
     expired_logs = serializers.IntegerField()
     tardio_logs = serializers.IntegerField()
     expired_rate = serializers.SerializerMethodField()
+    vencido_percentage = serializers.FloatField()
 
     def get_expired_rate(self, obj):
         if obj["total_logs"] > 0:
@@ -221,7 +297,99 @@ class VencidoStatisticsSerializer(serializers.Serializer):
             )
         return 0
 
-#Serializer estadistica deudor
+
+# Serializer estadistica deudor
 class LenderVencidosStatisticsSerializer(serializers.Serializer):
     lender__username = serializers.CharField()
     vencidos_count = serializers.IntegerField()
+
+
+class BudgetSerializer(serializers.ModelSerializer):
+    speciality = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Budget
+        fields = "__all__"
+
+    def get_speciality(self, obj):
+        if isinstance(obj.speciality, int):
+            # Si speciality es un entero, devuelve ese entero
+            return obj.speciality
+        else:
+            # Si speciality es un objeto Speciality, devuelve un diccionario
+            speciality_serializer = SpecialitySerializer(obj.speciality)
+            return speciality_serializer.data
+
+
+class BudgetLogSerializer(serializers.ModelSerializer):
+    element = ElementSerializer()
+    budget = BudgetSerializer()
+
+    class Meta:
+        model = models.BudgetLog
+        fields = "__all__"
+
+
+class BudgetLogCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BudgetLog
+        fields = "__all__"
+
+
+class BoxMasLogsRotostSerializer(serializers.ModelSerializer):
+    box_nombre = serializers.CharField(
+        source="name"
+    )  # Asociar el campo "name" del modelo con "box_nombre"
+    cantidad_logs_rotos = serializers.IntegerField(
+        source="total_productos_rotos"
+    )  # Asociar el campo "num_logs_rotos" del modelo con "cantidad_logs_rotos"
+
+    class Meta:
+        model = models.Box
+        fields = ("box_nombre", "cantidad_logs_rotos")
+
+
+from django.db.models import Sum
+
+
+class ElementEcommerceSerializer2(serializers.ModelSerializer):
+    class Meta:
+        model = models.Element
+        fields = ("id", "name", "description", "image", "category")
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        # Realiza el cálculo del current_stock en la vista
+        element_id = instance.id  # Id del elemento
+        boxes = models.Box.objects.filter(element__id=element_id)
+        box_ids = [box.id for box in boxes]
+
+        total_com = models.Log.objects.filter(
+            box__id__in=box_ids, status="COM"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_ped = models.Log.objects.filter(
+            box__id__in=box_ids, status="PED"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_rot = models.Log.objects.filter(
+            box__id__in=box_ids, status="ROT"
+        ).aggregate(total=Sum("quantity"))["total"]
+        total_ap = models.Log.objects.filter(
+            box__id__in=box_ids, status="AP"
+        ).aggregate(total=Sum("quantity"))["total"]
+
+        if total_com is None:
+            total_com = 0
+        if total_ped is None:
+            total_ped = 0
+        if total_ap is None:
+            total_ap = 0
+        if total_rot is None:
+            total_rot = 0
+
+        current_stock = total_com - total_ped - total_ap - total_rot
+
+        # Agrega el campo current_stock al resultado
+        data["current_stock"] = current_stock
+
+        return data

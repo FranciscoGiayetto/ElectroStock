@@ -11,7 +11,7 @@ function Layout(props) {
 
   return (
     <div className="container">
-      <LayoutComponents onSearch={handleSearch} />
+      <LayoutComponents isProfessor={props.isProfessor} onSearch={handleSearch} />
       {props.children }
     </div>
   );

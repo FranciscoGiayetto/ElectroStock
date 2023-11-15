@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './DetallePrestamo.css'; // Create this CSS file
-import OrderCard from '../../components/ordercard/OrderCard'; // Create this component
+import './DetallePrestamo.css';
+import OrderCard from '../../components/ordercard/OrderCard';
 import {
   MDBCol,
   MDBContainer,
@@ -12,19 +12,42 @@ import { useAuthStore } from '../../store/auth';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 function DetallePrestamo() {
-  const api = useAxios(); 
+  const api = useAxios();
   const [orders, setOrders] = useState([]);
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
   ]);
   const userData = user();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('SE EJECUTÓ EL USE')
+    console.log('SE EJECUTÓ EL USE');
     getOrders();
   }, []);
+
+  const handleApproval = async () => {
+    try {
+      // Realiza una solicitud PUT para aprobar los registros del usuario en el servidor
+      await api.put(`/aprobadoPost/${userData.user_id}/`);
+      // Vuelve a cargar los préstamos actualizados después de la aprobación
+      getOrders();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  const handleRejection = async () => {
+    try {
+      // Realiza una solicitud PUT para rechazar los registros del usuario en el servidor
+      await api.put(`/desaprobadoPost/${userData.user_id}/`);
+      // Vuelve a cargar los préstamos actualizados después del rechazo
+      getOrders();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
 
   const getOrders = async () => {
     try {
@@ -39,7 +62,7 @@ function DetallePrestamo() {
   };
 
   return (
-    <section className="container-bg" style={{ backgroundColor: "white"}}>
+    <section className="container-bg" style={{ backgroundColor: "white" }}>
       <MDBContainer className="h-100">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol>
@@ -61,6 +84,15 @@ function DetallePrestamo() {
               />
             ))}
 
+            {/* Botones de confirmar y rechazar */}
+            <div className="d-flex justify-content-end align-items-center mt-3">
+              <button className="btn btn-success me-2" onClick={handleApproval}>
+                <span role="img" aria-label="Checkmark">✅</span> Confirmar
+              </button>
+              <button className="btn btn-danger" onClick={handleRejection}>
+                <span role="img" aria-label="Cross">❌</span> Rechazar
+              </button>
+            </div>
           </MDBCol>
         </MDBRow>
       </MDBContainer>

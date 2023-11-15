@@ -163,16 +163,8 @@ class Category(models.Model):
 
 
 class Element(models.Model):
-    name = models.CharField(max_length=30, verbose_name="Nombre")
+    name = models.CharField(max_length=255, verbose_name="Nombre")
     description = models.TextField(null=True, blank=True, verbose_name="Descripcion")
-    price_usd = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        help_text="Ingrese el precio en dolares",
-        verbose_name="Precio",
-    )
     image = models.ImageField(upload_to="img-prod/", blank=True, verbose_name="Foto")
     category = models.ForeignKey(
         Category,
@@ -235,7 +227,7 @@ class TokenSignup(models.Model):
 class Box(models.Model):
     responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True,blank=True)
     minimumStock = models.IntegerField(verbose_name="Stock Minimo")
-    name = models.CharField(max_length=30, verbose_name="Nombre")
+    name = models.CharField(max_length=255, verbose_name="Nombre")
     element = models.ForeignKey(
         Element, on_delete=models.CASCADE, verbose_name="Elemento"
     )
@@ -247,6 +239,9 @@ class Box(models.Model):
         return self.name
 
     class Meta:
+        indexes = [
+            models.Index(fields=['name']),  
+        ]
         verbose_name_plural = "Boxes"
         verbose_name = "Box"
 
@@ -289,8 +284,8 @@ class Log(models.Model):
     )
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
     observation = models.CharField(max_length=100, null=True, blank=True,verbose_name='Observaciones')
-    dateIn = models.DateField(auto_now=True,verbose_name='Fecha de ingreso') #si este campo da error revisar en la init 
-    dateOut = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de devolucion')
+    dateIn = models.DateTimeField(auto_now=True,verbose_name='Fecha de ingreso') #si este campo da error revisar en la init 
+    dateOut = models.DateField(null=True, blank=True, verbose_name='Fecha de devolucion',help_text="No es necesario si se carga como comprado")
 
     def __str__(self):
         return self.status
@@ -314,6 +309,9 @@ class Log(models.Model):
     # Conecta el método a la señal post_save del modelo Log
 
     class Meta:
+        indexes = [
+            models.Index(fields=['quantity', 'status','box']),  
+        ]
         verbose_name_plural = "Prestamos y movimientos"
         verbose_name = "Prestamo y movimientos"
 
@@ -396,3 +394,56 @@ post_save.connect(create_notification_on_devuelto, sender=Log)
 post_save.connect(create_notification_on_aprobado, sender=Log)
 post_save.connect(create_notification_on_desaprobado, sender=Log)
 post_save.connect(create_notification_on_pedido, sender=Log)
+
+class Budget(models.Model):
+    class Status(models.TextChoices):
+        COMPLETADO = "COMPLETADO", "Completado"
+        PROGRESO = "PROGRESO", "Progreso"
+    name = models.CharField(max_length=30, verbose_name="Nombre")
+    status = models.CharField(
+        max_length=30,
+        choices=Status.choices,
+        default=Status.PROGRESO,
+        verbose_name="Estado",
+    )
+    speciality = models.ForeignKey(
+        Speciality,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name="Especialidad",
+    )
+    class Meta:
+        verbose_name_plural = "Presupuesto"
+        verbose_name = "Presupuesto"
+
+class BudgetLog(models.Model):
+    class Status(models.TextChoices):
+        COMPRADO = "COMPRADO", "Comprado"
+        PENDIENTE = "PENDIENTE", "Pendiente"
+    name = models.CharField(max_length=30, verbose_name="Nombre",null=True, blank=True)
+    status = models.CharField(
+        max_length=30,
+        choices=Status.choices,
+        default=Status.PENDIENTE,
+        verbose_name="Estado",
+    )
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Ingrese el precio en pesos",
+        verbose_name="Precio",
+    )
+    element = models.ForeignKey(
+        Element, on_delete=models.CASCADE, verbose_name="Elemento" ,null=True, blank=True
+    )
+    budget = models.ForeignKey(
+        Budget, on_delete=models.CASCADE, verbose_name="Presupuesto"
+    )
+    quantity = models.IntegerField(verbose_name="Cantidad")
+
+    class Meta:
+        verbose_name_plural = "Prestamos y movimientos del presupuesto"
+        verbose_name = "Prestamos y movimientos del presupuesto"
