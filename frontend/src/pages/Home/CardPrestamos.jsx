@@ -66,38 +66,48 @@ const CardPrestamos = () => {
     return `${year}-${month}-${day}`;
   };
   return (
-    <MDBCard alignment='left' style={{ backgroundColor: '#018195', border: 'none' , minWidth: '105vh' }}>
-      <MDBCardHeader style={{ color: 'white' }}>Prestamos</MDBCardHeader>
-      <Table hover style={{ marginBottom: '0', height: '100%' }}>
-        <thead>
-          <tr>
-            <th scope='col'>Fecha</th>
-            <th scope='col'>Producto</th>
-            <th scope='col'>Cantidad</th>
-            <th scope='col'>Vencimiento</th>
-            <th scope='col'>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          {element.slice(-3).map((item, index) => (
-            <tr key={index}>
-              <td>{formatDate(item.dateIn)}</td>
-              <td>{formatBoxName(item.box.name)}</td>              <td>{item.quantity}</td>
-              <td>{item.dateIn}</td>
-              <td>
-                {item.status === 'PED' ? (
-                  <span style={{ display: 'inline-block', width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'green' }} />
-                ) : item.status === 'VEN' ? (
-                  <span style={{ display: 'inline-block', width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'red' }} />
-                ) : (
-                  ''
-                )}
-              
-              </td>
+    <MDBCard alignment='left' style={{ backgroundColor: 'white', border: 'none', minHeight:'20rem', marginTop:'1.5rem', width:'100%'}}>
+      <MDBCardHeader style={{ color: 'white' }}>Préstamos Activos</MDBCardHeader>
+
+      {element.length === 0 ? (
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <p>No hay préstamos activos.</p>
+        </div>
+      ) : ( 
+        <Table hover style={{ marginBottom: '0', height: '100%' }}>
+          <thead>
+            <tr>
+              <th scope='col'>Fecha</th>
+              <th scope='col'>Producto</th>
+              <th scope='col'>Cantidad</th>
+              <th scope='col'>Vencimiento</th>
+              <th scope='col'>Estado</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          
+          <tbody>
+            {element.slice(-3).map((item, index) => (
+              <tr key={index}>
+                <td>{formatDate(item.dateIn)}</td>
+                <td>{formatBoxName(item.box.name)}</td>              
+                <td>{item.quantity}</td>
+                <td>{item.dateIn}</td>
+                <td>
+                  {item.status === 'PED' ? (
+                    <span style={{ display: 'inline-block', width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'green' }} />
+                  ) : item.status === 'VEN' ? (
+                    <span style={{ display: 'inline-block', width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'red' }} />
+                  ) : (
+                    ''
+                  )}
+                
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
+      
     </MDBCard>
   );
 };

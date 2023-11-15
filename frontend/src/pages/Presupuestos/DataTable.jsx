@@ -7,7 +7,12 @@ import {
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { HiPlusCircle } from "react-icons/hi2";
+import { AiFillQuestionCircle } from "react-icons/ai";
 import useAxios from '../../utils/useAxios';
+
+import Tooltip from 'react-png-tooltip'
+
+import './DataTable.css'
 const DataTable = ({ presupuestos }) => {
   let api = useAxios();
   const navigate = useNavigate();
@@ -61,6 +66,7 @@ const DataTable = ({ presupuestos }) => {
   
       // Realiza una acción de redirección a '/tienda' o ajusta según sea necesario
       navigate(`${newBudgetId}`);
+      
     } catch (error) {
       // En caso de error, muestra el mensaje de error en la consola
       console.error(error);
@@ -109,14 +115,21 @@ const DataTable = ({ presupuestos }) => {
 
   return (
     <MDBCard className="my-4 p-3" >
-     <MDBCardHeader style={{fontSize:"2rem"}} className="bg-primary text-white d-flex justify-content-between align-items-center">
+     <MDBCardHeader style={{fontSize:"2rem"}} className="sub-blue-its text-white d-flex justify-content-between align-items-center">
+      <div>
   <span>Presupuestos</span>
+  <Tooltip tooltip={<AiFillQuestionCircle style={{marginLeft:'10px'}}></AiFillQuestionCircle>}>
+      Para editar hacer click en la fila del presupuesto.
+    </Tooltip>
+    </div>
+  
   <div className="hover-scale" onClick={handleNewBudget}>
-  <HiPlusCircle />
+  <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
   </div>
+  
 </MDBCardHeader>
 
-      <Table responsive striped bordered hover className="mt-3">
+<Table responsive striped bordered hover className="mt-3 table-responsive">
         <thead>
           <tr>
             <th scope='col' onClick={() => handleSortChange('id')}>
@@ -142,7 +155,10 @@ const DataTable = ({ presupuestos }) => {
             >
               <td>{presupuesto.id}</td>
               <td>{presupuesto.name}</td>
-              <td className={`${getRowTextColor(presupuesto.status)}`}>{presupuesto.status}</td>
+              <td className={`progress-abbreviate ${getRowTextColor(presupuesto.status)}`}>
+                {presupuesto.status}
+              </td>
+
               <td >{presupuesto.speciality.name}</td>
             </tr>
           ))}
@@ -152,8 +168,8 @@ const DataTable = ({ presupuestos }) => {
         <ReactPaginate
           activeClassName={'active'}
           breakClassName={'item break-me'}
-          previousLabel={' Anterior '}
-          nextLabel={' Siguiente '}
+          previousLabel={'⬅️'}
+          nextLabel={'➡️'}
           breakLabel={'...'}
           pageCount={Math.ceil(presupuestos.length / itemsPerPage)}
           marginPagesDisplayed={2}

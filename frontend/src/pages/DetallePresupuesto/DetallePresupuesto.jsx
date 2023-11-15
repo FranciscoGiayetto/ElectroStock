@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CardMyData from '../../components/CardMyData/CardData.jsx';
 import CardUser from '../../components/CardUser/CardUser.jsx';
-import CardPrestamos from '../../components/CardPrestamos/CardPrestamos.jsx';
 import './DetallePresupuesto.css';
 import useAxios from '../../utils/useAxios.js';
 import { useAuthStore } from '../../store/auth.js';
@@ -11,6 +10,9 @@ import Col from 'react-bootstrap/Col';
 import DataTable from "./DataTable.jsx"
 import { useParams, useNavigate } from 'react-router-dom';
 import Link from 'antd/es/typography/Link.js';
+import {IoCaretBackCircleSharp} from 'react-icons/io5';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+
 function DetallePresupuesto() {
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
@@ -22,12 +24,7 @@ function DetallePresupuesto() {
   const userData = user();
   const {id} = useParams();
 
- 
-
-
-
   const getElements = async () => {
-  
 
     try {
       const response = await api.get('elementsEcommerce/');
@@ -43,8 +40,6 @@ function DetallePresupuesto() {
     }
   };
 
-
-
   const getPresupuesto = async () => {
     try {
       const response = await api.get(`budgetlog/${id}/`);
@@ -56,8 +51,6 @@ function DetallePresupuesto() {
     }
   };
 
-
-
   const updateData = async () => {
     await getPresupuesto();
   };
@@ -68,10 +61,10 @@ function DetallePresupuesto() {
   }, []);
 
   return (
-    <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
+    <Container fluid className="text-center mt-5 mb-5" style={{ padding: '10px' }}>
       <Link href='/presupuesto'>Volver</Link>
       <Row>
-        <Col style={{ width: '62.5rem' }}>
+        <Col xs={12}>
           <DataTable presupuesto={presupuesto} onUpdate={updateData} elements={elements}/>
         </Col>
       </Row>

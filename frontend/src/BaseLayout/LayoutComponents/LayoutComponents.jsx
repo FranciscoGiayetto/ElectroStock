@@ -3,6 +3,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, VideoCameraOutlined
 import { Layout, Menu } from 'antd';
 import AddModeratorRoundedIcon from '@mui/icons-material/AddModeratorRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
+import { Badge } from 'antd';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
@@ -12,12 +13,15 @@ import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import SettingsIcon from '@mui/icons-material/Settings';
 import MenuIcon from '@mui/icons-material/Menu';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import DataUsageRoundedIcon from '@mui/icons-material/DataUsageRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import Tooltip from '@mui/material/Tooltip';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -25,11 +29,17 @@ import './LayoutComponents.css';
 import itsv from '../../assets/itsv.png';
 import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
+import useAxios from "../../utils/useAxios";
+import { useAuthStore } from '../../store/auth';
+import { cartEventEmitter } from '../../pages/DetalleProducto/DetalleProducto';
+
 
 
 const { Header, Sider } = Layout;
 
-const LayoutComponents = ({ onSearch }) => {
+const LayoutComponents = ({ onSearch, isProfessor }) => {
+  const api = useAxios();
+  
   const [isReadyForInstall, setIsReadyForInstall] = useState(false);
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
@@ -37,10 +47,33 @@ const LayoutComponents = ({ onSearch }) => {
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [myOptions, setMyOptions] = useState([]);
+  const [cantCarrito, setCantCarrito] = useState(0);
+  const [cantNotificaciones, setCantNotificaciones] = useState(0);
+  const [isLoggedIn, user] = useAuthStore((state) => [
+    state.isLoggedIn,
+    state.user,
+  ]);
+  const userData = user();
 
   useEffect(() => {
     getElement();
-   
+    getCantCarrito();
+    getCantNotificaciones();
+  }, []);
+
+ 
+  useEffect(() => {
+    // Suscríbete al evento del carrito para actualizar la cantidad del carrito
+    const updateCart = () => {
+      getCantCarrito();
+    };
+
+    cartEventEmitter.on('updateCart', updateCart);
+
+    // Limpia la suscripción cuando se desmonta el componente
+    return () => {
+      cartEventEmitter.off('updateCart', updateCart);
+    };
   }, []);
 
   useEffect(() => {
@@ -106,8 +139,30 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
     setCollapsed(!collapsed);
   };
 
+  const getCantCarrito = async () => {
+    try {
+      const response = await api.get(`/cantCarrito/${userData.user_id}/`);
+      let data = await response.data;
+      console.log(data)
+      setCantCarrito(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getCantNotificaciones = async () => {
+    try {
+      const response = await api.get(`/cantNotificaciones/${userData.user_id}/`);
+      const data = await response.data;
+      setCantNotificaciones(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
+      {/* SIDEBAR */}
       <Sider
         trigger={null}
         collapsible
@@ -133,16 +188,25 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
           <Menu.Item key="2" icon={<CachedRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/Prestamos' }}>
             Préstamo
           </Menu.Item>
-          <Menu.Item key="3" icon={<PaidRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/presupuesto' }}>
-            Presupuesto
-          </Menu.Item>
-          <Menu.Item key="4" icon={<DataUsageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
-            Informe
-          </Menu.Item>
-          <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
-            Admin
-          </Menu.Item>
+    
+          {isProfessor && (
+              <Menu.Item key="3" icon={<PaidRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/presupuesto' }}>
+                Presupuesto
+              </Menu.Item>
+            )}
+            {isProfessor && (
+              <Menu.Item key="4" icon={<DataUsageRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/informe' }}>
+                Informe
+              </Menu.Item>
+            )}
+            {isProfessor && (
+            <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
+              Admin
+            </Menu.Item>
+               )}
           <Menu.Divider />
+     
+          
           <Menu.Item key="7" icon={<DownloadRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
             Descargar App
           </Menu.Item>
@@ -153,24 +217,20 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
         )}
       </Sider>
 
-      
+      {/* NAVBAR */}
       <Header className='navbar'>
           <Container fluid>
             <Row>
             <Col>
-    <Button
-      variant="primary"
-      type="submit"
-      className='button'
-      onClick={handleToggleSidebar}
-    >
-      {collapsed ? (
-        <MenuUnfoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-      ) : (
-        <MenuFoldOutlined style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-      )}
-    </Button>
-  </Col>
+              <Button
+                variant="primary"
+                type="submit"
+                className='button'
+                onClick={handleToggleSidebar}
+              >
+                <MenuRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+              </Button>
+            </Col>
 
            
           
@@ -188,7 +248,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               <Col >            
               <form onSubmit={handleSearch} className={`div-form ${isSmallScreen ? 'search-small' : 'search-large'}`}>                
                   <Autocomplete
-                      className={`search-input ${isSmallScreen ? 'search-small' : 'search-large'}`}
+                      className={`search-input`}
                     freeSolo
                     options={myOptions}
                     getOptionLabel={(option) => option}
@@ -208,35 +268,54 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
                     )}
                   />
-                
-                  <Button variant="primary" type="submit" className='button' style={{ backgroundColor: '#2E5266', borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                    <SearchRoundedIcon />
-                  </Button>
-
+                  <Tooltip title="Buscar" arrow placement="bottom">
+                    <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                      <SearchRoundedIcon />
+                    </Button>
+                  </Tooltip>
                 </form> 
               </Col>
 
               {/* Buttons */}
               <Col>
                 {!isSmallScreen && (
-                  <Button variant="primary" type="submit" className='button' onClick={() => { window.location.href = '/carrito' }}>
-                    <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                  </Button>
+                  <Tooltip title="Carrito" arrow placement="bottom">
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      className='button'
+                      data-toggle="tooltip" data-placement="right" title="Carrito"
+                      onClick={() => { window.location.href = '/carrito' }}
+                    >
+                      <Badge count={parseInt(cantCarrito)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                        <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                      </Badge>
+                    </Button>
+                  </Tooltip>
+                  
                 )}
               </Col>
 
               <Col style={{ marginLeft:'0'}}>
               {!isSmallScreen && (
-                <Button variant="primary" type="submit" className='button' >
-                  <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                </Button>
+                <Tooltip title="Notificaciones" arrow placement="bottom">
+                  <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
+                    <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                      <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                    </Badge>
+                  </Button>
+                </Tooltip>
+                
               )}
               </Col>
+
               <Col style={{ marginLeft:'0rem'}}>   
               {!isSmallScreen && (
-                <Button variant="primary" type="submit" className='button'  onClick={() => { window.location.href = '/detalleCuenta' }}>
-                  <AccountCircleRoundedIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
-                </Button>
+                <Tooltip title="Configuración" arrow placement="bottom">
+                  <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
+                    <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
+                  </Button>
+                </Tooltip>
               )}
               </Col>          
             </Row>
