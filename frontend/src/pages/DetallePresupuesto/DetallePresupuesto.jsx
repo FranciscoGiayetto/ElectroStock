@@ -12,6 +12,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Link from 'antd/es/typography/Link.js';
 import {IoCaretBackCircleSharp} from 'react-icons/io5';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import Button from 'react-bootstrap/Button';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 function DetallePresupuesto() {
   const [isLoggedIn, user] = useAuthStore((state) => [
@@ -23,7 +25,7 @@ function DetallePresupuesto() {
   const api = useAxios();
   const userData = user();
   const {id} = useParams();
-
+  const navigate = useNavigate();
   const getElements = async () => {
 
     try {
@@ -59,17 +61,25 @@ function DetallePresupuesto() {
     getPresupuesto();
     getElements();
   }, []);
-
+ 
+ 
   return (
     <Container fluid className="text-center mt-5 mb-5" style={{ padding: '10px' }}>
-      <Link href='/presupuesto'>Volver</Link>
+      <Row className="justify-content-start mb-3">
+        <Col xs={3} style={{paddingTop:"1rem"}}>
+          <Button variant="outline-primary" onClick={() => navigate('/presupuesto')}>
+            <ChevronLeftIcon />
+          </Button>
+        </Col>
+      </Row>
       <Row>
         <Col xs={12}>
-          <DataTable presupuesto={presupuesto} onUpdate={updateData} elements={elements}/>
+          <DataTable presupuesto={presupuesto} onUpdate={updateData} elements={elements} />
         </Col>
       </Row>
     </Container>
   );
 }
+
 
 export default DetallePresupuesto;

@@ -37,8 +37,10 @@ function Presupuestos() {
     getPresupuesto();
   }, []);
 
+  
   return (
     <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
+      
       <Row>
         <Col style={{ width: '62.5rem' }}>
           <DataTable presupuestos={presupuestos} />
