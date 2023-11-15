@@ -26,6 +26,7 @@ from rest_framework.decorators import api_view
 import json
 from rest_framework.decorators import action
 
+
 # View para tomar el stock actual segun el id que mandas por la url
 @api_view(["GET", "POST"])
 def get_stock(request, element_id):
@@ -121,14 +122,15 @@ class ecommercePaginacionAPIView(viewsets.ModelViewSet):
     serializer_class = ElementEcommerceSerializer2
     pagination_class = CustomPagination
 
-    @action(detail=False, methods=['GET'])
+    @action(detail=False, methods=["GET"])
     def search(self, request):
-        search_query = request.query_params.get('search', '')
-        queryset = models.Element.objects.filter(ecommerce=True, name__icontains=search_query)
+        search_query = request.query_params.get("search", "")
+        queryset = models.Element.objects.filter(
+            ecommerce=True, name__icontains=search_query
+        )
         page = self.paginate_queryset(queryset)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-
 
 
 @api_view(["GET", "POST"])
