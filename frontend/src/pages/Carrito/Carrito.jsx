@@ -153,7 +153,7 @@ function Carrito() {
             id={item.id}
             name={item.box.name}
             title={item.box.element.name}
-            image={item.box.element.image}
+            image={item.box.image}
             quantity={item.quantity}
             comments={item.observation}
             handleDelete={handleDelete}
