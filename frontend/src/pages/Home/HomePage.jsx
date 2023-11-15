@@ -23,17 +23,18 @@ function HomePage() {
   console.log(token.PromiseResult);
 
   return (
-    <Container className='pagecontainer'>
+    <Container className='pagecontainer d-flex align-items-center justify-content-center' style={{"paddingBottom":'12rem'}}>
       <Row>
-        <Col md={9}>
+        <Col md={4}>
+          <Row>
+          <h1>Bienvenido {userData.username}!</h1>
+          </Row>
+          <Row>
+          <ClockPage />
 
-         
-        <h1>Bienvenido {userData.username}!</h1>
-
+          </Row>
         </Col>
-      <ClockPage></ClockPage>
       </Row>
-
     </Container>
   );
 }
