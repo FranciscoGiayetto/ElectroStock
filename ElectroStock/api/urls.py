@@ -11,7 +11,7 @@ router.register("elements", ElementsViewSet, "elements")
 router.register("elementsEcommerce", ProductosEcommerceAPIView, "elementsEcommerce")
 router.register("ecommercePaginacion", ecommercePaginacionAPIView, "ecommercePaginacion")
 router.register("category", CategoriaViewSet, "category")
-#router.register("users", UsersViewSet, "users")
+router.register("users", UsersViewSet, "users")
 router.register("course", CourseViewSet, "course")
 router.register("laboratory", LaboratorioViewSet, "laboratory")
 router.register("location", LocationViewSet, "location")
@@ -26,7 +26,6 @@ urlpatterns = [
     path('elementos_por_especialidad/<str:nombre_especialidad>/', boxes_por_especialidad, name='elementos_por_especialidad'),
     path('categories_por_especialidad/<str:nombre_especialidad>/', categories_por_especialidad, name='categories_por_especialidad'),
     path("logPost/<int:user_id>/", CambioLog, name="logPost"),
-    path("users/<int:user_id>/", UsersViewSet, name="logPost"),
     path("usersFiltro/<str:name>/", UsersFiltros, name="users"),
     path("desaprobadoPost/<int:user_id>/", CambioDesaprobado, name="desaprobado"),
     path("devueltoPost/<int:user_id>/", CambioDevuelto, name="devuelto"),
