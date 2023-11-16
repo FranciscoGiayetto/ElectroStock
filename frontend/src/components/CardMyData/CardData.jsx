@@ -91,8 +91,8 @@ export default function CardMyData(props) {
           <tr>
             <th scope='col'>Usuario:</th>
           
-                <td scope='col'>{props.username}</td>
-               
+            <td scope='col'>{props.username}</td>
+            <td></td>   
           
     
           </tr>
