@@ -1,5 +1,4 @@
-// CardMyData.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import EditRoundedIcon from '@mui/icons-material/Edit';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
@@ -7,38 +6,38 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import LaunchRoundedIcon from '@mui/icons-material/Launch';
 import Tooltip from '@mui/material/Tooltip';
 import axios from 'axios';
+import useAxios from "../../utils/useAxios";
 import {
   MDBCard,
   MDBCardHeader,
 } from 'mdb-react-ui-kit';
 
 export default function CardMyData(props) {
+  const api = useAxios();
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditingUsername, setIsEditingUsername] = useState(false);
-  const [email, setEmail] = useState(props.email);
-  const [username, setUsername] = useState(props.username);
-  const [userData, setUserData] = useState({ email: props.email, username: props.username }); // User data state
+  const [email, setEmail] = useState("");
 
-  const handleEmailUpdate = async () => {
+  const handleEmailChange = async () => {
+    let body ={
+      email:email
+    }
     try {
-      await axios.put(`http://localhost:8000/api/users/${props.id}/`, userData);
-      setIsEditingEmail(false);
-      props.setEmail(userData.email); // Actualizar el estado de email en el componente padre
+      const response = await api.put(`/users/${props.id}/update_email/`,body);
+      props.updateEmail(email);
+
+      let data = await response.data;
+      console.log(data);
+      setIsEditingEmail(false)
+      
     } catch (error) {
-      console.error("Error updating email:", error);
+      console.error("EL EMAIL NO ES UN EMAIL"); //PONER ALERT ACA
     }
   };
 
-  const handleUsernameUpdate = async () => {
-    try {
-      await axios.put(`http://localhost:8000/api/users/${props.id}/`, userData);
-      setIsEditingUsername(false);
-      props.setUsername(userData.username); // Actualizar el estado de username en el componente padre
-    } catch (error) {
-      console.error("Error updating username:", error);
-    }
-  };
 
+
+ 
   return (
     <MDBCard className="card-user" alignment='left' border='none' style={{ fontFamily: 'Roboto, sans-serif' }}>
       <MDBCardHeader className="card-header">
@@ -63,15 +62,16 @@ export default function CardMyData(props) {
                 <td scope='col'>
                   <input
                     type="text"
-                    value={userData.email}
-                    onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                    value={email}
+                    onChange={(e) => setEmail( e.target.value )}
                   />
                 </td>
                 <td scope='col'>
                   <Tooltip title="Guardar" arrow placement="right">
                     <CheckRoundedIcon
                       style={{ color: 'green', cursor: 'pointer', fontSize: '0.938rem' }}
-                      onClick={handleEmailUpdate}
+                      onClick={handleEmailChange}
+                      
                     />
                   </Tooltip>
                   <Tooltip title="Cancelar" arrow placement="right">
@@ -79,7 +79,7 @@ export default function CardMyData(props) {
                       style={{ color: 'red', cursor: 'pointer', fontSize: '0.938rem' }}
                       onClick={() => {
                         setIsEditingEmail(false);
-                        setUserData({ ...userData, email: props.email });
+                        setEmail(props.email);
                       }}
                     />
                   </Tooltip>
@@ -90,43 +90,11 @@ export default function CardMyData(props) {
 
           <tr>
             <th scope='col'>Usuario:</th>
-            {!isEditingUsername ? (
-              <>
+          
                 <td scope='col'>{props.username}</td>
-                <td scope='col'>
-                  <Tooltip title="Editar" arrow placement="right">
-                    <EditRoundedIcon style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} onClick={() => setIsEditingUsername(true)} />
-                  </Tooltip>
-                </td>
-              </>
-            ) : (
-              <>
-                <td scope='col'>
-                  <input
-                    type="text"
-                    value={userData.username}
-                    onChange={(e) => setUserData({ ...userData, username: e.target.value })}
-                  />
-                </td>
-                <td scope='col'>
-                  <Tooltip title="Guardar" arrow placement="right">
-                    <CheckRoundedIcon
-                      style={{ color: 'green', cursor: 'pointer', fontSize: '0.938rem' }}
-                      onClick={handleUsernameUpdate}
-                    />
-                  </Tooltip>
-                  <Tooltip title="Cancelar" arrow placement="right">
-                    <CloseRoundedIcon
-                      style={{ color: 'red', cursor: 'pointer', fontSize: '0.938rem' }}
-                      onClick={() => {
-                        setIsEditingUsername(false);
-                        setUserData({ ...userData, username: props.username });
-                      }}
-                    />
-                  </Tooltip>
-                </td>
-              </>
-            )}
+               
+          
+    
           </tr>
 
           <tr>

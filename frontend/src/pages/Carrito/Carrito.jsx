@@ -47,7 +47,7 @@ function Carrito() {
       console.error(error);
     }
   };
-
+  
   const handleDelete = async (log_id) => {
     try {
       await api.delete(`/log/${log_id}`);

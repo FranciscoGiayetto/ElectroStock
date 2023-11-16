@@ -36,7 +36,7 @@ export default function CardUser(props) {
             </div>
             <div>
               <p style={{fontSize:'1.25rem'}}>{props.course} Año  </p>
-              <p style={{fontSize:'1.25rem'}}>Especialidades:{props.specialties} </p>
+              <p style={{fontSize:'1.25rem'}}>Especialidades: {props.specialties} </p>
             </div>
           </Stack>
         </Stack>
