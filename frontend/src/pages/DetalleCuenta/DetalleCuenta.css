@@ -19,10 +19,24 @@
   }
 }
 
-@media screen and (max-width: 810px) {
+@media screen and (max-width: 640px) {
 
   .col {
     width: 30rem;
+  }
+}
+
+@media screen and (max-width: 482px) {
+
+  .col {
+    width: 25rem;
+  }
+}
+
+@media screen and (max-width: 395px) {
+
+  .col {
+    width: 23rem;
   }
 }
 
