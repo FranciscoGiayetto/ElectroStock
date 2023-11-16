@@ -90,7 +90,7 @@ const Prestamos = ({ isProfessor }) => {
    
            
   <div>
-      {data.length > 0 ? (
+      {data.length > 0 && isProfessor ==! null? (
        
             data.map((prestamo, index) => (
               <PrestamosCardPackage
