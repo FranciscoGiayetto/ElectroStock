@@ -42,7 +42,7 @@ urlpatterns = [
         name="desaprobado",
     ),
     path("aprobadoPost/<int:user_id>/<str:date_in>/", CambioAprobado, name="aprobado"),
-    path("devueltoPost/<int:user_id>/", CambioDevuelto, name="devuelto"),
+    path("devueltoPost/<int:user_id>/<str:date_in>/", CambioDevuelto, name="devuelto"),
     path("budgetlog/<int:budget_id>/", BudgetLogViewSet, name="budgetlog"),
     path("budgetlog/create/", BudgetLogCreateView.as_view(), name="create-budget-log"),
     path("budget/", BudgetViewSet, name="budgetList"),

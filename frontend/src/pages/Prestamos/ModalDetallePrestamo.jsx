@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import PrestamosCard from './CardPrestamos';
 
-const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandleRejection,status, isProfessor}) => {
+const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandleRejection,onHandleDevolution,status, isProfessor}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredLista, setFilteredLista] = useState(lista);
 
@@ -42,8 +42,8 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
         ) : (
           // Mostrar otros dos botones si el status no es 'PED' (aún no definidos)
           <>
-            <button className="btn btn-primary me-sm-2 mb-2 mb-sm-0">Otro Botón</button>
-            <button className="btn btn-warning me-sm-2 mb-2 mb-sm-0">Otro Botón</button>
+            <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" onClick={onHandleDevolution}>Se Devolvio</button>
+            <button className="btn btn-danger me-sm-2 mb-2 mb-sm-0">Se Averio</button>
           </>
         )}
         
@@ -63,7 +63,7 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
         </ul>
       </Modal.Body>
       <Modal.Footer style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h5>Fecha De Devolucion: {dateOut}</h5>
+        <h5>Fecha De Devolucion: {dateOut} </h5>
         <button className="btn btn-secondary" onClick={onClose}>
           Cerrar
         </button>
