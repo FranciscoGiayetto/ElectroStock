@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import PrestamosCard from './CardPrestamos';
 
-const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandleRejection}) => {
+const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandleRejection,status, isProfessor}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredLista, setFilteredLista] = useState(lista);
 
@@ -27,16 +27,27 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
       style={{ width: '100%' }}
     />
   </div>
+{isProfessor === true ? (
  
   <div style={{ paddingLeft: '10%' }} className="d-flex flex-column flex-sm-row align-items-sm-center">
-  <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" onClick={onHandleApproval}>
-    <span role="img" aria-label="Checkmark">✅</span> Confirmar
-  </button>
-  <button className="btn btn-danger me-sm-2 mb-2 mb-sm-0" onClick={onHandleRejection}>
-    <span role="img" aria-label="Cross">❌</span> Rechazar
-  </button>
-</div>
-
+        {status === 'PED' ? ( // Mostrar estos botones si el status es 'PED'
+          <>
+            <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" onClick={onHandleApproval}>
+              <span role="img" aria-label="Checkmark">✅</span> Confirmar
+            </button>
+            <button className="btn btn-danger me-sm-2 mb-2 mb-sm-0" onClick={onHandleRejection}>
+              <span role="img" aria-label="Cross">❌</span> Rechazar
+            </button>
+          </>
+        ) : (
+          // Mostrar otros dos botones si el status no es 'PED' (aún no definidos)
+          <>
+            <button className="btn btn-primary me-sm-2 mb-2 mb-sm-0">Otro Botón</button>
+            <button className="btn btn-warning me-sm-2 mb-2 mb-sm-0">Otro Botón</button>
+          </>
+        )}
+        
+      </div>):(null)}
 </Modal.Header>
       <Modal.Body>
         <ul style={{ listStyleType: 'none', padding: 0 }}>

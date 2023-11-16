@@ -90,7 +90,7 @@ const Prestamos = ({ isProfessor }) => {
    
            
   <div>
-      {data.length > 0 && isProfessor ==! null? (
+      {data.length > 0 ? (
        
             data.map((prestamo, index) => (
               <PrestamosCardPackage
@@ -118,6 +118,8 @@ const Prestamos = ({ isProfessor }) => {
     onHandleRejection={() => handleRejection(selectedPackage.dateIn)}
     dateOut={selectedPackage.dateOut}
     lista={selectedPackage.lista}
+    status={selectedPackage.estado}
+    isProfessor={isProfessor}
     onClose={closeModal}
   />
 )}
