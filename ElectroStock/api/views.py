@@ -537,7 +537,7 @@ class MostRequestedElementView(generics.ListAPIView):
                     "box__log", filter=Q(box__log__status=models.Log.Status.APROBADO)
                 )
             )
-            .order_by("-num_borrowed_logs")[:5]
+            .order_by("-num_borrowed_logs")[:10]
         )
 
         return queryset
