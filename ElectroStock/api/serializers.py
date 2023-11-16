@@ -267,11 +267,11 @@ class BorrowerStatisticsSerializer(serializers.Serializer):
 
 
 # Serializer para la estadistica de los dias con mayor prestamos
-class DateStatisticsSerializer(serializers.Serializer):
-    dateIn = serializers.DateField()
+class DateStatisticsSerializer(serializers.ModelSerializer):
     total_datein_logs = serializers.IntegerField()
 
     class Meta:
+        model = models.Log  # Asigna el modelo correcto aquí
         fields = ("dateIn", "total_datein_logs")
 
 

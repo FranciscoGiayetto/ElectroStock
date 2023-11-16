@@ -636,8 +636,8 @@ class BorrowerStatisticsView(generics.ListAPIView):
         return Response(borrower_statistics)
 
 
-from django.db.models.functions import TruncDate
-
+from django.db.models.functions import TruncDate, Trunc
+from django.db.models import DateField
 
 # view para la estadistica de los dias con mayor prestamos
 class DateStatisticsView(generics.ListAPIView):
@@ -646,12 +646,9 @@ class DateStatisticsView(generics.ListAPIView):
     def get_queryset(self):
         current_year = datetime.datetime.now().year
         queryset = (
-            models.Log.objects.annotate(
-                dateIn_date=TruncDate("dateIn")
-            )  # Convierte dateIn a un campo de tipo date
-            .filter(dateIn__year=current_year)
-            .values("dateIn_date")
-            .annotate(total_datein_logs=Count("dateIn_date"))
+            models.Log.objects.filter(dateIn__year=current_year)
+            .values("dateIn")
+            .annotate(total_datein_logs=Count("dateIn"))
             .order_by("-total_datein_logs")[:1]
         )
         return queryset
@@ -662,6 +659,11 @@ class DateStatisticsView(generics.ListAPIView):
         date_statistics = serializer.data if serializer.data else None
         return Response(date_statistics)
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        date_statistics = serializer.data if serializer.data else None
+        return Response(date_statistics)
 
 from django.db.models import ExpressionWrapper, F, DurationField, Avg
 from rest_framework.views import APIView
