@@ -134,6 +134,86 @@ class ecommercePaginacionAPIView(viewsets.ModelViewSet):
 
 
 @api_view(["GET", "POST"])
+def AllPrestamos(request):
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.PEDIDO,
+            models.Log.Status.DESAPROBADO,
+            models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTOTARDIO,
+        ]
+
+        queryset = models.Log.objects.filter(status__in=valid_statuses)
+
+        if queryset.exists():
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
+
+            for log in queryset:
+                creation_date = (
+                    log.dateIn.strftime("%Y-%m-%dT%H:%M") if log.dateIn else None
+                )
+                log_data = LogSerializer(log).data
+                log_data["dateIn"] = creation_date
+                grouped_logs[creation_date].append(log_data)
+
+            response_data = []
+
+            for creation_date, logs_data in grouped_logs.items():
+                primer_log = logs_data[0]
+                primer_log_prueba = models.Log.objects.get(id=primer_log.get("id", ""))
+
+                dateIn_primer_log_prueba = (
+                    primer_log_prueba.dateIn.strftime("%Y-%m-%d %H:%M")
+                    if primer_log_prueba.dateIn
+                    else None
+                )
+                dateOut_primer_log = (
+                    primer_log.get("dateOut", "") if primer_log else None
+                )
+
+                imagen_primer_log = None
+                if (
+                    primer_log_prueba.box
+                    and primer_log_prueba.box.element
+                    and primer_log_prueba.box.element.image
+                    and primer_log_prueba.box.element.image.file
+                ):
+                    imagen_primer_log = primer_log_prueba.box.element.image.url
+
+                count_logs = len(logs_data) if logs_data else 0
+
+                response_data.append(
+                    {
+                        "dateOut": dateOut_primer_log,
+                        "usuario": primer_log["borrower"]["username"]
+                        if primer_log
+                        else None,
+                        "nombre": primer_log["borrower"]["first_name"]
+                        if primer_log
+                        else None,
+                        "apellido": primer_log["borrower"]["last_name"]
+                        if primer_log
+                        else None,
+                        "estado": primer_log["status"] if primer_log else None,
+                        "dateIn": dateIn_primer_log_prueba,
+                        "imagen": imagen_primer_log,
+                        "count": count_logs,
+                        "lista": logs_data,
+                    }
+                )
+
+            return Response(response_data)
+        else:
+            return Response("No se encontraron logs para este usuario.")
+
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+        return Response({"message": "Elemento agregado al carrito"})
+
+@api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
     if request.method == "GET":
         valid_statuses = [

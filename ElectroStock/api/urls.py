@@ -43,6 +43,7 @@ urlpatterns = [
     path("presatmosActuales/<int:user_id>/", PrestamosActualesView, name="prestamosActuales"),
     path("prestamosHistorial/<int:user_id>/", PrestamoVerAPIView, name="prestamosHistorial"),
     path("stock/<int:element_id>/", get_stock, name="stock"),
+    path("allPrestamos/", AllPrestamos, name="allPrestamos"),
     path("filtroCategoria/<str:category_id>/", elementos_por_categoria, name="filtroCategoria"),
     path("pendientes/<int:user_id>/", PrestamoPendientesAPIView, name="pendientes"),
     path("logCantidad/<int:log_id>/", update_log_quantity, name="logCantidad"),
