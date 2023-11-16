@@ -20,6 +20,8 @@
 
 .list-group-item.active{
     background-color: #018195;
+    border-color:transparent;
+    color: white;
 }
 
 .num{
