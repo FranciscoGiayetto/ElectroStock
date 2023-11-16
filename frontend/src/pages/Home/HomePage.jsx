@@ -11,6 +11,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ClockPage from './ClockPage';
+import Carousel from 'react-bootstrap/Carousel';
 
 function HomePage() {
   const [isLoggedIn, user] = useAuthStore((state) => [
@@ -23,19 +24,28 @@ function HomePage() {
   console.log(token.PromiseResult);
 
   return (
-    <Container className='pagecontainer d-flex align-items-center justify-content-center' style={{"paddingBottom":'12rem'}}>
+    <Container className='pagecontainer d-flex align-items-center justify-content-center' style={{ "paddingBottom": '12rem' }}>
       <Row>
         <Col md={4}>
-          <Row>
           <h1>Bienvenido {userData.username}!</h1>
-          </Row>
-          <Row>
           <ClockPage />
-
-          </Row>
         </Col>
       </Row>
-      
+      <Row>
+        <Col md={8}>
+          {/* Add your image carousel here */}
+          <Carousel>
+            <Carousel.Item>
+              <img
+                className="d-block w-100"
+                src="your-image1.jpg"
+                alt="First slide"
+              />
+            </Carousel.Item>
+            {/* Add more Carousel.Item for additional images */}
+          </Carousel>
+        </Col>
+      </Row>
     </Container>
   );
 }
