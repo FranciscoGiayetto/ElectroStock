@@ -243,21 +243,31 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 
 
 # View para los usuarios
+from validate_email_address import validate_email
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+# View para los usuarios
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = models.CustomUser.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = UsersSerializer
-        # Método personalizado para actualizar el email mediante PUT
+
+    # Método personalizado para actualizar el email mediante PUT
     @action(detail=True, methods=['put'])
     def update_email(self, request, pk=None):
         user = self.get_object()
         new_email = request.data.get('email', None)
 
         if new_email is not None:
-            user.email = new_email
-            user.save()
-            serializer = self.get_serializer(user)
-            return Response(serializer.data)
+            # Validar si es una dirección de correo electrónico válida
+            if validate_email(new_email, verify=True):
+                user.email = new_email
+                user.save()
+                serializer = self.get_serializer(user)
+                return Response(serializer.data)
+            else:
+                return Response({'error': 'El campo "email" no es una dirección de correo electrónico válida'}, status=400)
         else:
             return Response({'error': 'El campo "email" es requerido'}, status=400)
 
