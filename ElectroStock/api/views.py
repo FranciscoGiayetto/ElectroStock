@@ -94,6 +94,14 @@ from cryptography.fernet import Fernet
 
 # Función para encriptar
 
+from cryptography.fernet import Fernet
+
+def encrypt(data):
+    key = Fernet.generate_key()
+    cipher_suite = Fernet(key)
+    encrypted_data = cipher_suite.encrypt(data.encode())
+    return encrypted_data
+
 
 class TokenViewSet(viewsets.ModelViewSet):
     queryset = models.TokenSignup.objects.all()
@@ -103,11 +111,9 @@ class TokenViewSet(viewsets.ModelViewSet):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = TokenSerializer(queryset, many=True)
-        serialized_data = json.dumps(
-            serializer.data
-        )  # Convertir los datos a una cadena de texto
-        # encrypted_data = encrypt(serialized_data)
-        return Response("ARREGLAR")
+        serialized_data = json.dumps(serializer.data)  # Convertir los datos a una cadena de texto
+        encrypted_data = encrypt(serialized_data)
+        return Response(encrypted_data)
 
 
 class ProductosEcommerceAPIView(viewsets.ModelViewSet):
