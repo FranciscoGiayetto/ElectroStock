@@ -520,13 +520,13 @@ def PrestamosActualesView(request, user_id):
     return Response(status=405)
 
 from django.utils.timezone import now
-
+import datetime
 # View para las estadisticas de los productos mas pedidos
 class MostRequestedElementView(generics.ListAPIView):
     serializer_class = ElementSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().date().year
+        current_year = datetime.datetime.now().year
         queryset = (
             models.Element.objects.filter(
                 box__log__status=models.Log.Status.APROBADO,
@@ -548,7 +548,7 @@ class MostRequestedElementView(generics.ListAPIView):
         response_data = []
 
         current_year = (
-            timezone.now().date().year
+            datetime.datetime.now().year
         )  # Agregar esta línea para definir la variable current_year
 
         for item in serializer.data:
@@ -567,7 +567,7 @@ class LogStatisticsView(generics.ListAPIView):
     serializer_class = LogStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now()
+        current_year = datetime.datetime.now().year
         queryset = models.Log.objects.filter(dateIn__year=current_year)
         return queryset
 
@@ -596,7 +596,7 @@ class LenderStatisticsView(generics.ListAPIView):
     serializer_class = LenderStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = (
             models.Log.objects.filter(dateIn__year=current_year)
             .values("lender__username")
@@ -620,7 +620,7 @@ class BorrowerStatisticsView(generics.ListAPIView):
     serializer_class = BorrowerStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = (
             models.Log.objects.filter(dateIn__year=current_year)
             .values("borrower__username")
@@ -644,7 +644,7 @@ class DateStatisticsView(generics.ListAPIView):
     serializer_class = DateStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = (
             models.Log.objects.annotate(
                 dateIn_date=TruncDate("dateIn")
@@ -684,7 +684,7 @@ from datetime import timedelta
 class DateAvgView(APIView):
     def get(self, request, format=None):
         # Filtra los registros por los estados AP, DAP, DEV, VEN y TAR
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = models.Log.objects.filter(
             dateIn__year=current_year,
             status__in=["AP", "DAP", "DEV", "VEN", "TAR"],
@@ -730,7 +730,7 @@ class VencidoStatisticsView(generics.ListAPIView):
     serializer_class = VencidoStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = models.Log.objects.filter(dateIn__year=current_year)
         return queryset
 
@@ -771,7 +771,7 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
     serializer_class = LenderVencidosStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = (
             models.Log.objects.filter(
                 Q(status="VEN") | Q(status="TAR"), dateIn__year=current_year
