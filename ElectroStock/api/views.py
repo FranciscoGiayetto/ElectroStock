@@ -253,7 +253,19 @@ class UsersViewSet(viewsets.ModelViewSet):
     queryset = models.CustomUser.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = UsersSerializer
+    # Método personalizado para actualizar el email mediante PUT
+    @action(detail=True, methods=['put'])
+    def update_email(self, request, pk=None):
+        user = self.get_object()
+        new_email = request.data.get('email', None)
 
+        if new_email is not None:
+            user.email = new_email
+            user.save()
+            serializer = self.get_serializer(user)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'El campo "email" es requerido'}, status=400)
 
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
