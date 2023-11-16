@@ -4,6 +4,8 @@ import './Carrito.css';
 import CartCard from '../../components/cartcard/CartCard';
 import Button from 'react-bootstrap/Button';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import Spinner from 'react-bootstrap/Spinner';
+
 
 import {
   MDBCol,
@@ -24,6 +26,7 @@ function Carrito() {
   const api = useAxios();
   const [carrito, setCarrito] = useState([]);
   const [dateInputData, setDateInputData] = useState([]);
+  const [loading, setLoading] = useState(true); // Nuevo estado para el Spinner
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
@@ -38,13 +41,16 @@ function Carrito() {
 
   const getCarrito = async () => {
     try {
-      console.log(userData.user_id)
+      setLoading(true); // Inicia el Spinner
+      console.log(userData.user_id);
       const response = await api.get(`/carrito/${userData.user_id}`);
       let data = await response.data;
       setCarrito(data);
       console.log(data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false); // Detiene el Spinner después de la carga
     }
   };
 
@@ -134,62 +140,74 @@ function Carrito() {
   
   
 
-  return (
-    <section className="container-bg" style={{fontFamily: 'Roboto, sans-serif'}}>
-      <MDBContainer className="h-100">
-        <MDBRow className="justify-content-center align-items-center h-100">
-          <MDBCol>
-            <p style={{fontSize: '1.563rem'}}>
-              <ShoppingCartOutlinedIcon style={{marginRight: '0.5rem'}}/>
-              Carrito
-            </p>
-
-            {/* Renderizar los componentes CartCard */}
-
-            {carrito.length > 0 ? (
-        carrito.map((item) => (
-          <CartCard
-            key={item.id}
-            id={item.id}
-            name={item.box.name}
-            title={item.box.element.name}
-            image={item.box.image}
-            quantity={item.quantity}
-            comments={item.observation}
-            handleDelete={handleDelete}
-            handleQuantityChange={handleQuantityChange}
-            handleCommentChange={handleObservationChangeInCartCard} // Ensure this line is correct
-          />
-        ))
-      ) : (
-        <p className="text-center">¡Agregá tu próximo pedido! </p>
-      )}
-
-            {/* Datetime Input */}
-            <div className="mb-2 d-flex justify-content-between">
-              <div>
-                <label style={{marginRight:'0.3rem'}} htmlFor="datetimeInput" className="form-label">
-                  Fecha de devolución:
-                </label>
-                
-                <input
-                  className='date-style'
-                  type="date"
-                  name="dateInput"
-                  min={new Date().toISOString().split('T')[0]}
-                  value={dateInputData}
-                  onChange={(e) => setDateInputData(e.target.value)}
-                />
-              </div>
-              <Button className='btn-style' onClick={handleContinue}>
-                Siguiente
-              </Button>
+      return (
+        <div>
+          {loading && (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+              <Spinner animation="border" role="status">
+               
+              </Spinner>
             </div>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-    </section>
-  )
-}
-
-export default Carrito;
+          )}
+          {!loading && (
+            <section className="container-bg" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              <MDBContainer className="h-100">
+                <MDBRow className="justify-content-center align-items-center h-100">
+                  <MDBCol>
+                    <p style={{ fontSize: '1.563rem' }}>
+                      <ShoppingCartOutlinedIcon style={{ marginRight: '0.5rem' }} />
+                      Carrito
+                    </p>
+    
+                    {/* Renderizar los componentes CartCard */}
+    
+                    {carrito.length > 0 ? (
+                      carrito.map((item) => (
+                        <CartCard
+                          key={item.id}
+                          id={item.id}
+                          name={item.box.name}
+                          title={item.box.element.name}
+                          image={item.box.image}
+                          quantity={item.quantity}
+                          comments={item.observation}
+                          handleDelete={handleDelete}
+                          handleQuantityChange={handleQuantityChange}
+                          handleCommentChange={handleObservationChangeInCartCard}
+                        />
+                      ))
+                    ) : (
+                      <p className="text-center">¡Agregá tu próximo pedido! </p>
+                    )}
+    
+                    {/* Datetime Input */}
+                    <div className="mb-2 d-flex justify-content-between">
+                      <div>
+                        <label style={{ marginRight: '0.3rem' }} htmlFor="datetimeInput" className="form-label">
+                          Fecha de devolución:
+                        </label>
+    
+                        <input
+                          className='date-style'
+                          type="date"
+                          name="dateInput"
+                          min={new Date().toISOString().split('T')[0]}
+                          value={dateInputData}
+                          onChange={(e) => setDateInputData(e.target.value)}
+                        />
+                      </div>
+                      <Button className='btn-style' onClick={handleContinue}>
+                        Siguiente
+                      </Button>
+                    </div>
+                  </MDBCol>
+                </MDBRow>
+              </MDBContainer>
+            </section>
+          )}
+        </div>
+      );
+    }
+    
+    export default Carrito;
+    

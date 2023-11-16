@@ -7,7 +7,9 @@ import { useAuthStore } from '../../store/auth.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import DataTable from "./DataTable.jsx"
+import DataTable from "./DataTable.jsx";
+import Spinner from 'react-bootstrap/Spinner';
+
 
 function Presupuestos() {
   const [isLoggedIn, user] = useAuthStore((state) => [
@@ -18,18 +20,23 @@ function Presupuestos() {
   const [presupuestos, setPresupuestos] = useState([]);
   const api = useAxios();
   const userData = user();
-  const id = userData.user_id;
+  const [loading, setLoading] = useState(true); // Nuevo estado para el Spinner
+
 
  
 
   const getPresupuesto = async () => {
     try {
+      setLoading(true); // Inicia el Spinner
+
       const response = await api.get(`/budget/`);
       let data = await response.data;
       console.log(data)
       setPresupuestos(data);
     } catch (error) {
       console.error(error);
+    }finally {
+      setLoading(false); // Detiene el Spinner después de la carga
     }
   };
 
@@ -39,6 +46,14 @@ function Presupuestos() {
 
   
   return (
+    <div>
+          {loading && (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+              <Spinner animation="border" role="status">
+               
+              </Spinner>
+            </div>
+          )}
     <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
       
       <Row>
@@ -47,6 +62,7 @@ function Presupuestos() {
         </Col>
       </Row>
     </Container>
+    </div>
   );
 }
 

@@ -32,7 +32,7 @@ import { useMediaQuery } from '@mui/material';
 import useAxios from "../../utils/useAxios";
 import { useAuthStore } from '../../store/auth';
 import { cartEventEmitter } from '../../pages/DetalleProducto/DetalleProducto';
-
+import Spinner from 'react-bootstrap/Spinner';
 
 
 const { Header, Sider } = Layout;
@@ -321,6 +321,9 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
             </Row>
           </Container>
         </Header>
+        <div className="text-center">
+              <Spinner animation="border" variant="primary" />
+            </div>
       
     </div>
   );

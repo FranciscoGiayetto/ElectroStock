@@ -78,6 +78,14 @@ function Ecommerce({ allItems }) {
   };
 
   return (
+    <div>
+          {isLoading && (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+              <Spinner animation="border" role="status">
+               
+              </Spinner>
+            </div>
+          )}
     <Container style={{ marginTop: '5rem' }}>
       <Row>
         <Col xs={12} md={2} className={`d-none d-md-block`}>
@@ -98,7 +106,6 @@ function Ecommerce({ allItems }) {
         <Col xs={12} md={10}>
           {isLoading ? (
             <div className="text-center">
-              <Spinner animation="border" variant="primary" />
             </div>
           ) : filteredCards.length === 0 ? (
             <div className="text-center">
@@ -134,6 +141,8 @@ function Ecommerce({ allItems }) {
         </Col>
       </Row>
     </Container>
+    </div>
+
   );
 }
 

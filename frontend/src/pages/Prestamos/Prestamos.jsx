@@ -5,6 +5,9 @@ import './Prestamos.css';
 import { useAuthStore } from '../../store/auth';
 import PrestamosCardPackage from './PrestamosCardPackage';
 import ModalDetallePrestamo from './ModalDetallePrestamo';
+import Spinner from 'react-bootstrap/Spinner';
+
+
 const Prestamos = () => {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
@@ -13,6 +16,8 @@ const Prestamos = () => {
   const [selectedPackage, setSelectedPackage] = useState(null); // State to store selected package
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   const user_id = userData.user_id;
+  const [loading, setLoading] = useState(true); // Nuevo estado para el Spinner
+
 
   const handleApproval = async (dateIn) => {
     try {
@@ -47,6 +52,7 @@ const Prestamos = () => {
 
   const getPrestamos = async () => {
     try {
+      setLoading(true); // Inicia el Spinner
       const response = await api.get(`/prestamosHistorial/${user_id}`);
       console.log(response.data); // Verify the response from the API
       const data = response.data;
@@ -54,6 +60,8 @@ const Prestamos = () => {
       // Extract the dates from the response
     } catch (error) {
       console.error(error);
+    }finally {
+      setLoading(false); // Detiene el Spinner después de la carga
     }
   };
 
@@ -69,6 +77,14 @@ const Prestamos = () => {
     setIsModalOpen(false);
   };
   return (
+    <div>
+          {loading && (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+              <Spinner animation="border" role="status">
+               
+              </Spinner>
+            </div>
+          )}
     <div className="container pagecontainer">
    <div className="title-container" >
     <h1 className="textito">Mis prestamos</h1>
@@ -108,6 +124,7 @@ const Prestamos = () => {
     onClose={closeModal}
   />
 )}
+    </div>
     </div>
     );
   };
