@@ -246,6 +246,7 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 from validate_email_address import validate_email
 from rest_framework.decorators import action
 from rest_framework.response import Response
+import dns.resolver
 
 # View para los usuarios
 class UsersViewSet(viewsets.ModelViewSet):
@@ -260,16 +261,25 @@ class UsersViewSet(viewsets.ModelViewSet):
         new_email = request.data.get('email', None)
 
         if new_email is not None:
-            # Validar si es una dirección de correo electrónico válida
-            if validate_email(new_email, verify=True):
-                user.email = new_email
-                user.save()
-                serializer = self.get_serializer(user)
-                return Response(serializer.data)
-            else:
-                return Response({'error': 'El campo "email" no es una dirección de correo electrónico válida'}, status=400)
+            try:
+                # Validar el correo electrónico con verificación de registros MX usando dnspython
+                result = dns.resolver.resolve(new_email.split('@')[1], 'MX')
+                is_valid = bool(result)
+                
+                if is_valid:
+                    user.email = new_email
+                    user.save()
+                    serializer = self.get_serializer(user)
+                    return Response(serializer.data)
+                else:
+                    return Response({'error': 'El campo "email" no es una dirección de correo electrónico válida'}, status=400)
+            except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN) as e:
+                return Response({'error': f'Error de validación: {e}'}, status=400)
+            except Exception as e:
+                return Response({'error': f'Error desconocido de validación: {e}'}, status=400)
         else:
             return Response({'error': 'El campo "email" es requerido'}, status=400)
+
 
 
 class LogViewSet(viewsets.ModelViewSet):
