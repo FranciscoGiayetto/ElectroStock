@@ -189,6 +189,7 @@ def AllPrestamos(request):
                     response_data.append(
                         {
                             "dateOut": dateOut_primer_log,
+                            "id_user":primer_log["borrower"]["id"] if primer_log else None,
                             "usuario": primer_log["borrower"]["username"] if primer_log else None,
                             "nombre": primer_log["borrower"]["first_name"] if primer_log else None,
                             "apellido": primer_log["borrower"]["last_name"] if primer_log else None,
