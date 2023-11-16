@@ -5,7 +5,7 @@ import './Prestamos.css';
 import { useAuthStore } from '../../store/auth';
 import PrestamosCardPackage from './PrestamosCardPackage';
 import ModalDetallePrestamo from './ModalDetallePrestamo';
-const Prestamos = () => {
+const Prestamos = ({ isProfessor }) => {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const api = useAxios();
@@ -42,12 +42,25 @@ const Prestamos = () => {
 
 
   useEffect(() => {
-    getPrestamos();
-  }, []);
+    if (isProfessor !== null) {
+      getPrestamos();
+    }
+  }, [isProfessor]);
+  
 
   const getPrestamos = async () => {
     try {
-      const response = await api.get(`/prestamosHistorial/${user_id}`);
+      let endpoint;
+      console.log(isProfessor)
+    if (isProfessor) {
+      endpoint = '/allPrestamos';
+      console.log("isProfessor") // Endpoint for professors
+    } else {
+      console.log("isnotProfessor") // Endpoint for professors
+
+      endpoint = `/prestamosHistorial/${user_id}`; // Endpoint for regular users
+    }
+      const response = await api.get(endpoint);
       console.log(response.data); // Verify the response from the API
       const data = response.data;
       setData(data);
