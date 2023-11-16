@@ -1,0 +1,11 @@
+.carousel-container {
+    max-height: 400px; /* Set your desired fixed height */
+    overflow: hidden;
+  }
+  
+  .carousel-container img {
+    object-fit: cover;
+    max-height: 100%;
+    width: 100%;
+  }
+  
