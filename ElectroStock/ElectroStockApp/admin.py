@@ -517,6 +517,6 @@ admin.site.register(Speciality)
 
 #SACAR ESTE
 admin.site.register(TokenSignup, TokenAdmin)
-admin.site.register(Notification)
-admin.site.register(Budget, BudgetAdmin)
-admin.site.register(BudgetLog,BudgetLogAdmin)
+#admin.site.register(Notification)
+#admin.site.register(Budget, BudgetAdmin)
+#admin.site.register(BudgetLog,BudgetLogAdmin)
