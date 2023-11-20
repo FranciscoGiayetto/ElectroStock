@@ -1457,7 +1457,7 @@ def CambioDevuelto(request, user_id, date_in):
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
             grouped_logs = defaultdict(list)
-
+            creation_date = None 
             for log in queryset:
                 creation_date = (
                     log.dateIn.strftime("%Y-%m-%d %H:%M") if log.dateIn else None
@@ -1468,7 +1468,9 @@ def CambioDevuelto(request, user_id, date_in):
 
             # Verificar si hay logs para la fecha proporcionada y cambiar su estado a APROBADO o DEVUELTOTARDIO
             logs_to_approve = grouped_logs.get(date_in, [])
-            print("creacion_date ", creation_date, "date_in ", date_in)
+            #rint("creacion_date ", creation_date, "date_in ", date_in)
+            logs_instances_to_approve = []
+            logs_instances_to_return_late = []
             if creation_date == date_in:
                 # Recopilar los IDs de los logs aprobados y vencidos
                 log_ids_to_approve = [
