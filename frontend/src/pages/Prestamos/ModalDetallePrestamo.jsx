@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import PrestamosCard from './CardPrestamos';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandleRejection}) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,12 +36,12 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
         />
       </div>
     
-      <div style={{ paddingLeft: '10%' }} className="d-flex flex-column flex-sm-row align-items-sm-center">
+      <div style={{ paddingLeft: '10%', paddingTop:'4%' }} className="d-flex flex-column flex-sm-row align-items-sm-center">
         <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" onClick={onHandleApproval}>
-          <span role="img" aria-label="Checkmark">✅</span> Confirmar
+          <CheckRoundedIcon/>Confirmar
         </button>
         <button className="btn btn-danger me-sm-2 mb-2 mb-sm-0" onClick={onHandleRejection}>
-          <span role="img" aria-label="Cross">❌</span> Rechazar
+          <CloseRoundedIcon/>Rechazar
         </button>
       </div>
 
@@ -57,9 +59,9 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
           ))}
         </ul>
       </Modal.Body>
-      <Modal.Footer style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Modal.Footer style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h5>Fecha De Devolucion: {dateOut}</h5>
-        <button className="btn btn-secondary" onClick={onClose}>
+        <button className="btn btn-secondary me-sm-2 mb-2 mb-sm-0" style={{backgroundColor:'#58A4B0', border:'none'}} onClick={onClose}>
           Cerrar
         </button>
       </Modal.Footer>
