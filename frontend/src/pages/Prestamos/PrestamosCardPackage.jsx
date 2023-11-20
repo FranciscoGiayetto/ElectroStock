@@ -11,7 +11,7 @@ import {
   MDBBtn,
 } from 'mdb-react-ui-kit';
 
-const PrestamosCardPackage = ({ onClick, cliente, dateIn, dateOut, count, name, status, image, lista }) => {
+const PrestamosCardPackage = ({ onClick, cliente, dateIn, dateOut, count, name, status, image, lista, user_id }) => {
   const renderComponentList = () => {
     return lista.slice(0, 4).map((item, index) => {
       const componentName = item.box.name.length > 18 ? item.box.name.slice(0, 18) + '...' : item.box.name;
