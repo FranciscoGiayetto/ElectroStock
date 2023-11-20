@@ -96,6 +96,7 @@ from cryptography.fernet import Fernet
 
 from cryptography.fernet import Fernet
 
+
 def encrypt(data):
     key = Fernet.generate_key()
     cipher_suite = Fernet(key)
@@ -111,7 +112,9 @@ class TokenViewSet(viewsets.ModelViewSet):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = TokenSerializer(queryset, many=True)
-        serialized_data = json.dumps(serializer.data)  # Convertir los datos a una cadena de texto
+        serialized_data = json.dumps(
+            serializer.data
+        )  # Convertir los datos a una cadena de texto
         encrypted_data = encrypt(serialized_data)
         return Response(encrypted_data)
 
@@ -141,6 +144,7 @@ class ecommercePaginacionAPIView(viewsets.ModelViewSet):
 
 from collections import defaultdict
 
+
 @api_view(["GET", "POST"])
 def AllPrestamos(request):
     if request.method == "GET":
@@ -164,7 +168,11 @@ def AllPrestamos(request):
                 )
                 log_data = LogSerializer(log).data
                 log_data["dateIn"] = creation_date
-                user_key = log_data["borrower"]["username"] if log_data["borrower"] else "Sin Usuario"
+                user_key = (
+                    log_data["borrower"]["username"]
+                    if log_data["borrower"]
+                    else "Sin Usuario"
+                )
                 grouped_logs[user_key][creation_date].append(log_data)
 
             response_data = []
@@ -172,14 +180,18 @@ def AllPrestamos(request):
             for user, date_logs in grouped_logs.items():
                 for creation_date, logs_data in date_logs.items():
                     primer_log = logs_data[0]
-                    primer_log_prueba = models.Log.objects.get(id=primer_log.get("id", ""))
+                    primer_log_prueba = models.Log.objects.get(
+                        id=primer_log.get("id", "")
+                    )
 
                     dateIn_primer_log_prueba = (
                         primer_log_prueba.dateIn.strftime("%Y-%m-%d %H:%M")
                         if primer_log_prueba.dateIn
                         else None
                     )
-                    dateOut_primer_log = primer_log.get("dateOut", "") if primer_log else None
+                    dateOut_primer_log = (
+                        primer_log.get("dateOut", "") if primer_log else None
+                    )
 
                     imagen_primer_log = None
                     if (
@@ -195,10 +207,18 @@ def AllPrestamos(request):
                     response_data.append(
                         {
                             "dateOut": dateOut_primer_log,
-                            "id_user":primer_log["borrower"]["id"] if primer_log else None,
-                            "usuario": primer_log["borrower"]["username"] if primer_log else None,
-                            "nombre": primer_log["borrower"]["first_name"] if primer_log else None,
-                            "apellido": primer_log["borrower"]["last_name"] if primer_log else None,
+                            "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
+                            "usuario": primer_log["borrower"]["username"]
+                            if primer_log
+                            else None,
+                            "nombre": primer_log["borrower"]["first_name"]
+                            if primer_log
+                            else None,
+                            "apellido": primer_log["borrower"]["last_name"]
+                            if primer_log
+                            else None,
                             "estado": primer_log["status"] if primer_log else None,
                             "dateIn": dateIn_primer_log_prueba,
                             "imagen": imagen_primer_log,
@@ -215,6 +235,7 @@ def AllPrestamos(request):
         # Realiza acciones necesarias para agregar elementos al carrito
         # ...
         return Response({"message": "Elemento agregado al carrito"})
+
 
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
@@ -330,11 +351,12 @@ class UsersViewSet(viewsets.ModelViewSet):
     queryset = models.CustomUser.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = UsersSerializer
+
     # Método personalizado para actualizar el email mediante PUT
-    @action(detail=True, methods=['put'])
+    @action(detail=True, methods=["put"])
     def update_email(self, request, pk=None):
         user = self.get_object()
-        new_email = request.data.get('email', None)
+        new_email = request.data.get("email", None)
 
         if new_email is not None:
             user.email = new_email
@@ -342,7 +364,8 @@ class UsersViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(user)
             return Response(serializer.data)
         else:
-            return Response({'error': 'El campo "email" es requerido'}, status=400)
+            return Response({"error": 'El campo "email" es requerido'}, status=400)
+
 
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
@@ -383,6 +406,12 @@ class SpecialityViewSet(viewsets.ModelViewSet):
     queryset = models.Speciality.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = SpecialitySerializer
+
+
+class NotificationViewSet(viewsets.ModelViewSet):
+    queryset = models.Notification.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = NotificationSerializer
 
 
 # View para tomar el stock actual segun el id que mandas por la url
@@ -974,6 +1003,7 @@ def CambioAprobado(request, user_id, date_in):
 
                 # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
                 serializer = LogSerializer(logs_instances_to_approve, many=True)
+                create_notification_aprobado(user_id, date_in)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(
@@ -1057,7 +1087,7 @@ def CambioDesaprobado(request, user_id, date_in):
                     id__in=log_ids_to_approve
                 )
                 logs_instances_to_approve.update(status=models.Log.Status.DESAPROBADO)
-
+                create_notification_desaprobado(user_id, date_in)
                 # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
                 serializer = LogSerializer(logs_instances_to_approve, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
@@ -1110,12 +1140,15 @@ def CambioLog(request, user_id):
         )
         new_status = models.Log.Status.PEDIDO
         new_dateout = request.data.get("dateout", None)
+        count = 0
         for log in logs_carrito:
+            count += 1
             log.status = new_status
             if new_dateout is not None:
                 log.dateOut = new_dateout
             log.save()
         serializer = LogSerializer(logs_carrito, many=True)
+        create_notification_pedido(user_id, count)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -1455,13 +1488,20 @@ def CambioDevuelto(request, user_id, date_in):
                         id__in=log_ids_to_approve
                     )
                     logs_instances_to_approve.update(status=models.Log.Status.DEVUELTO)
-
+                    statusDevolucionTardia = False
+                    create_notification_devuelto(
+                        user_id, date_in, statusDevolucionTardia
+                    )
                 if log_ids_to_return_late:
                     logs_instances_to_return_late = models.Log.objects.filter(
                         id__in=log_ids_to_return_late
                     )
                     logs_instances_to_return_late.update(
                         status=models.Log.Status.DEVUELTOTARDIO
+                    )
+                    statusDevolucionTardia = True
+                    create_notification_devuelto(
+                        user_id, date_in, statusDevolucionTardia
                     )
 
                 # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
@@ -1519,3 +1559,81 @@ def PendientesAPIView(request, user_id):
         return Response({"message": "Elemento agregado al carrito"})
 
     return Response(status=405)
+
+
+# A PARTIR DE ACA COSAS DE NOTIFICACIONES Y PRESTAMOS
+# CambioAprobado
+def create_notification_aprobado(user, date_in):
+    notificacion = models.Notification.objects.create(
+        user_sender=None,
+        type_of_notification=models.Notification.NotificationType.APROBADO,
+        message=f"Tu solicitud de préstamo con fecha {date_in} ha sido aprobada.",
+    )
+    notificacion.user_revoker.add(user)
+    return notificacion
+
+
+#
+
+
+def create_notification_pedido(user_id, quantity):
+    user = models.CustomUser.objects.get(id=user_id)
+    profesor_group = Group.objects.get(name="Profesor")
+    detalles_pedido = (
+        f"Pedido Enviado de {user.username} :\n"
+        f"Cantidad de Elementos: {quantity}\n"
+        f"Observaciones"
+    )
+
+    notificacion = models.Notification.objects.create(
+        user_sender=user,
+        type_of_notification=models.Notification.NotificationType.PEDIDO,
+        message=detalles_pedido,
+    )
+    profesor_group_users = get_user_model().objects.filter(groups=profesor_group)
+    notificacion.user_revoker.add(*profesor_group_users)
+    return notificacion
+
+
+# CambioDesaprobado
+
+
+def create_notification_desaprobado(user, date_in):
+    notificacion = models.Notification.objects.create(
+        user_sender=None,
+        type_of_notification=models.Notification.NotificationType.DESAPROBADO,
+        message=f"Tu solicitud de préstamo con fecha {date_in} ha sido desaprobada.",
+    )
+    notificacion.user_revoker.add(user)
+    return notificacion
+
+
+# CambioDevuelto
+def create_notification_devuelto(user_id, dateIn, statusDevolucionTardia):
+    user = models.CustomUser.objects.get(id=user_id)
+    notificacion_prestador = models.Notification.objects.create(
+        user_sender=None,
+        type_of_notification=models.Notification.NotificationType.DEVUELTO,
+        message=f"Tu préstamo de la fecha {dateIn} ha sido devuelto con exito.",
+    )
+    notificacion_prestador.user_revoker.add(user)
+
+    profesor_group = Group.objects.get(name="Profesor")
+    if statusDevolucionTardia:
+        detalles_devuelto = (
+            f"Se devolvio El prestamo de {user.username} pedido en la fecha {dateIn}:\n"
+            "El pedido Se devolvio con demora"  # Descontar los dias para ver con cuantos dias de demora
+        )
+    else:
+        detalles_devuelto = (
+            f"Se devolvio El prestamo de {user.username} pedido en la fecha {dateIn}:\n"
+            "El pedido se devolvio en tiempo y forma"  # Descontar los dias para ver con cuantos dias de demora
+        )
+    notificacion_profesores = models.Notification.objects.create(
+        user_sender=user,
+        type_of_notification=models.Notification.NotificationType.DEVUELTO,
+        message=detalles_devuelto,
+    )
+    profesor_group_users = get_user_model().objects.filter(groups=profesor_group)
+    notificacion_profesores.user_revoker.add(*profesor_group_users)
+    return notificacion_profesores

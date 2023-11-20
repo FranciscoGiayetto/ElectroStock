@@ -21,6 +21,7 @@ router.register("box", BoxViewSet, "box")
 router.register("especialidad", SpecialityViewSet, "especialidad")
 router.register("token", TokenViewSet, "token")
 router.register("log", LogViewSet, "log")
+router.register("notification", NotificationViewSet, "notification")
 
 
 urlpatterns = [

@@ -329,6 +329,24 @@ class Log(models.Model):
         verbose_name = "Prestamo y movimientos"
 
 
+"""def create_notification_on_aprobado(sender, instance, **kwargs):
+    print("Entering create_notification_on_aprobado")
+    if instance.is_aprobado:
+        print("HAY UN APROBADO!")
+        # Crea y envía la notificación al usuario prestador
+        notificacion = Notification.objects.create(
+            user_sender=None,  # Sin remitente
+            type_of_notification=Notification.NotificationType.APROBADO,
+            message=f"Tu solicitud de préstamo ha sido aprobada: {instance.box.name}",
+        )
+        notificacion.user_revoker.add(instance.borrower)
+    else:
+        print("No es un APROBADO")
+
+
+# ... (similar modifications for other signal functions)
+
+
 def create_notification_on_pedido(sender, instance, **kwargs):
     if instance.is_pedido:
         # Obtén el grupo "Profesor"
@@ -349,17 +367,6 @@ def create_notification_on_pedido(sender, instance, **kwargs):
         )
         profesor_group_users = get_user_model().objects.filter(groups=profesor_group)
         notificacion.user_revoker.add(*profesor_group_users)
-
-
-def create_notification_on_aprobado(sender, instance, **kwargs):
-    if instance.is_aprobado:
-        # Crea y envía la notificación al usuario prestador
-        notificacion = Notification.objects.create(
-            user_sender=None,  # Sin remitente
-            type_of_notification=Notification.NotificationType.APROBADO,
-            message=f"Tu solicitud de préstamo ha sido aprobada: {instance.box.name}",
-        )
-        notificacion.user_revoker.add(instance.borrower)
 
 
 def create_notification_on_desaprobado(sender, instance, **kwargs):
@@ -407,6 +414,8 @@ post_save.connect(create_notification_on_devuelto, sender=Log)
 post_save.connect(create_notification_on_aprobado, sender=Log)
 post_save.connect(create_notification_on_desaprobado, sender=Log)
 post_save.connect(create_notification_on_pedido, sender=Log)
+
+"""
 
 
 class Budget(models.Model):
