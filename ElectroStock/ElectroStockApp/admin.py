@@ -151,7 +151,7 @@ class UserResource(resources.ModelResource):
 
         # Asignar el objeto "curso" al campo "course" del usuario
         instance.course = course
-        instance.is_staff= False
+        instance.is_staff = False
         # Cifrar la contraseña si es necesario
         if not dry_run:
             password = instance.password
@@ -248,6 +248,7 @@ from django import forms
 
 from django.contrib.admin.filters import ChoicesFieldListFilter
 
+
 class LogForm(forms.ModelForm):
     class Meta:
         model = Log
@@ -259,12 +260,15 @@ class LogForm(forms.ModelForm):
 
 
 from django.contrib import messages
+
+
 # Clase de filtros y busqueda de los prestamos
 class LogyAdmin(ImportExportActionModelAdmin):
     form = LogForm
 
     class Media:
         js = ("admin/js/log_admin.js",)
+
     resource_class = LogResource
     list_display = (
         "status",
@@ -312,25 +316,28 @@ class LogyAdmin(ImportExportActionModelAdmin):
             )
         return exclude
 
+
 from import_export.widgets import ForeignKeyWidget
+
+
 # Clase para export-import de boxes
 class BoxResource(resources.ModelResource):
     element = fields.Field(
-        column_name='element__id',
-        attribute='element',
-        widget=ForeignKeyWidget(Element, 'id')
+        column_name="element__id",
+        attribute="element",
+        widget=ForeignKeyWidget(Element, "id"),
     )
     responable = fields.Field(
-        column_name='responsable__username',
-        attribute='responsable',
-        widget=ForeignKeyWidget(CustomUser, 'username')
+        column_name="responsable__username",
+        attribute="responsable",
+        widget=ForeignKeyWidget(CustomUser, "username"),
     )
     location = fields.Field(
-        column_name='location__name',
-        attribute='location',
-        widget=ForeignKeyWidget(Location, 'name')
+        column_name="location__name",
+        attribute="location",
+        widget=ForeignKeyWidget(Location, "name"),
     )
-    
+
     class Meta:
         model = Box
         fields = (
@@ -349,14 +356,15 @@ class BoxResource(resources.ModelResource):
             "element",
             "location__name",
         )
+
     def before_import_row(self, row, **kwargs):
-        element_id = row.get('element')
+        element_id = row.get("element")
         if element_id:
             try:
                 element = Element.objects.get(id=element_id)
-                row['element'] = element
+                row["element"] = element
             except Element.DoesNotExist:
-                pass  
+                pass
 
 
 # Clase de filtros y busqueda de box
@@ -476,6 +484,7 @@ class LocationResource(resources.ModelResource):
             "laboratoy__id",
         )
 
+
 # Clase de filtros y busqueda de las ubicaciones
 class LocationAdmin(ImportExportActionModelAdmin):
     list_display = [
@@ -483,9 +492,11 @@ class LocationAdmin(ImportExportActionModelAdmin):
         "laboratoy",
     ]
 
+
 # Clase de filtros y busqueda de las ubicaciones
 class TokenAdmin(ImportExportActionModelAdmin):
     list_display = ("name",)
+
 
 class BudgetLogAdmin(ImportExportActionModelAdmin):
     list_display = [
@@ -497,13 +508,15 @@ class BudgetLogAdmin(ImportExportActionModelAdmin):
         "quantity",
     ]
 
+
 class BudgetAdmin(ImportExportActionModelAdmin):
     list_display = [
         "name",
         "status",
         "speciality",
     ]
-    
+
+
 # Registramos los filtros y busquedas de las clases
 admin.site.register(Element, ElementAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
@@ -515,8 +528,8 @@ admin.site.register(Box, BoxAdmin)
 admin.site.register(Log, LogyAdmin)
 admin.site.register(Speciality)
 
-#SACAR ESTE
+# SACAR ESTE
 admin.site.register(TokenSignup, TokenAdmin)
-#admin.site.register(Notification)
-#admin.site.register(Budget, BudgetAdmin)
-#admin.site.register(BudgetLog,BudgetLogAdmin)
+admin.site.register(Notification)  # para testear notificaciones
+# admin.site.register(Budget, BudgetAdmin)
+# admin.site.register(BudgetLog,BudgetLogAdmin)

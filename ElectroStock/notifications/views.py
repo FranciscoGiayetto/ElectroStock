@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework import viewsets, permissions, generics
 from api.serializers import *
 
+
 @api_view(["POST"])
 def create_test_notification(request):
     try:
@@ -20,7 +21,7 @@ def create_test_notification(request):
         tipo_notificacion = request.data.get("tipo_notificacion")
         # Obtén el grupo "Profesor"
         profesor_group = Group.objects.get(name="Profesor")
-        
+
         # Crea y envía la notificación
         notificacion = models.Notification.objects.create(
             user_sender=request.user,  # El remitente es el usuario autenticado
@@ -33,7 +34,6 @@ def create_test_notification(request):
 
         # Agrega a los usuarios del grupo "Profesor" a la notificación
         notificacion.user_revoker.add(*profesor_group_users)
-        
 
         return JsonResponse({"mensaje": "Notificación enviada exitosamente."})
     except Exception as e:

@@ -214,8 +214,9 @@ class Location(models.Model):
         verbose_name_plural = "Ubicaciones"
         verbose_name = "Ubicacion"
 
+
 class TokenSignup(models.Model):
-    name = models.CharField(max_length=30,verbose_name='Nombre')
+    name = models.CharField(max_length=30, verbose_name="Nombre")
 
     def __str__(self):
         return self.name
@@ -224,8 +225,11 @@ class TokenSignup(models.Model):
         verbose_name_plural = "Tokens"
         verbose_name = "Token"
 
+
 class Box(models.Model):
-    responsable = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True,blank=True)
+    responsable = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, null=True, blank=True
+    )
     minimumStock = models.IntegerField(verbose_name="Stock Minimo")
     name = models.CharField(max_length=255, verbose_name="Nombre")
     element = models.ForeignKey(
@@ -240,7 +244,7 @@ class Box(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['name']),  
+            models.Index(fields=["name"]),
         ]
         verbose_name_plural = "Boxes"
         verbose_name = "Box"
@@ -283,9 +287,18 @@ class Log(models.Model):
         verbose_name="Prestatario",
     )
     box = models.ForeignKey(Box, on_delete=models.CASCADE)
-    observation = models.CharField(max_length=100, null=True, blank=True,verbose_name='Observaciones')
-    dateIn = models.DateTimeField(auto_now=True,verbose_name='Fecha de ingreso') #si este campo da error revisar en la init 
-    dateOut = models.DateField(null=True, blank=True, verbose_name='Fecha de devolucion',help_text="No es necesario si se carga como comprado")
+    observation = models.CharField(
+        max_length=100, null=True, blank=True, verbose_name="Observaciones"
+    )
+    dateIn = models.DateTimeField(
+        auto_now=True, verbose_name="Fecha de ingreso"
+    )  # si este campo da error revisar en la init
+    dateOut = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Fecha de devolucion",
+        help_text="No es necesario si se carga como comprado",
+    )
 
     def __str__(self):
         return self.status
@@ -310,7 +323,7 @@ class Log(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['quantity', 'status','box']),  
+            models.Index(fields=["quantity", "status", "box"]),
         ]
         verbose_name_plural = "Prestamos y movimientos"
         verbose_name = "Prestamo y movimientos"
@@ -330,7 +343,7 @@ def create_notification_on_pedido(sender, instance, **kwargs):
         )
 
         notificacion = Notification.objects.create(
-            user_sender=None,  # Sin remitente
+            user_sender=instance.borrower,  # Sin remitente
             type_of_notification=Notification.NotificationType.PEDIDO,
             message=detalles_pedido,
         )
@@ -395,10 +408,12 @@ post_save.connect(create_notification_on_aprobado, sender=Log)
 post_save.connect(create_notification_on_desaprobado, sender=Log)
 post_save.connect(create_notification_on_pedido, sender=Log)
 
+
 class Budget(models.Model):
     class Status(models.TextChoices):
         COMPLETADO = "COMPLETADO", "Completado"
         PROGRESO = "PROGRESO", "Progreso"
+
     name = models.CharField(max_length=30, verbose_name="Nombre")
     status = models.CharField(
         max_length=30,
@@ -413,15 +428,18 @@ class Budget(models.Model):
         blank=True,
         verbose_name="Especialidad",
     )
+
     class Meta:
         verbose_name_plural = "Presupuesto"
         verbose_name = "Presupuesto"
+
 
 class BudgetLog(models.Model):
     class Status(models.TextChoices):
         COMPRADO = "COMPRADO", "Comprado"
         PENDIENTE = "PENDIENTE", "Pendiente"
-    name = models.CharField(max_length=30, verbose_name="Nombre",null=True, blank=True)
+
+    name = models.CharField(max_length=30, verbose_name="Nombre", null=True, blank=True)
     status = models.CharField(
         max_length=30,
         choices=Status.choices,
@@ -437,7 +455,11 @@ class BudgetLog(models.Model):
         verbose_name="Precio",
     )
     element = models.ForeignKey(
-        Element, on_delete=models.CASCADE, verbose_name="Elemento" ,null=True, blank=True
+        Element,
+        on_delete=models.CASCADE,
+        verbose_name="Elemento",
+        null=True,
+        blank=True,
     )
     budget = models.ForeignKey(
         Budget, on_delete=models.CASCADE, verbose_name="Presupuesto"
