@@ -88,21 +88,6 @@ const Prestamos = () => {
     <div className='container pagecontainer' style={{fontFamily: 'Roboto, sans-serif'}}>
       
       <div >
-        {isLoading && (
-          <>
-            <IconButton
-              title="Visualizar Filtros"
-              onClick={() => setShowWordListPrestamos(!showWordListPrestamos)}
-              aria-label={showWordListPrestamos ? 'Ocultar Categorías' : 'Mostrar Categorías'}
-            >
-            {showWordListPrestamos ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
-            {showWordListPrestamos && <WordListPrestamos />}
-          </>
-        )} 
-      </div>
-                    
-      <div >
           {data.length > 0 ? (
             data.map((prestamo, index) => (
               <PrestamosCardPackage
