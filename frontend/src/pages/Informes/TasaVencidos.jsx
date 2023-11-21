@@ -21,9 +21,10 @@ const TasaVencidos = ({ endpoint }) => {
                     <span className='icono-tasa'><EventBusyIcon></EventBusyIcon></span>
                     {vencidoPercentage !== null ? `${vencidoPercentage}%` : 'Cargando...'}
                 </ListGroup.Item>
-                <ListGroup.Item as="li" active>
-                    Tasa vencidos
-                </ListGroup.Item>
+                <ListGroup.Item as="li" className="white-text" style={{ color: 'white !important' }}>
+    Tasa vencidos
+</ListGroup.Item>
+
             </ListGroup>
         </div>
     );
