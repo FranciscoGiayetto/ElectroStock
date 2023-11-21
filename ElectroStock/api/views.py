@@ -765,58 +765,115 @@ def elementos_por_categoria(request, category_id):
 
     # Obtener todos los elementos que pertenecen a la categoría
     elementos = models.Element.objects.filter(category=categoria)
+    if elementos.exists():
+        # Paginar los elementos
+        paginated_elements = pagination_class.paginate_queryset(elementos, request)
 
-    # Paginar los elementos
-    paginated_elements = pagination_class.paginate_queryset(elementos, request)
+        elementos_con_stock = []
 
-    elementos_con_stock = []
+        if paginated_elements is not None:
+            for elemento in paginated_elements:
+                element_id = elemento.id
 
-    if paginated_elements is not None:
-        for elemento in paginated_elements:
-            element_id = elemento.id
+                boxes = models.Box.objects.filter(element__id=element_id)
+                box_ids = [box.id for box in boxes]
 
-            boxes = models.Box.objects.filter(element__id=element_id)
-            box_ids = [box.id for box in boxes]
+                total_com = models.Log.objects.filter(
+                    box__id__in=box_ids, status="COM"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_ped = models.Log.objects.filter(
+                    box__id__in=box_ids, status="PED"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_rot = models.Log.objects.filter(
+                    box__id__in=box_ids, status="ROT"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_ap = models.Log.objects.filter(
+                    box__id__in=box_ids, status="AP"
+                ).aggregate(total=Sum("quantity"))["total"]
 
-            total_com = models.Log.objects.filter(
-                box__id__in=box_ids, status="COM"
-            ).aggregate(total=Sum("quantity"))["total"]
-            total_ped = models.Log.objects.filter(
-                box__id__in=box_ids, status="PED"
-            ).aggregate(total=Sum("quantity"))["total"]
-            total_rot = models.Log.objects.filter(
-                box__id__in=box_ids, status="ROT"
-            ).aggregate(total=Sum("quantity"))["total"]
-            total_ap = models.Log.objects.filter(
-                box__id__in=box_ids, status="AP"
-            ).aggregate(total=Sum("quantity"))["total"]
+                if total_com is None:
+                    total_com = 0
+                if total_ped is None:
+                    total_ped = 0
+                if total_ap is None:
+                    total_ap = 0
+                if total_rot is None:
+                    total_rot = 0
 
-            if total_com is None:
-                total_com = 0
-            if total_ped is None:
-                total_ped = 0
-            if total_ap is None:
-                total_ap = 0
-            if total_rot is None:
-                total_rot = 0
+                current_stock = total_com - total_ped - total_ap - total_rot
 
-            current_stock = total_com - total_ped - total_ap - total_rot
+                elemento_con_stock = {
+                    "id": elemento.id,
+                    "name": elemento.name,
+                    "description": elemento.description,
+                    "image": elemento.image,
+                    "category": elemento.category,
+                    "current_stock": current_stock,
+                }
 
-            elemento_con_stock = {
-                "id": elemento.id,
-                "name": elemento.name,
-                "description": elemento.description,
-                "image": elemento.image,
-                "category": elemento.category,
-                "current_stock": current_stock,
-            }
+                elementos_con_stock.append(elemento_con_stock)
 
-            elementos_con_stock.append(elemento_con_stock)
+        serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
 
-    serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
+        return pagination_class.get_paginated_response(serializer.data)
+    else:
+         # La categoría no tiene elementos, verificar si tiene categorías hijas con elementos
+        categorias_hijas = categoria.child_categories.all()
+        elementos_categorias_hijas = models.Element.objects.filter(category__in=categorias_hijas)
 
-    return pagination_class.get_paginated_response(serializer.data)
+        if elementos_categorias_hijas.exists():
+            # Devolver elementos de categorías hijas
+            paginated_elements_hijas = pagination_class.paginate_queryset(elementos_categorias_hijas, request)
 
+            elementos_con_stock_hijas = []
+
+            if paginated_elements_hijas is not None:
+                for elemento_hija in paginated_elements_hijas:
+                    elemento_hija_id = elemento_hija.id
+
+                    boxes = models.Box.objects.filter(element__id=elemento_hija_id)
+                    box_ids = [box.id for box in boxes]
+
+                    total_com = models.Log.objects.filter(
+                        box__id__in=box_ids, status="COM"
+                    ).aggregate(total=Sum("quantity"))["total"]
+                    total_ped = models.Log.objects.filter(
+                        box__id__in=box_ids, status="PED"
+                    ).aggregate(total=Sum("quantity"))["total"]
+                    total_rot = models.Log.objects.filter(
+                        box__id__in=box_ids, status="ROT"
+                    ).aggregate(total=Sum("quantity"))["total"]
+                    total_ap = models.Log.objects.filter(
+                        box__id__in=box_ids, status="AP"
+                    ).aggregate(total=Sum("quantity"))["total"]
+
+                    if total_com is None:
+                        total_com = 0
+                    if total_ped is None:
+                        total_ped = 0
+                    if total_ap is None:
+                        total_ap = 0
+                    if total_rot is None:
+                        total_rot = 0
+
+                    current_stock = total_com - total_ped - total_ap - total_rot
+
+                    elemento_con_stock = {
+                        "id": elemento_hija_id,
+                        "name": elemento_hija.name,
+                        "description": elemento_hija.description,
+                        "image": elemento_hija.image,
+                        "category": elemento_hija.category,
+                        "current_stock": current_stock,
+                    }
+
+                    elementos_con_stock_hijas.append(elemento_con_stock)
+
+                serializer_hijas = ElementEcommerceSerializer(elementos_con_stock_hijas, many=True)
+                return pagination_class.get_paginated_response(serializer_hijas.data)
+        else:
+            # La categoría no tiene elementos ni categorías hijas con elementos, devolver respuesta vacía
+            return Response([])
 
 from django.utils.dateparse import parse_datetime
 from dateutil.parser import parse as dateparse
