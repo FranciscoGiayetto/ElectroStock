@@ -15,7 +15,7 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
   }, [searchTerm, lista]);
 
   return (
-    <Modal show={true} onHide={onClose} size="lg" contentClassName='custom-modal-content '>
+    <Modal id="PrestamoModal" show={true} onHide={onClose} size="lg" contentClassName='custom-modal-content '>
       <Modal.Header className="d-flex justify-content-between align-items-center" closeButton>
   <div className="d-flex flex-column">
     <Modal.Title>Prestamos:</Modal.Title>
@@ -49,7 +49,7 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
         
       </div>):(null)}
 </Modal.Header>
-      <Modal.Body>
+      <Modal.Body id="modalBody">
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           {filteredLista.map((element, index) => (
             <PrestamosCard
