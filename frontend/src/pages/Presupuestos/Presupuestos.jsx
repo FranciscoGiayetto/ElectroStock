@@ -54,9 +54,9 @@ function Presupuestos() {
               </Spinner>
             </div>
           )}
-    <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
+    <Container>
       
-      <Row>
+      <Row className="mt-1">
         <Col style={{ width: '62.5rem' }}>
           <DataTable presupuestos={presupuestos} />
         </Col>

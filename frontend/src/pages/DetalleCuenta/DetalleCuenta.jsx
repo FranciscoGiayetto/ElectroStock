@@ -71,9 +71,9 @@ function DetalleCuenta() {
             </div>
           )}
       
-    <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
+    <Container>
       
-      <Row>
+      <Row className="mt-4">
         <Col>
           <CardUser
             first_name={element.first_name}

@@ -425,7 +425,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
 />
 
             
-            
+            <div>
             <button
               onClick={handleBudgetStatusChange}
               className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
@@ -436,6 +436,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
             >
               {budgetStatus === 'PROGRESO' ? 'EN PROGRESO' : 'COMPLETADO'}
             </button>
+            </div>
           </div>
         </MDBCardHeader>
         <div className="text-center mb-3" style={{ paddingTop: '1rem' }}>
