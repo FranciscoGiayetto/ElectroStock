@@ -32,7 +32,7 @@ import { useMediaQuery } from '@mui/material';
 import useAxios from "../../utils/useAxios";
 import { useAuthStore } from '../../store/auth';
 import { cartEventEmitter } from '../../pages/DetalleProducto/DetalleProducto';
-import Spinner from 'react-bootstrap/Spinner';
+
 
 
 const { Header, Sider } = Layout;
@@ -107,9 +107,10 @@ async function downloadApp() {
   // Hide the install button.
   setIsReadyForInstall(false);
 }
-const isSmallScreen = useMediaQuery('(max-width: 1100px)');
-
-
+const isSmallScreen = useMediaQuery('(max-width: 830px)');
+const isSmallScreen4 = useMediaQuery('(max-width: 1200px)');
+const isSmallScreen3 = useMediaQuery('(max-width: 1100px)');
+const isSmallScreen2 = useMediaQuery('(max-width: 970px)');
 
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
@@ -204,6 +205,22 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               Admin
             </Menu.Item>
                )}
+                
+              {isSmallScreen4 && (
+                <Menu.Item key="6" icon={<SettingsIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/detalleCuenta' }}>
+                Cuenta
+              </Menu.Item>
+              )}
+             {isSmallScreen4 && (
+                <Menu.Item key="7" icon={<NotificationsRoundedIcon style={{ fontSize: '20px' }} />} >
+                Notificaciones
+              </Menu.Item>
+              )}
+              {isSmallScreen3 && (
+                <Menu.Item key="8" icon={<ShoppingCartOutlinedIcon  style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/carrito' }}>
+                Carrito
+              </Menu.Item>
+              )}
           <Menu.Divider />
      
           
@@ -218,11 +235,12 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
       </Sider>
 
       {/* NAVBAR */}
-      <Header className='navbar'>
-          <Container fluid>
-            <Row>
-            <Col>
-              <Button
+      <Header>
+        
+        <Row>
+          <div className='navbar'>
+          <Col>
+          <Button
                 variant="primary"
                 type="submit"
                 className='button'
@@ -230,23 +248,17 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               >
                 <MenuRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
               </Button>
-            </Col>
-
-           
-          
-              {/* Image */}
-              <Col style={{ marginLeft:'1.5rem' }}>  
-              {!isSmallScreen && (
-              
-                <a href="/">
-                  <img src={itsv} alt="itsv" className='logo-img' />
-                </a>   
-              )}           
               </Col>
+          <Col>
+              {!isSmallScreen2 && (
               
-              {/* Searchbar */}
-              <Col >            
-              <form onSubmit={handleSearch} className={`div-form ${isSmallScreen ? 'search-small' : 'search-large'}`}>                
+              <a href="/">
+                <img src={itsv} alt="itsv" className='logo-img' />
+              </a>   
+            )}      
+          </Col>
+          <Col>
+          <form onSubmit={handleSearch} className={`div-form ${isSmallScreen? 'search-small' : 'search-large'}`}>                
                   <Autocomplete
                       className={`search-input`}
                     freeSolo
@@ -268,17 +280,17 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
                     )}
                   />
-                  <Tooltip title="Buscar" arrow placement="bottom">
+                   </form>
+          </Col>
+          <Col>
+          <Tooltip title="Buscar" arrow placement="bottom">
                     <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
                       <SearchRoundedIcon />
                     </Button>
                   </Tooltip>
-                </form> 
-              </Col>
-
-              {/* Buttons */}
-              <Col>
-                {!isSmallScreen && (
+                  </Col>
+          <Col>
+                  {!isSmallScreen3 && (
                   <Tooltip title="Carrito" arrow placement="bottom">
                     <Button
                       variant="primary"
@@ -293,11 +305,11 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
                     </Button>
                   </Tooltip>
                   
+                  
                 )}
-              </Col>
-
-              <Col style={{ marginLeft:'0'}}>
-              {!isSmallScreen && (
+                </Col>
+          <Col>
+                {!isSmallScreen4 && (
                 <Tooltip title="Notificaciones" arrow placement="bottom">
                   <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
                     <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
@@ -308,24 +320,22 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
                 
               )}
               </Col>
-
-              <Col style={{ marginLeft:'0rem'}}>   
-              {!isSmallScreen && (
+          <Col>
+              {!isSmallScreen4 && (
                 <Tooltip title="Configuración" arrow placement="bottom">
                   <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
                     <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
                   </Button>
                 </Tooltip>
               )}
-              </Col>          
-            </Row>
-          </Container>
-        </Header>
-        <div className="text-center">
-              <Spinner animation="border" variant="primary" />
-            </div>
-      
-    </div>
+          </Col>
+          </div>
+
+        </Row>
+
+      </Header>
+        </div>       
+
   );
 };
 

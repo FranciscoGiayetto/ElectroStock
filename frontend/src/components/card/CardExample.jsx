@@ -19,6 +19,7 @@ export default function CardExample(props) {
                         src={image}
                         fluid
                         className="w-100"
+                        style={{ width: '3rem', height: '9rem' }} // Ajusta el tamaño según tus necesidades
                       />
                     </Link>
                     <div>
