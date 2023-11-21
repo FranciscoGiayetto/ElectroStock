@@ -110,7 +110,7 @@ async function downloadApp() {
 const isSmallScreen = useMediaQuery('(max-width: 830px)');
 const isSmallScreen4 = useMediaQuery('(max-width: 1200px)');
 const isSmallScreen3 = useMediaQuery('(max-width: 1100px)');
-const isSmallScreen2 = useMediaQuery('(max-width: 970px)');
+const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
 
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
@@ -248,15 +248,18 @@ const isSmallScreen2 = useMediaQuery('(max-width: 970px)');
               >
                 <MenuRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
               </Button>
+              
               </Col>
-          <Col>
               {!isSmallScreen2 && (
+          <Col>
+              
               
               <a href="/">
                 <img src={itsv} alt="itsv" className='logo-img' />
               </a>   
-            )}      
+               
           </Col>
+           )}  
           <Col>
           <form onSubmit={handleSearch} className={`div-form ${isSmallScreen? 'search-small' : 'search-large'}`}>                
                   <Autocomplete
@@ -282,6 +285,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 970px)');
                   />
                    </form>
           </Col>
+          {!isSmallScreen2 && (
           <Col>
           <Tooltip title="Buscar" arrow placement="bottom">
                     <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
@@ -289,8 +293,9 @@ const isSmallScreen2 = useMediaQuery('(max-width: 970px)');
                     </Button>
                   </Tooltip>
                   </Col>
-          <Col>
+          )}
                   {!isSmallScreen3 && (
+                 <Col>  
                   <Tooltip title="Carrito" arrow placement="bottom">
                     <Button
                       variant="primary"
@@ -303,13 +308,11 @@ const isSmallScreen2 = useMediaQuery('(max-width: 970px)');
                         <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                       </Badge>
                     </Button>
-                  </Tooltip>
-                  
-                  
-                )}
+                  </Tooltip>            
                 </Col>
+                 )}
           <Col>
-                {!isSmallScreen4 && (
+                { (
                 <Tooltip title="Notificaciones" arrow placement="bottom">
                   <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
                     <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
@@ -320,15 +323,17 @@ const isSmallScreen2 = useMediaQuery('(max-width: 970px)');
                 
               )}
               </Col>
-          <Col>
               {!isSmallScreen4 && (
+          <Col>
+              
                 <Tooltip title="Configuración" arrow placement="bottom">
                   <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
                     <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
                   </Button>
                 </Tooltip>
-              )}
+             
           </Col>
+           )}
           </div>
 
         </Row>
