@@ -28,10 +28,10 @@ function Informes({ isProfessor }) {
     <div className="container pagecontainer" style={{marginLeft:'125px'}}>
       <div className="row">
         {/* Fila 1 */}
-        <div className="col-md-4">
+        <div className="col-md-4" style={{color:'white'}}>
           <TasaVencidos endpoint="estadisticas/vencidos/" />
         </div>
-        <div className="col-md-4">
+        <div className="col-md-4" style={{color:'white'}}>
           <TasaAprobacion endpoint="estadisticas/aprobado/" />
         </div>
         
