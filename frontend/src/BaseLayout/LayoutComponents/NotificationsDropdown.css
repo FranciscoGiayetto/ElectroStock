@@ -1,0 +1,20 @@
+/* NotificationsDropdown.css */
+.notifications-dropdown {
+    position: absolute;
+    width: 400px; /* ajusta el ancho según tus preferencias */
+    max-height: 400px; /* ajusta la altura máxima según tus preferencias */
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1; /* asegura que esté sobre otros elementos */
+    top: 64px; /* ajusta la distancia desde la parte superior según tu barra de navegación */
+    right: 16px; /* ajusta la distancia desde la derecha según tus preferencias */
+    padding-inline: 1rem;
+  }
+  
+  /* ... (estilos existentes) */
+  .container-relative {
+    position: relative;
+  }  

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import AddModeratorRoundedIcon from '@mui/icons-material/AddModeratorRounded';
@@ -32,7 +32,7 @@ import { useMediaQuery } from '@mui/material';
 import useAxios from "../../utils/useAxios";
 import { useAuthStore } from '../../store/auth';
 import { cartEventEmitter } from '../../pages/DetalleProducto/DetalleProducto';
-
+import NotificationsDropdown from './NotificationsDropdown';
 
 
 const { Header, Sider } = Layout;
@@ -49,16 +49,23 @@ const LayoutComponents = ({ onSearch, isProfessor }) => {
   const [myOptions, setMyOptions] = useState([]);
   const [cantCarrito, setCantCarrito] = useState(0);
   const [cantNotificaciones, setCantNotificaciones] = useState(0);
+  const [notificaciones, setNotificaciones] = useState([]);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
   ]);
   const userData = user();
+  const notificationsRef = useRef();
+  const handleToggleNotifications = () => {
+    setIsNotificationsOpen(!isNotificationsOpen);
+  };
 
   useEffect(() => {
     getElement();
     getCantCarrito();
     getCantNotificaciones();
+    getNotificaciones();
   }, []);
 
  
@@ -160,6 +167,16 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
     }
   };
 
+  const getNotificaciones = async () => {
+    try {
+      const response = await api.get(`/notificaciones/${userData.user_id}/`);
+      const data = await response.data;
+      setNotificaciones(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       {/* SIDEBAR */}
@@ -218,6 +235,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
       </Sider>
 
       {/* NAVBAR */}
+              
       <Header className='navbar'>
           <Container fluid>
             <Row>
@@ -299,7 +317,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               <Col style={{ marginLeft:'0'}}>
               {!isSmallScreen && (
                 <Tooltip title="Notificaciones" arrow placement="bottom">
-                  <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
+                  <Button   ref={notificationsRef} variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones" onClick={handleToggleNotifications}>
                     <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
                       <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                     </Badge>
@@ -320,6 +338,9 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               </Col>          
             </Row>
           </Container>
+          {isNotificationsOpen && (
+          <NotificationsDropdown referenceElement={notificationsRef.current} notifications={notificaciones} onClose={() => setIsNotificationsOpen(false)} />
+        )}
         </Header>
       
     </div>
