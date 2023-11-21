@@ -196,9 +196,11 @@ function Carrito() {
                           onChange={(e) => setDateInputData(e.target.value)}
                         />
                       </div>
-                      <Button className='btn-style' onClick={handleContinue}>
-                        Siguiente
-                      </Button>
+                      <div className="mb-2 d-flex flex-column justify-content-between align-items-center">
+  <Button className='btn-style' onClick={handleContinue}>
+    Siguiente
+  </Button>
+</div>
                     </div>
                   </MDBCol>
                 </MDBRow>
