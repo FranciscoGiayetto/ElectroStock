@@ -16,6 +16,11 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import IconButton from '@mui/material/IconButton';
 
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet"></link>
+</head>
 
 
 function Ecommerce({ allItems }) {
@@ -78,7 +83,7 @@ function Ecommerce({ allItems }) {
   };
 
   return (
-    <Container style={{ marginTop: '5rem' }}>
+    <Container style={{ marginTop: '5rem', fontFamily: 'Roboto, sans-serif' }}>
       <Row>
         <Col xs={12} md={2} className={`d-none d-md-block`}>
           {!isLoading && (
