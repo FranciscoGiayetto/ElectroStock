@@ -16,10 +16,7 @@ class TokenSerializer(serializers.ModelSerializer):
         fields = ["id", "name"]
 
 
-class NotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Notification
-        fields = "__all__"
+
 
 
 # Para ver y editar categorias
@@ -393,3 +390,10 @@ class ElementEcommerceSerializer2(serializers.ModelSerializer):
         data["current_stock"] = current_stock
 
         return data
+
+class NotificationSerializer(serializers.ModelSerializer):
+    user_sender= UsersSerializer()
+    user_revoker=groups = serializers.StringRelatedField(many=True)
+    class Meta:
+        model = models.Notification
+        fields = "__all__"

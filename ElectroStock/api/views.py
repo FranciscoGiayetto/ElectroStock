@@ -526,7 +526,7 @@ def cantCarrito(request, user_id):
 @api_view(["GET", "POST"])
 def cantNotificaciones(request, user_id):
     if request.method == "GET":
-        queryset = models.Notification.objects.filter(user_revoker=user_id)
+        queryset = models.Notification.objects.filter(user_revoker=user_id, status=models.Notification.NotificationStatus.UNREAD)
 
         # Contar la cantidad de elementos en el carrito
         count = queryset.count()
@@ -1101,6 +1101,29 @@ def CambioDesaprobado(request, user_id, date_in):
                 "No se encontraron logs para este usuario con status DESAPROBADO o PEDIDO."
             )
 
+@api_view(["GET", "POST", "PUT"])
+def notificacionesLeidasViewSet(request, user_id):
+    if request.method == "GET":
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Notification.objects.filter(
+            user_revoker=user_id
+        )
+        serializer = NotificationSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    if request.method == "PUT":
+        # Agregar código para manejar la solicitud PUT
+        notificaciones = models.Notification.objects.filter(
+            user_revoker=user_id, status=models.Notification.NotificationStatus.UNREAD
+        )
+        new_status = models.Notification.NotificationStatus.READ
+        for notificacion in notificaciones:
+            notificacion.status = new_status
+            notificacion.save()
+
+        serializer = NotificationSerializer(notificaciones, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 @api_view(["GET", "POST", "PUT"])
 def CambioLog(request, user_id):
@@ -1156,8 +1179,15 @@ def CambioLog(request, user_id):
 def NotificacionesAPIView(request, user_id):
     if request.method == "GET":
         queryset = models.Notification.objects.filter(user_revoker=user_id)
+        notifications = queryset.all()
 
-        serializer = NotificationSerializer(queryset, many=True)
+        # Formatear el timestamp en el formato deseado
+        formatted_notifications = []
+        for notification in notifications:
+            notification.timestamp = notification.timestamp.strftime("%Y-%m-%d %H:%M")
+            formatted_notifications.append(notification)
+
+        serializer = NotificationSerializer(formatted_notifications, many=True)
         return Response(serializer.data)
 
     if request.method == "POST":

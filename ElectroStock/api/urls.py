@@ -21,7 +21,7 @@ router.register("box", BoxViewSet, "box")
 router.register("especialidad", SpecialityViewSet, "especialidad")
 router.register("token", TokenViewSet, "token")
 router.register("log", LogViewSet, "log")
-router.register("notification", NotificationViewSet, "notification")
+#router.register("notification", NotificationViewSet, "notification")
 
 
 urlpatterns = [
@@ -36,6 +36,7 @@ urlpatterns = [
         name="categories_por_especialidad",
     ),
     path("logPost/<int:user_id>/", CambioLog, name="logPost"),
+    path("notificacionesLeidas/<int:user_id>/", notificacionesLeidasViewSet, name="notificacionesLeidas"),
     path("usersFiltro/<str:name>/", UsersFiltros, name="users"),
     path(
         "desaprobadoPost/<int:user_id>/<str:date_in>/",
