@@ -2,3 +2,14 @@
     font-size: 12px; /* Adjust the font size as needed */
   }
   
+
+@media only screen and (max-width: 540px) {
+    .label-responsive{
+      display:none;
+    }
+    .btn-resp{
+      width: 4rem;
+      font-size: x-small;
+      padding: 0%;
+    }
+  }
