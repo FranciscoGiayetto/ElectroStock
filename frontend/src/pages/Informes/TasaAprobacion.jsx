@@ -22,7 +22,7 @@ const TasaAprobacion = ({ endpoint }) => {
                     {approvalRate !== null ? `${approvalRate}%` : 'Cargando...'}
                 </ListGroup.Item>
                 <ListGroup.Item as="li" className="white-text" style={{ color: 'white !important' }}>
-    Tasa vencidos
+    Tasa aprobación
 </ListGroup.Item>
             </ListGroup>
         </div>

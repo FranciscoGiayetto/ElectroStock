@@ -22,7 +22,7 @@ const TiempoPorPrestamo = () => {
   return (
     <Card className='customCard'>
       <Card.Body>
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center" style={{marginBottom:'2px !important'}}>
           <div className="mr-3">
             <AccessTimeOutlinedIcon sx={{ fontSize: 40 }} style={{ alignSelf: 'center' }} />
           </div>
