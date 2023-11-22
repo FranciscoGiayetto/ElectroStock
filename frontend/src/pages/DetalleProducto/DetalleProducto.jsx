@@ -11,6 +11,8 @@ import TextField from '@mui/material/TextField';
 import { EventEmitter } from 'events';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -113,7 +115,6 @@ function DetalleProducto() {
   };
 
   const handleSubmit = async (e) => {
-    // Ensure that the event object is available and not undefined
     if (e) {
       e.preventDefault();
     }
@@ -124,7 +125,7 @@ function DetalleProducto() {
       lender: userData.user_id,
       status: 'CAR',
       quantity: 1,
-      observation: observation, // Include the value of the observation
+      observation: observation, 
       dateIn: null,
       dateOut: null,
     };
@@ -135,11 +136,10 @@ function DetalleProducto() {
       setPostRes(response.data.response);
       cartEventEmitter.emit('updateCart');
       navigate('/tienda');
-      toast('Producto agregado');
-      console.log(toast);
+      toast.success('Se agrego un producto', { style:{marginTop:'3rem'} });
     } catch (error) {
       setPostRes(error.response.data);
-      toast('Hubo un error');
+      toast.error('Ha ocurrido un error', { style:{marginTop:'3rem'} });
     }
   };
   
