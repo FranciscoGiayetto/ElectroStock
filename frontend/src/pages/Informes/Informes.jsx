@@ -7,6 +7,9 @@ import DiaDemandado from './DiaDemandado';
 import TiempoPorPrestamo from './TiempoPorPrestamo';
 import HorizontalBarChart from './HorizontalBarChart';
 import VerticalBarChart from './VerticalBarChart';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function Informes({ isProfessor }) {
   const [deudorData, setDeudorData] = useState([]);
@@ -29,50 +32,52 @@ function Informes({ isProfessor }) {
 
   if (isMobile) {
     return (
-      <div className="container pagecontainer" style={{ marginLeft: '10px', overflowY: 'hidden' }}>
+      <Container className="pagecontainer" style={{ marginLeft: '10px', overflowY: 'hidden' }}>
         {/* Contenido para dispositivos móviles */}
-        <div className="row">
-          <div className="col-12">
+        <Row>
+          <Col xs={12}>
             <TasaVencidos endpoint="estadisticas/vencidos/" />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-12">
+          </Col>
+        </Row>
+    
+        <Row>
+          <Col xs={12}>
             <TasaAprobacion endpoint="estadisticas/aprobado/" />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-12">
-            <div className="d-flex flex-column align-items-start" style={{ marginLeft: '11px' }}>
+          </Col>
+        </Row>
+    
+        <Row>
+          <Col xs={12}>
+            <div className="d-flex flex-column align-items-start" >
               <TiempoPorPrestamo />
               <DiaDemandado subtitle="Día que más se pide" />
             </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-12">
+          </Col>
+        </Row>
+    
+        <Row style={{marginTop:'30px', height:'240px',width:'400px'}}>
+          <Col xs={12}>
             <h4>Box que mas se rompen</h4>
             <VerticalBarChart data={boxData} />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-12">
+          </Col>
+        </Row>
+    
+        <Row>
+          <Col xs={12}>
             <MostRequestedElements endpoint="estadisticas/maspedido/" />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-12">
+          </Col>
+        </Row>
+    
+        <Row style={{marginTop:'30px', height:'240px',width:'400px',marginBottom:'50px'}}>
+          <Col xs={12}>
             <h4 style={{ marginTop: '30px' }}>Top deudores</h4>
             <HorizontalBarChart data={deudorData}></HorizontalBarChart>
-          </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Container>
     );
+    
+    
   }
 
   return (
