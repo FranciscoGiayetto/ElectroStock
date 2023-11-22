@@ -11,7 +11,7 @@ import VerticalBarChart from './VerticalBarChart';
 function Informes({ isProfessor }) {
   const [deudorData, setDeudorData] = useState([]);
   const [boxData, setBoxData] = useState([]);
-  console.log(isProfessor)
+  console.log(isProfessor);
   useEffect(() => {
     fetch('/api/estadisticas/mayordeudor/')
       .then(response => response.json())
@@ -23,6 +23,57 @@ function Informes({ isProfessor }) {
       .then(data => setBoxData(data))
       .catch(error => console.error('Error fetching box data:', error));
   }, []);
+
+  // Verificar si la pantalla es de un tamaño pequeño (por ejemplo, un dispositivo móvil)
+  const isMobile = window.innerWidth <= 768;
+
+  if (isMobile) {
+    return (
+      <div className="container pagecontainer" style={{ marginLeft: '10px', overflowY: 'hidden' }}>
+        {/* Contenido para dispositivos móviles */}
+        <div className="row">
+          <div className="col-12">
+            <TasaVencidos endpoint="estadisticas/vencidos/" />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <TasaAprobacion endpoint="estadisticas/aprobado/" />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <div className="d-flex flex-column align-items-start" style={{ marginLeft: '11px' }}>
+              <TiempoPorPrestamo />
+              <DiaDemandado subtitle="Día que más se pide" />
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <h4>Box que mas se rompen</h4>
+            <VerticalBarChart data={boxData} />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <MostRequestedElements endpoint="estadisticas/maspedido/" />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <h4 style={{ marginTop: '30px' }}>Top deudores</h4>
+            <HorizontalBarChart data={deudorData}></HorizontalBarChart>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container pagecontainer" style={{marginLeft:'125px', overflowY:'hidden'}}>
@@ -55,7 +106,7 @@ function Informes({ isProfessor }) {
         </div>
       </div>
 
-      <div className="col-md-8 d-flex flex-column">
+      <div className="col-md-8 d-flex flex-column align-items-start">
   <h4 style={{marginTop:'30px'}}>Top deudores</h4>
   <HorizontalBarChart data={deudorData}></HorizontalBarChart>
 </div>
