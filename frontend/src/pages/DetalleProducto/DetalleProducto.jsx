@@ -152,8 +152,8 @@ function DetalleProducto() {
       />
     </div>
 
-    <div className="col-md-6 product-details__info-container" style={{ width: '45%' }}>
-      <h1 className="product-details__title">Nombre: {element.name}</h1>
+    <div className="col-md-6 product-details__info-container">
+      <h1 className="product-details__title"> {element.name}</h1>
       <h1 className="product-details__description">Descripción: {element.description}</h1>
       <h1 className="product-details__category">
         Categoría: {element.category.name}
