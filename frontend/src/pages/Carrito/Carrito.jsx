@@ -4,6 +4,7 @@ import './Carrito.css';
 import CartCard from '../../components/cartcard/CartCard';
 import Button from 'react-bootstrap/Button';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { toast } from 'react-toastify';
 
 import {
   MDBCol,
@@ -108,8 +109,10 @@ function Carrito() {
         const response = await api.put(`/logPost/${userData.user_id}/`, { dateOut: dateInputData });
         console.log(response.data.response);
         navigate('/');
+        toast.success('Préstamo solicitado!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
       } catch (error) {
         console.log(error);
+        toast.warning('Ha ocurrido un error...', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
       }
   
       console.log('Actualizaciones exitosas');
@@ -135,7 +138,7 @@ function Carrito() {
   
 
   return (
-    <section className="container-bg" style={{fontFamily: 'Roboto, sans-serif'}}>
+    <section className="container-bg">
       <MDBContainer className="h-100">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol>

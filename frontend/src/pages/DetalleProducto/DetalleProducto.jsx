@@ -10,7 +10,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TextField from '@mui/material/TextField';
 import { EventEmitter } from 'events';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -55,7 +54,6 @@ function DetalleProducto() {
     };
   }, [id]);
 
-
   const getElement = async () => {
     try {
       const response = await api.get(`/elements/${id}/`);
@@ -67,6 +65,7 @@ function DetalleProducto() {
       console.error(error);
     }
   };
+
   const getStockInfo = async () => {
     try {
       const stockResponse = await api.get(`/stock/${id}/`); 
@@ -76,6 +75,7 @@ function DetalleProducto() {
       console.error(error);
     }
   }
+
   const getStock = async () => {
     try {
       const stockResponse = await api.get(`/stock/${id}`);
@@ -92,10 +92,6 @@ function DetalleProducto() {
       console.error(error);
     }
   };
-  
-
-  
-
 
   const handleLayoutChange = () => {
     const isMobileLayout = window.innerWidth < 768;
@@ -134,10 +130,10 @@ function DetalleProducto() {
       setPostRes(response.data.response);
       cartEventEmitter.emit('updateCart');
       navigate('/tienda');
-      toast.success('Se agrego un producto', { style:{marginTop:'3rem'} });
+      toast.success('Producto añadido!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     } catch (error) {
       setPostRes(error.response.data);
-      toast.error('Ha ocurrido un error', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
+      toast.error('Ha ocurrido un error...', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     }
   };
   
@@ -151,7 +147,7 @@ function DetalleProducto() {
   };
 
   return (
-    <div className="container pagecontainer detalleproducto-container" style={{ position: 'relative', fontFamily: 'Roboto, sans-serif' }}>
+    <div className="container pagecontainer detalleproducto-container" style={{ position: 'relative'}}>
       <div style={backButtonStyle}>
         <Button variant="outline-primary" onClick={() => navigate('/tienda')}>
           <ChevronLeftIcon />
