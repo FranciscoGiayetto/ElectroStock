@@ -83,7 +83,7 @@ function Ecommerce({ allItems }) {
   };
 
   return (
-    <Container style={{ marginTop: '5rem', fontFamily: 'Roboto, sans-serif' }}>
+    <Container style={{ marginTop: '5rem' }}>
       <Row>
         <Col xs={12} md={2} className={`d-none d-md-block`}>
           {!isLoading && (

@@ -40,7 +40,7 @@ export default function CardMyData(props) {
   };
 
   return (
-    <MDBCard className="card-user" alignment='left' border='none' style={{ fontFamily: 'Roboto, sans-serif' }}>
+    <MDBCard className="card-user" alignment='left' border='none'>
       <MDBCardHeader className="card-header">
         Mis Datos
       </MDBCardHeader>

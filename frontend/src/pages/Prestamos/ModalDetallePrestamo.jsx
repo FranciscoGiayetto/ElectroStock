@@ -23,7 +23,7 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
 </head>
 
   return (
-    <Modal show={true} onHide={onClose} size="lg" contentClassName='custom-modal-content ' style={{fontFamily: 'Roboto, sans-serif'}}>
+    <Modal show={true} onHide={onClose} size="lg" contentClassName='custom-modal-content '>
       <Modal.Header className="d-flex justify-content-between align-items-center" closeButton>
       <div className="d-flex flex-column">
         <Modal.Title>Prestamos:</Modal.Title>

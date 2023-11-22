@@ -30,6 +30,11 @@ import AccesoDenegado from './pages/AccesoDenegado/AccesoDenegado';
 import { ToastContainer } from 'react-toastify';
 import { Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
+</head>
 
 function App() {
   const api = useAxios();
@@ -77,7 +82,7 @@ function App() {
   return (
     <Router>
       <MainWrapper>
-        <div className="container">
+        <div className="container" style={{ fontFamily: 'Roboto, sans-serif' }}>
           <div className="app">
             <Routes>
               <Route path="/private" element={<PrivateRoute><Private /></PrivateRoute>} />
@@ -95,7 +100,7 @@ function App() {
 
 function LayoutWrapper({ onSearch, searchQuery, isProfessor }) {
   return (
-    <Layout isProfessor={isProfessor}>
+    <Layout isProfessor={isProfessor} style={{ fontFamily: 'Roboto, sans-serif' }}>
       <ToastContainer limit={3} transition={Slide}/>
       <Routes>
         {isProfessor ? (

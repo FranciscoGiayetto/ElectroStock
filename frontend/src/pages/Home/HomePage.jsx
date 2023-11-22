@@ -31,7 +31,7 @@ function HomePage() {
   console.log(token.PromiseResult);
 
   return (
-    <Container className='margen d-flex align-items-center justify-content-center' style={{ paddingBottom: '12rem', fontFamily: 'Roboto, sans-serif' }}>
+    <Container className='margen d-flex align-items-center justify-content-center' style={{ paddingBottom: '12rem' }}>
       <Row className='align-items-center justify-content-center'>
         <Col md={6}>
           <h1>Bienvenido {userData.username}!</h1>
