@@ -9,8 +9,8 @@ import './DetalleProducto.css';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TextField from '@mui/material/TextField';
 import { EventEmitter } from 'events';
-import Alert from '@mui/material/Alert';
-import { ReactNotifications, Store } from 'react-notifications-component';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -113,7 +113,10 @@ function DetalleProducto() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // Ensure that the event object is available and not undefined
+    if (e) {
+      e.preventDefault();
+    }
   
     let body = {
       box: element.id,
@@ -121,7 +124,7 @@ function DetalleProducto() {
       lender: userData.user_id,
       status: 'CAR',
       quantity: 1,
-      observation: observation, // Incluye el valor de la observación
+      observation: observation, // Include the value of the observation
       dateIn: null,
       dateOut: null,
     };
@@ -132,14 +135,16 @@ function DetalleProducto() {
       setPostRes(response.data.response);
       cartEventEmitter.emit('updateCart');
       navigate('/tienda');
-      <ReactNotifications />
+      toast('Producto agregado');
+      console.log(toast);
     } catch (error) {
       setPostRes(error.response.data);
-      <Alert severity="success">ERROR!</Alert>
-      
+      toast('Hubo un error');
     }
   };
-   
+  
+  
+  
 
   const backButtonStyle = {
     position: 'absolute',
@@ -149,7 +154,6 @@ function DetalleProducto() {
 
   return (
     <div className="container pagecontainer detalleproducto-container" style={{ position: 'relative', fontFamily: 'Roboto, sans-serif' }}>
-      <ReactNotifications />
       <div style={backButtonStyle}>
         <Button variant="outline-primary" onClick={() => navigate('/tienda')}>
           <ChevronLeftIcon />
@@ -185,16 +189,17 @@ function DetalleProducto() {
             onChange={(e) => handleObservationChange(e.target.value)}
             sx={{ width: '80%' }}
           />
+          <ToastContainer />
           <Button
             className="botonCarrito"
             size="lg"
             style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0', left: '5px' }}
             variant="primary"
             type="submit"
-            onClick={handleSubmit}
-          >
+            onClick={handleSubmit}>
             Agregar al carrito
           </Button>
+          
         </div>
       </div>
     )}
