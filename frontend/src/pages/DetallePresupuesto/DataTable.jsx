@@ -506,14 +506,14 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     {editingRows[item.id] ? (
                       <button
                         onClick={() => handleItemSave(item.id)}
-                        className="btn btn-success btn-sm"
+                        className="btn btn-success btn-sm iconardos"
                       >
                         <HiMiniCheck></HiMiniCheck>
                       </button>
                     ) : (
                       <button
                         onClick={() => handleItemEdit(item.id)}
-                        className="btn btn-primary btn-sm sub-blue-its"
+                        className="btn btn-primary btn-sm sub-blue-its iconardos"
                       >
                         <HiPencil></HiPencil>
                       </button>

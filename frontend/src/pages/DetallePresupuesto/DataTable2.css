@@ -13,3 +13,17 @@
       padding: 0%;
     }
   }
+
+  @media only screen and (max-width: 380px) {
+    .label-responsive{
+      display:none;
+    }
+    .btn-resp{
+      width: 80%;
+      font-size: xx-small;
+      padding: 0%;
+    }
+    .iconardos{
+      width: 30%
+    }
+  }
