@@ -9,8 +9,8 @@ import './DetalleProducto.css';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TextField from '@mui/material/TextField';
 import { EventEmitter } from 'events';
-import Alert from '@mui/material/Alert';
-import { ReactNotifications, Store } from 'react-notifications-component';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -113,7 +113,9 @@ function DetalleProducto() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
   
     let body = {
       box: element.id,
@@ -121,7 +123,7 @@ function DetalleProducto() {
       lender: userData.user_id,
       status: 'CAR',
       quantity: 1,
-      observation: observation, // Incluye el valor de la observación
+      observation: observation, 
       dateIn: null,
       dateOut: null,
     };
@@ -132,11 +134,10 @@ function DetalleProducto() {
       setPostRes(response.data.response);
       cartEventEmitter.emit('updateCart');
       navigate('/tienda');
-      <ReactNotifications />
+      toast.success('Se agrego un producto', { style:{marginTop:'3rem'} });
     } catch (error) {
       setPostRes(error.response.data);
-      <Alert severity="success">ERROR!</Alert>
-      
+      toast.error('Ha ocurrido un error', { style:{marginTop:'3rem'} });
     }
   };
    
@@ -149,7 +150,6 @@ function DetalleProducto() {
 
   return (
     <div className="container pagecontainer detalleproducto-container" style={{ position: 'relative', fontFamily: 'Roboto, sans-serif' }}>
-      <ReactNotifications />
       <div style={backButtonStyle}>
         <Button variant="outline-primary" onClick={() => navigate('/tienda')}>
           <ChevronLeftIcon />
@@ -185,6 +185,7 @@ function DetalleProducto() {
             onChange={(e) => handleObservationChange(e.target.value)}
             sx={{ width: '80%' }}
           />
+          <ToastContainer />
           <Button
             className="botonCarrito"
             size="lg"
