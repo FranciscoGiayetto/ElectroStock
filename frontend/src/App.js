@@ -26,6 +26,7 @@ import DetallePresupuesto from './pages/DetallePresupuesto/DetallePresupuesto';
 import { Link } from 'react-router-dom';
 import Informes from './pages/Informes/Informes';
 import DetallePrestamo from './pages/DetallePrestamo/DetallePrestamo';
+import AccesoDenegado from './pages/AccesoDenegado/AccesoDenegado';
 
 function App() {
   const api = useAxios();
@@ -110,6 +111,7 @@ function LayoutWrapper({ onSearch, searchQuery, isProfessor }) {
         ) : null}
         <Route path="/detallePrestamo/:dateId/" element={<PrivateRoute><DetallePrestamo  /></PrivateRoute>} />
         <Route path="/Prestamos" element={<PrivateRoute><Prestamos /></PrivateRoute>} />
+        <Route path="/403" element={<PrivateRoute><AccesoDenegado /></PrivateRoute>} />
       </Routes>
     </Layout>
   );

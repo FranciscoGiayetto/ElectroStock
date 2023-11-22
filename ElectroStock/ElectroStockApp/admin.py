@@ -4,6 +4,13 @@ from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from import_export.widgets import ForeignKeyWidget
+from django.db.models import Max
+from django.contrib.auth.hashers import make_password
+from import_export import resources, fields
+from import_export.widgets import ManyToManyWidget
+from django import forms
+from django.contrib import messages
 
 # Para arreglar el erro del export tenes que cambiar de la funcion ExportActionMixin- export_action_action ---> export_format = 1
 # Arreglar cuando aparece el token blacklist comentar los admin registers en  venv/lib/pythonX.X/site-packages/rest_framework_simple/token_blacklist/admin.py
@@ -76,6 +83,7 @@ class ElementAdmin(ImportExportActionModelAdmin):
         "description",
         "category",
         "ecommerce",
+        "image"
     )
     list_filter = (
         "category",
@@ -84,10 +92,7 @@ class ElementAdmin(ImportExportActionModelAdmin):
     search_fields = ["name"]
 
 
-from django.db.models import Max
-from django.contrib.auth.hashers import make_password
-from import_export import resources, fields
-from import_export.widgets import ManyToManyWidget
+
 
 
 def obtener_siguiente_id_usuario():
@@ -244,9 +249,7 @@ class LogResource(resources.ModelResource):
         )
 
 
-from django import forms
 
-from django.contrib.admin.filters import ChoicesFieldListFilter
 
 class LogForm(forms.ModelForm):
     class Meta:
@@ -258,7 +261,7 @@ class LogForm(forms.ModelForm):
         pass
 
 
-from django.contrib import messages
+
 # Clase de filtros y busqueda de los prestamos
 class LogyAdmin(ImportExportActionModelAdmin):
     form = LogForm
@@ -312,7 +315,6 @@ class LogyAdmin(ImportExportActionModelAdmin):
             )
         return exclude
 
-from import_export.widgets import ForeignKeyWidget
 # Clase para export-import de boxes
 class BoxResource(resources.ModelResource):
     element = fields.Field(
@@ -517,6 +519,6 @@ admin.site.register(Speciality)
 
 #SACAR ESTE
 admin.site.register(TokenSignup, TokenAdmin)
-admin.site.register(Notification)
-admin.site.register(Budget, BudgetAdmin)
-admin.site.register(BudgetLog,BudgetLogAdmin)
+#admin.site.register(Notification)
+#admin.site.register(Budget, BudgetAdmin)
+#admin.site.register(BudgetLog,BudgetLogAdmin)

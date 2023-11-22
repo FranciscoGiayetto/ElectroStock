@@ -2,9 +2,23 @@ import React, { useState, useEffect } from 'react';
 import PrestamosCard from './CardPrestamos';
 import useAxios from '../../utils/useAxios';
 import './Prestamos.css';
+import WordListPrestamos from './filtrosPrestamos';
 import { useAuthStore } from '../../store/auth';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import PrestamosCardPackage from './PrestamosCardPackage';
 import ModalDetallePrestamo from './ModalDetallePrestamo';
+import IconButton from '@mui/material/IconButton';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
+</head>
+
 const Prestamos = () => {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
@@ -13,6 +27,8 @@ const Prestamos = () => {
   const [selectedPackage, setSelectedPackage] = useState(null); // State to store selected package
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   const user_id = userData.user_id;
+  const [showWordListPrestamos, setShowWordListPrestamos] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleApproval = async (dateIn) => {
     try {
@@ -69,19 +85,13 @@ const Prestamos = () => {
     setIsModalOpen(false);
   };
   return (
-    <div className="container pagecontainer">
-   <div className="title-container" >
-    <h1 className="textito">Mis prestamos</h1>
-  </div>
-
-   
-           
-  <div>
-      {data.length > 0 ? (
-       
+    <div className='container pagecontainer' style={{fontFamily: 'Roboto, sans-serif'}}>
+      
+      <div >
+          {data.length > 0 ? (
             data.map((prestamo, index) => (
               <PrestamosCardPackage
-              onClick={() => openModal(prestamo)}
+                onClick={() => openModal(prestamo)}
                 key={index}
                 image={prestamo.imagen}
                 status={prestamo.estado}
@@ -89,28 +99,26 @@ const Prestamos = () => {
                 dateIn={prestamo.dateIn}
                 dateOut={prestamo.dateOut}
                 count={prestamo.count}
-                lista={prestamo.lista}
-                
+                lista={prestamo.lista}                  
               />
-             
-             
-        ))): (
-          
-          <p>Cargando préstamos...</p>
-          )}
-       </div>
+            ))): (
+              <p>Cargando préstamos...</p>
+              )}
+      </div>
+
       {isModalOpen && (
-  <ModalDetallePrestamo
-    onHandleApproval={() => handleApproval(selectedPackage.dateIn)}
-    onHandleRejection={() => handleRejection(selectedPackage.dateIn)}
-    dateOut={selectedPackage.dateOut}
-    lista={selectedPackage.lista}
-    onClose={closeModal}
-  />
-)}
+        <ModalDetallePrestamo
+        onHandleApproval={() => handleApproval(selectedPackage.dateIn)}
+        onHandleRejection={() => handleRejection(selectedPackage.dateIn)}
+        dateOut={selectedPackage.dateOut}
+        lista={selectedPackage.lista}
+        onClose={closeModal}
+        />
+      )}
+
     </div>
-    );
-  };
+  );
+};
   
 
 export default Prestamos;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Ecommerce.css';
 import CardExample from '../../components/card/CardExample';
 import WordList from '../../components/card/filtros';
+import Dropdown from '../../components/FiltrosCelus/Dropdown'
 import defaultpicture from '../../assets/images/defaultpicture.png';
 import { useSearchParams } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
@@ -78,64 +79,75 @@ function Ecommerce({ allItems }) {
   };
 
   return (
-    <Container style={{ marginTop: '5rem' }}>
-      <Row>
-        <Col xs={12} md={2} className={`d-none d-md-block`}>
-          {!isLoading && (
-            <>
-              <IconButton
-                title="Visualizar Filtros"
-                onClick={() => setShowWordList(!showWordList)}
-                aria-label={showWordList ? 'Ocultar Categorías' : 'Mostrar Categorías'}
-              >
-                {showWordList ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </IconButton>
-              {showWordList && <WordList />}
-            </>
-          )}
-        </Col>
+    <div className="tratandodecentrar" >
+      {isLoading && (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <Spinner animation="border" role="status">
+            {/* Puedes personalizar el spinner según tus necesidades */}
+          </Spinner>
+        </div>
+      )}
 
-        <Col xs={12} md={10}>
-          {isLoading ? (
-            <div className="text-center">
-              <Spinner animation="border" variant="primary" />
-            </div>
-          ) : filteredCards.length === 0 ? (
-            <div className="text-center">
-              <h2>No hay productos disponibles para esta categoría.</h2>
-              <a href="/tienda" className="btn btn-primary">
-                Volver a la tienda
-              </a>
-            </div>
-          ) : (
-            <>
-              {filteredCards.map((card, index) => (
-                <div key={index}>
-                  <CardExample
-                    title={card.name}
-                    text={card.description}
-                    image={card.image}
-                    id={card.id}
-                    current_stock={card.current_stock}
-                  />
-                </div>
-              ))}
-              <div className="d-flex justify-content-center mt-4">
-                <Pagination
-                  totalRecords={count}
-                  pageLimit={pageSize}
-                  pageNeighbours={1}
-                  currentPage={page}
-                  onPageChanged={setPage}
-                />
+
+      <Container className = "mt-4" >
+          <Col md = "12"> 
+            {!isLoading ? (
+ 
+              <>   
+          <Row>
+              <div className="mr-12"> 
+                <WordList />
               </div>
-            </>
-          )}
-        </Col>
-      </Row>
-    </Container>
+          </Row>
+
+              <Row className="mt-4">             
+                {filteredCards.length === 0 ? (
+                  <div className="text-center">
+                    <h2>No hay productos disponibles para esta categoría.</h2>
+                    <a href="/tienda" className="btn btn-primary">
+                      Volver a la tienda
+                    </a>
+                  </div>
+                ) : (
+                  <>
+                  
+                  
+                    {filteredCards.map((card, index) => (
+                      <div key={index} >
+                        <CardExample
+                          title={card.name}
+                          text={card.description}
+                          image={card.image}
+                          id={card.id}
+                          current_stock={card.current_stock}
+                        />
+                      </div>
+                    ))}
+                    <Row>
+                    <div className="d-flex justify-content-center mt-4">
+                      <Pagination
+                        totalRecords={count}
+                        pageLimit={pageSize}
+                        pageNeighbours={1}
+                        currentPage={page}
+                        onPageChanged={setPage}
+                      />
+                    </div>
+                    </Row>
+                  </>
+                )}
+                  </Row>
+
+              </>
+            ) : null}
+
+          </Col>
+
+      </Container>
+    </div>
   );
 }
+
 
 Ecommerce.propTypes = {
   allItems: PropTypes.bool,

@@ -359,9 +359,6 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   };
   
   
-  
-  
-  
   return (
     <div>
       <MDBCard
@@ -374,7 +371,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
       >
         <MDBCardHeader className="text-white sub-blue-its">
         <div style={{ display: 'flex', alignItems: 'center' }}>
-    <div style={{ margin: '0 10px 0 0' }}>
+    <div style={{ margin: '0 10px 0 0' }} className='label-responsive'>
       Nombre del Presupuesto:
     </div>
     {isEditingBudgetName ? (
@@ -420,22 +417,23 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   data-toggle="tooltip"
   data-placement="right"
   title="Exportar"
-  style={{ marginLeft: '325px', cursor: 'pointer' }}
+  style={{ marginLeft: '15px', cursor: 'pointer' }}
   onClick={exportToExcel}
 />
 
             
-            
+            <div>
             <button
               onClick={handleBudgetStatusChange}
-              className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
+              className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'} btn-resp`}
               style={{
-                marginLeft: 'auto'
+                marginLeft: '15px'
               }}
               data-toggle="tooltip" data-placement="top" title="Estado del presupuesto"
             >
               {budgetStatus === 'PROGRESO' ? 'EN PROGRESO' : 'COMPLETADO'}
             </button>
+            </div>
           </div>
         </MDBCardHeader>
         <div className="text-center mb-3" style={{ paddingTop: '1rem' }}>
@@ -508,14 +506,14 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     {editingRows[item.id] ? (
                       <button
                         onClick={() => handleItemSave(item.id)}
-                        className="btn btn-success btn-sm"
+                        className="btn btn-success btn-sm iconardos"
                       >
                         <HiMiniCheck></HiMiniCheck>
                       </button>
                     ) : (
                       <button
                         onClick={() => handleItemEdit(item.id)}
-                        className="btn btn-primary btn-sm sub-blue-its"
+                        className="btn btn-primary btn-sm sub-blue-its iconardos"
                       >
                         <HiPencil></HiPencil>
                       </button>

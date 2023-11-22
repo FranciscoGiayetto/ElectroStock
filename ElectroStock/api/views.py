@@ -3,28 +3,22 @@ from rest_framework.decorators import api_view
 from ElectroStockApp import models
 from .serializers import *
 from rest_framework import viewsets, permissions, generics
-from .permissions import PermisoUsuarioActual
-from django.db.models import (
-    Sum,
-    Value,
-    IntegerField,
-    Q,
-    Count,
-    Case,
-    When,
-    F,
-    FloatField,
-)
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-from django.views.decorators.csrf import csrf_exempt
+from django.db.models import (Sum,Value,IntegerField,Q,Case,When,F,FloatField,)
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
-from django.contrib.auth import get_user_model, get_user
-from django.contrib.auth.models import Group
-from rest_framework.decorators import api_view
 import json
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import permissions
+from cryptography.fernet import Fernet
+from django.utils import timezone
+from dateutil.parser import parse as dateparse
+from pytz import timezone, utc
+from django.db.models.functions import TruncDate
+from django.db.models import ExpressionWrapper, F, DurationField, Avg
+from rest_framework.views import APIView
+from rest_framework import status
+from django.db.models import Count, Q
+from collections import defaultdict
 
 
 # View para tomar el stock actual segun el id que mandas por la url
@@ -73,29 +67,25 @@ def get_stock(request, element_id):
         )  # Si no se proporciona el parámetro 'element_id', devolver una lista vacía como respuesta
 
 
-from rest_framework import viewsets
-from rest_framework.pagination import PageNumberPagination
-from rest_framework import permissions
-
-
 class CustomPagination(PageNumberPagination):
     page_size = 10  # Cantidad de elementos por página
     page_size_query_param = "page_size"
     max_page_size = 100
 
 
+from rest_framework.authentication import BasicAuthentication
+
+
 class ElementsViewSet(viewsets.ModelViewSet):
-    queryset = models.Element.objects.all()
-    permission_classes = [permissions.AllowAny]
+    queryset = models.Element.objects.filter(id=1)
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [BasicAuthentication]
     serializer_class = ElementSerializer
 
 
-from cryptography.fernet import Fernet
+
 
 # Función para encriptar
-
-from cryptography.fernet import Fernet
-
 def encrypt(data):
     key = Fernet.generate_key()
     cipher_suite = Fernet(key)
@@ -111,7 +101,9 @@ class TokenViewSet(viewsets.ModelViewSet):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = TokenSerializer(queryset, many=True)
-        serialized_data = json.dumps(serializer.data)  # Convertir los datos a una cadena de texto
+        serialized_data = json.dumps(
+            serializer.data
+        )  # Convertir los datos a una cadena de texto
         encrypted_data = encrypt(serialized_data)
         return Response(encrypted_data)
 
@@ -295,9 +287,7 @@ def PrestamoVerAPIView(request, user_id):
             return Response("No se encontraron logs para este usuario.")
 
     if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-        return Response({"message": "Elemento agregado al carrito"})
+        return Response({"message": "Post completado"})
 
 
 @api_view(["GET", "POST"])
@@ -313,10 +303,7 @@ def PrestamoPendientesAPIView(request, user_id):
         return Response(serializer.data)
 
     if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-
-        return Response({"message": "Elemento agregado al carrito"})
+        return Response({"message": "Post completado"})
 
     return Response(status=405)
 
@@ -329,10 +316,43 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 
 
 # View para los usuarios
+from validate_email_address import validate_email
+from rest_framework.decorators import action
+from rest_framework.response import Response
+import dns.resolver
+
+# View para los usuarios
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = models.CustomUser.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = UsersSerializer
+
+    # Método personalizado para actualizar el email mediante PUT
+    @action(detail=True, methods=['put'])
+    def update_email(self, request, pk=None):
+        user = self.get_object()
+        new_email = request.data.get('email', None)
+
+        if new_email is not None:
+            try:
+                # Validar el correo electrónico con verificación de registros MX usando dnspython
+                result = dns.resolver.resolve(new_email.split('@')[1], 'MX')
+                is_valid = bool(result)
+                
+                if is_valid:
+                    user.email = new_email
+                    user.save()
+                    serializer = self.get_serializer(user)
+                    return Response(serializer.data)
+                else:
+                    return Response({'error': 'El campo "email" no es una dirección de correo electrónico válida'}, status=400)
+            except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN) as e:
+                return Response({'error': f'Error de validación: {e}'}, status=400)
+            except Exception as e:
+                return Response({'error': f'Error desconocido de validación: {e}'}, status=400)
+        else:
+            return Response({'error': 'El campo "email" es requerido'}, status=400)
+
 
 
 class LogViewSet(viewsets.ModelViewSet):
@@ -377,8 +397,6 @@ class SpecialityViewSet(viewsets.ModelViewSet):
 
 
 # View para tomar el stock actual segun el id que mandas por la url
-
-
 @api_view(["GET", "POST"])
 def get_stock(request, element_id):
     if request.method == "GET":
@@ -459,10 +477,7 @@ def VencidosAPIView(request, user_id):
         return Response(serializer.data)
 
     if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-
-        return Response({"message": "Elemento agregado al carrito"})
+        return Response({"message": "Post completado"})
 
     return Response(status=405)
 
@@ -480,7 +495,7 @@ def cantCarrito(request, user_id):
         return Response({count})
 
     if request.method == "POST":
-        return Response({"message": "Elemento agregado al carrito"})
+        return Response({"message": "Post completado"})
 
     return Response(status=405)
 
@@ -496,7 +511,7 @@ def cantNotificaciones(request, user_id):
         return Response({count})
 
     if request.method == "POST":
-        return Response({"message": "Elemento agregado al carrito"})
+        return Response({"message": "Post completado"})
 
     return Response(status=405)
 
@@ -515,7 +530,7 @@ def PrestamosActualesView(request, user_id):
         return Response(serializer.data)
 
     if request.method == "POST":
-        return Response({"message": "Elemento agregado al carrito"})
+        return Response({"message": "Post completado"})
 
     return Response(status=405)
 
@@ -613,9 +628,6 @@ class LenderStatisticsView(generics.ListAPIView):
 
 
 # view para el usuario que mas aprueba prestamos
-from django.utils import timezone
-
-
 class BorrowerStatisticsView(generics.ListAPIView):
     serializer_class = BorrowerStatisticsSerializer
 
@@ -636,8 +648,8 @@ class BorrowerStatisticsView(generics.ListAPIView):
         return Response(borrower_statistics)
 
 
-from django.db.models.functions import TruncDate, Trunc
-from django.db.models import DateField
+from django.db.models.functions import TruncDate
+
 
 # view para la estadistica de los dias con mayor prestamos
 class DateStatisticsView(generics.ListAPIView):
@@ -665,22 +677,6 @@ class DateStatisticsView(generics.ListAPIView):
         date_statistics = serializer.data if serializer.data else None
         return Response(date_statistics)
 
-from django.db.models import ExpressionWrapper, F, DurationField, Avg
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.utils import timezone
-from django.db.models import F, ExpressionWrapper, DurationField, Avg
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.utils import timezone
-from django.db.models import F, ExpressionWrapper, DurationField, Avg
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.utils import timezone
-from django.db.models import Count
-from django.db.models import F, ExpressionWrapper, Func
-from django.db.models.fields import CharField
-from datetime import timedelta
 
 
 class DateAvgView(APIView):
@@ -791,8 +787,7 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
         return Response(lender_statistics)
 
 
-from rest_framework import status
-from django.db.models import Count, Q, Subquery, OuterRef
+
 
 
 class BoxMasLogsRotos(generics.ListAPIView):
@@ -820,12 +815,6 @@ class BoxMasLogsRotos(generics.ListAPIView):
             )
 
 
-from django.shortcuts import get_object_or_404
-
-from rest_framework.pagination import PageNumberPagination
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-
 @api_view(["GET"])
 def elementos_por_categoria(request, category_id):
     pagination_class = CustomPagination()
@@ -836,62 +825,122 @@ def elementos_por_categoria(request, category_id):
 
     # Obtener todos los elementos que pertenecen a la categoría
     elementos = models.Element.objects.filter(category=categoria)
+    if elementos.exists():
+        # Paginar los elementos
+        paginated_elements = pagination_class.paginate_queryset(elementos, request)
 
-    # Paginar los elementos
-    paginated_elements = pagination_class.paginate_queryset(elementos, request)
+        elementos_con_stock = []
 
-    elementos_con_stock = []
+        if paginated_elements is not None:
+            for elemento in paginated_elements:
+                element_id = elemento.id
 
-    if paginated_elements is not None:
-        for elemento in paginated_elements:
-            element_id = elemento.id
+                boxes = models.Box.objects.filter(element__id=element_id)
+                box_ids = [box.id for box in boxes]
 
-            boxes = models.Box.objects.filter(element__id=element_id)
-            box_ids = [box.id for box in boxes]
+                total_com = models.Log.objects.filter(
+                    box__id__in=box_ids, status="COM"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_ped = models.Log.objects.filter(
+                    box__id__in=box_ids, status="PED"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_rot = models.Log.objects.filter(
+                    box__id__in=box_ids, status="ROT"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_ap = models.Log.objects.filter(
+                    box__id__in=box_ids, status="AP"
+                ).aggregate(total=Sum("quantity"))["total"]
 
-            total_com = models.Log.objects.filter(
-                box__id__in=box_ids, status="COM"
-            ).aggregate(total=Sum("quantity"))["total"]
-            total_ped = models.Log.objects.filter(
-                box__id__in=box_ids, status="PED"
-            ).aggregate(total=Sum("quantity"))["total"]
-            total_rot = models.Log.objects.filter(
-                box__id__in=box_ids, status="ROT"
-            ).aggregate(total=Sum("quantity"))["total"]
-            total_ap = models.Log.objects.filter(
-                box__id__in=box_ids, status="AP"
-            ).aggregate(total=Sum("quantity"))["total"]
+                if total_com is None:
+                    total_com = 0
+                if total_ped is None:
+                    total_ped = 0
+                if total_ap is None:
+                    total_ap = 0
+                if total_rot is None:
+                    total_rot = 0
 
-            if total_com is None:
-                total_com = 0
-            if total_ped is None:
-                total_ped = 0
-            if total_ap is None:
-                total_ap = 0
-            if total_rot is None:
-                total_rot = 0
+                current_stock = total_com - total_ped - total_ap - total_rot
 
-            current_stock = total_com - total_ped - total_ap - total_rot
+                elemento_con_stock = {
+                    "id": elemento.id,
+                    "name": elemento.name,
+                    "description": elemento.description,
+                    "image": elemento.image,
+                    "category": elemento.category,
+                    "current_stock": current_stock,
+                }
 
-            elemento_con_stock = {
-                "id": elemento.id,
-                "name": elemento.name,
-                "description": elemento.description,
-                "image": elemento.image,
-                "category": elemento.category,
-                "current_stock": current_stock,
-            }
+                elementos_con_stock.append(elemento_con_stock)
 
-            elementos_con_stock.append(elemento_con_stock)
+        serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
 
-    serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
+        return pagination_class.get_paginated_response(serializer.data)
+    else:
+        # La categoría no tiene elementos, verificar si tiene categorías hijas con elementos
+        categorias_hijas = categoria.child_categories.all()
+        elementos_categorias_hijas = models.Element.objects.filter(
+            category__in=categorias_hijas
+        )
 
-    return pagination_class.get_paginated_response(serializer.data)
+        if elementos_categorias_hijas.exists():
+            # Devolver elementos de categorías hijas
+            paginated_elements_hijas = pagination_class.paginate_queryset(
+                elementos_categorias_hijas, request
+            )
 
+            elementos_con_stock_hijas = []
 
-from django.utils.dateparse import parse_datetime
-from dateutil.parser import parse as dateparse
-from pytz import timezone, utc
+            if paginated_elements_hijas is not None:
+                for elemento_hija in paginated_elements_hijas:
+                    elemento_hija_id = elemento_hija.id
+
+                    boxes = models.Box.objects.filter(element__id=elemento_hija_id)
+                    box_ids = [box.id for box in boxes]
+
+                    total_com = models.Log.objects.filter(
+                        box__id__in=box_ids, status="COM"
+                    ).aggregate(total=Sum("quantity"))["total"]
+                    total_ped = models.Log.objects.filter(
+                        box__id__in=box_ids, status="PED"
+                    ).aggregate(total=Sum("quantity"))["total"]
+                    total_rot = models.Log.objects.filter(
+                        box__id__in=box_ids, status="ROT"
+                    ).aggregate(total=Sum("quantity"))["total"]
+                    total_ap = models.Log.objects.filter(
+                        box__id__in=box_ids, status="AP"
+                    ).aggregate(total=Sum("quantity"))["total"]
+
+                    if total_com is None:
+                        total_com = 0
+                    if total_ped is None:
+                        total_ped = 0
+                    if total_ap is None:
+                        total_ap = 0
+                    if total_rot is None:
+                        total_rot = 0
+
+                    current_stock = total_com - total_ped - total_ap - total_rot
+
+                    elemento_con_stock = {
+                        "id": elemento_hija_id,
+                        "name": elemento_hija.name,
+                        "description": elemento_hija.description,
+                        "image": elemento_hija.image,
+                        "category": elemento_hija.category,
+                        "current_stock": current_stock,
+                    }
+
+                    elementos_con_stock_hijas.append(elemento_con_stock)
+
+                serializer_hijas = ElementEcommerceSerializer(
+                    elementos_con_stock_hijas, many=True
+                )
+                return pagination_class.get_paginated_response(serializer_hijas.data)
+        else:
+            # La categoría no tiene elementos ni categorías hijas con elementos, devolver respuesta vacía
+            return Response([])
+
 
 
 @api_view(["GET", "PUT"])
@@ -1125,9 +1174,6 @@ def NotificacionesAPIView(request, user_id):
         return Response({"message": "Notificaciones agregada"})
 
     return Response(status=405)
-
-
-from django.db.models import F
 
 
 @api_view(["GET"])
@@ -1481,7 +1527,6 @@ def CambioDevuelto(request, user_id, date_in):
             )
 
 
-from collections import defaultdict
 
 
 @api_view(["GET", "POST"])
@@ -1507,9 +1552,6 @@ def PendientesAPIView(request, user_id):
         return Response(grouped_logs)
 
     if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-
-        return Response({"message": "Elemento agregado al carrito"})
+        return Response({"message": "Post completado"})
 
     return Response(status=405)

@@ -7,6 +7,8 @@ import { useAuthStore } from '../../store/auth';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Spinner from 'react-bootstrap/Spinner';
+
 
 function DetalleCuenta() {
   const [isLoggedIn, user] = useAuthStore((state) => [
@@ -20,9 +22,12 @@ function DetalleCuenta() {
   const api = useAxios();
   const userData = user();
   const id = userData.user_id;
+  const [loading, setLoading] = useState(true); // Nuevo estado para el Spinner
+
 
   const getUser = async () => {
     try {
+      setLoading(true); // Inicia el Spinner
       const response = await api.get(`http://127.0.0.1:8000/api/users/${id}/`);
       let data = await response.data;
       console.log(data);
@@ -35,6 +40,8 @@ function DetalleCuenta() {
       setCourseName(data.course?.name);
     } catch (error) {
       console.error(error);
+    }finally {
+      setLoading(false); // Detiene el Spinner después de la carga
     }
   };
 
@@ -45,7 +52,7 @@ function DetalleCuenta() {
       console.log(data);
       setPrestamos(data);
     } catch (error) {
-      console.error(error);
+     console.log(error)
     }
   };
 
@@ -55,8 +62,18 @@ function DetalleCuenta() {
   }, []);
 
   return (
-    <Container fluid style={{ marginTop: '6rem', marginBottom: '5rem' }}>
-      <Row>
+    <div>
+          {loading && (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+              <Spinner animation="border" role="status">
+               
+              </Spinner>
+            </div>
+          )}
+      
+    <Container>
+      
+      <Row className="mt-4">
         <Col>
           <CardUser
             first_name={element.first_name}
@@ -69,13 +86,18 @@ function DetalleCuenta() {
       <Row style={{ marginTop: '2rem' }}>
         <Col>
           <CardMyData
+          id={element.id}
             email={element.email}
             username={element.username}
             specialties={specialtiesName}
+            updateEmail={(newEmail) => setElement((prevElement) => ({ ...prevElement, email: newEmail }))}
           ></CardMyData>
         </Col>
       </Row>
     </Container>
+    </div>
+
+
   );
 }
 
