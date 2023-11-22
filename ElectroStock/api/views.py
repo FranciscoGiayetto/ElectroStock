@@ -236,24 +236,43 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 
 
 # View para los usuarios
+from validate_email_address import validate_email
+from rest_framework.decorators import action
+from rest_framework.response import Response
+import dns.resolver
+
+# View para los usuarios
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = models.CustomUser.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = UsersSerializer
 
     # Método personalizado para actualizar el email mediante PUT
-    @action(detail=True, methods=["put"])
+    @action(detail=True, methods=['put'])
     def update_email(self, request, pk=None):
         user = self.get_object()
-        new_email = request.data.get("email", None)
+        new_email = request.data.get('email', None)
 
         if new_email is not None:
-            user.email = new_email
-            user.save()
-            serializer = self.get_serializer(user)
-            return Response(serializer.data)
+            try:
+                # Validar el correo electrónico con verificación de registros MX usando dnspython
+                result = dns.resolver.resolve(new_email.split('@')[1], 'MX')
+                is_valid = bool(result)
+                
+                if is_valid:
+                    user.email = new_email
+                    user.save()
+                    serializer = self.get_serializer(user)
+                    return Response(serializer.data)
+                else:
+                    return Response({'error': 'El campo "email" no es una dirección de correo electrónico válida'}, status=400)
+            except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN) as e:
+                return Response({'error': f'Error de validación: {e}'}, status=400)
+            except Exception as e:
+                return Response({'error': f'Error desconocido de validación: {e}'}, status=400)
         else:
-            return Response({"error": 'El campo "email" es requerido'}, status=400)
+            return Response({'error': 'El campo "email" es requerido'}, status=400)
+
 
 
 class LogViewSet(viewsets.ModelViewSet):

@@ -53,7 +53,7 @@ function Carrito() {
       setLoading(false); // Detiene el Spinner después de la carga
     }
   };
-
+  
   const handleDelete = async (log_id) => {
     try {
       await api.delete(`/log/${log_id}`);
