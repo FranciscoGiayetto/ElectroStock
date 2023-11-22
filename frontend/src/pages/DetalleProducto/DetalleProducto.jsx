@@ -136,7 +136,7 @@ function DetalleProducto() {
   };
 
   return (
-    <div className="container pagecontainer detalleproducto-container" style={{ position: 'relative' }}>
+    <div className="container detalleproducto-container" style={{ position: 'relative' }}>
       <div style={backButtonStyle}>
         <Button variant="outline-primary" onClick={() => navigate('/tienda')}>
           <ChevronLeftIcon />

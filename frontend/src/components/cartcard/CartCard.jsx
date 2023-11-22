@@ -53,17 +53,17 @@ export default function CartCard(props) {
               src={image}
             />
           </MDBCol>
-          <MDBCol md="6" lg="6" xl="6">
+          <MDBCol md="6" lg="6" xl="6" className='justify-content-start'>
             <p className="lead fw-normal mb-2">{name}</p>
             <MDBInput
               // Establece el valor del campo de entrada con la observación existente.
               value={observation}
               onChange={handleObservationChange}
-              className='input-style' // Removed mt-2 (margin-top) and ms-2 (margin-start) classes
+              className='input-style w-75' // Removed mt-2 (margin-top) and ms-2 (margin-start) classes
             />
           </MDBCol>
           <MDBCol md="2" lg="2" xl="2"
-            className="d-flex align-items-center justify-content-around"
+            className="d-flex align-items-center justify-content-start"
           >
             <MDBInput
               min={0}

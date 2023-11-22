@@ -76,6 +76,7 @@ class ElementAdmin(ImportExportActionModelAdmin):
         "description",
         "category",
         "ecommerce",
+        "image"
     )
     list_filter = (
         "category",
