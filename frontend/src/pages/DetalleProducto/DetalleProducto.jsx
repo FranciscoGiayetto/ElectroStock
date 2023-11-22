@@ -9,9 +9,7 @@ import './DetalleProducto.css';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TextField from '@mui/material/TextField';
 import { EventEmitter } from 'events';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 <head>
@@ -139,7 +137,7 @@ function DetalleProducto() {
       toast.success('Se agrego un producto', { style:{marginTop:'3rem'} });
     } catch (error) {
       setPostRes(error.response.data);
-      toast.error('Ha ocurrido un error', { style:{marginTop:'3rem'} });
+      toast.error('Ha ocurrido un error', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     }
   };
   
@@ -189,7 +187,6 @@ function DetalleProducto() {
             onChange={(e) => handleObservationChange(e.target.value)}
             sx={{ width: '80%' }}
           />
-          <ToastContainer />
           <Button
             className="botonCarrito"
             size="lg"

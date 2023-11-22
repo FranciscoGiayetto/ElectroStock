@@ -27,6 +27,9 @@ import { Link } from 'react-router-dom';
 import Informes from './pages/Informes/Informes';
 import DetallePrestamo from './pages/DetallePrestamo/DetallePrestamo';
 import AccesoDenegado from './pages/AccesoDenegado/AccesoDenegado';
+import { ToastContainer } from 'react-toastify';
+import { Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const api = useAxios();
@@ -93,6 +96,7 @@ function App() {
 function LayoutWrapper({ onSearch, searchQuery, isProfessor }) {
   return (
     <Layout isProfessor={isProfessor}>
+      <ToastContainer limit={3} transition={Slide}/>
       <Routes>
         {isProfessor ? (
           <Route path="/informe" element={<PrivateRoute><Informes isProfessor={isProfessor} /></PrivateRoute>} />
