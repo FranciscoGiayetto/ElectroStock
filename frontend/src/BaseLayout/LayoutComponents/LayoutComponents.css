@@ -89,18 +89,37 @@ html, body {
   width: 150px;
 }
 /* Estilo para pantallas pequeñas */
-.search-small {
-  width: 11rem; 
-  max-width: 100%; /* Se ajusta al ancho de su contenedor */
-  /* Añade estilos adicionales para hacer la barra más pequeña en pantallas pequeñas */
-  padding: 5px; /* Puedes ajustar este valor según tus preferencias */
-  font-size: 14px; /* Tamaño de fuente más pequeño */
+/* Estilo para pantallas pequeñas */
+@media (min-width: 200px) {
+  .search-input {
+    width: 5rem; /* Ajusta el ancho según tus preferencias */
+    max-width: 100%; /* Se ajusta al ancho de su contenedor */
+    padding: 5px; /* Puedes ajustar este valor según tus preferencias */
+    font-size: 14px; /* Tamaño de fuente más pequeño */
+  }
 }
 
+@media (min-width: 400px) {
+  .search-input {
+    width: 10rem; /* Ajusta el ancho según tus preferencias */
+    max-width: 100%; /* Se ajusta al ancho de su contenedor */
+    padding: 5px; /* Puedes ajustar este valor según tus preferencias */
+    font-size: 14px; /* Tamaño de fuente más pequeño */
+  }
+}
+/* Estilo para pantallas medianas */
+@media (min-width: 750px) {
+  .search-input {
+    width: 30rem; /* Ajusta el ancho según tus preferencias */
+    max-width: 100%; /* Se ajusta al ancho de su contenedor */
+  }
+}
 
 /* Estilo para pantallas grandes */
-.search-large {
-  width: 40rem; /* Tamaño fijo para pantallas grandes */
-  max-width: 100%; /* Se ajusta al ancho de su contenedor */
+@media (min-width: 1101px) {
+  .search-input {
+    width: 40rem; /* Tamaño fijo para pantallas grandes */
+    max-width: 100%; /* Se ajusta al ancho de su contenedor */
+  }
 }
 
