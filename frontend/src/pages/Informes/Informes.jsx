@@ -25,7 +25,7 @@ function Informes({ isProfessor }) {
   }, []);
 
   return (
-    <div className="container pagecontainer" style={{marginLeft:'125px'}}>
+    <div className="container pagecontainer" style={{marginLeft:'125px', overflowY:'hidden'}}>
       <div className="row">
         {/* Fila 1 */}
         <div className="col-md-4">
@@ -47,17 +47,17 @@ function Informes({ isProfessor }) {
       <div className="row" style={{ marginTop: '30px' }}>
         {/* Fila 2 */}
         <div className="col-md-8">
-          <h4>Top deudores</h4>
-          <HorizontalBarChart data={deudorData} />
+          <h4>Box que mas se rompen</h4>
+          <VerticalBarChart data={boxData} />
         </div>
         <div className="col-md-4">
           <MostRequestedElements endpoint="estadisticas/maspedido/" />
         </div>
       </div>
 
-      <div className="col-md-8 d-flex flex-column" style={{ width: '900px', height: '300px' }}>
-  <h4>Box que mas se rompen</h4>
-  <VerticalBarChart data={boxData} />
+      <div className="col-md-8 d-flex flex-column">
+  <h4 style={{marginTop:'30px'}}>Top deudores</h4>
+  <HorizontalBarChart data={deudorData}></HorizontalBarChart>
 </div>
       
     </div>
