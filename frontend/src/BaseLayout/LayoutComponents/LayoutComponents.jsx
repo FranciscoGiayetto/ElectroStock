@@ -211,11 +211,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
                 Cuenta
               </Menu.Item>
               )}
-             {isSmallScreen4 && (
-                <Menu.Item key="7" icon={<NotificationsRoundedIcon style={{ fontSize: '20px' }} />} >
-                Notificaciones
-              </Menu.Item>
-              )}
+             
               {isSmallScreen3 && (
                 <Menu.Item key="8" icon={<ShoppingCartOutlinedIcon  style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/carrito' }}>
                 Carrito
@@ -235,7 +231,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
       </Sider>
 
       {/* NAVBAR */}
-      <Header>
+      <Header >
         
         <Row>
           <div className='navbar'>
