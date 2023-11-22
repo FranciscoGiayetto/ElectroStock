@@ -132,86 +132,6 @@ class ecommercePaginacionAPIView(viewsets.ModelViewSet):
 
 
 @api_view(["GET", "POST"])
-def AllPrestamos(request):
-    if request.method == "GET":
-        valid_statuses = [
-            models.Log.Status.APROBADO,
-            models.Log.Status.PEDIDO,
-            models.Log.Status.DESAPROBADO,
-            models.Log.Status.VENCIDO,
-            models.Log.Status.DEVUELTOTARDIO,
-        ]
-
-        queryset = models.Log.objects.filter(status__in=valid_statuses)
-
-        if queryset.exists():
-            # Agrupar logs por fecha y hora de creación
-            grouped_logs = defaultdict(list)
-
-            for log in queryset:
-                creation_date = (
-                    log.dateIn.strftime("%Y-%m-%dT%H:%M") if log.dateIn else None
-                )
-                log_data = LogSerializer(log).data
-                log_data["dateIn"] = creation_date
-                grouped_logs[creation_date].append(log_data)
-
-            response_data = []
-
-            for creation_date, logs_data in grouped_logs.items():
-                primer_log = logs_data[0]
-                primer_log_prueba = models.Log.objects.get(id=primer_log.get("id", ""))
-
-                dateIn_primer_log_prueba = (
-                    primer_log_prueba.dateIn.strftime("%Y-%m-%d %H:%M")
-                    if primer_log_prueba.dateIn
-                    else None
-                )
-                dateOut_primer_log = (
-                    primer_log.get("dateOut", "") if primer_log else None
-                )
-
-                imagen_primer_log = None
-                if (
-                    primer_log_prueba.box
-                    and primer_log_prueba.box.element
-                    and primer_log_prueba.box.element.image
-                    and primer_log_prueba.box.element.image.file
-                ):
-                    imagen_primer_log = primer_log_prueba.box.element.image.url
-
-                count_logs = len(logs_data) if logs_data else 0
-
-                response_data.append(
-                    {
-                        "dateOut": dateOut_primer_log,
-                        "usuario": primer_log["borrower"]["username"]
-                        if primer_log
-                        else None,
-                        "nombre": primer_log["borrower"]["first_name"]
-                        if primer_log
-                        else None,
-                        "apellido": primer_log["borrower"]["last_name"]
-                        if primer_log
-                        else None,
-                        "estado": primer_log["status"] if primer_log else None,
-                        "dateIn": dateIn_primer_log_prueba,
-                        "imagen": imagen_primer_log,
-                        "count": count_logs,
-                        "lista": logs_data,
-                    }
-                )
-
-            return Response(response_data)
-        else:
-            return Response("No se encontraron logs para este usuario.")
-
-    if request.method == "POST":
-        # Realiza acciones necesarias para agregar elementos al carrito
-        # ...
-        return Response({"message": "Elemento agregado al carrito"})
-    
-@api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
     if request.method == "GET":
         valid_statuses = [
@@ -534,14 +454,13 @@ def PrestamosActualesView(request, user_id):
 
     return Response(status=405)
 
-from django.utils.timezone import now
-import datetime
+
 # View para las estadisticas de los productos mas pedidos
 class MostRequestedElementView(generics.ListAPIView):
     serializer_class = ElementSerializer
 
     def get_queryset(self):
-        current_year = datetime.datetime.now().year
+        current_year = timezone.now().year
         queryset = (
             models.Element.objects.filter(
                 box__log__status=models.Log.Status.APROBADO,
@@ -552,7 +471,7 @@ class MostRequestedElementView(generics.ListAPIView):
                     "box__log", filter=Q(box__log__status=models.Log.Status.APROBADO)
                 )
             )
-            .order_by("-num_borrowed_logs")[:10]
+            .order_by("-num_borrowed_logs")[:5]
         )
 
         return queryset
@@ -563,7 +482,7 @@ class MostRequestedElementView(generics.ListAPIView):
         response_data = []
 
         current_year = (
-            datetime.datetime.now().year
+            timezone.now().year
         )  # Agregar esta línea para definir la variable current_year
 
         for item in serializer.data:
@@ -577,12 +496,13 @@ class MostRequestedElementView(generics.ListAPIView):
 
         return Response(response_data)
 
+
 # view para la estaditica del porcentaje de prestamos aprobados
 class LogStatisticsView(generics.ListAPIView):
     serializer_class = LogStatisticsSerializer
 
     def get_queryset(self):
-        current_year = datetime.datetime.now().year
+        current_year = timezone.now().year
         queryset = models.Log.objects.filter(dateIn__year=current_year)
         return queryset
 
@@ -605,13 +525,12 @@ class LogStatisticsView(generics.ListAPIView):
         return Response(serializer.data)
 
 
-
 # view para la estadistica para el mayor usuario que hace prestamos
 class LenderStatisticsView(generics.ListAPIView):
     serializer_class = LenderStatisticsSerializer
 
     def get_queryset(self):
-        current_year = datetime.datetime.now().year
+        current_year = timezone.now().year
         queryset = (
             models.Log.objects.filter(dateIn__year=current_year)
             .values("lender__username")
@@ -632,7 +551,7 @@ class BorrowerStatisticsView(generics.ListAPIView):
     serializer_class = BorrowerStatisticsSerializer
 
     def get_queryset(self):
-        current_year = datetime.datetime.now().year
+        current_year = timezone.now().year
         queryset = (
             models.Log.objects.filter(dateIn__year=current_year)
             .values("borrower__username")
@@ -648,7 +567,7 @@ class BorrowerStatisticsView(generics.ListAPIView):
         return Response(borrower_statistics)
 
 
-from django.db.models.functions import TruncDate
+
 
 
 # view para la estadistica de los dias con mayor prestamos
@@ -656,11 +575,14 @@ class DateStatisticsView(generics.ListAPIView):
     serializer_class = DateStatisticsSerializer
 
     def get_queryset(self):
-        current_year = datetime.datetime.now().year
+        current_year = timezone.now().year
         queryset = (
-            models.Log.objects.filter(dateIn__year=current_year)
-            .values("dateIn")
-            .annotate(total_datein_logs=Count("dateIn"))
+            models.Log.objects.annotate(
+                dateIn_date=TruncDate("dateIn")
+            )  # Convierte dateIn a un campo de tipo date
+            .filter(dateIn__year=current_year)
+            .values("dateIn_date")
+            .annotate(total_datein_logs=Count("dateIn_date"))
             .order_by("-total_datein_logs")[:1]
         )
         return queryset
@@ -671,18 +593,13 @@ class DateStatisticsView(generics.ListAPIView):
         date_statistics = serializer.data if serializer.data else None
         return Response(date_statistics)
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        date_statistics = serializer.data if serializer.data else None
-        return Response(date_statistics)
 
 
 
 class DateAvgView(APIView):
     def get(self, request, format=None):
         # Filtra los registros por los estados AP, DAP, DEV, VEN y TAR
-        current_year = datetime.datetime.now().year
+        current_year = timezone.now().year
         queryset = models.Log.objects.filter(
             dateIn__year=current_year,
             status__in=["AP", "DAP", "DEV", "VEN", "TAR"],
@@ -728,7 +645,7 @@ class VencidoStatisticsView(generics.ListAPIView):
     serializer_class = VencidoStatisticsSerializer
 
     def get_queryset(self):
-        current_year = datetime.datetime.now().year
+        current_year = timezone.now().year
         queryset = models.Log.objects.filter(dateIn__year=current_year)
         return queryset
 
@@ -769,7 +686,7 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
     serializer_class = LenderVencidosStatisticsSerializer
 
     def get_queryset(self):
-        current_year = datetime.datetime.now().year
+        current_year = timezone.now().year
         queryset = (
             models.Log.objects.filter(
                 Q(status="VEN") | Q(status="TAR"), dateIn__year=current_year
