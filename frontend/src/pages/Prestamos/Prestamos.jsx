@@ -12,6 +12,7 @@ import ModalDetallePrestamo from './ModalDetallePrestamo';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { toast } from 'react-toastify';
 
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -38,6 +39,7 @@ const Prestamos = () => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
+      toast.success('Préstamo Aprobado!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     } catch (error) {
       console.error(error);
     }
@@ -51,6 +53,7 @@ const Prestamos = () => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
+      toast.warning('Préstamo Rechazado.', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     } catch (error) {
       console.error(error);
     }

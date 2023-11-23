@@ -31,7 +31,7 @@ function DetalleProducto() {
   const handleObservationChange = (value) => {
     setObservation(value);
   };
-
+  
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const [posRes, setPostRes] = useState('');
@@ -42,6 +42,8 @@ function DetalleProducto() {
   const navigate = useNavigate();
   const api = useAxios();
   const { id } = useParams();
+  const [disableButton, setDisableButton] = useState('');
+
   useEffect(() => {
     console.log(userData);
     getElement();
@@ -87,6 +89,7 @@ function DetalleProducto() {
       } else {
         // En caso de que no haya datos de stock en la respuesta
         console.warn('No se encontraron datos de stock en la respuesta.');
+        setDisableButton('disabled');
       }
     } catch (error) {
       console.error(error);
@@ -133,7 +136,7 @@ function DetalleProducto() {
       toast.success('Producto añadido!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     } catch (error) {
       setPostRes(error.response.data);
-      toast.error('Ha ocurrido un error...', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
+      toast.error('Este producto ya fue añadido.', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     }
   };
   
@@ -184,7 +187,7 @@ function DetalleProducto() {
             sx={{ width: '80%' }}
           />
           <Button
-            className="botonCarrito"
+            className={`botonCarrito ${disableButton}`}
             size="lg"
             style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0', left: '5px' }}
             variant="primary"
