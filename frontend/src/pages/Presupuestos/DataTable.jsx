@@ -12,9 +12,9 @@ import useAxios from '../../utils/useAxios';
 import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
 import Tooltip from 'react-png-tooltip'
 import ModalNewPresupuesto from './ModalNewPresupuesto';
-
+import ModalDeleteConfirm from './ModalDeleteConfirm';
 import './DataTable.css'
-const DataTable = ({ presupuestos }) => {
+const DataTable = ({ presupuestos , specialties}) => {
   let api = useAxios();
   const navigate = useNavigate();
   const handleRowClick = (presupuestoId, event) => {
@@ -35,9 +35,10 @@ const DataTable = ({ presupuestos }) => {
   const [sortColumn, setSortColumn] = useState(null);
   const [postRes, setPostRes] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalDeleteConfirmOpen, setIsModalDeleteConfirmOpen] = useState(true);
   const [sortDirection, setSortDirection] = useState('asc');
-  const [specialties, setSpecialties] = useState([]);
-
+  
+  const [selectedBudget, setSelectedBudget] = useState(null);
 
   const getRowTextColor = (estado) => {
     if (estado === "PROGRESO") {
@@ -53,23 +54,24 @@ const DataTable = ({ presupuestos }) => {
     setIsModalOpen(false)
   }
 
-  useEffect(() => {
-    getSpecialties();
-  }, []);
+  const closeModalDeleteConfirm = () => {
+    setIsModalDeleteConfirmOpen(false)
+  }
+
+  const handleDeleteConfirm = () => {
+    setIsModalDeleteConfirmOpen(false)
+  }
+
+  const handleDeleteConfirmProgress = (budgetId) => {
+    setSelectedBudget(budgetId)
+    setIsModalDeleteConfirmOpen(true)
+  }
 
 
-  const getSpecialties = async () => {
-    try {
-     // Inicia el Spinner
 
-      const response = await api.get(`/especialidad/`);
-      let data = await response.data;
-      console.log(data)
-      setSpecialties(data);
-    } catch (error) {
-      console.error(error);
-   
-  }};
+  
+
+  
 
   const handleNewBudget = async (title, selectedSpecialty) => {
     console.log(title,selectedSpecialty)
@@ -185,8 +187,9 @@ const DataTable = ({ presupuestos }) => {
               </td>
               <td className='text-center'>{presupuesto.speciality.name}</td>
               <td className="text-center">
-                <button className="btn btn-danger btn-sm btn-block ml-2">
+                <button className="btn btn-danger btn-sm btn-block ml-2"  onClick={() => handleDeleteConfirmProgress(presupuesto.id)}>
                   <HiOutlineXMark />
+                  
                 </button>
               </td>
             </tr>
@@ -216,6 +219,13 @@ const DataTable = ({ presupuestos }) => {
         onHandleNewBudget={handleNewBudget} // Sin función anónima
         specialties={specialties}
         onClose={closeModal}
+        />
+      )}
+       {isModalDeleteConfirmOpen && (
+        <ModalDeleteConfirm
+        onHandleDeleteConfirm={handleDeleteConfirm} // Sin función anónima
+      
+        onClose={closeModalDeleteConfirm}
         />
       )}
     </MDBCard>
