@@ -86,7 +86,7 @@ from rest_framework.authentication import BasicAuthentication
 
 
 class ElementsViewSet(viewsets.ModelViewSet):
-    queryset = models.Element.objects.filter(id=1)
+    queryset = models.Element.objects.filter()
     permission_classes = [
         permissions.AllowAny
     ]  # permission_classes = [permissions.IsAuthenticated] Fix Rapido para morales
