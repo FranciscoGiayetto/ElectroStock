@@ -472,7 +472,6 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                   {editingRows[item.id] ? (
                     <input
                       type="number"
-                      style={{ maxWidth: "100px" }}
                       className="form-control"
                       value={editedValues[item.id]?.price || item.price}
                       onChange={(e) =>
