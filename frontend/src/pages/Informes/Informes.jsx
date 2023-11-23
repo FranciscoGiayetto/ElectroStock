@@ -32,7 +32,7 @@ function Informes({ isProfessor }) {
 
   if (isMobile) {
     return (
-      <Container className="pagecontainer" style={{ marginLeft: '10px', overflowY: 'hidden' }}>
+      <Container className="pagecontainer" style={{marginTop:'0px' ,marginLeft: '0px', overflowY: 'hidden' }}>
         {/* Contenido para dispositivos móviles */}
         <Row>
           <Col xs={12}>
@@ -81,7 +81,7 @@ function Informes({ isProfessor }) {
   }
 
   return (
-    <div className="container pagecontainer" style={{marginLeft:'125px', overflowY:'hidden'}}>
+    <div className="container pagecontainer" style={{marginLeft:'20px',marginTop:'0px', overflowY:'hidden'}}>
       <div className="row">
         {/* Fila 1 */}
         <div className="col-md-4">
