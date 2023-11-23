@@ -8,20 +8,6 @@
   
 }
 
-
-
-/* Estilos para dispositivos móviles */
-@media (max-width: 767px) {
-  .product-details {
-    margin-top: 0;
-  }
-
- 
-}
-
-
-
-
 .product-details__title {
   font-size: 35px;
   margin-bottom: 25px;
@@ -31,6 +17,12 @@
   max-width: max-content;
   
 
+}
+
+@media (max-width: 761px) {
+  .product-details__title {
+    font-size: 25px;
+  }
 }
 
 .product-details__description {
@@ -59,9 +51,8 @@
   margin: 20px 0;
 }
 
-.botonCarrito:hover {
-  transform: scale(1.001);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+.botonCarrito {
+ font-size: 100%
 }
 .product-details__image-container {
   margin-top: 2rem;

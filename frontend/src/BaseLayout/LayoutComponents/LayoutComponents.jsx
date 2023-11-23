@@ -33,7 +33,11 @@ import useAxios from "../../utils/useAxios";
 import { useAuthStore } from '../../store/auth';
 import { cartEventEmitter } from '../../pages/DetalleProducto/DetalleProducto';
 
-
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
+</head>
 
 const { Header, Sider } = Layout;
 
@@ -162,7 +166,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
   };
 
   return (
-    <div>
+    <div style={{fontFamily: 'Roboto, sans-serif'}}>
       {/* SIDEBAR */}
       <Sider
         trigger={null}
@@ -211,11 +215,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
                 Cuenta
               </Menu.Item>
               )}
-             {isSmallScreen4 && (
-                <Menu.Item key="7" icon={<NotificationsRoundedIcon style={{ fontSize: '20px' }} />} >
-                Notificaciones
-              </Menu.Item>
-              )}
+             
               {isSmallScreen3 && (
                 <Menu.Item key="8" icon={<ShoppingCartOutlinedIcon  style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/carrito' }}>
                 Carrito
@@ -235,7 +235,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
       </Sider>
 
       {/* NAVBAR */}
-      <Header>
+      <Header >
         
         <Row>
           <div className='navbar'>

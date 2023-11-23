@@ -52,7 +52,7 @@ function DetalleCuenta() {
       console.log(data);
       setPrestamos(data);
     } catch (error) {
-      console.error(error);
+     console.log(error)
     }
   };
 
@@ -86,9 +86,11 @@ function DetalleCuenta() {
       <Row style={{ marginTop: '2rem' }}>
         <Col>
           <CardMyData
+          id={element.id}
             email={element.email}
             username={element.username}
             specialties={specialtiesName}
+            updateEmail={(newEmail) => setElement((prevElement) => ({ ...prevElement, email: newEmail }))}
           ></CardMyData>
         </Col>
       </Row>

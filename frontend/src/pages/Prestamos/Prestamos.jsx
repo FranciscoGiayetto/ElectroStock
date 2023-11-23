@@ -85,7 +85,7 @@ const Prestamos = () => {
     setIsModalOpen(false);
   };
   return (
-    <div className='container pagecontainer' style={{fontFamily: 'Roboto, sans-serif'}}>
+    <div className='container pagecontainer'>
       
       <div >
           {data.length > 0 ? (
