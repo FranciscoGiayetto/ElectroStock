@@ -3,7 +3,16 @@ from rest_framework.decorators import api_view
 from ElectroStockApp import models
 from .serializers import *
 from rest_framework import viewsets, permissions, generics
-from django.db.models import (Sum,Value,IntegerField,Q,Case,When,F,FloatField,)
+from django.db.models import (
+    Sum,
+    Value,
+    IntegerField,
+    Q,
+    Case,
+    When,
+    F,
+    FloatField,
+)
 from django.shortcuts import get_object_or_404
 import json
 from rest_framework.decorators import action
@@ -78,11 +87,11 @@ from rest_framework.authentication import BasicAuthentication
 
 class ElementsViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.filter(id=1)
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [
+        permissions.AllowAny
+    ]  # permission_classes = [permissions.IsAuthenticated] Fix Rapido para morales
     authentication_classes = [BasicAuthentication]
     serializer_class = ElementSerializer
-
-
 
 
 # Función para encriptar
@@ -241,6 +250,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 import dns.resolver
 
+
 # View para los usuarios
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = models.CustomUser.objects.all()
@@ -248,31 +258,37 @@ class UsersViewSet(viewsets.ModelViewSet):
     serializer_class = UsersSerializer
 
     # Método personalizado para actualizar el email mediante PUT
-    @action(detail=True, methods=['put'])
+    @action(detail=True, methods=["put"])
     def update_email(self, request, pk=None):
         user = self.get_object()
-        new_email = request.data.get('email', None)
+        new_email = request.data.get("email", None)
 
         if new_email is not None:
             try:
                 # Validar el correo electrónico con verificación de registros MX usando dnspython
-                result = dns.resolver.resolve(new_email.split('@')[1], 'MX')
+                result = dns.resolver.resolve(new_email.split("@")[1], "MX")
                 is_valid = bool(result)
-                
+
                 if is_valid:
                     user.email = new_email
                     user.save()
                     serializer = self.get_serializer(user)
                     return Response(serializer.data)
                 else:
-                    return Response({'error': 'El campo "email" no es una dirección de correo electrónico válida'}, status=400)
+                    return Response(
+                        {
+                            "error": 'El campo "email" no es una dirección de correo electrónico válida'
+                        },
+                        status=400,
+                    )
             except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN) as e:
-                return Response({'error': f'Error de validación: {e}'}, status=400)
+                return Response({"error": f"Error de validación: {e}"}, status=400)
             except Exception as e:
-                return Response({'error': f'Error desconocido de validación: {e}'}, status=400)
+                return Response(
+                    {"error": f"Error desconocido de validación: {e}"}, status=400
+                )
         else:
-            return Response({'error': 'El campo "email" es requerido'}, status=400)
-
+            return Response({"error": 'El campo "email" es requerido'}, status=400)
 
 
 class LogViewSet(viewsets.ModelViewSet):
@@ -567,9 +583,6 @@ class BorrowerStatisticsView(generics.ListAPIView):
         return Response(borrower_statistics)
 
 
-
-
-
 # view para la estadistica de los dias con mayor prestamos
 class DateStatisticsView(generics.ListAPIView):
     serializer_class = DateStatisticsSerializer
@@ -592,8 +605,6 @@ class DateStatisticsView(generics.ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         date_statistics = serializer.data if serializer.data else None
         return Response(date_statistics)
-
-
 
 
 class DateAvgView(APIView):
@@ -702,9 +713,6 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         lender_statistics = serializer.data if serializer.data else None
         return Response(lender_statistics)
-
-
-
 
 
 class BoxMasLogsRotos(generics.ListAPIView):
@@ -857,7 +865,6 @@ def elementos_por_categoria(request, category_id):
         else:
             # La categoría no tiene elementos ni categorías hijas con elementos, devolver respuesta vacía
             return Response([])
-
 
 
 @api_view(["GET", "PUT"])
@@ -1442,8 +1449,6 @@ def CambioDevuelto(request, user_id, date_in):
             return Response(
                 "No se encontraron logs para este usuario con status APROBADO o VENCIDO."
             )
-
-
 
 
 @api_view(["GET", "POST"])
