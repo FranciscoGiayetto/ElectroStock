@@ -19,10 +19,12 @@ const DataTable = ({ presupuestos , specialties}) => {
   const navigate = useNavigate();
   const handleRowClick = (presupuestoId, event) => {
     // Check if the click occurred on the button
-    const isButtonClick = event.target.tagName === 'BUTTON';
-  
+    const isButtonClick =
+    event.target.tagName === 'BUTTON' || event.target.closest('button');
+    console.log(event.target.tagName)
     // If it's a button click, don't navigate
     if (isButtonClick) {
+      console.log("Es un boton")
       return;
     }
   
