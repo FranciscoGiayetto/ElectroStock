@@ -136,7 +136,7 @@ function DetalleProducto() {
       toast.success('Producto añadido!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     } catch (error) {
       setPostRes(error.response.data);
-      toast.error('Ha ocurrido un error...', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
+      toast.error('Este producto ya fue añadido.', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     }
   };
   
