@@ -32,43 +32,43 @@ function Informes({ isProfessor }) {
 
   if (isMobile) {
     return (
-      <Container className="pagecontainer" style={{marginTop:'0px' ,marginLeft: '0px', overflowY: 'hidden' }}>
+      <Container fluid className="pagecontainer" style={{ marginTop: '0px', marginLeft: '0px', overflowY: 'hidden' }}>
         {/* Contenido para dispositivos móviles */}
-        <Row>
+        <Row className="justify-content-center">
           <Col xs={12}>
             <TasaVencidos endpoint="estadisticas/vencidos/" />
           </Col>
         </Row>
-    
-        <Row>
+  
+        <Row className="justify-content-center">
           <Col xs={12}>
             <TasaAprobacion endpoint="estadisticas/aprobado/" />
           </Col>
         </Row>
-    
-        <Row>
+  
+        <Row className="justify-content-center">
           <Col xs={12}>
-            <div className="d-flex flex-column align-items-start" >
+            <div className="d-flex flex-column align-items-center">
               <TiempoPorPrestamo />
               <DiaDemandado subtitle="Día que más se pide" />
             </div>
           </Col>
         </Row>
-    
-        <Row style={{marginTop:'30px', height:'240px',width:'400px'}}>
+  
+        <Row className="justify-content-center" style={{ marginTop: '30px', height: '240px', width: '400px' }}>
           <Col xs={12}>
             <h4>Box que mas se rompen</h4>
             <VerticalBarChart data={boxData} />
           </Col>
         </Row>
-    
-        <Row>
+  
+        <Row className="justify-content-center">
           <Col xs={12}>
             <MostRequestedElements endpoint="estadisticas/maspedido/" />
           </Col>
         </Row>
-    
-        <Row style={{marginTop:'30px', height:'240px',width:'400px',marginBottom:'50px'}}>
+  
+        <Row className="justify-content-center" style={{ marginTop: '30px', height: '240px', width: '400px', marginBottom: '50px' }}>
           <Col xs={12}>
             <h4 style={{ marginTop: '30px' }}>Top deudores</h4>
             <HorizontalBarChart data={deudorData}></HorizontalBarChart>
@@ -76,9 +76,7 @@ function Informes({ isProfessor }) {
         </Row>
       </Container>
     );
-    
-    
-  }
+  } 
 
   return (
     <div className="container pagecontainer" style={{marginLeft:'20px',marginTop:'0px', overflowY:'hidden'}}>
