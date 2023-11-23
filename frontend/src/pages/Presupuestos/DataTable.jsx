@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import {
   MDBCard,
@@ -10,7 +10,7 @@ import { HiPlusCircle, HiOutlineXMark } from "react-icons/hi2";
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { AiFillQuestionCircle } from "react-icons/ai";
 import useAxios from '../../utils/useAxios';
-
+import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
 import Tooltip from 'react-png-tooltip'
 
 import './DataTable.css'
@@ -25,7 +25,9 @@ const DataTable = ({ presupuestos }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [sortColumn, setSortColumn] = useState(null);
   const [postRes, setPostRes] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [sortDirection, setSortDirection] = useState('asc');
+  const [specialties, setSpecialties] = useState([]);
 
 
   const getRowTextColor = (estado) => {
@@ -37,6 +39,28 @@ const DataTable = ({ presupuestos }) => {
     return ""; // El color de texto predeterminado
   };
 
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
+  useEffect(() => {
+    getSpecialties();
+  }, []);
+
+
+  const getSpecialties = async () => {
+    try {
+     // Inicia el Spinner
+
+      const response = await api.get(`/especialidad/`);
+      let data = await response.data;
+      console.log(data)
+      setSpecialties(data);
+    } catch (error) {
+      console.error(error);
+   
+  }};
 
   const handleNewBudget = async () => {
 
@@ -124,7 +148,7 @@ const DataTable = ({ presupuestos }) => {
     </Tooltip>
     </div>
   
-  <div className="hover-scale" onClick={handleNewBudget}>
+  <div className="hover-scale" onClick={()=> setIsModalOpen(true)}>
   <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
   </div>
   
@@ -192,6 +216,15 @@ const DataTable = ({ presupuestos }) => {
           nextClassName={"item"}
         />
       </div>
+      {isModalOpen && (
+        <ModalNewPresupuesto
+        onHandleNewBudget={() => handleNewBudget()}
+        specialties={specialties}
+        
+        
+        onClose={closeModal}
+        />
+      )}
     </MDBCard>
   );
 };
