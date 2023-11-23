@@ -375,7 +375,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
       Nombre del Presupuesto:
     </div>
     {isEditingBudgetName ? (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }} >
         <input
           className="form-control"
           ref={nameInputRef}
@@ -401,7 +401,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
     ) : (
       <div
         style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginLeft: '6px' }}
-        onDoubleClick={activateBudgetNameEditing}
+        onDoubleClick={activateBudgetNameEditing} className='nombre-responsive'
       >
         {budgetName}
         <HiPencil
