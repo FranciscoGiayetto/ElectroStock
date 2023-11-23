@@ -6,12 +6,12 @@ import {
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
-import { HiPlusCircle, HiOutlineXMark } from "react-icons/hi2";
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { AiFillQuestionCircle } from "react-icons/ai";
 import useAxios from '../../utils/useAxios';
 import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
 import Tooltip from 'react-png-tooltip'
+import ModalNewPresupuesto from './ModalNewPresupuesto';
 
 import './DataTable.css'
 const DataTable = ({ presupuestos }) => {
