@@ -539,11 +539,11 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
             {isAddingNewItem && (
               <tr className="table-info">
                 <td>{budgetLogs.length + 1}</td>
-                <td style={{ display: "flex"}}>
+                <td>
                   <input
                     type="text"
                     className={`form-control ${isAddingNewItem && customName ? '' : 'disabled-input'}`}
-                    style={{ maxWidth: "200px", paddingRight: "1rem" }}
+                    style={{ maxWidth: "200px"}}
                     value={customName ? (editedValues['new']?.name || "") : selectedItem?.name}
                     onChange={(e) =>
                       handleItemInputChange('new', "name", e.target.value)
