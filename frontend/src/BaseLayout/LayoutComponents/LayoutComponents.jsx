@@ -113,7 +113,7 @@ async function downloadApp() {
 }
 const isSmallScreen = useMediaQuery('(max-width: 830px)');
 const isSmallScreen4 = useMediaQuery('(max-width: 1200px)');
-const isSmallScreen3 = useMediaQuery('(max-width: 1100px)');
+const isSmallScreen3 = useMediaQuery('(max-width: 1110px)');
 const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
 
   const getElement = async () => {
