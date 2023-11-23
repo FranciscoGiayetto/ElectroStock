@@ -21,8 +21,24 @@ function Presupuestos() {
   const api = useAxios();
   const userData = user();
   const [loading, setLoading] = useState(true); // Nuevo estado para el Spinner
+  const [specialties, setSpecialties] = useState([]);
+  useEffect(() => {
+    getSpecialties();
+  }, []);
 
 
+  const getSpecialties = async () => {
+    try {
+     // Inicia el Spinner
+
+      const response = await api.get(`/especialidad/`);
+      let data = await response.data;
+      console.log(data)
+      setSpecialties(data);
+    } catch (error) {
+      console.error(error);
+   
+  }};
  
 
   const getPresupuesto = async () => {
@@ -58,7 +74,7 @@ function Presupuestos() {
       
       <Row className="mt-1">
         <Col style={{ width: '62.5rem' }}>
-          <DataTable presupuestos={presupuestos} />
+          <DataTable presupuestos={presupuestos} specialties={specialties} />
         </Col>
       </Row>
     </Container>
