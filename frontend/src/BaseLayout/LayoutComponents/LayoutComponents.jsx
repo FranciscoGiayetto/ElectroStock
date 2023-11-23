@@ -190,6 +190,11 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
           <Menu.Item key="1" icon={<StoreRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/tienda' }}>
             Tienda
           </Menu.Item>
+          {isSmallScreen3 && (
+                <Menu.Item key="8" icon={<ShoppingCartOutlinedIcon  style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/carrito' }}>
+                Carrito
+              </Menu.Item>
+              )}
           <Menu.Item key="2" icon={<CachedRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/Prestamos' }}>
             Préstamo
           </Menu.Item>
@@ -216,11 +221,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
               </Menu.Item>
               )}
              
-              {isSmallScreen3 && (
-                <Menu.Item key="8" icon={<ShoppingCartOutlinedIcon  style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/carrito' }}>
-                Carrito
-              </Menu.Item>
-              )}
+              
           <Menu.Divider />
      
           
@@ -239,6 +240,11 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
         
         <Row>
           <div className='navbar'>
+            <div className='botonesnav1'>
+                <Row>
+
+                
+           
           <Col>
           <Button
                 variant="primary"
@@ -260,6 +266,8 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
                
           </Col>
            )}  
+           </Row>
+            </div>
           <Col>
           <form onSubmit={handleSearch} className={`div-form ${isSmallScreen? 'search-small' : 'search-large'}`}>                
                   <Autocomplete
@@ -294,6 +302,9 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
                   </Tooltip>
                   </Col>
           )}
+          <div className='botonesnav'>
+            <Row>
+            
                   {!isSmallScreen3 && (
                  <Col>  
                   <Tooltip title="Carrito" arrow placement="bottom">
@@ -334,6 +345,11 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
              
           </Col>
            )}
+             
+             </Row>
+
+         </div>
+
           </div>
 
         </Row>

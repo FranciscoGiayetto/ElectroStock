@@ -123,3 +123,10 @@ html, body {
   }
 }
 
+.botonesnav{
+  justify-content: end;
+}
+
+.botonesnav{
+  justify-content: start;
+}
