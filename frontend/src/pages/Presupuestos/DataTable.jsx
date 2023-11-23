@@ -17,10 +17,19 @@ import './DataTable.css'
 const DataTable = ({ presupuestos }) => {
   let api = useAxios();
   const navigate = useNavigate();
-  const handleRowClick = (key) => {
-    navigate(`${key}`);
+  const handleRowClick = (presupuestoId, event) => {
+    // Check if the click occurred on the button
+    const isButtonClick = event.target.tagName === 'BUTTON';
+  
+    // If it's a button click, don't navigate
+    if (isButtonClick) {
+      return;
+    }
+  
+    // Navigate to the details page
+    navigate(`${presupuestoId}`);
   }
-
+  
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(0);
   const [sortColumn, setSortColumn] = useState(null);
@@ -163,28 +172,26 @@ const DataTable = ({ presupuestos }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedData().map((presupuesto) => (
+        {sortedData().map((presupuesto) => (
             <tr
               key={presupuesto.id}
-              onClick={() => handleRowClick(presupuesto.id)}
+              onClick={(event) => handleRowClick(presupuesto.id, event)}
               className={`cursor-pointer`}
             >
-              <td>{presupuesto.id}</td>
+              <td className='text-center'>{presupuesto.id}</td>
               <td>{presupuesto.name}</td>
               <td className={`progress-abbreviate ${getRowTextColor(presupuesto.status)}`}>
                 {presupuesto.status}
               </td>
-
-              <td >{presupuesto.speciality.name}</td>
-              <tr className='align-middle'>
-              <button
-                      className="btn btn-danger btn-sm ml-2"
-                    >
-                      <HiOutlineXMark></HiOutlineXMark>
-                    </button>
-              </tr>
+              <td className='text-center'>{presupuesto.speciality.name}</td>
+              <td className="text-center">
+                <button className="btn btn-danger btn-sm btn-block ml-2">
+                  <HiOutlineXMark />
+                </button>
+              </td>
             </tr>
           ))}
+
         </tbody>
       </Table>
       <div className="pagination justify-content-center">
