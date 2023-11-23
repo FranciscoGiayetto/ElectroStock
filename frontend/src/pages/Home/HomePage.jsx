@@ -20,6 +20,7 @@ import ClockPage from './ClockPage';
 </head>
 
 
+
 function HomePage() {
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
@@ -29,6 +30,46 @@ function HomePage() {
   const token = getCurrentToken();
   const userData = user();
   console.log(token.PromiseResult);
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    return (
+      <Container className='margen d-flex align-items-center justify-content-center' >
+      <Row className='align-items-center justify-content-center'>
+        <Col md={13}>
+          <div className='margenasos'><h1>Bienvenido {userData.username}!</h1>
+          <div className="square border border-1 border-dark rounded-pill text-center" style={{width: "150px"}}>
+            <ClockPage/>
+            </div>
+            </div>
+
+        </Col>
+        <Row>
+          <div className="carousel-container">
+            <Carousel fade indicators={false}>
+              <Carousel.Item>
+                <img
+                  className="d-block w-100"
+                  src="https://www.itsv.edu.ar/itsv/images/panoramicas/a_frente.jpg?1699747200027"
+                  alt="First slide"
+                />
+              </Carousel.Item>
+              <Carousel.Item>
+                <img
+                  className="d-block w-100"
+                  src="https://www.itsv.edu.ar/itsv/images/panoramicas/a_frente.jpg?1699747200027"
+                  alt="Second slide"
+                />
+              </Carousel.Item>
+              {/* Add more Carousel.Item for additional images */}
+            </Carousel>
+          </div>
+          </Row>
+      </Row>
+    </Container>
+  );
+
+
+  }
 
   return (
     <Container className='margen d-flex align-items-center justify-content-center' >
