@@ -10,6 +10,7 @@ const ModalNewPresupuesto = ({ onClose, onHandleNewBudget, specialties }) => {
   const handleConfirm = () => {
     // Puedes realizar alguna lógica adicional aquí antes de confirmar
     onHandleNewBudget(title, selectedSpecialty);
+    onClose();
   };
 
   return (
@@ -48,15 +49,18 @@ const ModalNewPresupuesto = ({ onClose, onHandleNewBudget, specialties }) => {
         </Form>
       </Modal.Body>
       <Modal.Footer style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div className="d-flex flex-column flex-sm-row align-items-sm-end">
-          <Button variant="secondary" onClick={onClose}>
-            Cerrar
-          </Button>
-          <Button variant="success" onClick={handleConfirm}>
-            <CheckRoundedIcon /> Confirmar
-          </Button>
-        </div>
-      </Modal.Footer>
+  <div className="d-flex flex-column">
+    <Button variant="secondary" onClick={onClose}>
+      Cerrar
+    </Button>
+  </div>
+  <div className="d-flex flex-column flex-sm-row align-items-sm-end">
+    <Button variant="success" onClick={handleConfirm}>
+      <CheckRoundedIcon /> Confirmar
+    </Button>
+  </div>
+</Modal.Footer>
+
     </Modal>
   );
 };
