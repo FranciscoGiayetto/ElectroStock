@@ -142,6 +142,8 @@ class ecommercePaginacionAPIView(viewsets.ModelViewSet):
 
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
+    pagination_class = CustomPagination()
+
     if request.method == "GET":
         valid_statuses = [
             models.Log.Status.APROBADO,
@@ -211,7 +213,10 @@ def PrestamoVerAPIView(request, user_id):
                     }
                 )
 
-            return Response(response_data)
+            # Aplicar paginación
+            paginated_response = pagination_class.paginate_queryset(response_data, request)
+            return pagination_class.get_paginated_response(paginated_response)
+
         else:
             return Response("No se encontraron logs para este usuario.")
 
@@ -454,6 +459,8 @@ def cantNotificaciones(request, user_id):
 
 @api_view(["GET", "POST"])
 def PrestamosActualesView(request, user_id):
+    pagination_class = CustomPagination()
+
     if request.method == "GET":
         valid_statuses = [
             models.Log.Status.APROBADO,
@@ -463,7 +470,10 @@ def PrestamosActualesView(request, user_id):
         queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
         serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
+
+        # Aplicar paginación
+        paginated_response = pagination_class.paginate_queryset(serializer.data, request)
+        return pagination_class.get_paginated_response(paginated_response)
 
     if request.method == "POST":
         return Response({"message": "Post completado"})
