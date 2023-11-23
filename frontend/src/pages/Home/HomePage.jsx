@@ -13,6 +13,7 @@ import Col from 'react-bootstrap/Col';
 import Carousel from 'react-bootstrap/Carousel';
 import ClockPage from './ClockPage';
 
+
 function HomePage() {
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
@@ -24,15 +25,19 @@ function HomePage() {
   console.log(token.PromiseResult);
 
   return (
-    <Container className='margen d-flex align-items-center justify-content-center' style={{ paddingBottom: '12rem' }}>
+    <Container className='margen d-flex align-items-center justify-content-center' >
       <Row className='align-items-center justify-content-center'>
-        <Col md={6}>
-          <h1>Bienvenido {userData.username}!</h1>
-          <ClockPage />
+        <Col md={13}>
+          <div className='margenasos'><h1>Bienvenido {userData.username}!</h1>
+          <div className="square border border-1 border-dark rounded-pill text-center" style={{width: "150px"}}>
+            <ClockPage/>
+            </div>
+            </div>
+
         </Col>
-        <Col md={6}>
+        <Row>
           <div className="carousel-container">
-            <Carousel>
+            <Carousel fade indicators={false}>
               <Carousel.Item>
                 <img
                   className="d-block w-100"
@@ -50,7 +55,7 @@ function HomePage() {
               {/* Add more Carousel.Item for additional images */}
             </Carousel>
           </div>
-        </Col>
+          </Row>
       </Row>
     </Container>
   );
