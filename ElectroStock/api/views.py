@@ -90,7 +90,7 @@ class ElementsViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
     ]  # permission_classes = [permissions.IsAuthenticated] Fix Rapido para morales
-    authentication_classes = [BasicAuthentication]
+    #authentication_classes = [BasicAuthentication]
     serializer_class = ElementSerializer
 
 
