@@ -13,7 +13,7 @@ import {
 
 const PrestamosCardPackage = ({ onClick, cliente, dateIn, dateOut, count, name, status, image, lista }) => {
   const renderComponentList = () => {
-    return lista.slice(0, 3).map((item, index) => {
+    return lista.slice(0, 1).map((item, index) => {
       const componentName = item.box.name.length > 18 ? item.box.name.slice(0, 18) + '...' : item.box.name;
       return (
         <p key={index}>{componentName}</p>
@@ -21,7 +21,7 @@ const PrestamosCardPackage = ({ onClick, cliente, dateIn, dateOut, count, name, 
     });
   };
 
-  const moreComponentsMessage = lista.length > 3 ? `+${lista.length - 3} componentes` : null;
+  const moreComponentsMessage = lista.length > 1 ? `+${lista.length - 1} componentes` : null;
 
   return (
     <div className='prestamo-card' onClick={onClick}>

@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Spinner from 'react-bootstrap/Spinner';
 
+import { toast } from 'react-toastify';
 
 import {
   MDBCol,
@@ -114,8 +115,10 @@ function Carrito() {
         const response = await api.put(`/logPost/${userData.user_id}/`, { dateOut: dateInputData });
         console.log(response.data.response);
         navigate('/');
+        toast.success('Préstamo solicitado!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
       } catch (error) {
         console.log(error);
+        toast.warning('Ha ocurrido un error...', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
       }
   
       console.log('Actualizaciones exitosas');
