@@ -6,7 +6,8 @@ import {
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
-import { HiPlusCircle } from "react-icons/hi2";
+import { HiPlusCircle, HiOutlineXMark } from "react-icons/hi2";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { AiFillQuestionCircle } from "react-icons/ai";
 import useAxios from '../../utils/useAxios';
 
@@ -132,17 +133,20 @@ const DataTable = ({ presupuestos }) => {
 <Table responsive striped bordered hover className="mt-3 table-responsive">
         <thead>
           <tr>
-            <th scope='col' onClick={() => handleSortChange('id')}>
-              ID {sortColumn === 'id' && (sortDirection === 'asc' ? '▲' : '▼')}
+            <th scope='col' onClick={() => handleSortChange('id')} className='col-1'>
+              ID {sortColumn === 'id' && (sortDirection === 'asc' ? '▲' : '▼')} 
             </th>
-            <th scope='col' onClick={() => handleSortChange('name')}>
+            <th scope='col' onClick={() => handleSortChange('name')}className='col-7'>
               Nombre {sortColumn === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th scope='col' onClick={() => handleSortChange('status')}>
+            <th scope='col' onClick={() => handleSortChange('status')}className='col-1'>
               Estado {sortColumn === 'status' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th scope='col' onClick={() => handleSortChange('speciality.name')}>
+            <th scope='col' onClick={() => handleSortChange('speciality.name')}className='col-2'>
               Especialidad {sortColumn === 'speciality.name' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
+            <th scope='col' onClick={() => handleSortChange('speciality.name')}className='col-1'>
+              Acciones
             </th>
           </tr>
         </thead>
@@ -160,6 +164,13 @@ const DataTable = ({ presupuestos }) => {
               </td>
 
               <td >{presupuesto.speciality.name}</td>
+              <tr className='align-middle'>
+              <button
+                      className="btn btn-danger btn-sm ml-2"
+                    >
+                      <HiOutlineXMark></HiOutlineXMark>
+                    </button>
+              </tr>
             </tr>
           ))}
         </tbody>
