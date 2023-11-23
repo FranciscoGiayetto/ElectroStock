@@ -62,25 +62,15 @@ const DataTable = ({ presupuestos }) => {
    
   }};
 
-  const handleNewBudget = async () => {
-
-    const maxNumber = presupuestos.reduce((max, presupuesto) => {
-      const name = presupuesto.name;
-      if (name.startsWith("Presupuesto Sin Nombre ")) {
-        const number = parseInt(name.replace("Presupuesto Sin Nombre ", ""), 10);
-        return !isNaN(number) && number > max ? number : max;
-      }
-      return max;
-    }, 0);
-
-    const nextNum = maxNumber + 1;
+  const handleNewBudget = async (title, selectedSpecialty) => {
+    console.log(title,selectedSpecialty)
     // Define los datos del nuevo presupuesto
     const newBudgetData = {
-      name: `Presupuesto Sin Nombre ${nextNum}`,
+      name: title, // Utiliza el título proporcionado
       status: "PROGRESO", // O "COMPLETADO" según sea necesario
-      speciality: 1, // Reemplaza 'specialityId' con el ID de la especialidad correspondiente
+      speciality: selectedSpecialty, // Utiliza la especialidad seleccionada
     };
-  
+
     try {
       // Realiza la solicitud POST para crear un nuevo presupuesto
       const response = await api.post('/budget/', newBudgetData);
@@ -88,18 +78,16 @@ const DataTable = ({ presupuestos }) => {
 
       // Muestra la respuesta del servidor en la consola
       console.log(response.data);
-  
+
       // Realiza una acción de redirección a '/tienda' o ajusta según sea necesario
       navigate(`${newBudgetId}`);
-      
     } catch (error) {
       // En caso de error, muestra el mensaje de error en la consola
       console.error(error);
-  
+
       // Puedes manejar el error y mostrar un mensaje de error al usuario si es necesario
     }
   };
-
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
   };
@@ -218,10 +206,8 @@ const DataTable = ({ presupuestos }) => {
       </div>
       {isModalOpen && (
         <ModalNewPresupuesto
-        onHandleNewBudget={() => handleNewBudget()}
+        onHandleNewBudget={handleNewBudget} // Sin función anónima
         specialties={specialties}
-        
-        
         onClose={closeModal}
         />
       )}
