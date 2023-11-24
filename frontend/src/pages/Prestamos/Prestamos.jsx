@@ -78,18 +78,18 @@ const Prestamos = () => {
   const getPrestamos = async () => {
     try {
       const response = await api.get(`/prestamosHistorial/${user_id}`);
-      console.log(response.data); // Verify the response from the API
-      const data = response.data;
+      console.log(response.data); // Verifica la respuesta de la API
+      const data = response.data.results; // Accede al array dentro de 'results'
       setData(data);
       setIsLoading(false);
-
-      // Extract the dates from the response
+  
+      // Extrae las fechas de la respuesta
     } catch (error) {
       console.error(error);
       setIsLoading(false);
-
     }
   };
+  
 
   const openModal = (packageData) => {
     console.log("Click registrado")
