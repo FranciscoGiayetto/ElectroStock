@@ -139,9 +139,106 @@ class ecommercePaginacionAPIView(viewsets.ModelViewSet):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+from PIL import Image
+from io import BytesIO
+from django.conf import settings
+import os
+import datetime
+
+BASE_DIR = settings.BASE_DIR
+carpeta_guardado = os.path.join(BASE_DIR, "img-prod/img-logs")
+def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None):
+    print("Ruta de la imagen 1:", imagen1)
+    print("Ruta de la imagen 2:", imagen2)
+    print("Ruta de la imagen 3:", imagen3)
+    print("Ruta de la imagen 4:", imagen4)
+
+    try:
+        # Cargar las imágenes disponibles
+        img1 = Image.open(imagen1)
+        img2 = Image.open(imagen2.lstrip('/')) if imagen2 else None
+        img3 = Image.open(imagen3.lstrip('/')) if imagen3 else None
+        img4 = Image.open(imagen4.lstrip('/')) if imagen4 else None
+
+        # Obtener el tamaño de la imagen principal (img1)
+        width, height = img1.size
+
+        # Asegurarse de que todas las imágenes tengan el mismo tamaño
+        if img2:
+            img2 = img2.resize((width, height))
+            img3 = img3.resize((width, height)) if img3 else None
+            img4 = img4.resize((width, height)) if img4 else None
+
+        # Crear una nueva imagen que sea la combinación de las imágenes disponibles
+        nueva_imagen = Image.new('RGB', (width * 2, height * 2))
+        nueva_imagen.paste(img1, (0, 0))
+        if img2:
+            nueva_imagen.paste(img2, (width, 0))
+        if img3:
+            nueva_imagen.paste(img3, (0, height))
+        if img4:
+            nueva_imagen.paste(img4, (width, height))
+        
+        # Guardar la nueva imagen en bytes
+        ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
+        print("Ruta de guardado:", ruta_guardado)  # Agregamos esta línea para imprimir la ruta
+        nueva_imagen.save(ruta_guardado, format='JPEG')
+
+        # Obtener el camino relativo
+        ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
+        print("Guardado exitoso.")
+        
+        return ruta_relativa
+
+    except Exception as e:
+        print("Error al combinar imágenes:", str(e))
+        return None
+
+
+
+import os
+from django.conf import settings
+from django.core.files.storage import default_storage
+
+def obtener_imagen_primer_log(primer_log_prueba):
+    try:
+        if (
+            primer_log_prueba.box
+            and primer_log_prueba.box.element
+            and primer_log_prueba.box.element.image
+            and primer_log_prueba.box.element.image.file
+        ):
+            imagen_path = default_storage.path(primer_log_prueba.box.element.image.file.name)
+            print("Ruta de la imagen primer log:", imagen_path)
+            if default_storage.exists(primer_log_prueba.box.element.image.file.name):
+                print("La imagen existe.")
+                
+                # Obtener el camino relativo
+                ruta_relativa = os.path.relpath(imagen_path, BASE_DIR)
+                
+                return ruta_relativa
+            else:
+                print("La imagen NO existe.")
+    except FileNotFoundError:
+        print("Archivo no encontrado:", primer_log_prueba.box.element.image.file.name)
+    return None
+
+
+
+def obtener_imagenes_elementos(elementos):
+    imagenes = []
+    for elemento in elementos:
+        box = elemento['box']
+        if 'image' in box and box['image']:
+            imagenes.append(box['image'])
+    return imagenes
+
+
 
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
+    pagination_class = CustomPagination()
+
     if request.method == "GET":
         valid_statuses = [
             models.Log.Status.APROBADO,
@@ -179,16 +276,21 @@ def PrestamoVerAPIView(request, user_id):
                 dateOut_primer_log = (
                     primer_log.get("dateOut", "") if primer_log else None
                 )
-
+                
                 imagen_primer_log = None
-                if (
-                    primer_log_prueba.box
-                    and primer_log_prueba.box.element
-                    and primer_log_prueba.box.element.image
-                    and primer_log_prueba.box.element.image.file
-                ):
-                    imagen_primer_log = primer_log_prueba.box.element.image.url
+                imagen_primer_log = obtener_imagen_primer_log(primer_log_prueba)
 
+                nombre_archivo = f"imagen_combinada_{creation_date}.jpg"
+
+                if imagen_primer_log:
+                    imagenes_elementos = obtener_imagenes_elementos(logs_data)
+                    imagenes_elementos_filtradas = [imagen for imagen in imagenes_elementos[:3] if imagen is not None]
+                    imagen_combinada = combinar_imagenes(nombre_archivo, imagen_primer_log, *imagenes_elementos_filtradas)
+
+                    primer_log["imagen_combinada"] = imagen_combinada
+                print('Imagen primer log', imagen_combinada)
+                        
+                
                 count_logs = len(logs_data) if logs_data else 0
 
                 response_data.append(
@@ -205,13 +307,16 @@ def PrestamoVerAPIView(request, user_id):
                         else None,
                         "estado": primer_log["status"] if primer_log else None,
                         "dateIn": dateIn_primer_log_prueba,
-                        "imagen": imagen_primer_log,
+                        "imagen": imagen_combinada,
                         "count": count_logs,
                         "lista": logs_data,
                     }
                 )
 
-            return Response(response_data)
+            # Aplicar paginación
+            paginated_response = pagination_class.paginate_queryset(response_data, request)
+            return pagination_class.get_paginated_response(paginated_response)
+
         else:
             return Response("No se encontraron logs para este usuario.")
 
@@ -454,6 +559,8 @@ def cantNotificaciones(request, user_id):
 
 @api_view(["GET", "POST"])
 def PrestamosActualesView(request, user_id):
+    pagination_class = CustomPagination()
+
     if request.method == "GET":
         valid_statuses = [
             models.Log.Status.APROBADO,
@@ -463,7 +570,10 @@ def PrestamosActualesView(request, user_id):
         queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
 
         serializer = LogSerializer(queryset, many=True)
-        return Response(serializer.data)
+
+        # Aplicar paginación
+        paginated_response = pagination_class.paginate_queryset(serializer.data, request)
+        return pagination_class.get_paginated_response(paginated_response)
 
     if request.method == "POST":
         return Response({"message": "Post completado"})
@@ -1237,7 +1347,7 @@ def BudgetViewSet(request, budget_id=None):
 
     if request.method == "POST":
         # Deserializa los datos de la solicitud POST
-        serializer = BudgetSerializer(data=request.data)
+        serializer = BudgetSerializer2(data=request.data)
 
         # Verifica si los datos son válidos
         if serializer.is_valid():
