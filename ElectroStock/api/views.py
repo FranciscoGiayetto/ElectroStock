@@ -1347,7 +1347,7 @@ def BudgetViewSet(request, budget_id=None):
 
     if request.method == "POST":
         # Deserializa los datos de la solicitud POST
-        serializer = BudgetSerializer(data=request.data)
+        serializer = BudgetSerializer2(data=request.data)
 
         # Verifica si los datos son válidos
         if serializer.is_valid():
