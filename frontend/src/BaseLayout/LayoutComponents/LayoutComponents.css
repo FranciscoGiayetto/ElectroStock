@@ -98,7 +98,10 @@ html, body {
     font-size: 14px; /* Tamaño de fuente más pequeño */
   }
 }
+.SearchVisit{
+  padding-top: 5px;
 
+}
 
 
 .botonesnav{
