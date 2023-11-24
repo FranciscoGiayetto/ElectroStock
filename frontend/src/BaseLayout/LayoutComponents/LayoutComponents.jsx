@@ -112,7 +112,11 @@ async function downloadApp() {
   setIsReadyForInstall(false);
 }
 const isSmallScreen = useMediaQuery('(max-width: 830px)');
+<<<<<<< HEAD
 const isSmallScreen4 = useMediaQuery('(max-width: 1200px)');
+=======
+const isSmallScreen4 = useMediaQuery('(max-width: 1206px)');
+>>>>>>> branch-arreglos-23/11
 const isSmallScreen3 = useMediaQuery('(max-width: 1110px)');
 const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
 
@@ -269,17 +273,18 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
            </Row>
             </div>
           <Col>
-          <form onSubmit={handleSearch} className={`div-form ${isSmallScreen? 'search-small' : 'search-large'}`}>                
+          <form onSubmit={handleSearch}>                
                   <Autocomplete
-                      className={`search-input`}
-                    freeSolo
+                    className="SearchVisit"      
+                   freeSolo
                     options={myOptions}
                     getOptionLabel={(option) => option}
                     value={selectedOption}
                     onChange={(event, newValue) => setSelectedOption(newValue)}
                     renderInput={(params) => (
                       <TextField
-                        className='search-input'
+                        fullWidth
+                        className="SearchVisit"
                         {...params}
                         variant="outlined"
                         name='searchBar'
@@ -293,17 +298,19 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
                   />
                    </form>
           </Col>
-          {!isSmallScreen2 && (
-          <Col>
-          <Tooltip title="Buscar" arrow placement="bottom">
-                    <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                      <SearchRoundedIcon />
-                    </Button>
-                  </Tooltip>
-                  </Col>
-          )}
+         
           <div className='botonesnav'>
             <Row>
+            <Col>
+                { (
+               <Tooltip title="Buscar" arrow placement="bottom">
+                         <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                           <SearchRoundedIcon />
+                         </Button>
+                       </Tooltip>
+                
+              )}
+              </Col>
             
                   {!isSmallScreen3 && (
                  <Col>  

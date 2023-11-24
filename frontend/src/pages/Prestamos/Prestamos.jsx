@@ -12,7 +12,16 @@ import ModalDetallePrestamo from './ModalDetallePrestamo';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+<<<<<<< HEAD
 import { toast } from 'react-toastify';
+=======
+import Spinner from 'react-bootstrap/Spinner';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import { TextField } from "@mui/material";  
+import Button from 'react-bootstrap/Button';
+
+
+>>>>>>> branch-arreglos-23/11
 
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -39,9 +48,16 @@ const Prestamos = () => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
+<<<<<<< HEAD
       toast.success('Préstamo Aprobado!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
+=======
+      setIsLoading(false);
+
+>>>>>>> branch-arreglos-23/11
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
+
     }
   };
 
@@ -53,9 +69,16 @@ const Prestamos = () => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
+<<<<<<< HEAD
       toast.warning('Préstamo Rechazado.', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
+=======
+      setIsLoading(false);
+
+>>>>>>> branch-arreglos-23/11
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
+
     }
   };
 
@@ -70,9 +93,13 @@ const Prestamos = () => {
       console.log(response.data); // Verify the response from the API
       const data = response.data;
       setData(data);
+      setIsLoading(false);
+
       // Extract the dates from the response
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
+
     }
   };
 
@@ -88,39 +115,74 @@ const Prestamos = () => {
     setIsModalOpen(false);
   };
   return (
-    <div className='container pagecontainer'>
-      
-      <div >
-          {data.length > 0 ? (
-            data.map((prestamo, index) => (
-              <PrestamosCardPackage
-                onClick={() => openModal(prestamo)}
-                key={index}
-                image={prestamo.imagen}
-                status={prestamo.estado}
-                name={prestamo.nombre}
-                dateIn={prestamo.dateIn}
-                dateOut={prestamo.dateOut}
-                count={prestamo.count}
-                lista={prestamo.lista}                  
-              />
-            ))): (
-              <p>Cargando préstamos...</p>
-              )}
-      </div>
-
-      {isModalOpen && (
-        <ModalDetallePrestamo
-        onHandleApproval={() => handleApproval(selectedPackage.dateIn)}
-        onHandleRejection={() => handleRejection(selectedPackage.dateIn)}
-        dateOut={selectedPackage.dateOut}
-        lista={selectedPackage.lista}
-        onClose={closeModal}
-        />
+    <div className="tratandodecentrar">
+      {isLoading && (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <Spinner animation="border" role="status"></Spinner>
+        </div>
       )}
 
+      <Container>
+        <Col>
+          {/* Search Bar */}
+          <Row className="mt-4 col-md-12" >
+          <Col>
+      <div className="d-flex align-items-center">
+        <TextField
+          fullWidth
+          id="SearchVisit"
+          variant="outlined"
+          label="Buscar"
+          className="SearchVisit"
+        />
+        <Button variant="outline-secondary" className="ms-2">
+          <SearchRoundedIcon />
+        </Button>
+      </div>
+    </Col>
+
+          </Row>
+
+          {/* Prestamos Cards */}
+          <Row className="mt-4">
+            <div>
+              {data.length > 0 ? (
+                data.map((prestamo, index) => (
+                  <PrestamosCardPackage
+                    onClick={() => openModal(prestamo)}
+                    key={index}
+                    image={prestamo.imagen}
+                    status={prestamo.estado}
+                    name={prestamo.nombre}
+                    dateIn={prestamo.dateIn}
+                    dateOut={prestamo.dateOut}
+                    count={prestamo.count}
+                    lista={prestamo.lista}
+                  />
+                ))
+              ) : (
+                <p></p>
+              )}
+            </div>
+          </Row>
+
+          {/* Modal */}
+          <Row>
+            {isModalOpen && (
+              <ModalDetallePrestamo
+                onHandleApproval={() => handleApproval(selectedPackage.dateIn)}
+                onHandleRejection={() => handleRejection(selectedPackage.dateIn)}
+                dateOut={selectedPackage.dateOut}
+                lista={selectedPackage.lista}
+                onClose={closeModal}
+              />
+            )}
+          </Row>
+        </Col>
+      </Container>
     </div>
   );
+
 };
   
 
