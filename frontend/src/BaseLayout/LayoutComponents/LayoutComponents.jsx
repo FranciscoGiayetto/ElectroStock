@@ -112,11 +112,7 @@ async function downloadApp() {
   setIsReadyForInstall(false);
 }
 const isSmallScreen = useMediaQuery('(max-width: 830px)');
-<<<<<<< HEAD
-const isSmallScreen4 = useMediaQuery('(max-width: 1200px)');
-=======
 const isSmallScreen4 = useMediaQuery('(max-width: 1206px)');
->>>>>>> branch-arreglos-23/11
 const isSmallScreen3 = useMediaQuery('(max-width: 1110px)');
 const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
 

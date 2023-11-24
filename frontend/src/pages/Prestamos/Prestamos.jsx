@@ -12,16 +12,12 @@ import ModalDetallePrestamo from './ModalDetallePrestamo';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-<<<<<<< HEAD
-import { toast } from 'react-toastify';
-=======
 import Spinner from 'react-bootstrap/Spinner';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { TextField } from "@mui/material";  
 import Button from 'react-bootstrap/Button';
 
 
->>>>>>> branch-arreglos-23/11
 
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -48,12 +44,8 @@ const Prestamos = () => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
-<<<<<<< HEAD
-      toast.success('Préstamo Aprobado!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
-=======
       setIsLoading(false);
 
->>>>>>> branch-arreglos-23/11
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -69,12 +61,8 @@ const Prestamos = () => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
-<<<<<<< HEAD
-      toast.warning('Préstamo Rechazado.', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
-=======
       setIsLoading(false);
 
->>>>>>> branch-arreglos-23/11
     } catch (error) {
       console.error(error);
       setIsLoading(false);
