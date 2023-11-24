@@ -111,10 +111,10 @@ async function downloadApp() {
   // Hide the install button.
   setIsReadyForInstall(false);
 }
-const isSmallScreen = useMediaQuery('(max-width: 830px)');
-const isSmallScreen4 = useMediaQuery('(max-width: 1206px)');
-const isSmallScreen3 = useMediaQuery('(max-width: 1110px)');
-const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
+const isSmallScreen = useMediaQuery('(max-width: 950px)');
+const isSmallScreen4 = useMediaQuery('(max-width: 950px)');
+const isSmallScreen3 = useMediaQuery('(max-width: 950px)');
+const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
 
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
