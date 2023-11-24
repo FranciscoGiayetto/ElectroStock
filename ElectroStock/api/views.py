@@ -1251,7 +1251,16 @@ def BudgetViewSet(request, budget_id=None):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == "DELETE":
-        return Response({"message": "Notificaciones agregada"})
+        # Check if the budget_id is provided
+        if budget_id is not None:
+            try:
+                # Get the budget instance
+                budget_instance = models.Budget.objects.get(id=budget_id)
+                budget_instance.delete()  # Delete the budget instance
+
+                return Response({"message": "Budget deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+            except models.Budget.DoesNotExist:
+                return Response({"message": "Budget not found"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "PUT":
         # Actualiza el estado del presupuesto a "COMPRADO".

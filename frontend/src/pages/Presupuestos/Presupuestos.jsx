@@ -22,10 +22,17 @@ function Presupuestos() {
   const userData = user();
   const [loading, setLoading] = useState(true); // Nuevo estado para el Spinner
   const [specialties, setSpecialties] = useState([]);
+  const [shouldRefresh, setShouldRefresh] = useState(false);
   useEffect(() => {
     getSpecialties();
   }, []);
 
+  useEffect(() => {
+    if (shouldRefresh) {
+      getPresupuesto(); // Realiza un refresh llamando a la función que obtiene los presupuestos
+      setShouldRefresh(false); // Reinicia el estado para evitar refresh continuos
+    }
+  }, [shouldRefresh]);
 
   const getSpecialties = async () => {
     try {
@@ -74,7 +81,7 @@ function Presupuestos() {
       
       <Row className="mt-1">
         <Col style={{ width: '62.5rem' }}>
-          <DataTable presupuestos={presupuestos} specialties={specialties} />
+          <DataTable presupuestos={presupuestos} specialties={specialties} setShouldRefresh={setShouldRefresh}/>
         </Col>
       </Row>
     </Container>

@@ -14,7 +14,7 @@ import Tooltip from 'react-png-tooltip'
 import ModalNewPresupuesto from './ModalNewPresupuesto';
 import ModalDeleteConfirm from './ModalDeleteConfirm';
 import './DataTable.css'
-const DataTable = ({ presupuestos , specialties}) => {
+const DataTable = ({ presupuestos , specialties,setShouldRefresh}) => {
   let api = useAxios();
   const navigate = useNavigate();
   const handleRowClick = (presupuestoId, event) => {
@@ -37,7 +37,7 @@ const DataTable = ({ presupuestos , specialties}) => {
   const [sortColumn, setSortColumn] = useState(null);
   const [postRes, setPostRes] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalDeleteConfirmOpen, setIsModalDeleteConfirmOpen] = useState(true);
+  const [isModalDeleteConfirmOpen, setIsModalDeleteConfirmOpen] = useState(false);
   const [sortDirection, setSortDirection] = useState('asc');
   
   const [selectedBudget, setSelectedBudget] = useState(null);
@@ -60,7 +60,22 @@ const DataTable = ({ presupuestos , specialties}) => {
     setIsModalDeleteConfirmOpen(false)
   }
 
-  const handleDeleteConfirm = () => {
+  
+    const handleDeleteConfirm = async () => {
+    try {
+     // Inicia el Spinner
+
+      const response = await api.delete(`/budget/${selectedBudget}`);
+      let data = await response.data;
+      console.log(data)
+      setShouldRefresh(true);
+    } catch (error) {
+      console.error(error);
+   
+  };
+
+
+
     setIsModalDeleteConfirmOpen(false)
   }
 
