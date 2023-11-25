@@ -20,7 +20,7 @@ import { toast } from 'react-toastify';
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
 </head>
 
-const Prestamos = () => {
+const Prestamos = ({ isProfessor }) => {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const api = useAxios();
@@ -58,7 +58,7 @@ const Prestamos = () => {
       console.error(error);
     }
   };
-  
+
   const handleRejection = async (dateIn,packageUserId) => {
     try {
       // Realiza una solicitud PUT para rechazar los registros del usuario en el servidor
