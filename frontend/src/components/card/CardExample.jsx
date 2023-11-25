@@ -7,7 +7,7 @@ export default function CardExample(props) {
   const { id, title, image, current_stock } = props;
   return (
     <div className="container-fluid">
-      <div className="row justify-content-end mb-3">
+      <div className="row justify-content-center mb-3">
         <div className="col-md-12 col-xl-10">
           <Card className="shadow-sm border rounded-3">
             <div className="card-body">
