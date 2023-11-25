@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PrestamosCard from './CardPrestamos';
 import useAxios from '../../utils/useAxios';
 import './Prestamos.css';
-import WordListPrestamos from './filtrosPrestamos';
+import FiltrosPrestamos from './filtrosPrestamos';
+import OrdenarPorPrestamos from './OrdenarPor';
 import { useAuthStore } from '../../store/auth';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -16,6 +17,8 @@ import Spinner from 'react-bootstrap/Spinner';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { TextField } from "@mui/material";  
 import Button from 'react-bootstrap/Button';
+import InputAdornment from '@mui/material/InputAdornment';
+
 
 
 
@@ -113,22 +116,34 @@ const Prestamos = () => {
       <Container>
         <Col>
           {/* Search Bar */}
-          <Row className="mt-4 col-md-12" >
-          <Col>
-      <div className="d-flex align-items-center">
-        <TextField
-          fullWidth
-          id="SearchVisit"
-          variant="outlined"
-          label="Buscar"
-          className="SearchVisit"
-        />
-        <Button variant="outline-secondary" className="ms-2">
-          <SearchRoundedIcon />
-        </Button>
-      </div>
-    </Col>
+          <Row className=" col-md-12" >
+          <Col md="auto">
+  <div className="mr-12 mt-4">
+    <OrdenarPorPrestamos />
+  </div>
+</Col>
 
+<Col>
+  <div className="d-flex align-items-center mt-4">
+    <TextField
+      fullWidth
+      id="SearchVisit"
+      variant="outlined"
+      label="Buscar"
+      className="SearchVisit"
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <Button variant="outline-secondary">
+              <SearchRoundedIcon />
+            </Button>
+          </InputAdornment>
+        ),
+      }}
+    />
+  </div>
+</Col>
+      
           </Row>
 
           {/* Prestamos Cards */}
