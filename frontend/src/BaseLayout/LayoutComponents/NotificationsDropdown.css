@@ -11,10 +11,34 @@
     z-index: 1; /* asegura que esté sobre otros elementos */
     top: 64px; /* ajusta la distancia desde la parte superior según tu barra de navegación */
     right: 16px; /* ajusta la distancia desde la derecha según tus preferencias */
-    padding-inline: 1rem;
+    
   }
   
   /* ... (estilos existentes) */
   .container-relative {
     position: relative;
   }  
+  /* NotificationsDropdown.css */
+
+  .unread-notification {
+    background-color: #e6f7ff; /* Change the background color as per your design */
+
+  }
+
+.read-notification {
+  background-color: #ffffff; /* White background for read notifications */
+}
+
+.notificacionardas {
+  padding-inline: 1rem;
+  display: block; /* Add this line to override the display property */
+  width: 100%; /* Ensure the text takes up the full width available */
+  text-decoration: none !important;
+  overflow: hidden; /* Hide any overflow beyond the width */
+  text-overflow: ellipsis; /* Display an ellipsis (...) for overflow text */
+}
+
+/* Update the styles for the description element */
+.ant-list-item-meta-description {
+  white-space: pre-line; /* Preserve line breaks in the description */
+}
