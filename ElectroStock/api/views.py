@@ -187,10 +187,10 @@ def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, image
         if img2:
             img2 = img2.resize((width, height))
             nueva_imagen.paste(img2, (width, 0))
-        if img3:
+        if img3 and img4:
             nueva_imagen.paste(img3, (0, height))
-        if img4:
             nueva_imagen.paste(img4, (width, height))
+            
 
         # Guardar la nueva imagen en bytes
         ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
