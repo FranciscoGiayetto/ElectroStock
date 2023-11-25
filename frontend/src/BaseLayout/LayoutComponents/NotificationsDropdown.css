@@ -34,6 +34,7 @@
   display: block; /* Add this line to override the display property */
   width: 100%; /* Ensure the text takes up the full width available */
   text-decoration: none !important;
+  outline: none;
   overflow: hidden; /* Hide any overflow beyond the width */
   text-overflow: ellipsis; /* Display an ellipsis (...) for overflow text */
 }
