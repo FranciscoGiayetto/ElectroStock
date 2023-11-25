@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db.models.signals import post_save
 
+
+
 # Creo el grupo alumno
 if not Group.objects.filter(name="Alumno").exists():
     alumno_group = Group.objects.create(name="Alumno")
@@ -83,14 +85,6 @@ class CustomUser(AbstractUser):
             notification.user_revoker.add(*users_in_groups)
 
         return notification
-
-
-from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, Permission
-from django.contrib.auth import get_user_model
-from django.utils import timezone
-
-# ... otros imports ...
 
 
 class Notification(models.Model):

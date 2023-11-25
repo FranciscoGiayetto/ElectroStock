@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from ElectroStockApp import models
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Sum
 
 
 # Serializer para heredar de categorias
@@ -113,9 +114,6 @@ class BoxSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Box
         fields = "__all__"
-
-
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class BoxSerializerPrueba(serializers.ModelSerializer):
@@ -344,9 +342,6 @@ class BoxMasLogsRotostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Box
         fields = ("box_nombre", "cantidad_logs_rotos")
-
-
-from django.db.models import Sum
 
 
 class ElementEcommerceSerializer2(serializers.ModelSerializer):

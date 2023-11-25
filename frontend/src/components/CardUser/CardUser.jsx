@@ -23,7 +23,7 @@ import {
 
 export default function CardUser(props) {
   return (
-    <MDBCard border='none' style={{ fontFamily:'Roboto, sans-serif', fontSize:'0.938rem', boxShadow:'0 2px 4px rgba(0, 0, 0, 0.05)'}}>
+    <MDBCard border='none' style={{ fontSize:'0.938rem', boxShadow:'0 2px 4px rgba(0, 0, 0, 0.05)'}}>
       <MDBCardHeader className='card-header'>Alumno</MDBCardHeader>
       <MDBCardBody>
         <Stack direction='horizontal' gap={4}>
@@ -36,7 +36,7 @@ export default function CardUser(props) {
             </div>
             <div>
               <p style={{fontSize:'1.25rem'}}>{props.course} Año  </p>
-              <p style={{fontSize:'1.25rem'}}>Especialidades:{props.specialties} </p>
+              <p style={{fontSize:'1.25rem'}}>{props.specialties} </p>
             </div>
           </Stack>
         </Stack>

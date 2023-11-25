@@ -1,21 +1,22 @@
 .container-bg {
   width: 100%; 
   height: auto;
-  margin: 3.125rem;
-  margin-top: 6.25rem;
+  margin-top: 3rem;
   border-radius: 0.625rem;
   padding-top: 0.9375rem; 
   padding-bottom: 1.25rem; 
   background-color: white;
 }
 
-.btn-style{
+.btn-style {
   font-size: 0.938rem;
   background-color: #58A4B0;
   border: none;
   width: 9rem;
   height: 2.5rem;
+  margin-bottom: 1rem;  
 }
+
 
 .btn-style:hover{
   background-color: #528e97;
@@ -28,6 +29,20 @@
   border-width: 0.1rem;
   padding: 0.3rem;
   cursor: text;
+}
+@media (min-width: 300px) {
+  .date-style{
+    margin-right: 3rem;
+  }
+}
+@media (min-width: 200px) {
+  .date-style{
+    margin-right: 2rem;
+  }
+  .btn-style {
+    width: 7rem; 
+  }
+
 }
 .text-center2{
   text-align: center;

@@ -91,3 +91,16 @@ ul {
 .dropdown-content.expanded + .dropdown-header::after {
   content: '▲';
 }
+
+/* Estilos para el dropdown principal */
+.main-dropdown-toggle {
+  background-color: white;
+  color: black;
+}
+
+/* Estilos para los dropdowns secundarios */
+.nested-dropdown-toggle,
+.nested-dropdown-item {
+  background-color: white;
+  color: black;
+}

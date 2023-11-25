@@ -2,10 +2,25 @@ import React, { useState, useEffect } from 'react';
 import PrestamosCard from './CardPrestamos';
 import useAxios from '../../utils/useAxios';
 import './Prestamos.css';
+import WordListPrestamos from './filtrosPrestamos';
 import { useAuthStore } from '../../store/auth';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import PrestamosCardPackage from './PrestamosCardPackage';
 import ModalDetallePrestamo from './ModalDetallePrestamo';
-const Prestamos = ({ isProfessor }) => {
+import IconButton from '@mui/material/IconButton';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { toast } from 'react-toastify';
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
+</head>
+
+const Prestamos = () => {
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const api = useAxios();
@@ -13,6 +28,8 @@ const Prestamos = ({ isProfessor }) => {
   const [selectedPackage, setSelectedPackage] = useState(null); // State to store selected package
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   const user_id = userData.user_id;
+  const [showWordListPrestamos, setShowWordListPrestamos] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleApproval = async (dateIn, packageUserId) => {
     try {
@@ -22,6 +39,7 @@ const Prestamos = ({ isProfessor }) => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
+      toast.success('Préstamo Aprobado!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     } catch (error) {
       console.error(error);
     }
@@ -35,10 +53,12 @@ const Prestamos = ({ isProfessor }) => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
+      toast.success('Préstamo Aprobado!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     } catch (error) {
       console.error(error);
     }
   };
+  
   const handleRejection = async (dateIn,packageUserId) => {
     try {
       // Realiza una solicitud PUT para rechazar los registros del usuario en el servidor
@@ -47,6 +67,7 @@ const Prestamos = ({ isProfessor }) => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
+      toast.warning('Préstamo Rechazado.', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     } catch (error) {
       console.error(error);
     }
@@ -94,19 +115,13 @@ const Prestamos = ({ isProfessor }) => {
     setIsModalOpen(false);
   };
   return (
-    <div className="container pagecontainer">
-   <div className="title-container" >
-    <h1 className="textito">Mis prestamos</h1>
-  </div>
-
-   
-           
-  <div>
-      {data.length > 0 ? (
-       
+    <div className='container pagecontainer'>
+      
+      <div >
+          {data.length > 0 ? (
             data.map((prestamo, index) => (
               <PrestamosCardPackage
-              onClick={() => openModal(prestamo)}
+                onClick={() => openModal(prestamo)}
                 key={index}
                 image={prestamo.imagen}
                 status={prestamo.estado}
@@ -117,13 +132,11 @@ const Prestamos = ({ isProfessor }) => {
                 lista={prestamo.lista}
                 user_id={prestamo.id_user}
               />
-             
-             
-        ))): (
-          
-          <p>Cargando préstamos...</p>
-          )}
-       </div>
+            ))): (
+              <p>Cargando préstamos...</p>
+              )}
+      </div>
+
       {isModalOpen && (
   <ModalDetallePrestamo
     onHandleApproval={() => handleApproval(selectedPackage.dateIn, selectedPackage.id_user)}
@@ -137,8 +150,8 @@ const Prestamos = ({ isProfessor }) => {
   />
 )}
     </div>
-    );
-  };
+  );
+};
   
 
 export default Prestamos;

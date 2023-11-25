@@ -9,6 +9,14 @@ import './DetalleProducto.css';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TextField from '@mui/material/TextField';
 import { EventEmitter } from 'events';
+import { toast } from 'react-toastify';
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
+</head>
+
 // Lista de categorías con nombres correspondientes a los IDs
 const categorias = [
   { id: 1, nombre: "Electrónica" },
@@ -23,7 +31,7 @@ function DetalleProducto() {
   const handleObservationChange = (value) => {
     setObservation(value);
   };
-
+  
   const [user] = useAuthStore((state) => [state.user]);
   const userData = user();
   const [posRes, setPostRes] = useState('');
@@ -34,6 +42,8 @@ function DetalleProducto() {
   const navigate = useNavigate();
   const api = useAxios();
   const { id } = useParams();
+  const [disableButton, setDisableButton] = useState('');
+
   useEffect(() => {
     console.log(userData);
     getElement();
@@ -46,7 +56,6 @@ function DetalleProducto() {
     };
   }, [id]);
 
-
   const getElement = async () => {
     try {
       const response = await api.get(`/elements/${id}/`);
@@ -58,6 +67,7 @@ function DetalleProducto() {
       console.error(error);
     }
   };
+
   const getStockInfo = async () => {
     try {
       const stockResponse = await api.get(`/stock/${id}/`); 
@@ -67,6 +77,7 @@ function DetalleProducto() {
       console.error(error);
     }
   }
+
   const getStock = async () => {
     try {
       const stockResponse = await api.get(`/stock/${id}`);
@@ -78,15 +89,12 @@ function DetalleProducto() {
       } else {
         // En caso de que no haya datos de stock en la respuesta
         console.warn('No se encontraron datos de stock en la respuesta.');
+        setDisableButton('disabled');
       }
     } catch (error) {
       console.error(error);
     }
   };
-  
-
-  
-
 
   const handleLayoutChange = () => {
     const isMobileLayout = window.innerWidth < 768;
@@ -104,7 +112,9 @@ function DetalleProducto() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
   
     let body = {
       box: element.id,
@@ -112,7 +122,7 @@ function DetalleProducto() {
       lender: userData.user_id,
       status: 'CAR',
       quantity: 1,
-      observation: observation, // Incluye el valor de la observación
+      observation: observation, 
       dateIn: null,
       dateOut: null,
     };
@@ -123,11 +133,15 @@ function DetalleProducto() {
       setPostRes(response.data.response);
       cartEventEmitter.emit('updateCart');
       navigate('/tienda');
+      toast.success('Producto añadido!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     } catch (error) {
       setPostRes(error.response.data);
+      toast.error('Este producto ya fue añadido.', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
     }
   };
-   
+  
+  
+  
 
   const backButtonStyle = {
     position: 'absolute',
@@ -136,58 +150,55 @@ function DetalleProducto() {
   };
 
   return (
-    <div className="container pagecontainer detalleproducto-container" style={{ position: 'relative' }}>
+    <div className="container detalleproducto-container" style={{ position: 'relative' }}>
       <div style={backButtonStyle}>
         <Button variant="outline-primary" onClick={() => navigate('/tienda')}>
           <ChevronLeftIcon />
         </Button>
       </div>
       {element && (
-  <div className={`row product-details ${isVerticalLayout ? 'vertical-layout' : ''}`}>
-    <div className="col-md-6 product-details__image-container">
-      <img
-        src={element.image || defaultpicture}
-        alt="Imagen"
-        className="img-fluid product-details__image"
-      />
-    </div>
+      <div className={`row product-details ${isVerticalLayout ? 'vertical-layout' : ''}`}>
+        <div className="col-md-6 product-details__image-container">
+          <img
+            src={element.image || defaultpicture}
+            alt="Imagen"
+            className="img-fluid product-details__image"
+          />
+        </div>
 
-    <div className="col-md-6 product-details__info-container" style={{ width: '45%' }}>
-      <h1 className="product-details__title">Nombre: {element.name}</h1>
+    <div className="col-md-6 product-details__info-container">
+      <h1 className="product-details__title"> {element.name}</h1>
       <h1 className="product-details__description">Descripción: {element.description}</h1>
       <h1 className="product-details__category">
         Categoría: {element.category.name}
       </h1>
       <h1 className="product-details__stock">Stock: {element.stock || 'No disponible'}</h1>
 
-      {/* Campo de observación */}
-      <TextField
-  label="Observación"
-  variant="outlined"
-  fullWidth
-  margin="normal"
-  color="primary"
-  placeholder="Escribe tu observación"
-  value={observation}
-  onChange={(e) => handleObservationChange(e.target.value)}
-  sx={{ width: '80%' }}
-/>
-
-
-
-      <Button
-        className="botonCarrito"
-        size="lg"
-        style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0', left: '5px' }}
-        variant="primary"
-        type="submit"
-        onClick={handleSubmit}
-      >
-        Agregar al carrito
-      </Button>
-    </div>
-  </div>
-)}
+          {/* Campo de observación */}
+          <TextField
+            label="Observación"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            color="primary"
+            placeholder="Escribe tu observación"
+            value={observation}
+            onChange={(e) => handleObservationChange(e.target.value)}
+            sx={{ width: '80%' }}
+          />
+          <Button
+            className={`botonCarrito ${disableButton}`}
+            size="lg"
+            style={{ backgroundColor: '#58A4B0', border: '1px solid #58A4B0', left: '5px' }}
+            variant="primary"
+            type="submit"
+            onClick={handleSubmit}>
+            Agregar al carrito
+          </Button>
+          
+        </div>
+      </div>
+    )}
 
       <div className={`product-details__separator ${isVerticalLayout ? 'vertical-separator' : ''}`}></div>
     </div>

@@ -1,0 +1,27 @@
+
+
+.carousel-container {
+    max-height: 400px; /* Set your desired fixed height */
+    overflow: hidden;
+    margin-top: 2rem;
+  }
+  
+  .carousel-container img {
+    object-fit: cover;
+    max-height: 100%;
+    width: 100%;
+  }
+  .margen {
+    margin-top: 2rem; /* Adjust the value based on the height of your navbar */
+  }
+  
+  /* You might need media queries to adjust the margin for smaller screens */
+  @media (max-width: 767px) {
+    .margen {
+      margin-top: 2rem; /* Adjust the value for smaller screens */
+    }
+  }  
+  
+  .margenasos{
+    margin: 10px;
+  }

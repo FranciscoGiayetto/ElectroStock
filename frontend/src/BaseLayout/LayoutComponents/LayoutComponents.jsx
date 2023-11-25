@@ -33,7 +33,11 @@ import useAxios from "../../utils/useAxios";
 import { useAuthStore } from '../../store/auth';
 import { cartEventEmitter } from '../../pages/DetalleProducto/DetalleProducto';
 import NotificationsDropdown from './NotificationsDropdown';
-
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
+</head>
 
 const { Header, Sider } = Layout;
 
@@ -114,9 +118,10 @@ async function downloadApp() {
   // Hide the install button.
   setIsReadyForInstall(false);
 }
-const isSmallScreen = useMediaQuery('(max-width: 1100px)');
-
-
+const isSmallScreen = useMediaQuery('(max-width: 830px)');
+const isSmallScreen4 = useMediaQuery('(max-width: 1200px)');
+const isSmallScreen3 = useMediaQuery('(max-width: 1110px)');
+const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
 
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
@@ -178,7 +183,7 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
   };
 
   return (
-    <div>
+    <div style={{fontFamily: 'Roboto, sans-serif'}}>
       {/* SIDEBAR */}
       <Sider
         trigger={null}
@@ -221,6 +226,18 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               Admin
             </Menu.Item>
                )}
+                
+              {isSmallScreen4 && (
+                <Menu.Item key="6" icon={<SettingsIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/detalleCuenta' }}>
+                Cuenta
+              </Menu.Item>
+              )}
+             
+              {isSmallScreen3 && (
+                <Menu.Item key="8" icon={<ShoppingCartOutlinedIcon  style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/carrito' }}>
+                Carrito
+              </Menu.Item>
+              )}
           <Menu.Divider />
      
           
@@ -235,12 +252,12 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
       </Sider>
 
       {/* NAVBAR */}
-              
-      <Header className='navbar'>
-          <Container fluid>
-            <Row>
-            <Col>
-              <Button
+      <Header >
+        
+        <Row>
+          <div className='navbar'>
+          <Col>
+          <Button
                 variant="primary"
                 type="submit"
                 className='button'
@@ -248,23 +265,20 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               >
                 <MenuRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
               </Button>
-            </Col>
-
-           
-          
-              {/* Image */}
-              <Col style={{ marginLeft:'1.5rem' }}>  
-              {!isSmallScreen && (
               
-                <a href="/">
-                  <img src={itsv} alt="itsv" className='logo-img' />
-                </a>   
-              )}           
               </Col>
+              {!isSmallScreen2 && (
+          <Col>
               
-              {/* Searchbar */}
-              <Col >            
-              <form onSubmit={handleSearch} className={`div-form ${isSmallScreen ? 'search-small' : 'search-large'}`}>                
+              
+              <a href="/">
+                <img src={itsv} alt="itsv" className='logo-img' />
+              </a>   
+               
+          </Col>
+           )}  
+          <Col>
+          <form onSubmit={handleSearch} className={`div-form ${isSmallScreen? 'search-small' : 'search-large'}`}>                
                   <Autocomplete
                       className={`search-input`}
                     freeSolo
@@ -286,17 +300,19 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
 
                     )}
                   />
-                  <Tooltip title="Buscar" arrow placement="bottom">
+                   </form>
+          </Col>
+          {!isSmallScreen2 && (
+          <Col>
+          <Tooltip title="Buscar" arrow placement="bottom">
                     <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
                       <SearchRoundedIcon />
                     </Button>
                   </Tooltip>
-                </form> 
-              </Col>
-
-              {/* Buttons */}
-              <Col>
-                {!isSmallScreen && (
+                  </Col>
+          )}
+                  {!isSmallScreen3 && (
+                 <Col>  
                   <Tooltip title="Carrito" arrow placement="bottom">
                     <Button
                       variant="primary"
@@ -309,13 +325,11 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
                         <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                       </Badge>
                     </Button>
-                  </Tooltip>
-                  
-                )}
-              </Col>
-
-              <Col style={{ marginLeft:'0'}}>
-              {!isSmallScreen && (
+                  </Tooltip>            
+                </Col>
+                 )}
+          <Col>
+                { (
                 <Tooltip title="Notificaciones" arrow placement="bottom">
                   <Button   ref={notificationsRef} variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones" onClick={handleToggleNotifications}>
                     <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
@@ -326,24 +340,26 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
                 
               )}
               </Col>
-
-              <Col style={{ marginLeft:'0rem'}}>   
-              {!isSmallScreen && (
+              {!isSmallScreen4 && (
+          <Col>
+              
                 <Tooltip title="Configuración" arrow placement="bottom">
                   <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
                     <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
                   </Button>
                 </Tooltip>
-              )}
-              </Col>          
-            </Row>
-          </Container>
-          {isNotificationsOpen && (
+             
+          </Col>
+           )}
+          </div>
+
+        </Row>
+        {isNotificationsOpen && (
           <NotificationsDropdown referenceElement={notificationsRef.current} notifications={notificaciones} onClose={() => setIsNotificationsOpen(false)} />
         )}
-        </Header>
-      
-    </div>
+      </Header>
+        </div>       
+
   );
 };
 
