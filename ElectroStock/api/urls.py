@@ -82,6 +82,7 @@ urlpatterns = [
     ),
     path("filtroStatusPrestamos/<str:status>/<int:user_id>/", FiltroStatusPrestamo, name="FiltroPrestamosStatus"),
     path("filtroDatePrestamos/<int:user_id>/", FiltroDatePrestamo, name="FiltroPrestamosDate"),
+    path("PrestamosAgrupadosSinPaginacion/<int:user_id>/", PrestamosSinPaginacion, name="FiltroPrestamosDate"),
     path("filtroComponentesPrestamos/<int:user_id>/", FiltroComponentesPrestamo, name="FiltroPrestamosComponentes"),
     path("pendientes/<int:user_id>/", PrestamoPendientesAPIView, name="pendientes"),
     path("logCantidad/<int:log_id>/", update_log_quantity, name="logCantidad"),
