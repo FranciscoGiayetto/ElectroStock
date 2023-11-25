@@ -158,22 +158,14 @@ def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, image
         # Obtener el tamaño de la imagen principal (img1)
         width, height = img1.size
 
-        # Asegurarse de que todas las imágenes tengan el mismo tamaño
-        if img3:
-            img2 = img2.resize((width, height))
-            img3 = img3.resize((width, height)) if img3 else None
-            img4 = img4.resize((width, height)) if img4 else None
-        else:
-            # Si solo hay dos imágenes, ajusta la anchura de la nueva imagen
-            nueva_imagen = Image.new('RGB', (width * 2, height))
+        # Si solo hay una imagen, ajusta la anchura de la nueva imagen
+        if not img2 and not img3 and not img4:
+            nueva_imagen = Image.new('RGB', (width, height))
             nueva_imagen.paste(img1, (0, 0))
-            if img2:
-                img2 = img2.resize((width, height))
-                nueva_imagen.paste(img2, (width, 0))
             
             # Guardar la nueva imagen en bytes
             ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
-            print("Ruta de guardado:", ruta_guardado)  # Agregamos esta línea para imprimir la ruta
+            print("Ruta de guardado:", ruta_guardado)
             nueva_imagen.save(ruta_guardado, format='JPEG')
 
             # Obtener el camino relativo
@@ -181,7 +173,7 @@ def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, image
             print("Guardado exitoso.")
             return ruta_relativa
 
-        # Si hay más de dos imágenes, procede como antes
+        # Si hay más de una imagen, procede como antes
         nueva_imagen = Image.new('RGB', (width * 2, height * 2))
         nueva_imagen.paste(img1, (0, 0))
         if img2:
@@ -191,10 +183,9 @@ def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, image
             nueva_imagen.paste(img3, (0, height))
             nueva_imagen.paste(img4, (width, height))
             
-
         # Guardar la nueva imagen en bytes
         ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
-        print("Ruta de guardado:", ruta_guardado)  # Agregamos esta línea para imprimir la ruta
+        print("Ruta de guardado:", ruta_guardado)
         nueva_imagen.save(ruta_guardado, format='JPEG')
 
         # Obtener el camino relativo
@@ -291,7 +282,7 @@ def PrestamoVerAPIView(request, user_id):
                 
                 imagen_primer_log = None
                 imagen_primer_log = obtener_imagen_primer_log(primer_log_prueba)
-
+                imagen_combinada = None 
                 nombre_archivo = f"imagen_combinada_{creation_date}_{datetime.datetime.now}.jpg"
                 print('ACA ', logs_data)
                 if imagen_primer_log:
@@ -300,7 +291,7 @@ def PrestamoVerAPIView(request, user_id):
                     imagen_combinada = combinar_imagenes(nombre_archivo, *imagenes_elementos_filtradas)
 
                     primer_log["imagen_combinada"] = imagen_combinada
-                print('Imagen primer log', imagen_combinada)
+                
                         
                 
                 count_logs = len(logs_data) if logs_data else 0
