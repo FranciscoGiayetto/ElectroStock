@@ -148,14 +148,9 @@ import datetime
 BASE_DIR = settings.BASE_DIR
 carpeta_guardado = os.path.join(BASE_DIR, "img-prod/img-logs")
 def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None):
-    print("Ruta de la imagen 1:", imagen1)
-    print("Ruta de la imagen 2:", imagen2)
-    print("Ruta de la imagen 3:", imagen3)
-    print("Ruta de la imagen 4:", imagen4)
-
     try:
         # Cargar las imágenes disponibles
-        img1 = Image.open(imagen1)
+        img1 = Image.open(imagen1.lstrip('/'))
         img2 = Image.open(imagen2.lstrip('/')) if imagen2 else None
         img3 = Image.open(imagen3.lstrip('/')) if imagen3 else None
         img4 = Image.open(imagen4.lstrip('/')) if imagen4 else None
@@ -164,21 +159,39 @@ def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, image
         width, height = img1.size
 
         # Asegurarse de que todas las imágenes tengan el mismo tamaño
-        if img2:
+        if img3:
             img2 = img2.resize((width, height))
             img3 = img3.resize((width, height)) if img3 else None
             img4 = img4.resize((width, height)) if img4 else None
+        else:
+            # Si solo hay dos imágenes, ajusta la anchura de la nueva imagen
+            nueva_imagen = Image.new('RGB', (width * 2, height))
+            nueva_imagen.paste(img1, (0, 0))
+            if img2:
+                img2 = img2.resize((width, height))
+                nueva_imagen.paste(img2, (width, 0))
+            
+            # Guardar la nueva imagen en bytes
+            ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
+            print("Ruta de guardado:", ruta_guardado)  # Agregamos esta línea para imprimir la ruta
+            nueva_imagen.save(ruta_guardado, format='JPEG')
 
-        # Crear una nueva imagen que sea la combinación de las imágenes disponibles
+            # Obtener el camino relativo
+            ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
+            print("Guardado exitoso.")
+            return ruta_relativa
+
+        # Si hay más de dos imágenes, procede como antes
         nueva_imagen = Image.new('RGB', (width * 2, height * 2))
         nueva_imagen.paste(img1, (0, 0))
         if img2:
+            img2 = img2.resize((width, height))
             nueva_imagen.paste(img2, (width, 0))
-        if img3:
+        if img3 and img4:
             nueva_imagen.paste(img3, (0, height))
-        if img4:
             nueva_imagen.paste(img4, (width, height))
-        
+            
+
         # Guardar la nueva imagen en bytes
         ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
         print("Ruta de guardado:", ruta_guardado)  # Agregamos esta línea para imprimir la ruta
@@ -187,13 +200,12 @@ def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, image
         # Obtener el camino relativo
         ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
         print("Guardado exitoso.")
-        
+
         return ruta_relativa
 
     except Exception as e:
         print("Error al combinar imágenes:", str(e))
         return None
-
 
 
 import os
@@ -280,12 +292,12 @@ def PrestamoVerAPIView(request, user_id):
                 imagen_primer_log = None
                 imagen_primer_log = obtener_imagen_primer_log(primer_log_prueba)
 
-                nombre_archivo = f"imagen_combinada_{creation_date}.jpg"
-
+                nombre_archivo = f"imagen_combinada_{creation_date}_{datetime.datetime.now}.jpg"
+                print('ACA ', logs_data)
                 if imagen_primer_log:
                     imagenes_elementos = obtener_imagenes_elementos(logs_data)
                     imagenes_elementos_filtradas = [imagen for imagen in imagenes_elementos[:3] if imagen is not None]
-                    imagen_combinada = combinar_imagenes(nombre_archivo, imagen_primer_log, *imagenes_elementos_filtradas)
+                    imagen_combinada = combinar_imagenes(nombre_archivo, *imagenes_elementos_filtradas)
 
                     primer_log["imagen_combinada"] = imagen_combinada
                 print('Imagen primer log', imagen_combinada)
