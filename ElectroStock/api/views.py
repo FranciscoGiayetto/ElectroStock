@@ -328,6 +328,7 @@ def PrestamoVerAPIView(request, user_id):
             models.Log.Status.PEDIDO,
             models.Log.Status.DESAPROBADO,
             models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTO,
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
