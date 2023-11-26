@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PrestamosCard from './CardPrestamos';
 import useAxios from '../../utils/useAxios';
 import './Prestamos.css';
-import WordListPrestamos from './filtrosPrestamos';
+import FiltrosPrestamos from './filtrosPrestamos';
+import OrdenarPorPrestamos from './OrdenarPor';
 import { useAuthStore } from '../../store/auth';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -12,6 +13,14 @@ import ModalDetallePrestamo from './ModalDetallePrestamo';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Spinner from 'react-bootstrap/Spinner';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import { TextField } from "@mui/material";  
+import Button from 'react-bootstrap/Button';
+import InputAdornment from '@mui/material/InputAdornment';
+
+
+
 
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
@@ -38,8 +47,12 @@ const Prestamos = () => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
+      setIsLoading(false);
+
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
+
     }
   };
 
@@ -51,8 +64,12 @@ const Prestamos = () => {
       getPrestamos();
       // Actualiza el estado del modal
       closeModal();
+      setIsLoading(false);
+
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
+
     }
   };
 
@@ -64,14 +81,18 @@ const Prestamos = () => {
   const getPrestamos = async () => {
     try {
       const response = await api.get(`/prestamosHistorial/${user_id}`);
-      console.log(response.data); // Verify the response from the API
-      const data = response.data;
+      console.log(response.data); // Verifica la respuesta de la API
+      const data = response.data.results; // Accede al array dentro de 'results'
       setData(data);
-      // Extract the dates from the response
+      setIsLoading(false);
+  
+      // Extrae las fechas de la respuesta
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
+  
 
   const openModal = (packageData) => {
     console.log("Click registrado")
@@ -85,39 +106,86 @@ const Prestamos = () => {
     setIsModalOpen(false);
   };
   return (
-    <div className='container pagecontainer'>
-      
-      <div >
-          {data.length > 0 ? (
-            data.map((prestamo, index) => (
-              <PrestamosCardPackage
-                onClick={() => openModal(prestamo)}
-                key={index}
-                image={prestamo.imagen}
-                status={prestamo.estado}
-                name={prestamo.nombre}
-                dateIn={prestamo.dateIn}
-                dateOut={prestamo.dateOut}
-                count={prestamo.count}
-                lista={prestamo.lista}                  
-              />
-            ))): (
-              <p>Cargando préstamos...</p>
-              )}
-      </div>
-
-      {isModalOpen && (
-        <ModalDetallePrestamo
-        onHandleApproval={() => handleApproval(selectedPackage.dateIn)}
-        onHandleRejection={() => handleRejection(selectedPackage.dateIn)}
-        dateOut={selectedPackage.dateOut}
-        lista={selectedPackage.lista}
-        onClose={closeModal}
-        />
+    <div className="tratandodecentrar">
+      {isLoading && (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <Spinner animation="border" role="status"></Spinner>
+        </div>
       )}
 
+      <Container>
+        <Col>
+          {/* Search Bar */}
+          <Row className=" col-md-12" >
+          <Col md="auto">
+  <div className="mr-12 mt-4">
+    <OrdenarPorPrestamos />
+  </div>
+</Col>
+
+<Col>
+  <div className="d-flex align-items-center mt-4">
+    <TextField
+      fullWidth
+      id="SearchVisit"
+      variant="outlined"
+      label="Buscar"
+      className="SearchVisit"
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <Button variant="outline-secondary">
+              <SearchRoundedIcon />
+            </Button>
+          </InputAdornment>
+        ),
+      }}
+    />
+  </div>
+</Col>
+      
+          </Row>
+
+          {/* Prestamos Cards */}
+          <Row className="mt-4">
+            <div>
+              {data.length > 0 ? (
+                data.map((prestamo, index) => (
+                  <PrestamosCardPackage
+                    onClick={() => openModal(prestamo)}
+                    key={index}
+                    image={prestamo.imagen}
+                    status={prestamo.estado}
+                    name={prestamo.nombre}
+                    dateIn={prestamo.dateIn}
+                    dateOut={prestamo.dateOut}
+                    count={prestamo.count}
+                    lista={prestamo.lista}
+                  />
+                ))
+              ) : (
+                <p></p>
+              )}
+            </div>
+          </Row>
+
+          {/* Modal */}
+          <Row>
+            {isModalOpen && (
+              <ModalDetallePrestamo
+                onHandleApproval={() => handleApproval(selectedPackage.dateIn)}
+                onHandleRejection={() => handleRejection(selectedPackage.dateIn)}
+                dateOut={selectedPackage.dateOut}
+                lista={selectedPackage.lista}
+                onClose={closeModal}
+              />
+            )}
+          </Row>
+        </Col>
+      </Container>
     </div>
   );
+
 };
   
 

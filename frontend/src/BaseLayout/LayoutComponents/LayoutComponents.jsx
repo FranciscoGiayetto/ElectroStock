@@ -111,10 +111,10 @@ async function downloadApp() {
   // Hide the install button.
   setIsReadyForInstall(false);
 }
-const isSmallScreen = useMediaQuery('(max-width: 830px)');
-const isSmallScreen4 = useMediaQuery('(max-width: 1200px)');
-const isSmallScreen3 = useMediaQuery('(max-width: 1100px)');
-const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
+const isSmallScreen = useMediaQuery('(max-width: 950px)');
+const isSmallScreen4 = useMediaQuery('(max-width: 950px)');
+const isSmallScreen3 = useMediaQuery('(max-width: 950px)');
+const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
 
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
@@ -190,6 +190,11 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
           <Menu.Item key="1" icon={<StoreRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/tienda' }}>
             Tienda
           </Menu.Item>
+          {isSmallScreen3 && (
+                <Menu.Item key="8" icon={<ShoppingCartOutlinedIcon  style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/carrito' }}>
+                Carrito
+              </Menu.Item>
+              )}
           <Menu.Item key="2" icon={<CachedRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/Prestamos' }}>
             Préstamo
           </Menu.Item>
@@ -216,11 +221,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
               </Menu.Item>
               )}
              
-              {isSmallScreen3 && (
-                <Menu.Item key="8" icon={<ShoppingCartOutlinedIcon  style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/carrito' }}>
-                Carrito
-              </Menu.Item>
-              )}
+              
           <Menu.Divider />
      
           
@@ -239,6 +240,11 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
         
         <Row>
           <div className='navbar'>
+            <div className='botonesnav1'>
+                <Row>
+
+                
+           
           <Col>
           <Button
                 variant="primary"
@@ -260,18 +266,21 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
                
           </Col>
            )}  
+           </Row>
+            </div>
           <Col>
-          <form onSubmit={handleSearch} className={`div-form ${isSmallScreen? 'search-small' : 'search-large'}`}>                
+          <form onSubmit={handleSearch}>                
                   <Autocomplete
-                      className={`search-input`}
-                    freeSolo
+                    className="SearchVisit"      
+                   freeSolo
                     options={myOptions}
                     getOptionLabel={(option) => option}
                     value={selectedOption}
                     onChange={(event, newValue) => setSelectedOption(newValue)}
                     renderInput={(params) => (
                       <TextField
-                        className='search-input'
+                        fullWidth
+                        className="SearchVisit"
                         {...params}
                         variant="outlined"
                         name='searchBar'
@@ -285,15 +294,20 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
                   />
                    </form>
           </Col>
-          {!isSmallScreen2 && (
-          <Col>
-          <Tooltip title="Buscar" arrow placement="bottom">
-                    <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                      <SearchRoundedIcon />
-                    </Button>
-                  </Tooltip>
-                  </Col>
-          )}
+         
+          <div className='botonesnav'>
+            <Row>
+            <Col>
+                { (
+               <Tooltip title="Buscar" arrow placement="bottom">
+                         <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                           <SearchRoundedIcon />
+                         </Button>
+                       </Tooltip>
+                
+              )}
+              </Col>
+            
                   {!isSmallScreen3 && (
                  <Col>  
                   <Tooltip title="Carrito" arrow placement="bottom">
@@ -334,6 +348,11 @@ const isSmallScreen2 = useMediaQuery('(max-width: 995px)');
              
           </Col>
            )}
+             
+             </Row>
+
+         </div>
+
           </div>
 
         </Row>

@@ -88,7 +88,6 @@ function Ecommerce({ allItems }) {
       {isLoading && (
         <div className="d-flex justify-content-center align-items-center vh-100">
           <Spinner animation="border" role="status">
-            {/* Puedes personalizar el spinner según tus necesidades */}
           </Spinner>
         </div>
       )}
