@@ -14,6 +14,7 @@ import ModalListItems from './ModalListItems';
 import "./DataTable2.css";
 import ModalDeleteConfirm from '../Presupuestos/ModalDeleteConfirm.jsx';
 import * as XLSX from 'xlsx';
+import ModalCompletadoConfirm from './ModalCompletadoConfirm.jsx';
 
 
 
@@ -29,6 +30,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const [customName, setCustomName] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalDeleteConfirmOpen, setIsModalDeleteConfirmOpen] = useState(false);
+  const [isModalCompletadoConfirmOpen, setIsModalCompletadoConfirmOpen] = useState(false);
   const navigate = useNavigate();
 
 
@@ -36,6 +38,12 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const closeModalDeleteConfirm = () => {
     setIsModalDeleteConfirmOpen(false)
   }
+
+  const changeModalCompletadoConfirm = () => {
+    setIsModalCompletadoConfirmOpen(!isModalCompletadoConfirmOpen)
+  }
+
+
 
   const handleDeleteConfirm = async () => {
     try {
@@ -52,7 +60,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
 
 
 
-    setIsModalDeleteConfirmOpen(false)
+    setIsModalCompletadoConfirmOpen(false)
   }
 
   const nameInputRef = useRef(null);
@@ -451,7 +459,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
             
             <div>
             <button
-              onClick={handleBudgetStatusChange}
+              onClick={changeModalCompletadoConfirm}
               className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'} btn-resp`}
               style={{
                 marginLeft: '15px'
@@ -651,7 +659,16 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
         onClose={closeModalDeleteConfirm}
         />
       )}
+      {isModalCompletadoConfirmOpen && (
+        <ModalCompletadoConfirm
+        onHandleCompletadoConfirm={handleBudgetStatusChange} // Sin función anónima
+        onClose={changeModalCompletadoConfirm}
+        />
+      )}
     </div>
+  
+
+
   );
 };
 
