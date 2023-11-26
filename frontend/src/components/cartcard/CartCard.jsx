@@ -22,14 +22,18 @@ export default function CartCard(props) {
     handleQuantityChange,
     handleCommentChange,
     comments,
-    currentStock,
+    current_stock,
   } = props;
 
   // Inicializa el estado local 'observation' con la observación existente de las props.
   const [observation, setObservation] = useState(comments);
 
   const handleInputChange = (e) => {
-    const newQuantity = parseInt(e.target.value, 10);
+    let newQuantity = parseInt(e.target.value, 10);
+
+    // Verifica si el nuevo valor supera el stock disponible
+    newQuantity = Math.min(newQuantity, current_stock);
+
     console.log(`New quantity for item ${id}: ${newQuantity}`);
     handleQuantityChange(id, newQuantity);
   };
@@ -67,7 +71,7 @@ export default function CartCard(props) {
           >
             <MDBInput
               min={0}
-              max={currentStock}
+              max={current_stock}
               value={quantity}
               onChange={handleInputChange}
               type="number"

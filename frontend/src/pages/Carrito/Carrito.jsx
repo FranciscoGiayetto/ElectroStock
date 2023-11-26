@@ -5,6 +5,8 @@ import CartCard from '../../components/cartcard/CartCard';
 import Button from 'react-bootstrap/Button';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Spinner from 'react-bootstrap/Spinner';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 import { toast } from 'react-toastify';
 
@@ -26,7 +28,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 function Carrito() {
   const api = useAxios();
   const [carrito, setCarrito] = useState([]);
-  const [dateInputData, setDateInputData] = useState([]);
+  const [dateInputData, setDateInputData] = useState('');
   const [loading, setLoading] = useState(true); // Nuevo estado para el Spinner
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
@@ -98,6 +100,13 @@ function Carrito() {
     setCarrito(updatedCart);
   };
   const handleContinue = async () => {
+
+    if (!dateInputData) {
+      // Agrega alguna lógica o muestra un mensaje si dateInputData está vacío
+      toast.warning('Selecciona una fecha de devolución', { style: { marginTop: '3rem', marginBottom: '-2rem' } });
+      return;
+    }
+
     try {
       for (const item of carrito) {
         console.log(item);
@@ -177,6 +186,7 @@ function Carrito() {
                           handleDelete={handleDelete}
                           handleQuantityChange={handleQuantityChange}
                           handleCommentChange={handleObservationChangeInCartCard}
+                          current_stock={item.box.current_stock}
                         />
                       ))
                     ) : (
@@ -200,10 +210,22 @@ function Carrito() {
                         />
                       </div>
                       <div className="mb-2 d-flex flex-column justify-content-between align-items-center">
-  <Button className='btn-style' onClick={handleContinue}>
-    Siguiente
-  </Button>
-</div>
+              {/* Use OverlayTrigger to show tooltip */}
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip id="tooltip-disabled">Debes establecer una fecha de devolución</Tooltip>}
+              >
+                <span>
+                  <Button
+                    className='btn-style'
+                    onClick={handleContinue}
+                    disabled={!dateInputData}
+                  >
+                    Siguiente
+                  </Button>
+                </span>
+              </OverlayTrigger>
+            </div>
                     </div>
                   </MDBCol>
                 </MDBRow>
