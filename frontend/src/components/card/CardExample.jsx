@@ -21,14 +21,13 @@ export default function CardExample(props) {
               <div className="row">
                 <div className="col-md-12 col-lg-3 mb-4 mb-lg-0">
                   <div className="bg-image rounded hover-zoom hover-overlay">
-                    <Link to={`/detalleProducto/${id}`}>
                       <Card.Img
                         src={image}
                         fluid
                         className="w-100"
                         style={{ width: '3rem', height: '9rem' }}
                       />
-                    </Link>
+                    
                     <div>
                       <div
                         style={{ backgroundColor: "rgba(251, 251, 251, 0.15)" }}
