@@ -3,7 +3,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, VideoCameraOutlined
 import { Layout, Menu } from 'antd';
 import AddModeratorRoundedIcon from '@mui/icons-material/AddModeratorRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-import { Badge } from 'antd';
+import {Dropdown, Badge } from 'antd';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
@@ -147,6 +147,15 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
    // console.log(searchQuery)  
   };
 
+  const menu = (
+    <Menu>
+      {/* Aquí renderizas el contenido del modal */}
+      <Menu.Item key="0">
+        <NotificationsDropdown notifications={notificaciones} onClose={() => setIsNotificationsOpen(false)} />
+      </Menu.Item>
+    </Menu>
+  );
+   
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);
   };
@@ -345,11 +354,13 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
           <Col>
                 { (
                 <Tooltip title="Notificaciones" arrow placement="bottom">
-                  <Button   ref={notificationsRef} variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones" onClick={handleToggleNotifications}>
-                    <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
-                      <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                    </Badge>
-                  </Button>
+                   <Dropdown overlay={menu}  trigger={['click']} placement="bottomLeft">
+  <Button ref={notificationsRef} variant="primary" className='button'>
+    <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{ backgroundColor: '#EE8F37' }}>
+      <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+    </Badge>
+  </Button>
+</Dropdown>
                 </Tooltip>
                 
               )}
