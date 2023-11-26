@@ -37,10 +37,16 @@ const handleAverioButtonClick = () => {
   });
   setQuantityInputs(initialQuantities);
 };
-const handleQuantityChange = (index, value) => {
-  // Actualizar el estado de las cantidades
-  setQuantityInputs(prevState => ({ ...prevState, [index]: value }));
+const handleQuantityChange = (index, value, element) => {
+  // Si el valor no es un número o es mayor que el límite, no actualices el estado
+  if (isNaN(value) || value > element.quantity || value < 0 || value.includes('-')) {
+    return;
+  }
+
+  // Actualiza el estado de las cantidades
+  setQuantityInputs((prevState) => ({ ...prevState, [index]: value }));
 };
+
 const handleCardSelect = (index) => {
   console.log(selectedCards)
   // No hacer nada si las cajas no son clicables
@@ -119,26 +125,28 @@ const handleConfirmDestruction = () => {
               </div>
               <div className='col-xs-10 col-md-2'>
               {showCheckBoxes && (
-        <div style={{ marginBottom: '10px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <input
-            type="checkbox"
-            checked={selectedCards.includes(index)}
-            onChange={() => handleCardSelect(index)}
-            style={{  margin: "10px", transform: 'scale(1.5)' }}
-          />
-          <div style={{ marginBottom: '10px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          {selectedCards.includes(index) && (
-            <input
-              type="number"
-              value={quantityInputs[index]}
-              onChange={(e) => handleQuantityChange(index, e.target.value)}
-              min="0"
-              max={element.quantity}
-              style={{ marginTop: "10px", width: '50px' }}
-            />
-          )}
-          </div>
-        </div>
+  <div style={{ marginBottom: '10px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <input
+      type="checkbox"
+      checked={selectedCards.includes(index)}
+      onChange={() => handleCardSelect(index)}
+      style={{ margin: '10px', transform: 'scale(1.5)' }}
+    />
+    {selectedCards.includes(index) && (
+      <div style={{ marginBottom: '10px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <input
+          type="number"
+          value={quantityInputs[index]}
+          onChange={(e) => handleQuantityChange(index, e.target.value, element)}
+          min="0"
+          max={element.quantity}
+          style={{ marginTop: '10px', width: '50px' }}
+        />
+       
+      </div>
+    )}
+  </div>
+
       )}
 </div>
             </div>

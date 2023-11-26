@@ -73,25 +73,27 @@ const Prestamos = ({ isProfessor }) => {
     }
   };
 
-  const HandleDestruction = async (dateIn, packageUserId, selectedCards, quantityInputs) => {
-    console.log (selectedCards,quantityInputs)
-    /*
+  const HandleDestruction = async (selectedPackage, selectedCards, quantityInputs) => {
+    console.log (selectedPackage,selectedCards,quantityInputs)
+    
     try {
       // Iterate over selected cards to create logs for each item
       for (const selectedIndex of selectedCards) {
-      //  const element = filteredLista[selectedIndex];
+        const element = selectedPackage.lista[selectedIndex];
         const quantityDestroyed = quantityInputs[selectedIndex] || 0;
-  
+        const fechaDevuelto = new Date().toISOString().split('T')[0]; // Obtener la parte de la fecha (YYYY-MM-DD)
+        const fechaDevueltoHora = new Date().toISOString().slice(0, 16).replace('T', ' '); // Formato 'YYYY-MM-DD HH:mm'
+
         // Create a log for the destroyed item
         const logData = {
-          box: element.box.id, // Replace with the actual property in your data
-          borrower: element.borrower.id, // Replace with the actual property in your data
-          lender: element.lender.id, // Replace with the actual property in your data
-          status: 'DST', // Replace with the appropriate status for destruction
+          box_id: element.box.id, // Replace with the actual property in your data
+          borrower_id: element.borrower.id, // Replace with the actual property in your data
+          lender_id: element.lender.id, // Replace with the actual property in your data
+          status: 'ROT', // Replace with the appropriate status for destruction
           quantity: quantityDestroyed,
-          observation: `Item destroyed on ${new Date().toISOString()}`,
-          dateIn,
-          dateOut: dateIn, // Update as needed
+          observation: `Item Averiado enla fecha ${fechaDevueltoHora}`,
+          dateIn:selectedPackage.dateIn,
+          dateOut: fechaDevuelto, // Update as needed
         };
   
         // Make a POST request to create the log
@@ -104,7 +106,20 @@ const Prestamos = ({ isProfessor }) => {
   
       // Optionally, you can update the state or perform other actions after all logs are created
       // ...
+      try{
+        console.log("Ahora devolviendo todo")
+      HandleDevolution(selectedPackage.dateIn, selectedPackage.id_user)
+      
+    }
   
+    catch (error) {
+      console.error(error);
+      setIsLoading(false);
+  
+      // Handle errors or display error messages
+      // ...
+    }
+      
       // Close the modal and update the state
       closeModal();
       setIsLoading(false);
@@ -116,7 +131,7 @@ const Prestamos = ({ isProfessor }) => {
       // Handle errors or display error messages
       // ...
     }
-    */
+    
   };
 
   const handleRejection = async (dateIn,packageUserId) => {
@@ -157,9 +172,15 @@ const Prestamos = ({ isProfessor }) => {
       endpoint = `/prestamosHistorial/${user_id}`; // Endpoint for regular users
     }
       const response = await api.get(endpoint);
-      console.log(response.data); // Verify the response from the API
-      const data = response.data;
-      setData(data);
+      console.log("DATAAA",response.data); // Verify the response from the API
+      if (response.data === "No se encontraron logs para este usuario.") {
+        // Manejar el caso cuando no hay logs
+        setData([]);
+      } else {
+        const data = response.data;
+        setData(data);
+      }
+  
       setIsLoading(false);
   
       // Extrae las fechas de la respuesta
@@ -240,7 +261,7 @@ const Prestamos = ({ isProfessor }) => {
                   />
                 ))
               ) : (
-                <p></p>
+                <p className='d-flex justify-content-center'>No hay préstamos disponibles.</p>
               )}
             </div>
           </Row>
@@ -253,7 +274,7 @@ const Prestamos = ({ isProfessor }) => {
         onHandleApproval={() => handleApproval(selectedPackage.dateIn , selectedPackage.id_user)}
         onHandleRejection={() => handleRejection(selectedPackage.dateIn, selectedPackage.id_user)}
         onHandleDevolution={() => HandleDevolution(selectedPackage.dateIn, selectedPackage.id_user)}
-        onHandleDestruction={() => HandleDestruction(selectedPackage.dateIn, selectedPackage.id_user )}
+        onHandleDestruction={(selectedCards,quantityInputs) => HandleDestruction(selectedPackage,selectedCards,quantityInputs )}
         dateOut={selectedPackage.dateOut}
         lista={selectedPackage.lista}
         onClose={closeModal}

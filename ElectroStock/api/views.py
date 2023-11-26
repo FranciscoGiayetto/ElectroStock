@@ -595,7 +595,7 @@ class UsersViewSet(viewsets.ModelViewSet):
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     permission_classes = [permissions.AllowAny]
-    serializer_class = LogSerializer
+    serializer_class = OnlyPkLogSerializer
 
 
 # View para los cursos
