@@ -37,11 +37,11 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
       </div>
     
       <div style={{ paddingLeft: '10%', paddingTop:'4%' }} className="d-flex flex-column flex-sm-row align-items-sm-center">
-        <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" onClick={onHandleApproval}>
-          <CheckRoundedIcon/>Confirmar
+        <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" style={{border:'none'}} onClick={onHandleApproval}>
+          Confirmar
         </button>
-        <button className="btn btn-danger me-sm-2 mb-2 mb-sm-0" onClick={onHandleRejection}>
-          <CloseRoundedIcon/>Rechazar
+        <button className="btn btn-danger me-sm-2 mb-2 mb-sm-0"  style={{backgroundColor:'#FF5151', border:'none'}} onClick={onHandleRejection}>
+          Rechazar
         </button>
       </div>
 

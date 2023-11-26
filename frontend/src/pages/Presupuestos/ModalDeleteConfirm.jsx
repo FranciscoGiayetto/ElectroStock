@@ -22,10 +22,10 @@ const ModalDeleteConfirm = ({ onClose, onHandleDeleteConfirm }) => {
         </Modal.Header>
         <Modal.Body>Estas seguro que deseas eliminar este presupuesto?</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" style={{backgroundColor:'#FF5151', border:'none'}} onClick={onClose}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={onHandleDeleteConfirm}>
+          <Button variant="danger" style={{backgroundColor:'#3BB273', border:'none'}} onClick={onHandleDeleteConfirm}>
             Continuar
           </Button>
         </Modal.Footer>
