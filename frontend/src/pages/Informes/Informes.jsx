@@ -32,7 +32,7 @@ function Informes({ isProfessor }) {
 
   if (isMobile) {
     return (
-      <Container fluid className="pagecontainer" style={{ marginTop: '0px', marginLeft: '0px', overflowY: 'hidden' }}>
+      <Container fluid className="pagecontainer" style={{ marginTop: '0px', marginLeft: '0px', overflowY: 'hidden' }}> 
         {/* Contenido para dispositivos móviles */}
         <Row className="justify-content-center">
           <Col xs={12}>
@@ -79,7 +79,7 @@ function Informes({ isProfessor }) {
   } 
 
   return (
-    <div className="container pagecontainer" style={{marginLeft:'20px',marginTop:'0px', overflowY:'hidden'}}>
+    <div className="container pagecontainer" style={{marginLeft:'1%', marginTop:'0px', overflowY:'hidden'}}>
       <div className="row">
         {/* Fila 1 */}
         <div className="col-md-4">
@@ -88,17 +88,15 @@ function Informes({ isProfessor }) {
         <div className="col-md-4">
           <TasaAprobacion endpoint="estadisticas/aprobado/" />
         </div>
-        
         <div className="col-md-4">
-  <div className="d-flex flex-column align-items-start" style={{ marginLeft: '11px' }}>
-    <TiempoPorPrestamo />
-    <DiaDemandado subtitle="Día que más se pide" />
-  </div>
-</div>
-
+          <div className="d-flex flex-column align-items-start" style={{ marginLeft: '1%' }}>
+            <TiempoPorPrestamo />
+            <DiaDemandado subtitle="Día que más se pide" />
+          </div>
+        </div>
       </div>
-
-      <div className="row" style={{ marginTop: '30px' }}>
+  
+      <div className="row" style={{ marginTop: '2%' }}>
         {/* Fila 2 */}
         <div className="col-md-8">
           <h4>Box que mas se rompen</h4>
@@ -108,14 +106,12 @@ function Informes({ isProfessor }) {
           <MostRequestedElements endpoint="estadisticas/maspedido/" />
         </div>
       </div>
-
-      <div className="col-md-8 d-flex flex-column align-items-start">
-  <h4 style={{marginTop:'30px'}}>Top deudores</h4>
-  <HorizontalBarChart data={deudorData}></HorizontalBarChart>
-</div>
-      
+  
+      <div className="col-md-8 d-flex flex-column align-items-start" style={{ marginTop: '2%' }}>
+        <h4>Top deudores</h4>
+        <HorizontalBarChart data={deudorData}></HorizontalBarChart>
+      </div>
     </div>
-    
   );
 }
 

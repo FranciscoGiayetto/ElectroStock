@@ -13,7 +13,7 @@ const MostRequestedElements = ({ endpoint }) => {
   }, []);
 
   return (  
-    <div className="container mt-4" style={{width: 350}}>
+    <div className="container mt-4">
       <ListGroup as="ul">
         <ListGroup.Item as="li" active className="white-text" style={{ color: 'white !important' }}>
           Elementos más pedidos

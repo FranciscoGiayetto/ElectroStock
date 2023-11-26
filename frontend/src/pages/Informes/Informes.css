@@ -37,7 +37,7 @@
   }
 
 .wide{
-    width: 350px;
+    width: 100%;
 }
 
 .icono-tasa{
@@ -52,7 +52,7 @@
   
 .customCard {
     border-radius: 6px;
-    width: 350px;
+    width: 95%;
     height: 60px;
     margin-top: 25px;
   }
