@@ -53,8 +53,8 @@ export default function CardExample(props) {
                         className="mt-2 w-100"
                         style={{
                           borderColor: '#58A4B0',
-                          color: '#58A4B0',
-                          backgroundColor: 'white',
+                          color: 'white',
+                          backgroundColor: '#58A4B0',
                         }}
                         disabled={!current_stock}
                       >
