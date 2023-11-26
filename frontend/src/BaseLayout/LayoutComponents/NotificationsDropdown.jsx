@@ -11,15 +11,19 @@ import styled from '@emotion/styled';
 const NotificationsDropdown = ({ notifications,referenceElement, onClose }) => {
     const [position, setPosition] = useState({ top: 0, left: 0 });
     useEffect(() => {
-  if (referenceElement) {
-    const rect = referenceElement.getBoundingClientRect();
-    const dropdownWidth = 350;
-    setPosition({
-      left: rect.left - dropdownWidth + window.scrollX,
-    });
-  }
-}, [referenceElement, notifications]);
-
+      // Log sorted notifications
+      const sortedNotifications = notifications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      console.log(sortedNotifications);
+  
+      if (referenceElement) {
+          const rect = referenceElement.getBoundingClientRect();
+          const dropdownWidth = 350;
+          setPosition({
+              top: rect.bottom + window.scrollY,
+              left: rect.left - dropdownWidth + window.scrollX,
+          });
+      }
+  }, [referenceElement, notifications]);
   
 
       // Example timestamp formatting function
