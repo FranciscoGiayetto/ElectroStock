@@ -166,7 +166,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
   };
 
   return (
-    <div style={{fontFamily: 'Roboto, sans-serif'}}>
+    <div>
       {/* SIDEBAR */}
       <Sider
         trigger={null}
@@ -221,9 +221,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
               </Menu.Item>
               )}
              
-              
-          <Menu.Divider />
-     
+          <Menu.Divider />    
           
           <Menu.Item key="7" icon={<DownloadRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
             Descargar App
@@ -236,129 +234,116 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
       </Sider>
 
       {/* NAVBAR */}
-      <Header >
-        
+      <Header >    
         <Row>
           <div className='navbar'>
             <div className='botonesnav1'>
-                <Row>
-
-                
-           
-          <Col>
-          <Button
-                variant="primary"
-                type="submit"
-                className='button'
-                onClick={handleToggleSidebar}
-              >
-                <MenuRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-              </Button>
-              
-              </Col>
-              {!isSmallScreen2 && (
-          <Col>
-              
-              
-              <a href="/">
-                <img src={itsv} alt="itsv" className='logo-img' />
-              </a>   
-               
-          </Col>
-           )}  
-           </Row>
-            </div>
-          <Col>
-          <form onSubmit={handleSearch}>                
-                  <Autocomplete
-                    className="SearchVisit"      
-                   freeSolo
-                    options={myOptions}
-                    getOptionLabel={(option) => option}
-                    value={selectedOption}
-                    onChange={(event, newValue) => setSelectedOption(newValue)}
-                    renderInput={(params) => (
-                      <TextField
-                        fullWidth
-                        className="SearchVisit"
-                        {...params}
-                        variant="outlined"
-                        name='searchBar'
-                        label="Buscar productos"
-                        InputLabelProps={{
-                          style: { color: 'rgba(235, 235, 235, 0.5)'}  
-                        }}
-                      />
-
-                    )}
-                  />
-                   </form>
-          </Col>
-         
-          <div className='botonesnav'>
-            <Row>
-            <Col>
-                { (
-               <Tooltip title="Buscar" arrow placement="bottom">
-                         <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                           <SearchRoundedIcon />
-                         </Button>
-                       </Tooltip>
-                
-              )}
-              </Col>
-            
-                  {!isSmallScreen3 && (
-                 <Col>  
-                  <Tooltip title="Carrito" arrow placement="bottom">
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      className='button'
-                      data-toggle="tooltip" data-placement="right" title="Carrito"
-                      onClick={() => { window.location.href = '/carrito' }}
-                    >
-                      <Badge count={parseInt(cantCarrito)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
-                        <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                      </Badge>
-                    </Button>
-                  </Tooltip>            
+              <Row> 
+                <Col>
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    className='button'
+                    onClick={handleToggleSidebar}
+                  >
+                    <MenuRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                  </Button>
                 </Col>
-                 )}
-          <Col>
-                { (
-                <Tooltip title="Notificaciones" arrow placement="bottom">
-                  <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
-                    <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
-                      <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                    </Badge>
-                  </Button>
-                </Tooltip>
-                
-              )}
-              </Col>
-              {!isSmallScreen4 && (
-          <Col>
+
+                {!isSmallScreen2 && (
+                  <Col>
+                    <a href="/">
+                      <img src={itsv} alt="itsv" className='logo-img' />
+                    </a>   
+                  </Col>
+                )}  
+              </Row>
+            </div>
+            <Col>
+              <form onSubmit={handleSearch}>                
+                <Autocomplete
+                  className="SearchVisit"      
+                  freeSolo
+                  options={myOptions}
+                  getOptionLabel={(option) => option}
+                  value={selectedOption}
+                  onChange={(event, newValue) => setSelectedOption(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      fullWidth
+                      className="SearchVisit"
+                      {...params}
+                      variant="outlined"
+                      name='searchBar'
+                      label="Buscar productos"
+                      InputLabelProps={{
+                        style: { color: 'rgba(235, 235, 235, 0.5)'}  
+                      }}
+                      InputProps={{
+                        style: { color: 'whitesmoke'}
+                      }}
+                    />
+                  )}
+                />
+              </form>
+            </Col>
+         
+            <div className='botonesnav'>
+              <Row>
+                <Col>
+                  { (
+                <Tooltip title="Buscar" arrow placement="bottom">
+                    <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                        <SearchRoundedIcon />
+                    </Button>
+                  </Tooltip>
+                  )}
+                </Col>
               
-                <Tooltip title="Configuración" arrow placement="bottom">
-                  <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
-                    <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
-                  </Button>
-                </Tooltip>
-             
-          </Col>
-           )}
-             
-             </Row>
+                {!isSmallScreen3 && (
+                  <Col>  
+                    <Tooltip title="Carrito" arrow placement="bottom">
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        className='button'
+                        data-toggle="tooltip" data-placement="right" title="Carrito"
+                        onClick={() => { window.location.href = '/carrito' }}
+                      >
+                        <Badge count={parseInt(cantCarrito)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                          <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                        </Badge>
+                      </Button>
+                    </Tooltip>            
+                  </Col>
+                  )}
+                  <Col>
+                  { (
+                    <Tooltip title="Notificaciones" arrow placement="bottom">
+                      <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
+                        <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                          <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                        </Badge>
+                      </Button>
+                    </Tooltip>
+                  )}
+                  </Col>
 
-         </div>
-
+                {!isSmallScreen4 && (
+                  <Col>
+                    <Tooltip title="Configuración" arrow placement="bottom">
+                      <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
+                        <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
+                      </Button>
+                    </Tooltip>
+                  </Col>
+                )}
+              </Row>
+            </div>
           </div>
-
         </Row>
-
       </Header>
-        </div>       
+    </div>       
 
   );
 };
