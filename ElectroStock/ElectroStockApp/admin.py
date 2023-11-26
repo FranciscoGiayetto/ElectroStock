@@ -511,6 +511,13 @@ class BudgetAdmin(ImportExportActionModelAdmin):
     ]
 
 
+class SpecialityAdmin(ImportExportActionModelAdmin):
+    list_display = [
+        "id",
+        "name",
+    ]
+
+
 # Registramos los filtros y busquedas de las clases
 admin.site.register(Element, ElementAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
@@ -520,10 +527,10 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Box, BoxAdmin)
 admin.site.register(Log, LogyAdmin)
-admin.site.register(Speciality)
+admin.site.register(Speciality, SpecialityAdmin)
 
 # SACAR ESTE
 admin.site.register(TokenSignup, TokenAdmin)
-admin.site.register(Notification)  # para testear notificaciones
-# admin.site.register(Budget, BudgetAdmin)
+admin.site.register(Notification)
+admin.site.register(Budget, BudgetAdmin)
 # admin.site.register(BudgetLog,BudgetLogAdmin)

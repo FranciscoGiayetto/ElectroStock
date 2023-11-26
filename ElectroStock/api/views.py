@@ -139,6 +139,104 @@ class ecommercePaginacionAPIView(viewsets.ModelViewSet):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+from PIL import Image
+from io import BytesIO
+from django.conf import settings
+import os
+import datetime
+
+BASE_DIR = settings.BASE_DIR
+carpeta_guardado = os.path.join(BASE_DIR, "img-prod/img-logs")
+def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None):
+    try:
+        # Cargar las imágenes disponibles
+        img1 = Image.open(imagen1.lstrip('/'))
+        img2 = Image.open(imagen2.lstrip('/')) if imagen2 else None
+        img3 = Image.open(imagen3.lstrip('/')) if imagen3 else None
+        img4 = Image.open(imagen4.lstrip('/')) if imagen4 else None
+
+        # Obtener el tamaño de la imagen principal (img1)
+        width, height = img1.size
+
+        # Si solo hay una imagen, ajusta la anchura de la nueva imagen
+        if not img2 and not img3 and not img4:
+            nueva_imagen = Image.new('RGB', (width, height))
+            nueva_imagen.paste(img1, (0, 0))
+            
+            # Guardar la nueva imagen en bytes
+            ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
+            print("Ruta de guardado:", ruta_guardado)
+            nueva_imagen.save(ruta_guardado, format='JPEG')
+
+            # Obtener el camino relativo
+            ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
+            print("Guardado exitoso.")
+            return ruta_relativa
+
+        # Si hay más de una imagen, procede como antes
+        nueva_imagen = Image.new('RGB', (width * 2, height * 2))
+        nueva_imagen.paste(img1, (0, 0))
+        if img2:
+            img2 = img2.resize((width, height))
+            nueva_imagen.paste(img2, (width, 0))
+        if img3 and img4:
+            nueva_imagen.paste(img3, (0, height))
+            nueva_imagen.paste(img4, (width, height))
+            
+        # Guardar la nueva imagen en bytes
+        ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
+        print("Ruta de guardado:", ruta_guardado)
+        nueva_imagen.save(ruta_guardado, format='JPEG')
+
+        # Obtener el camino relativo
+        ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
+        print("Guardado exitoso.")
+
+        return ruta_relativa
+
+    except Exception as e:
+        print("Error al combinar imágenes:", str(e))
+        return None
+
+
+import os
+from django.conf import settings
+from django.core.files.storage import default_storage
+
+def obtener_imagen_primer_log(primer_log_prueba):
+    try:
+        if (
+            primer_log_prueba.box
+            and primer_log_prueba.box.element
+            and primer_log_prueba.box.element.image
+            and primer_log_prueba.box.element.image.file
+        ):
+            imagen_path = default_storage.path(primer_log_prueba.box.element.image.file.name)
+            print("Ruta de la imagen primer log:", imagen_path)
+            if default_storage.exists(primer_log_prueba.box.element.image.file.name):
+                print("La imagen existe.")
+                
+                # Obtener el camino relativo
+                ruta_relativa = os.path.relpath(imagen_path, BASE_DIR)
+                
+                return ruta_relativa
+            else:
+                print("La imagen NO existe.")
+    except FileNotFoundError:
+        print("Archivo no encontrado:", primer_log_prueba.box.element.image.file.name)
+    return None
+
+
+
+def obtener_imagenes_elementos(elementos):
+    imagenes = []
+    for elemento in elementos:
+        box = elemento['box']
+        if 'image' in box and box['image']:
+            imagenes.append(box['image'])
+    return imagenes
+
+
 
 from collections import defaultdict
 
@@ -236,9 +334,7 @@ def AllPrestamos(request):
 
 
 @api_view(["GET", "POST"])
-def PrestamoVerAPIView(request, user_id):
-    pagination_class = CustomPagination()
-
+def AllPrestamos(request):
     if request.method == "GET":
         valid_statuses = [
             models.Log.Status.APROBADO,
@@ -248,7 +344,7 @@ def PrestamoVerAPIView(request, user_id):
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
-        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+        queryset = models.Log.objects.filter(status__in=valid_statuses)
 
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
@@ -303,6 +399,93 @@ def PrestamoVerAPIView(request, user_id):
                         "estado": primer_log["status"] if primer_log else None,
                         "dateIn": dateIn_primer_log_prueba,
                         "imagen": imagen_primer_log,
+                        "count": count_logs,
+                        "lista": logs_data,
+                    }
+                )
+
+            return Response(response_data)
+        else:
+            return Response("No se encontraron logs para este usuario.")
+
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+        return Response({"message": "Elemento agregado al carrito"})
+    
+@api_view(["GET", "POST"])
+def PrestamoVerAPIView(request, user_id):
+    pagination_class = CustomPagination()
+
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.PEDIDO,
+            models.Log.Status.DESAPROBADO,
+            models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTOTARDIO,
+        ]
+
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+
+        if queryset.exists():
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
+
+            for log in queryset:
+                creation_date = (
+                    log.dateIn.strftime("%Y-%m-%dT%H:%M") if log.dateIn else None
+                )
+                log_data = LogSerializer(log).data
+                log_data["dateIn"] = creation_date
+                grouped_logs[creation_date].append(log_data)
+
+            response_data = []
+
+            for creation_date, logs_data in grouped_logs.items():
+                primer_log = logs_data[0]
+                primer_log_prueba = models.Log.objects.get(id=primer_log.get("id", ""))
+
+                dateIn_primer_log_prueba = (
+                    primer_log_prueba.dateIn.strftime("%Y-%m-%d %H:%M")
+                    if primer_log_prueba.dateIn
+                    else None
+                )
+                dateOut_primer_log = (
+                    primer_log.get("dateOut", "") if primer_log else None
+                )
+                
+                imagen_primer_log = None
+                imagen_primer_log = obtener_imagen_primer_log(primer_log_prueba)
+                imagen_combinada = None 
+                nombre_archivo = f"imagen_combinada_{creation_date}_{datetime.datetime.now}.jpg"
+                print('ACA ', logs_data)
+                if imagen_primer_log:
+                    imagenes_elementos = obtener_imagenes_elementos(logs_data)
+                    imagenes_elementos_filtradas = [imagen for imagen in imagenes_elementos[:3] if imagen is not None]
+                    imagen_combinada = combinar_imagenes(nombre_archivo, *imagenes_elementos_filtradas)
+
+                    primer_log["imagen_combinada"] = imagen_combinada
+                
+                        
+                
+                count_logs = len(logs_data) if logs_data else 0
+
+                response_data.append(
+                    {
+                        "dateOut": dateOut_primer_log,
+                        "usuario": primer_log["borrower"]["username"]
+                        if primer_log
+                        else None,
+                        "nombre": primer_log["borrower"]["first_name"]
+                        if primer_log
+                        else None,
+                        "apellido": primer_log["borrower"]["last_name"]
+                        if primer_log
+                        else None,
+                        "estado": primer_log["status"] if primer_log else None,
+                        "dateIn": dateIn_primer_log_prueba,
+                        "imagen": imagen_combinada,
                         "count": count_logs,
                         "lista": logs_data,
                     }
@@ -587,13 +770,14 @@ def PrestamosActualesView(request, user_id):
 
     return Response(status=405)
 
-
+from django.utils.timezone import now
+import datetime
 # View para las estadisticas de los productos mas pedidos
 class MostRequestedElementView(generics.ListAPIView):
     serializer_class = ElementSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = (
             models.Element.objects.filter(
                 box__log__status=models.Log.Status.APROBADO,
@@ -615,7 +799,7 @@ class MostRequestedElementView(generics.ListAPIView):
         response_data = []
 
         current_year = (
-            timezone.now().year
+            datetime.datetime.now().year
         )  # Agregar esta línea para definir la variable current_year
 
         for item in serializer.data:
@@ -629,13 +813,12 @@ class MostRequestedElementView(generics.ListAPIView):
 
         return Response(response_data)
 
-
 # view para la estaditica del porcentaje de prestamos aprobados
 class LogStatisticsView(generics.ListAPIView):
     serializer_class = LogStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = models.Log.objects.filter(dateIn__year=current_year)
         return queryset
 
@@ -663,7 +846,7 @@ class LenderStatisticsView(generics.ListAPIView):
     serializer_class = LenderStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = (
             models.Log.objects.filter(dateIn__year=current_year)
             .values("lender__username")
@@ -684,7 +867,7 @@ class BorrowerStatisticsView(generics.ListAPIView):
     serializer_class = BorrowerStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = (
             models.Log.objects.filter(dateIn__year=current_year)
             .values("borrower__username")
@@ -705,14 +888,11 @@ class DateStatisticsView(generics.ListAPIView):
     serializer_class = DateStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = (
-            models.Log.objects.annotate(
-                dateIn_date=TruncDate("dateIn")
-            )  # Convierte dateIn a un campo de tipo date
-            .filter(dateIn__year=current_year)
-            .values("dateIn_date")
-            .annotate(total_datein_logs=Count("dateIn_date"))
+            models.Log.objects.filter(dateIn__year=current_year)
+            .values("dateIn")
+            .annotate(total_datein_logs=Count("dateIn"))
             .order_by("-total_datein_logs")[:1]
         )
         return queryset
@@ -727,7 +907,7 @@ class DateStatisticsView(generics.ListAPIView):
 class DateAvgView(APIView):
     def get(self, request, format=None):
         # Filtra los registros por los estados AP, DAP, DEV, VEN y TAR
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = models.Log.objects.filter(
             dateIn__year=current_year,
             status__in=["AP", "DAP", "DEV", "VEN", "TAR"],
@@ -773,7 +953,7 @@ class VencidoStatisticsView(generics.ListAPIView):
     serializer_class = VencidoStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = models.Log.objects.filter(dateIn__year=current_year)
         return queryset
 
@@ -814,7 +994,7 @@ class LenderVencidosStatisticsView(generics.ListAPIView):
     serializer_class = LenderVencidosStatisticsSerializer
 
     def get_queryset(self):
-        current_year = timezone.now().year
+        current_year = datetime.datetime.now().year
         queryset = (
             models.Log.objects.filter(
                 Q(status="VEN") | Q(status="TAR"), dateIn__year=current_year
@@ -1432,7 +1612,7 @@ def BudgetViewSet(request, budget_id=None):
 
     if request.method == "POST":
         # Deserializa los datos de la solicitud POST
-        serializer = BudgetSerializer(data=request.data)
+        serializer = BudgetSerializer2(data=request.data)
 
         # Verifica si los datos son válidos
         if serializer.is_valid():

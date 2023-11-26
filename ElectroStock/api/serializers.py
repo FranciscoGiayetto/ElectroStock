@@ -300,20 +300,19 @@ class LenderVencidosStatisticsSerializer(serializers.Serializer):
 
 
 class BudgetSerializer(serializers.ModelSerializer):
-    speciality = serializers.SerializerMethodField()
+    speciality = SpecialitySerializer()
 
     class Meta:
         model = models.Budget
         fields = "__all__"
 
-    def get_speciality(self, obj):
-        if isinstance(obj.speciality, int):
-            # Si speciality es un entero, devuelve ese entero
-            return obj.speciality
-        else:
-            # Si speciality es un objeto Speciality, devuelve un diccionario
-            speciality_serializer = SpecialitySerializer(obj.speciality)
-            return speciality_serializer.data
+class BudgetSerializer2(serializers.ModelSerializer):
+    speciality = serializers.PrimaryKeyRelatedField(queryset=models.Speciality.objects.all())
+
+    class Meta:
+        model = models.Budget
+        fields = "__all__"
+
 
 
 class BudgetLogSerializer(serializers.ModelSerializer):
