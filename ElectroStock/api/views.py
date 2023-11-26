@@ -28,6 +28,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.db.models import Count, Q
 from collections import defaultdict
+from django.contrib.auth.models import Group
 
 
 # View para tomar el stock actual segun el id que mandas por la url
@@ -139,6 +140,7 @@ class ecommercePaginacionAPIView(viewsets.ModelViewSet):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+
 from PIL import Image
 from io import BytesIO
 from django.conf import settings
@@ -147,26 +149,30 @@ import datetime
 
 BASE_DIR = settings.BASE_DIR
 carpeta_guardado = os.path.join(BASE_DIR, "img-prod/img-logs")
-def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None):
+
+
+def combinar_imagenes(
+    nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None
+):
     try:
         # Cargar las imágenes disponibles
-        img1 = Image.open(imagen1.lstrip('/'))
-        img2 = Image.open(imagen2.lstrip('/')) if imagen2 else None
-        img3 = Image.open(imagen3.lstrip('/')) if imagen3 else None
-        img4 = Image.open(imagen4.lstrip('/')) if imagen4 else None
+        img1 = Image.open(imagen1.lstrip("/"))
+        img2 = Image.open(imagen2.lstrip("/")) if imagen2 else None
+        img3 = Image.open(imagen3.lstrip("/")) if imagen3 else None
+        img4 = Image.open(imagen4.lstrip("/")) if imagen4 else None
 
         # Obtener el tamaño de la imagen principal (img1)
         width, height = img1.size
 
         # Si solo hay una imagen, ajusta la anchura de la nueva imagen
         if not img2 and not img3 and not img4:
-            nueva_imagen = Image.new('RGB', (width, height))
+            nueva_imagen = Image.new("RGB", (width, height))
             nueva_imagen.paste(img1, (0, 0))
-            
+
             # Guardar la nueva imagen en bytes
             ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
             print("Ruta de guardado:", ruta_guardado)
-            nueva_imagen.save(ruta_guardado, format='JPEG')
+            nueva_imagen.save(ruta_guardado, format="JPEG")
 
             # Obtener el camino relativo
             ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
@@ -174,7 +180,7 @@ def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, image
             return ruta_relativa
 
         # Si hay más de una imagen, procede como antes
-        nueva_imagen = Image.new('RGB', (width * 2, height * 2))
+        nueva_imagen = Image.new("RGB", (width * 2, height * 2))
         nueva_imagen.paste(img1, (0, 0))
         if img2:
             img2 = img2.resize((width, height))
@@ -182,11 +188,11 @@ def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, image
         if img3 and img4:
             nueva_imagen.paste(img3, (0, height))
             nueva_imagen.paste(img4, (width, height))
-            
+
         # Guardar la nueva imagen en bytes
         ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
         print("Ruta de guardado:", ruta_guardado)
-        nueva_imagen.save(ruta_guardado, format='JPEG')
+        nueva_imagen.save(ruta_guardado, format="JPEG")
 
         # Obtener el camino relativo
         ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
@@ -203,6 +209,7 @@ import os
 from django.conf import settings
 from django.core.files.storage import default_storage
 
+
 def obtener_imagen_primer_log(primer_log_prueba):
     try:
         if (
@@ -211,14 +218,16 @@ def obtener_imagen_primer_log(primer_log_prueba):
             and primer_log_prueba.box.element.image
             and primer_log_prueba.box.element.image.file
         ):
-            imagen_path = default_storage.path(primer_log_prueba.box.element.image.file.name)
+            imagen_path = default_storage.path(
+                primer_log_prueba.box.element.image.file.name
+            )
             print("Ruta de la imagen primer log:", imagen_path)
             if default_storage.exists(primer_log_prueba.box.element.image.file.name):
                 print("La imagen existe.")
-                
+
                 # Obtener el camino relativo
                 ruta_relativa = os.path.relpath(imagen_path, BASE_DIR)
-                
+
                 return ruta_relativa
             else:
                 print("La imagen NO existe.")
@@ -227,15 +236,13 @@ def obtener_imagen_primer_log(primer_log_prueba):
     return None
 
 
-
 def obtener_imagenes_elementos(elementos):
     imagenes = []
     for elemento in elementos:
-        box = elemento['box']
-        if 'image' in box and box['image']:
-            imagenes.append(box['image'])
+        box = elemento["box"]
+        if "image" in box and box["image"]:
+            imagenes.append(box["image"])
     return imagenes
-
 
 
 from collections import defaultdict
@@ -387,6 +394,7 @@ def AllPrestamos(request):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"] if primer_log else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -412,7 +420,8 @@ def AllPrestamos(request):
         # Realiza acciones necesarias para agregar elementos al carrito
         # ...
         return Response({"message": "Elemento agregado al carrito"})
-    
+
+
 @api_view(["GET", "POST"])
 def PrestamoVerAPIView(request, user_id):
     pagination_class = CustomPagination()
@@ -454,21 +463,27 @@ def PrestamoVerAPIView(request, user_id):
                 dateOut_primer_log = (
                     primer_log.get("dateOut", "") if primer_log else None
                 )
-                
+
                 imagen_primer_log = None
                 imagen_primer_log = obtener_imagen_primer_log(primer_log_prueba)
-                imagen_combinada = None 
-                nombre_archivo = f"imagen_combinada_{creation_date}_{datetime.datetime.now}.jpg"
-                print('ACA ', logs_data)
+                imagen_combinada = None
+                nombre_archivo = (
+                    f"imagen_combinada_{creation_date}_{datetime.datetime.now}.jpg"
+                )
+                print("ACA ", logs_data)
                 if imagen_primer_log:
                     imagenes_elementos = obtener_imagenes_elementos(logs_data)
-                    imagenes_elementos_filtradas = [imagen for imagen in imagenes_elementos[:3] if imagen is not None]
-                    imagen_combinada = combinar_imagenes(nombre_archivo, *imagenes_elementos_filtradas)
+                    imagenes_elementos_filtradas = [
+                        imagen
+                        for imagen in imagenes_elementos[:3]
+                        if imagen is not None
+                    ]
+                    imagen_combinada = combinar_imagenes(
+                        nombre_archivo, *imagenes_elementos_filtradas
+                    )
 
                     primer_log["imagen_combinada"] = imagen_combinada
-                
-                        
-                
+
                 count_logs = len(logs_data) if logs_data else 0
 
                 response_data.append(
@@ -770,8 +785,11 @@ def PrestamosActualesView(request, user_id):
 
     return Response(status=405)
 
+
 from django.utils.timezone import now
 import datetime
+
+
 # View para las estadisticas de los productos mas pedidos
 class MostRequestedElementView(generics.ListAPIView):
     serializer_class = ElementSerializer
@@ -812,6 +830,7 @@ class MostRequestedElementView(generics.ListAPIView):
             response_data.append(element_data)
 
         return Response(response_data)
+
 
 # view para la estaditica del porcentaje de prestamos aprobados
 class LogStatisticsView(generics.ListAPIView):

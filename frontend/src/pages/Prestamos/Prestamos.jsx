@@ -210,6 +210,7 @@ const Prestamos = ({ isProfessor }) => {
         dateOut={selectedPackage.dateOut}
         lista={selectedPackage.lista}
         onClose={closeModal}
+        isProfessor={isProfessor}
         />
         )}
         </Row>
