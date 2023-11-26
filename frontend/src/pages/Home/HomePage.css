@@ -4,6 +4,7 @@
   max-width: 2169px; /* Set your desired maximum width */
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 7rem;
 }
 
 .carousel-container img {
@@ -25,6 +26,24 @@
   .margen {
     margin-top: 2rem; /* Adjust the value for smaller screens */
   }
+  .carousel-container {
+    overflow: hidden;
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 7rem;
+  }
+  
+  .carousel-container img {
+    object-fit: cover;
+    max-height: 100%;
+    width: 100%;
+  }
+  
+  .carousel-container .carousel-item img {
+    height: 700px; /* Set your desired fixed height */
+  }
+  
 }
 
 .margenasos {
