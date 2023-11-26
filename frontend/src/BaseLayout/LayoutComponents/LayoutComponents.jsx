@@ -62,8 +62,11 @@ const LayoutComponents = ({ onSearch, isProfessor }) => {
   const userData = user();
   const notificationsRef = useRef();
   const handleToggleNotifications = () => {
+    markNotificationsAsRead();
     setIsNotificationsOpen(!isNotificationsOpen);
   };
+
+
 
   useEffect(() => {
     getElement();
@@ -72,7 +75,42 @@ const LayoutComponents = ({ onSearch, isProfessor }) => {
     getNotificaciones();
   }, []);
 
+
+  useEffect(() => {
+    // ... (otras suscripciones y efectos)
+    
+    // Si el dropdown de notificaciones está abierto, marca las notificaciones como leídas
+    if (isNotificationsOpen) {
+      markNotificationsAsRead();
+    }
+  }, [isNotificationsOpen]);
  
+
+
+
+ 
+
+ const markNotificationsAsRead = async () => {
+    try {
+      // Realiza la solicitud al endpoint para marcar notificaciones como leídas
+      const response = await api.put(`/notificacionesLeidas/${userData.user_id}/`);
+      const data = await response.data;
+      console.log('Notificaciones marcadas como leídas:', data);
+
+      // Actualiza la cantidad de notificaciones leídas
+      getCantNotificaciones();
+    } catch (error) {
+      console.error('Error al marcar notificaciones como leídas:', error);
+    }
+  };
+  const handleNotificationsVisibleChange = (visible) => {
+    // La función handleNotificationsVisibleChange se ejecutará cuando el estado del dropdown cambie (abierto/cerrado)
+    if (!visible) {
+      // Si el dropdown está cerrado, ejecuta la función para marcar notificaciones como leídas
+      markNotificationsAsRead();
+    }
+  }
+
   useEffect(() => {
     // Suscríbete al evento del carrito para actualizar la cantidad del carrito
     const updateCart = () => {
@@ -151,7 +189,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
     <Menu>
       {/* Aquí renderizas el contenido del modal */}
       <Menu.Item key="0">
-        <NotificationsDropdown notifications={notificaciones} onClose={() => setIsNotificationsOpen(false)} />
+        <NotificationsDropdown notifications={notificaciones}    onClose={() => setIsNotificationsOpen(false)} />
       </Menu.Item>
     </Menu>
   );
@@ -353,15 +391,20 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
                  )}
           <Col>
                 { (
-                <Tooltip title="Notificaciones" arrow placement="bottom">
-                   <Dropdown overlay={menu}  trigger={['click']} placement="bottomLeft">
-  <Button ref={notificationsRef} variant="primary" className='button'>
-    <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{ backgroundColor: '#EE8F37' }}>
-      <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-    </Badge>
-  </Button>
-</Dropdown>
-                </Tooltip>
+          
+                   <Dropdown
+        overlay={menu}
+        trigger={['click']}
+        placement="bottomLeft"
+        onVisibleChange={handleNotificationsVisibleChange}
+      >
+        <Button ref={notificationsRef} variant="primary" className='button'>
+          <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{ backgroundColor: '#EE8F37' }}>
+            <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+          </Badge>
+        </Button>
+      </Dropdown>
+              
                 
               )}
               </Col>
