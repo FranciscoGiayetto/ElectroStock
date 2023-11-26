@@ -5,6 +5,13 @@ import Card from 'react-bootstrap/Card';
 
 export default function CardExample(props) {
   const { id, title, image, current_stock } = props;
+  
+  const handleClick = (e) => {
+    if (!current_stock) {
+      e.preventDefault(); // Evita la navegación si el stock no está disponible
+    }
+  };
+
   return (
     <div className="container-fluid">
       <div className="row justify-content-center mb-3">
@@ -19,7 +26,7 @@ export default function CardExample(props) {
                         src={image}
                         fluid
                         className="w-100"
-                        style={{ width: '3rem', height: '9rem' }} // Ajusta el tamaño según tus necesidades
+                        style={{ width: '3rem', height: '9rem' }}
                       />
                     </Link>
                     <div>
@@ -35,12 +42,11 @@ export default function CardExample(props) {
                     <h4 className="mb-1 me-1">{title}</h4>
                     <span className="text-danger"></span>
                   </div>
-                  <h6 className={current_stock ?   "text-success" : "text-danger"}>
-        {current_stock ? "Stock Disponible" : "Stock No Disponible"}
-      </h6>
+                  <h6 className={current_stock ? "text-success" : "text-danger"}>
+                    {current_stock ? "Stock Disponible" : "Stock No Disponible"}
+                  </h6>
                   <div className="d-flex flex-column mt-4">
-                    
-                    <Link to={`/detalleProducto/${id}`}>
+                    <Link to={`/detalleProducto/${id}`} onClick={handleClick}>
                       <Button
                         variant="outline-primary"
                         size="sm"
@@ -48,8 +54,9 @@ export default function CardExample(props) {
                         style={{
                           borderColor: '#58A4B0',
                           color: '#58A4B0',
-                          backgroundColor: 'white', // Color de fondo en estado normal
+                          backgroundColor: 'white',
                         }}
+                        disabled={!current_stock}
                       >
                         Ver Más
                       </Button>
