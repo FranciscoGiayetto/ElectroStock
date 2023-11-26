@@ -12,7 +12,7 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ModalListItems from './ModalListItems'; 
 import "./DataTable2.css";
-
+import ModalDeleteConfirm from '../Presupuestos/ModalDeleteConfirm.jsx';
 import * as XLSX from 'xlsx';
 
 
@@ -28,7 +28,33 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [customName, setCustomName] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
- 
+  const [isModalDeleteConfirmOpen, setIsModalDeleteConfirmOpen] = useState(false);
+  const navigate = useNavigate();
+
+
+
+  const closeModalDeleteConfirm = () => {
+    setIsModalDeleteConfirmOpen(false)
+  }
+
+  const handleDeleteConfirm = async () => {
+    try {
+     // Inicia el Spinner
+
+      const response = await api.delete(`/budget/${presupuesto.budget_id}`);
+      let data = await response.data;
+      console.log(data)
+      navigate("/presupuesto")
+    } catch (error) {
+      console.error(error);
+   
+  };
+
+
+
+    setIsModalDeleteConfirmOpen(false)
+  }
+
   const nameInputRef = useRef(null);
   useEffect(() => {
     try {
@@ -410,7 +436,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           style={{ cursor: 'pointer', marginLeft: '1rem' }}
         />
         
-          <DeleteRoundedIcon style={{marginLeft:'1rem'}}/>
+          <DeleteRoundedIcon onClick={() => setIsModalDeleteConfirmOpen(true)} style={{marginLeft:'1rem'}}/>
         
       </div>
     )}
@@ -617,6 +643,12 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           elements={elements}
           onItemSelect={handleItemSelect}
           onClose={handleModalClose}
+        />
+      )}
+      {isModalDeleteConfirmOpen && (
+        <ModalDeleteConfirm
+        onHandleDeleteConfirm={handleDeleteConfirm} // Sin función anónima
+        onClose={closeModalDeleteConfirm}
         />
       )}
     </div>
