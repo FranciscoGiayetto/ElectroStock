@@ -8,6 +8,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import ClockPage from './ClockPage';
 import foto1 from '../../assets/fotarda1.jpg';
 import foto2 from '../../assets/fotarda2.jpg';
+import img3 from './the-team.jpg';
 import { useAuthStore } from '../../store/auth';
 import { getCurrentToken } from '../../utils/auth';
 
@@ -64,6 +65,14 @@ function HomePage() {
                     className="d-block w-100"
                     src="https://www.itsv.edu.ar/itsv/images/panoramicas/a_frente.jpg?1699747200027"
                     alt="Second slide"
+                  />
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    className="d-block w-100"
+                    src={img3}
+                    style={{ maxHeight: "100%" }}
+                    alt="Third slide"
                   />
                 </Carousel.Item>
                 {/* Add more Carousel.Item for additional images */}
