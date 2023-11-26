@@ -17,7 +17,7 @@ const ModalNewPresupuesto = ({ onClose, onHandleNewBudget, specialties }) => {
     <Modal show={true} onHide={onClose} size="lg" contentClassName='custom-modal-content'>
       <Modal.Header className="d-flex justify-content-between align-items-center" closeButton>
         <div className="d-flex flex-column">
-          <Modal.Title>Crear un Nuevo Presupuesto</Modal.Title>
+          <Modal.Title>Crear un nuevo Presupuesto</Modal.Title>
         </div>
       </Modal.Header>
       <Modal.Body>
@@ -50,13 +50,13 @@ const ModalNewPresupuesto = ({ onClose, onHandleNewBudget, specialties }) => {
       </Modal.Body>
       <Modal.Footer style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
   <div className="d-flex flex-column">
-    <Button variant="secondary" onClick={onClose}>
+    <Button variant="secondary" style={{backgroundColor:'#FF5151', border:'none'}} onClick={onClose}>
       Cerrar
     </Button>
   </div>
   <div className="d-flex flex-column flex-sm-row align-items-sm-end">
-    <Button variant="success" onClick={handleConfirm}>
-      <CheckRoundedIcon /> Confirmar
+    <Button variant="success" style={{backgroundColor:'#3BB273', border:'none'}} onClick={handleConfirm}>
+      Confirmar
     </Button>
   </div>
 </Modal.Footer>

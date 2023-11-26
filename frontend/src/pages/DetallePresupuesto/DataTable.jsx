@@ -7,6 +7,7 @@ import {
 import useAxios from '../../utils/useAxios.js';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ModalListItems from './ModalListItems'; 
@@ -409,7 +410,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           style={{ cursor: 'pointer', marginLeft: '1rem' }}
         />
         
-          <DeleteRoundedIcon style={{marginLeft:'15px'}}/>
+          <DeleteRoundedIcon style={{marginLeft:'1rem'}}/>
         
       </div>
     )}
@@ -446,7 +447,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           />
           {!isAddingNewItem && budgetStatus !== 'COMPLETADO' && (
             <div className="hover-scale" onClick={handleNewItem}>
-              <HiPlusCircle style={{ fontSize: "2rem" }} />
+              <HiPlusCircle style={{ fontSize: "2rem", color:'#018195' }} />
             </div>
           )}
         </div>
@@ -505,6 +506,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                       <button
                         onClick={() => handleItemSave(item.id)}
                         className="btn btn-success btn-sm iconardos"
+                        style={{backgroundColor:'#3BB273', border:'none', color:'whitesmoke'}}
                       >
                         <HiMiniCheck></HiMiniCheck>
                       </button>
@@ -512,21 +514,24 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                       <button
                         onClick={() => handleItemEdit(item.id)}
                         className="btn btn-primary btn-sm sub-blue-its iconardos"
+                        style={{backgroundColor:'#018195', border:'none', color:'whitesmoke'}}
                       >
-                        <HiPencil></HiPencil>
+                        <HiPencil/>
                       </button>
                     )}
                     <button
                       onClick={() => handleItemDelete(item.id)}
                       className="btn btn-danger btn-sm ml-2"
                       disabled={budgetStatus === 'COMPLETADO'}
-                    >
+                      style={{marginLeft:'0.5rem', backgroundColor:'#FF5151', border:'none', color:'whitesmoke'}}
+                    > 
                       <HiOutlineXMark></HiOutlineXMark>
                     </button>
                     <button
                       onClick={() => handleItemCompra(item.id, item.status)}
                       className={`btn btn-sm ${item.status === 'COMPRADO' ? 'btn-success' : 'btn-warning'}`}
                       disabled={budgetStatus === 'COMPLETADO'}
+                      style={{marginLeft:'0.5rem'}}
                     >
                       {item.status === 'COMPRADO' ? 'COMPRADO' : 'PENDIENTE'}
                     </button>
@@ -549,7 +554,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     disabled={!customName || budgetStatus === 'COMPLETADO'}
                   />
                   <button onClick={() => setIsModalOpen(true)} className="btn btn-sm">
-                    <HiPlusCircle style={{ fontSize: "1rem" }} />
+                    <AddCircleRoundedIcon style={{ fontSize: "1rem", color:'#018195' }} />
                   </button>
                 </td>
                 <td className='text-center'>
@@ -580,14 +585,16 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     <button
                       onClick={handleCancelNewItem}
                       className="btn btn-danger btn-sm"
+                      style={{backgroundColor:'#FF5151', border:'none'}}
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={handleConfirmNewItem}
                       className="btn btn-success btn-sm"
+                      style={{backgroundColor:'#3BB273', border:'none', marginLeft:'0.5rem'}}
                     >
-                      Confirmar nuevo log
+                      Confirmar
                     </button>
                   </td>
                 )}

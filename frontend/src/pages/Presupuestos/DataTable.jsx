@@ -10,10 +10,13 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { AiFillQuestionCircle } from "react-icons/ai";
 import useAxios from '../../utils/useAxios';
 import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
-import Tooltip from 'react-png-tooltip'
+import Tooltip from 'react-png-tooltip';
 import ModalNewPresupuesto from './ModalNewPresupuesto';
 import ModalDeleteConfirm from './ModalDeleteConfirm';
-import './DataTable.css'
+import './DataTable.css';
+import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
+import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
+
 const DataTable = ({ presupuestos , specialties,setShouldRefresh}) => {
   let api = useAxios();
   const navigate = useNavigate();
@@ -157,41 +160,40 @@ const DataTable = ({ presupuestos , specialties,setShouldRefresh}) => {
   return (
     <MDBCard className="my-4 p-3" >
      <MDBCardHeader style={{fontSize:"2rem"}} className="sub-blue-its text-white d-flex justify-content-between align-items-center">
-      <div>
-  <span>Presupuestos</span>
-  <Tooltip tooltip={<AiFillQuestionCircle style={{marginLeft:'10px'}}></AiFillQuestionCircle>}>
-      Para editar hacer click en la fila del presupuesto.
-    </Tooltip>
-    </div>
-  
-  <div className="hover-scale" onClick={()=> setIsModalOpen(true)}>
-  <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
-  </div>
-  
-</MDBCardHeader>
+        <div>
+          <span>Presupuestos</span>
+          <Tooltip tooltip={<AiFillQuestionCircle style={{marginLeft:'10px'}}></AiFillQuestionCircle>}>
+            Para editar hacer click en la fila del presupuesto.
+        </Tooltip>
+        </div>
+          
+        <div className="hover-scale" onClick={()=> setIsModalOpen(true)}>
+          <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
+        </div>
+      </MDBCardHeader>
 
-<Table responsive striped bordered hover className="mt-3 table-responsive">
+      <Table responsive striped bordered hover className="mt-3 table-responsive">
         <thead>
           <tr>
             <th scope='col' onClick={() => handleSortChange('id')} className='col-1'>
               ID {sortColumn === 'id' && (sortDirection === 'asc' ? '▲' : '▼')} 
             </th>
-            <th scope='col' onClick={() => handleSortChange('name')}className='col-7'>
+            <th scope='col' onClick={() => handleSortChange('name')} className='col-7'>
               Nombre {sortColumn === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th scope='col' onClick={() => handleSortChange('status')}className='col-1'>
+            <th scope='col' onClick={() => handleSortChange('status')}c lassName='col-1'>
               Estado {sortColumn === 'status' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th scope='col' onClick={() => handleSortChange('speciality.name')}className='col-2'>
+            <th scope='col' onClick={() => handleSortChange('speciality.name')} className='col-2'>
               Especialidad {sortColumn === 'speciality.name' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th scope='col' onClick={() => handleSortChange('speciality.name')}className='col-1'>
-              Acciones
+            <th scope='col' onClick={() => handleSortChange('speciality.name')} className='col-1'>
+              
             </th>
           </tr>
         </thead>
         <tbody>
-        {sortedData().map((presupuesto) => (
+          {sortedData().map((presupuesto) => (
             <tr
               key={presupuesto.id}
               onClick={(event) => handleRowClick(presupuesto.id, event)}
@@ -199,28 +201,23 @@ const DataTable = ({ presupuestos , specialties,setShouldRefresh}) => {
             >
               <td className='text-center'>{presupuesto.id}</td>
               <td>{presupuesto.name}</td>
-              <td className={`progress-abbreviate ${getRowTextColor(presupuesto.status)}`}>
-                {presupuesto.status}
-              </td>
+              <td className={`progress-abbreviate ${getRowTextColor(presupuesto.status)}`}>{presupuesto.status}</td>
               <td className='text-center'>{presupuesto.speciality.name !== null ? presupuesto.speciality.name : ' '}</td>
-
               <td className="text-center">
-                <button className="btn btn-danger btn-sm btn-block ml-2"  onClick={() => handleDeleteConfirmProgress(presupuesto.id)}>
+                <button className="btn btn-sm btn-block ml-2" style={{backgroundColor:'#FF5151', color:'white'}} onClick={() => handleDeleteConfirmProgress(presupuesto.id)}>
                   <HiOutlineXMark />
-                  
                 </button>
               </td>
             </tr>
           ))}
-
         </tbody>
       </Table>
       <div className="pagination justify-content-center">
         <ReactPaginate
           activeClassName={'active'}
           breakClassName={'item break-me'}
-          previousLabel={'⬅️'}
-          nextLabel={'➡️'}
+          previousLabel={<KeyboardArrowLeftRoundedIcon style={{color:'#2E5266'}}/>}
+          nextLabel={<KeyboardArrowRightRoundedIcon style={{color:'#2E5266'}}/>}
           breakLabel={'...'}
           pageCount={Math.ceil(presupuestos.length / itemsPerPage)}
           marginPagesDisplayed={2}
@@ -239,10 +236,9 @@ const DataTable = ({ presupuestos , specialties,setShouldRefresh}) => {
         onClose={closeModal}
         />
       )}
-       {isModalDeleteConfirmOpen && (
+      {isModalDeleteConfirmOpen && (
         <ModalDeleteConfirm
         onHandleDeleteConfirm={handleDeleteConfirm} // Sin función anónima
-      
         onClose={closeModalDeleteConfirm}
         />
       )}
