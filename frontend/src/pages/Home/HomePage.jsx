@@ -34,7 +34,7 @@ function HomePage() {
   if (isMobile) {
     return (
       <Container className='margen d-flex align-items-center justify-content-center' >
-      <Row className='align-items-center justify-content-center'>
+      <Row className='align-items-center justify-content-center text-center'>
         <Col md={13}>
           <div className='margenasos'><h1>Bienvenido {userData.username}!</h1>
           <div className="square border border-1 border-dark rounded-pill text-center" style={{width: "150px"}}>
