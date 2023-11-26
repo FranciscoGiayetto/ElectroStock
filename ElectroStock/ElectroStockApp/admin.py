@@ -523,5 +523,5 @@ admin.site.register(Speciality, SpecialityAdmin)
 # SACAR ESTE
 admin.site.register(TokenSignup, TokenAdmin)
 # admin.site.register(Notification)
-# admin.site.register(Budget, BudgetAdmin)
+admin.site.register(Budget, BudgetAdmin)
 admin.site.register(BudgetLog, BudgetLogAdmin)

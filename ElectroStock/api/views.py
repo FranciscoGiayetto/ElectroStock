@@ -1454,15 +1454,67 @@ def BudgetViewSet(request, budget_id=None):
                 return Response({"message": "Budget not found"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "PUT":
-        # Actualiza el estado del presupuesto a "COMPRADO".
-        queryset = models.Budget.objects.get(id=budget_id)
-        serializer = BudgetSerializer(queryset, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            print(serializer.data)
-            return Response(serializer.data)
+        try:
+            # Obtén el presupuesto actual
+            budget = models.Budget.objects.get(id=budget_id)
 
-    return Response(status=405)
+            # Serializa y valida los datos del presupuesto actualizado
+            budget_serializer = BudgetSerializer(budget, data=request.data, partial=True)
+            if not budget_serializer.is_valid():
+                return Response(budget_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            # Guarda el presupuesto actualizado
+            budget_serializer.save()
+
+            # Obtiene todos los elementos asociados al presupuesto
+            budget_logs = models.BudgetLog.objects.filter(budget=budget)
+
+            # Itera sobre los elementos del presupuesto
+            for budget_log in budget_logs:
+                element = budget_log.element
+                quantity = budget_log.quantity
+
+                if element is None:
+                    # Si el elemento es nulo, crea uno nuevo con el nombre del BudgetLog
+                    new_element = models.Element.objects.create(name=budget_log.name)
+
+                    # Actualiza el BudgetLog con el nuevo elemento creado
+                    budget_log.element = new_element
+                    budget_log.save()
+                location_instance, _ = models.Location.objects.get_or_create(name='Depósito')
+                # Verifica si el Box existe, si no, créalo
+                box, created = models.Box.objects.get_or_create(
+                    element=budget_log.element,
+                    defaults={
+                        'name': f"Caja para {budget_log.element.name}",
+                        'minimumStock': 1,
+                        'location': location_instance,
+                    }
+                )
+
+                # Ahora, necesitas obtener la instancia de Location basándote en 'Depósito'
+                # Aquí asumo que 'Depósito' es un nombre de ubicación que está en el modelo Location
+                
+
+                # Asigna la ubicación al Box
+                box.location = location_instance
+                box.save()
+
+                # Crea un nuevo Log para el elemento y la cantidad correspondiente
+                models.Log.objects.create(
+                    status=models.Log.Status.COMPRADO,
+                    quantity=quantity,
+                    borrower=None,  # Puedes cambiar esto según tus necesidades
+                    lender=None,    # Puedes cambiar esto según tus necesidades
+                    box=box,
+                    observation=f"Compra de {quantity} {budget_log.element.name} para el presupuesto {budget.name}",
+                )
+
+            return Response(budget_serializer.data)
+        except models.Budget.DoesNotExist:
+            return Response({"error": "Presupuesto no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+    return Response({"error": "Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 def check_stock_sufficiency(element_id, new_quantity):
