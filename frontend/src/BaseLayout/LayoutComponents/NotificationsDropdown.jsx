@@ -74,7 +74,7 @@ const getNotificationIcon = (type) => {
           <div className='notificacionardas'>
             <List.Item.Meta
               avatar={<Avatar icon={getNotificationIcon(item.type_of_notification)} />}
-              title={<a href="#">{item.message}</a>}
+              title={<a href="/Prestamos">{item.message}</a>}
               description={<div>{formatTimestamp(item.timestamp)}</div>}
             />
   </div>
