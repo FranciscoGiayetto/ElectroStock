@@ -133,10 +133,10 @@ function DetalleProducto() {
       setPostRes(response.data.response);
       cartEventEmitter.emit('updateCart');
       navigate('/tienda');
-      toast.success('Producto añadido!', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
+      toast.success('Producto añadido!', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
     } catch (error) {
       setPostRes(error.response.data);
-      toast.error('Este producto ya fue añadido.', { style:{marginTop:'3rem', marginBottom:'-2rem'} });
+      toast.error('Este producto ya fue añadido.', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
     }
   };
   
@@ -172,7 +172,14 @@ function DetalleProducto() {
       <h1 className="product-details__category">
         Categoría: {element.category.name}
       </h1>
-      <h1 className="product-details__stock">Stock: {element.stock || 'No disponible'}</h1>
+      <h1 className="product-details__stock">
+        <span style={{ color: element.stock !== undefined ? '#212529' : 'black' }}>Stock:</span>{' '}
+        <span style={{ color: element.stock === undefined ? 'red' : 'black' }}>
+          {element.stock !== undefined ? element.stock : 'No disponible'}
+        </span>
+      </h1>
+
+
 
           {/* Campo de observación */}
           <TextField

@@ -11,6 +11,7 @@ import {
   MDBCard,
   MDBCardHeader,
 } from 'mdb-react-ui-kit';
+import { toast } from 'react-toastify';
 
 export default function CardMyData(props) {
   const api = useAxios();
@@ -31,7 +32,8 @@ export default function CardMyData(props) {
       setIsEditingEmail(false)
       
     } catch (error) {
-      console.error("EL EMAIL NO ES UN EMAIL"); //PONER ALERT ACA
+      console.error("EL EMAIL NO ES UN EMAIL");
+      toast.error('El email introducido no es válido.', { style:{marginTop:'3.5rem', marginBottom:'-2rem'} }); //PONER ALERT ACA
     }
   };
 
