@@ -32,7 +32,7 @@ function Informes({ isProfessor }) {
 
   if (isMobile) {
     return (
-      <Container fluid className="pagecontainer" style={{ marginTop: '0px', marginLeft: '0px', overflowY: 'hidden' }}> 
+      <Container fluid className="pagecontainer" style={{marginLeft:0, paddingLeft:0,marginTop:0, overflowY: 'hidden' }}>
         {/* Contenido para dispositivos móviles */}
         <Row className="justify-content-center">
           <Col xs={12}>
@@ -55,9 +55,9 @@ function Informes({ isProfessor }) {
           </Col>
         </Row>
   
-        <Row className="justify-content-center" style={{ marginTop: '30px', height: '240px', width: '400px' }}>
+        <Row className="justify-content-center" style={{ marginTop: '10%'}}>
           <Col xs={12}>
-            <h4>Box que mas se rompen</h4>
+            <h5>Box que mas se rompen</h5>
             <VerticalBarChart data={boxData} />
           </Col>
         </Row>
@@ -68,16 +68,16 @@ function Informes({ isProfessor }) {
           </Col>
         </Row>
   
-        <Row className="justify-content-center" style={{ marginTop: '30px', height: '240px', width: '400px', marginBottom: '50px' }}>
+        <Row className="justify-content-center" style={{ marginTop: '2%', marginBottom: '15%' }}>
           <Col xs={12}>
-            <h4 style={{ marginTop: '30px' }}>Top deudores</h4>
+            <h5 style={{ marginTop: '2%' }}>Top deudores</h5>
             <HorizontalBarChart data={deudorData}></HorizontalBarChart>
           </Col>
         </Row>
       </Container>
     );
-  } 
-
+  }
+  
   return (
     <div className="container pagecontainer" style={{marginLeft:'1%', marginTop:'0px', overflowY:'hidden'}}>
       <div className="row">
