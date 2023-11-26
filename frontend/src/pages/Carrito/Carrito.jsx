@@ -215,9 +215,9 @@ function Carrito() {
                 placement="top"
                 overlay={<Tooltip id="tooltip-disabled">Debes establecer una fecha de devolución</Tooltip>}
               >
-                <span>
+                <span className='siguiente-container'>
                   <Button
-                    className='btn-style'
+                    className='btn-style '
                     onClick={handleContinue}
                     disabled={!dateInputData}
                   >
