@@ -186,6 +186,7 @@ function Carrito() {
                           handleDelete={handleDelete}
                           handleQuantityChange={handleQuantityChange}
                           handleCommentChange={handleObservationChangeInCartCard}
+                          current_stock={item.box.current_stock}
                         />
                       ))
                     ) : (
