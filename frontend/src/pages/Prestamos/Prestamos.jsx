@@ -74,10 +74,12 @@ const Prestamos = ({ isProfessor }) => {
   };
 
   const HandleDestruction = async (dateIn, packageUserId, selectedCards, quantityInputs) => {
+    console.log ("hola")
+    /*
     try {
       // Iterate over selected cards to create logs for each item
       for (const selectedIndex of selectedCards) {
-        const element = filteredLista[selectedIndex];
+      //  const element = filteredLista[selectedIndex];
         const quantityDestroyed = quantityInputs[selectedIndex] || 0;
   
         // Create a log for the destroyed item
@@ -114,6 +116,7 @@ const Prestamos = ({ isProfessor }) => {
       // Handle errors or display error messages
       // ...
     }
+    */
   };
 
   const handleRejection = async (dateIn,packageUserId) => {
@@ -247,14 +250,15 @@ const Prestamos = ({ isProfessor }) => {
           <Row>
       {isModalOpen && (
         <ModalDetallePrestamo
-        onHandleApproval={() => handleApproval(selectedPackage.dateIn)}
-        onHandleRejection={() => handleRejection(selectedPackage.dateIn)}
+        onHandleApproval={() => handleApproval(selectedPackage.dateIn , selectedPackage.id_user)}
+        onHandleRejection={() => handleRejection(selectedPackage.dateIn, selectedPackage.id_user)}
         onHandleDevolution={() => HandleDevolution(selectedPackage.dateIn, selectedPackage.id_user)}
-        onHandleDestruction={() => HandleDestruction(selectedPackage.dateIn, selectedPackage.id_user , selectedCards, quantityInputs)}
+        onHandleDestruction={() => HandleDestruction(selectedPackage.dateIn, selectedPackage.id_user )}
         dateOut={selectedPackage.dateOut}
         lista={selectedPackage.lista}
         onClose={closeModal}
         isProfessor={isProfessor}
+        status={selectedPackage.estado}
         />
         )}
         </Row>

@@ -16,6 +16,8 @@ const ModalDetallePrestamo = ({ lista,dateOut, onClose,onHandleApproval ,onHandl
       element.box.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredLista(filtered);
+
+
   }, [searchTerm, lista]);
 
 <head>
@@ -68,6 +70,7 @@ const handleCardSelect = (index) => {
         </div>
         {isProfessor === true ? (
           <div style={{ paddingLeft: '10%' }} className="d-flex flex-column flex-sm-row align-items-sm-center">
+            
             {status === 'PED' ? (
               <>
                 <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" onClick={onHandleApproval}>
