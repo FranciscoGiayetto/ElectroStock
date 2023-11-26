@@ -1,6 +1,7 @@
 /* NotificationsDropdown.css */
 .notifications-dropdown {
-    position: absolute;
+    position: fixed;
+    top: 0;
     width: 400px; /* ajusta el ancho según tus preferencias */
     max-height: 400px; /* ajusta la altura máxima según tus preferencias */
     overflow-y: auto;
