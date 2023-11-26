@@ -109,12 +109,14 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
 
 
   const getClassByEstado = (estado) => {
-    if (estado === "COMPRADO") {
-      return "table-success"; // Clase para colorear en verde
-    } else if (estado === "PENDIENTE") {
-      return "table-warning"; // Clase para colorear en naranja
+    if (budgetStatus === 'COMPLETADO') {
+      return ''; // Sin color si el presupuesto está completado
+    } else if (estado === 'COMPRADO') {
+      return 'table-success'; // Clase para colorear en verde
+    } else if (estado === 'PENDIENTE') {
+      return 'table-warning'; // Clase para colorear en naranja
     }
-    return ""; // Sin color si no es "COMPRADO" ni "PENDIENTE"
+    return ''; // Sin color si no es "COMPRADO" ni "PENDIENTE"
   };
   
 
@@ -190,15 +192,25 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
 
   const handleBudgetStatusChange = async () => {
     try {
-      const nuevoEstado = budgetStatus === 'PROGRESO' ? 'COMPLETADO' : 'PROGRESO';
-      setBudgetStatus(nuevoEstado);
-      await api.put(`/budget/${id}/`, { status: nuevoEstado });
+     
+      await api.put(`/budget/${id}/`);
 
+
+      const nuevoEstado =  'COMPLETADO' ;
+      const updatedBudgetLogs = budgetLogs.map((item) => ({
+        ...item,
+        status: nuevoEstado,
+      }));
+
+      setBudgetLogs(updatedBudgetLogs);
+      setBudgetStatus(nuevoEstado);
+
+      
       if (nuevoEstado === 'COMPLETADO') {
         // Cuando se completa el presupuesto, desactiva la edición de todos los elementos
         // y cambia su estado a "COMPRADO"
         setEditingRows({});
-       
+        setIsModalCompletadoConfirmOpen(false)
       }
     } catch (error) {
       console.error(error);
@@ -465,6 +477,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                 marginLeft: '15px'
               }}
               data-toggle="tooltip" data-placement="top" title="Estado del presupuesto"
+              disabled={budgetStatus === 'COMPLETADO'}
             >
               {budgetStatus === 'PROGRESO' ? 'EN PROGRESO' : 'COMPLETADO'}
             </button>

@@ -20,15 +20,24 @@ const ModalCompletadoConfirm = ({ onClose, onHandleCompletadoConfirm }) => {
      <Modal.Header closeButton>
           <Modal.Title>Presupuesto Completado</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Estas seguro que ya se compraron todos los items y estan listos para guardarse en la base de datos?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" style={{backgroundColor:'#FF5151', border:'none'}} onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button variant="danger" style={{backgroundColor:'#3BB273', border:'none'}} onClick={onHandleCompletadoConfirm}>
-            Continuar
-          </Button>
-        </Modal.Footer>
+        <Modal.Body>
+          <p>
+           
+           Estas seguro que ya se compraron todos los items y estan listos para guardarse en la base de datos?
+           </p>
+           
+           </Modal.Body>
+           <Modal.Footer>
+  <span className='d-flex justify-content-left' style={{ fontWeight: 'bold', marginRight:"40%" }}>
+    -Esta acción es irreversible!
+  </span>
+  <Button variant="secondary" style={{ backgroundColor: '#FF5151', border: 'none' }} onClick={onClose}>
+    Cancelar
+  </Button>
+  <Button variant="danger" style={{ backgroundColor: '#3BB273', border: 'none' }} onClick={onHandleCompletadoConfirm}>
+    Continuar
+  </Button>
+</Modal.Footer>
     </Modal>
   );
 };
