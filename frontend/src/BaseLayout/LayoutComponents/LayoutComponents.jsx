@@ -221,14 +221,16 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
               </Menu.Item>
               )}
              
-          <Menu.Divider />    
-          
-          <Menu.Item key="7" icon={<DownloadRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
-            Descargar App
-          </Menu.Item>
-          <Menu.Item key="6" icon={<LogoutRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/logout' }}>
-            Cerrar sesión
-          </Menu.Item>
+           
+          <div className='last-elements-sidebar'>
+            <Menu.Divider className='divisorsaso'/>   
+            <Menu.Item key="7" icon={<DownloadRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
+              Descargar App
+            </Menu.Item>
+            <Menu.Item key="6" icon={<LogoutRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/logout' }}>
+              Cerrar sesión
+            </Menu.Item>
+          </div>
         </Menu>
         )}
       </Sider>

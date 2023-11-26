@@ -111,3 +111,15 @@ html, body {
 .botonesnav{
   justify-content: start;
 }
+
+.divisorsaso{
+  margin: 1rem;
+}
+
+.last-elements-sidebar {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  width: 100%;
+  padding-left: 24px;
+}
