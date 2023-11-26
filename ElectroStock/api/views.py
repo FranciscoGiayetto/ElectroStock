@@ -173,8 +173,8 @@ def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, image
             print("Guardado exitoso.")
             return ruta_relativa
 
-        # Si hay más de una imagen, procede como antes
-        nueva_imagen = Image.new('RGB', (width * 2, height * 2))
+        # Si hay más de una imagen, ajusta el tamaño de la nueva imagen
+        nueva_imagen = Image.new('RGB', (width * 2, height))
         nueva_imagen.paste(img1, (0, 0))
         if img2:
             img2 = img2.resize((width, height))
@@ -182,7 +182,7 @@ def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, image
         if img3 and img4:
             nueva_imagen.paste(img3, (0, height))
             nueva_imagen.paste(img4, (width, height))
-            
+
         # Guardar la nueva imagen en bytes
         ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
         print("Ruta de guardado:", ruta_guardado)
@@ -328,6 +328,7 @@ def PrestamoVerAPIView(request, user_id):
             models.Log.Status.PEDIDO,
             models.Log.Status.DESAPROBADO,
             models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTO,
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
