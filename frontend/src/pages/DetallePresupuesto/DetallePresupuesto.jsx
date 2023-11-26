@@ -64,9 +64,9 @@ function DetallePresupuesto() {
  
  
   return (
-    <Container fluid className="text-center mt-5 mb-5" style={{ padding: '10px' }}>
-      <Row className="justify-content-start mb-3">
-        <Col xs={3} style={{paddingTop:"1rem"}}>
+    <Container fluid className="text-center mt-4 mb-5" >
+      <Row className="justify-content-start mb-1">
+        <Col xs={1} >
           <Button variant="outline-primary" onClick={() => navigate('/presupuesto')}>
             <ChevronLeftIcon />
           </Button>

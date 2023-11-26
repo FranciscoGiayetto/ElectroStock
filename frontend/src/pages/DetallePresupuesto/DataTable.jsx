@@ -466,13 +466,12 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           <tbody>
             {filteredPresupuesto.map((item, index) => (
               <tr key={item.id} className={getClassByEstado(item.status)}>
-                <td>{index + 1}</td>
-                <td>{renderNameField(item)}</td>
-                <td>
+                <td className='text-center'>{index + 1}</td>
+                <td className='text-center'>{renderNameField(item)}</td>
+                <td className='text-center'>
                   {editingRows[item.id] ? (
                     <input
                       type="number"
-                      style={{ maxWidth: "100px" }}
                       className="form-control"
                       value={editedValues[item.id]?.price || item.price}
                       onChange={(e) =>
@@ -484,12 +483,11 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     item.price
                   )}
                 </td>
-                <td>
+                <td className='text-center'>
                   {editingRows[item.id] ? (
                     <input
                       type="number"
                       className="form-control"
-                      style={{ maxWidth: "100px" }}
                       value={editedValues[item.id]?.quantity || item.quantity}
                       onChange={(e) =>
                         handleItemInputChange(item.id, "quantity", e.target.value)
@@ -500,9 +498,9 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     item.quantity
                   )}
                 </td>
-                <td className="d-none d-md-table-cell">{(item.quantity * parseFloat(item.price)).toFixed(2)}</td>
+                <td className="d-none d-md-table-cell text-center">{(item.quantity * parseFloat(item.price)).toFixed(2)}</td>
                 {budgetStatus !== 'COMPLETADO' && (
-                  <td>
+                  <td className='text-center'>
                     {editingRows[item.id] ? (
                       <button
                         onClick={() => handleItemSave(item.id)}
@@ -538,12 +536,12 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
             ))}
             {isAddingNewItem && (
               <tr className="table-info">
-                <td>{budgetLogs.length + 1}</td>
-                <td style={{ display: "flex"}}>
+                <td className='text-center'>{budgetLogs.length + 1}</td>
+                <td className='text-center'>
                   <input
                     type="text"
                     className={`form-control ${isAddingNewItem && customName ? '' : 'disabled-input'}`}
-                    style={{ maxWidth: "200px", paddingRight: "1rem" }}
+
                     value={customName ? (editedValues['new']?.name || "") : selectedItem?.name}
                     onChange={(e) =>
                       handleItemInputChange('new', "name", e.target.value)
@@ -554,10 +552,9 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     <HiPlusCircle style={{ fontSize: "1rem" }} />
                   </button>
                 </td>
-                <td>
+                <td className='text-center'>
                   <input
                     type="number"
-                    style={{ maxWidth: "100px" }}
                     className="form-control"
                     value={editedValues['new']?.price || ""}
                     onChange={(e) =>
@@ -566,10 +563,9 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     disabled={budgetStatus === 'COMPLETADO'}
                   />
                 </td>
-                <td>
+                <td className='text-center'>
                   <input
                     type="number"
-                    style={{ maxWidth: "100px" }}
                     className="form-control"
                     value={editedValues['new']?.quantity || ""}
                     onChange={(e) =>
@@ -600,10 +596,10 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           </tbody>
           <tfoot className="sticky-tfoot">
             <tr>
-              <td colSpan="3"></td>
+              <td colSpan="3" className='text-center'></td>
               <th>Total:</th>
-              <td>{calcularPrecioTotal()}</td>
-              <td></td>
+              <td className='text-center'>{calcularPrecioTotal()}</td>
+              <td className='text-center'></td>
             </tr>
           </tfoot>
         </Table>

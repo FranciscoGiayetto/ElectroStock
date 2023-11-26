@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import {
   MDBCard,
@@ -6,26 +6,41 @@ import {
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
-import { HiPlusCircle } from "react-icons/hi2";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { AiFillQuestionCircle } from "react-icons/ai";
 import useAxios from '../../utils/useAxios';
-
+import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
 import Tooltip from 'react-png-tooltip'
-
+import ModalNewPresupuesto from './ModalNewPresupuesto';
+import ModalDeleteConfirm from './ModalDeleteConfirm';
 import './DataTable.css'
-const DataTable = ({ presupuestos }) => {
+const DataTable = ({ presupuestos , specialties,setShouldRefresh}) => {
   let api = useAxios();
   const navigate = useNavigate();
-  const handleRowClick = (key) => {
-    navigate(`${key}`);
+  const handleRowClick = (presupuestoId, event) => {
+    // Check if the click occurred on the button
+    const isButtonClick =
+    event.target.tagName === 'BUTTON' || event.target.closest('button');
+    console.log(event.target.tagName)
+    // If it's a button click, don't navigate
+    if (isButtonClick) {
+      console.log("Es un boton")
+      return;
+    }
+  
+    // Navigate to the details page
+    navigate(`${presupuestoId}`);
   }
-
+  
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(0);
   const [sortColumn, setSortColumn] = useState(null);
   const [postRes, setPostRes] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalDeleteConfirmOpen, setIsModalDeleteConfirmOpen] = useState(false);
   const [sortDirection, setSortDirection] = useState('asc');
-
+  
+  const [selectedBudget, setSelectedBudget] = useState(null);
 
   const getRowTextColor = (estado) => {
     if (estado === "PROGRESO") {
@@ -37,25 +52,53 @@ const DataTable = ({ presupuestos }) => {
   };
 
 
-  const handleNewBudget = async () => {
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
 
-    const maxNumber = presupuestos.reduce((max, presupuesto) => {
-      const name = presupuesto.name;
-      if (name.startsWith("Presupuesto Sin Nombre ")) {
-        const number = parseInt(name.replace("Presupuesto Sin Nombre ", ""), 10);
-        return !isNaN(number) && number > max ? number : max;
-      }
-      return max;
-    }, 0);
+  const closeModalDeleteConfirm = () => {
+    setIsModalDeleteConfirmOpen(false)
+  }
 
-    const nextNum = maxNumber + 1;
+  
+    const handleDeleteConfirm = async () => {
+    try {
+     // Inicia el Spinner
+
+      const response = await api.delete(`/budget/${selectedBudget}`);
+      let data = await response.data;
+      console.log(data)
+      setShouldRefresh(true);
+    } catch (error) {
+      console.error(error);
+   
+  };
+
+
+
+    setIsModalDeleteConfirmOpen(false)
+  }
+
+  const handleDeleteConfirmProgress = (budgetId) => {
+    setSelectedBudget(budgetId)
+    setIsModalDeleteConfirmOpen(true)
+  }
+
+
+
+  
+
+  
+
+  const handleNewBudget = async (title, selectedSpecialty) => {
+    console.log(title,selectedSpecialty)
     // Define los datos del nuevo presupuesto
     const newBudgetData = {
-      name: `Presupuesto Sin Nombre ${nextNum}`,
+      name: title, // Utiliza el título proporcionado
       status: "PROGRESO", // O "COMPLETADO" según sea necesario
-      speciality: 1, // Reemplaza 'specialityId' con el ID de la especialidad correspondiente
+      speciality: selectedSpecialty, // Utiliza la especialidad seleccionada
     };
-  
+
     try {
       // Realiza la solicitud POST para crear un nuevo presupuesto
       const response = await api.post('/budget/', newBudgetData);
@@ -63,18 +106,16 @@ const DataTable = ({ presupuestos }) => {
 
       // Muestra la respuesta del servidor en la consola
       console.log(response.data);
-  
+
       // Realiza una acción de redirección a '/tienda' o ajusta según sea necesario
       navigate(`${newBudgetId}`);
-      
     } catch (error) {
       // En caso de error, muestra el mensaje de error en la consola
       console.error(error);
-  
+
       // Puedes manejar el error y mostrar un mensaje de error al usuario si es necesario
     }
   };
-
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
   };
@@ -123,7 +164,7 @@ const DataTable = ({ presupuestos }) => {
     </Tooltip>
     </div>
   
-  <div className="hover-scale" onClick={handleNewBudget}>
+  <div className="hover-scale" onClick={()=> setIsModalOpen(true)}>
   <HiPlusCircle data-toggle="tooltip" data-placement="right" title="Agregar presupuesto"/>
   </div>
   
@@ -132,36 +173,46 @@ const DataTable = ({ presupuestos }) => {
 <Table responsive striped bordered hover className="mt-3 table-responsive">
         <thead>
           <tr>
-            <th scope='col' onClick={() => handleSortChange('id')}>
-              ID {sortColumn === 'id' && (sortDirection === 'asc' ? '▲' : '▼')}
+            <th scope='col' onClick={() => handleSortChange('id')} className='col-1'>
+              ID {sortColumn === 'id' && (sortDirection === 'asc' ? '▲' : '▼')} 
             </th>
-            <th scope='col' onClick={() => handleSortChange('name')}>
+            <th scope='col' onClick={() => handleSortChange('name')}className='col-7'>
               Nombre {sortColumn === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th scope='col' onClick={() => handleSortChange('status')}>
+            <th scope='col' onClick={() => handleSortChange('status')}className='col-1'>
               Estado {sortColumn === 'status' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th scope='col' onClick={() => handleSortChange('speciality.name')}>
+            <th scope='col' onClick={() => handleSortChange('speciality.name')}className='col-2'>
               Especialidad {sortColumn === 'speciality.name' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
+            <th scope='col' onClick={() => handleSortChange('speciality.name')}className='col-1'>
+              Acciones
             </th>
           </tr>
         </thead>
         <tbody>
-          {sortedData().map((presupuesto) => (
+        {sortedData().map((presupuesto) => (
             <tr
               key={presupuesto.id}
-              onClick={() => handleRowClick(presupuesto.id)}
+              onClick={(event) => handleRowClick(presupuesto.id, event)}
               className={`cursor-pointer`}
             >
-              <td>{presupuesto.id}</td>
+              <td className='text-center'>{presupuesto.id}</td>
               <td>{presupuesto.name}</td>
               <td className={`progress-abbreviate ${getRowTextColor(presupuesto.status)}`}>
                 {presupuesto.status}
               </td>
+              <td className='text-center'>{presupuesto.speciality.name !== null ? presupuesto.speciality.name : ' '}</td>
 
-              <td >{presupuesto.speciality.name}</td>
+              <td className="text-center">
+                <button className="btn btn-danger btn-sm btn-block ml-2"  onClick={() => handleDeleteConfirmProgress(presupuesto.id)}>
+                  <HiOutlineXMark />
+                  
+                </button>
+              </td>
             </tr>
           ))}
+
         </tbody>
       </Table>
       <div className="pagination justify-content-center">
@@ -181,6 +232,20 @@ const DataTable = ({ presupuestos }) => {
           nextClassName={"item"}
         />
       </div>
+      {isModalOpen && (
+        <ModalNewPresupuesto
+        onHandleNewBudget={handleNewBudget} // Sin función anónima
+        specialties={specialties}
+        onClose={closeModal}
+        />
+      )}
+       {isModalDeleteConfirmOpen && (
+        <ModalDeleteConfirm
+        onHandleDeleteConfirm={handleDeleteConfirm} // Sin función anónima
+      
+        onClose={closeModalDeleteConfirm}
+        />
+      )}
     </MDBCard>
   );
 };
