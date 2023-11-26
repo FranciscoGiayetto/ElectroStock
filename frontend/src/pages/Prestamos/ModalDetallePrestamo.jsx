@@ -55,6 +55,16 @@ const handleCardSelect = (index) => {
     setSelectedCards([...selectedCards, index]);
   }
 };
+
+
+
+const handleConfirmDestruction = () => {
+  // Puedes realizar alguna lógica adicional aquí antes de confirmar
+  console.log(selectedCards,quantityInputs)
+  onHandleDestruction(selectedCards, quantityInputs);
+  onClose();
+};
+
  return (
     <Modal id="PrestamoModal" show={true} onHide={onClose} size="lg" contentClassName='custom-modal-content modal-fixed ' >
       <Modal.Header className="d-flex justify-content-between align-items-center" closeButton>
@@ -143,7 +153,7 @@ const handleCardSelect = (index) => {
         </button>
         {selectedCards.length > 0 && (
           
-         <button className="btn btn-primary me-sm-2 mb-2 mb-sm-0" onClick={() => onHandleDestruction(selectedCards, quantityInputs)}>
+         <button className="btn btn-primary me-sm-2 mb-2 mb-sm-0" onClick={handleConfirmDestruction}>
 
             Continuar
           </button>

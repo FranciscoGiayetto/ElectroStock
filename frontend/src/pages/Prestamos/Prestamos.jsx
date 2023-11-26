@@ -74,7 +74,7 @@ const Prestamos = ({ isProfessor }) => {
   };
 
   const HandleDestruction = async (dateIn, packageUserId, selectedCards, quantityInputs) => {
-    console.log ("hola")
+    console.log (selectedCards,quantityInputs)
     /*
     try {
       // Iterate over selected cards to create logs for each item
