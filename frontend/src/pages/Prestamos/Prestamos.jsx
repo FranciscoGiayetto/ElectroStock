@@ -73,6 +73,49 @@ const Prestamos = ({ isProfessor }) => {
     }
   };
 
+  const HandleDestruction = async (dateIn, packageUserId, selectedCards, quantityInputs) => {
+    try {
+      // Iterate over selected cards to create logs for each item
+      for (const selectedIndex of selectedCards) {
+        const element = filteredLista[selectedIndex];
+        const quantityDestroyed = quantityInputs[selectedIndex] || 0;
+  
+        // Create a log for the destroyed item
+        const logData = {
+          box: element.box.id, // Replace with the actual property in your data
+          borrower: element.borrower.id, // Replace with the actual property in your data
+          lender: element.lender.id, // Replace with the actual property in your data
+          status: 'DST', // Replace with the appropriate status for destruction
+          quantity: quantityDestroyed,
+          observation: `Item destroyed on ${new Date().toISOString()}`,
+          dateIn,
+          dateOut: dateIn, // Update as needed
+        };
+  
+        // Make a POST request to create the log
+        await api.post('/log/', logData);
+  
+        // You may need to update the status or perform other actions based on the API response
+  
+        // Log created successfully, you can handle additional logic here
+      }
+  
+      // Optionally, you can update the state or perform other actions after all logs are created
+      // ...
+  
+      // Close the modal and update the state
+      closeModal();
+      setIsLoading(false);
+  
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+  
+      // Handle errors or display error messages
+      // ...
+    }
+  };
+
   const handleRejection = async (dateIn,packageUserId) => {
     try {
       // Realiza una solicitud PUT para rechazar los registros del usuario en el servidor
@@ -207,6 +250,7 @@ const Prestamos = ({ isProfessor }) => {
         onHandleApproval={() => handleApproval(selectedPackage.dateIn)}
         onHandleRejection={() => handleRejection(selectedPackage.dateIn)}
         onHandleDevolution={() => HandleDevolution(selectedPackage.dateIn, selectedPackage.id_user)}
+        onHandleDestruction={() => HandleDestruction(selectedPackage.dateIn, selectedPackage.id_user , selectedCards, quantityInputs)}
         dateOut={selectedPackage.dateOut}
         lista={selectedPackage.lista}
         onClose={closeModal}
