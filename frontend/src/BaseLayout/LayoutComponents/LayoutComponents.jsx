@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import AddModeratorRoundedIcon from '@mui/icons-material/AddModeratorRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-import { Badge } from 'antd';
+import {Dropdown, Badge } from 'antd';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
@@ -32,7 +32,7 @@ import { useMediaQuery } from '@mui/material';
 import useAxios from "../../utils/useAxios";
 import { useAuthStore } from '../../store/auth';
 import { cartEventEmitter } from '../../pages/DetalleProducto/DetalleProducto';
-
+import NotificationsDropdown from './NotificationsDropdown';
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
@@ -53,19 +53,64 @@ const LayoutComponents = ({ onSearch, isProfessor }) => {
   const [myOptions, setMyOptions] = useState([]);
   const [cantCarrito, setCantCarrito] = useState(0);
   const [cantNotificaciones, setCantNotificaciones] = useState(0);
+  const [notificaciones, setNotificaciones] = useState([]);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
   ]);
   const userData = user();
+  const notificationsRef = useRef();
+  const handleToggleNotifications = () => {
+    markNotificationsAsRead();
+    setIsNotificationsOpen(!isNotificationsOpen);
+  };
+
+
 
   useEffect(() => {
     getElement();
     getCantCarrito();
     getCantNotificaciones();
+    getNotificaciones();
   }, []);
 
+
+  useEffect(() => {
+    // ... (otras suscripciones y efectos)
+    
+    // Si el dropdown de notificaciones está abierto, marca las notificaciones como leídas
+    if (isNotificationsOpen) {
+      markNotificationsAsRead();
+    }
+  }, [isNotificationsOpen]);
  
+
+
+
+ 
+
+ const markNotificationsAsRead = async () => {
+    try {
+      // Realiza la solicitud al endpoint para marcar notificaciones como leídas
+      const response = await api.put(`/notificacionesLeidas/${userData.user_id}/`);
+      const data = await response.data;
+      console.log('Notificaciones marcadas como leídas:', data);
+
+      // Actualiza la cantidad de notificaciones leídas
+      getCantNotificaciones();
+    } catch (error) {
+      console.error('Error al marcar notificaciones como leídas:', error);
+    }
+  };
+  const handleNotificationsVisibleChange = (visible) => {
+    // La función handleNotificationsVisibleChange se ejecutará cuando el estado del dropdown cambie (abierto/cerrado)
+    if (!visible) {
+      // Si el dropdown está cerrado, ejecuta la función para marcar notificaciones como leídas
+      markNotificationsAsRead();
+    }
+  }
+
   useEffect(() => {
     // Suscríbete al evento del carrito para actualizar la cantidad del carrito
     const updateCart = () => {
@@ -140,6 +185,15 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
    // console.log(searchQuery)  
   };
 
+  const menu = (
+    <Menu>
+      {/* Aquí renderizas el contenido del modal */}
+      <Menu.Item key="0">
+        <NotificationsDropdown notifications={notificaciones}    onClose={() => setIsNotificationsOpen(false)} />
+      </Menu.Item>
+    </Menu>
+  );
+   
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);
   };
@@ -160,6 +214,16 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
       const response = await api.get(`/cantNotificaciones/${userData.user_id}/`);
       const data = await response.data;
       setCantNotificaciones(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getNotificaciones = async () => {
+    try {
+      const response = await api.get(`/notificaciones/${userData.user_id}/`);
+      const data = await response.data;
+      setNotificaciones(data);
     } catch (error) {
       console.error(error);
     }
@@ -290,60 +354,76 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
               </form>
             </Col>
          
-            <div className='botonesnav'>
-              <Row>
-                <Col>
-                  { (
-                <Tooltip title="Buscar" arrow placement="bottom">
-                    <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                        <SearchRoundedIcon />
+          <div className='botonesnav'>
+            <Row>
+            <Col>
+                { (
+               <Tooltip title="Buscar" arrow placement="bottom">
+                         <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                           <SearchRoundedIcon />
+                         </Button>
+                       </Tooltip>
+                
+              )}
+              </Col>
+            
+                  {!isSmallScreen3 && (
+                 <Col>  
+                  <Tooltip title="Carrito" arrow placement="bottom">
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      className='button'
+                      data-toggle="tooltip" data-placement="right" title="Carrito"
+                      onClick={() => { window.location.href = '/carrito' }}
+                    >
+                      <Badge count={parseInt(cantCarrito)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
+                        <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                      </Badge>
                     </Button>
-                  </Tooltip>
-                  )}
+                  </Tooltip>            
                 </Col>
+                 )}
+          <Col>
+                { (
+          
+                   <Dropdown
+        overlay={menu}
+        trigger={['click']}
+        placement="bottomLeft"
+        onVisibleChange={handleNotificationsVisibleChange}
+      >
+        <Button ref={notificationsRef} variant="primary" className='button'>
+          <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{ backgroundColor: '#EE8F37' }}>
+            <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+          </Badge>
+        </Button>
+      </Dropdown>
               
-                {!isSmallScreen3 && (
-                  <Col>  
-                    <Tooltip title="Carrito" arrow placement="bottom">
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        className='button'
-                        data-toggle="tooltip" data-placement="right" title="Carrito"
-                        onClick={() => { window.location.href = '/carrito' }}
-                      >
-                        <Badge count={parseInt(cantCarrito)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
-                          <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                        </Badge>
-                      </Button>
-                    </Tooltip>            
-                  </Col>
-                  )}
-                  <Col>
-                  { (
-                    <Tooltip title="Notificaciones" arrow placement="bottom">
-                      <Button variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones">
-                        <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
-                          <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                        </Badge>
-                      </Button>
-                    </Tooltip>
-                  )}
-                  </Col>
+                
+              )}
+              </Col>
+              {!isSmallScreen4 && (
+          <Col>
+              
+                <Tooltip title="Configuración" arrow placement="bottom">
+                  <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
+                    <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
+                  </Button>
+                </Tooltip>
+             
+          </Col>
+           )}
+             
+             </Row>
 
-                {!isSmallScreen4 && (
-                  <Col>
-                    <Tooltip title="Configuración" arrow placement="bottom">
-                      <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
-                        <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
-                      </Button>
-                    </Tooltip>
-                  </Col>
-                )}
-              </Row>
-            </div>
+         </div>
+
           </div>
         </Row>
+        {isNotificationsOpen && (
+          <NotificationsDropdown referenceElement={notificationsRef.current} notifications={notificaciones} onClose={() => setIsNotificationsOpen(false)} />
+        )}
       </Header>
     </div>       
 

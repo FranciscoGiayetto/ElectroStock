@@ -79,6 +79,7 @@ class ElementResource(resources.ModelResource):
 class ElementAdmin(ImportExportActionModelAdmin):
     resource_class = ElementResource
     list_display = ("name", "description", "category", "ecommerce", "image")
+    list_display = ("name", "description", "category", "ecommerce", "image")
     list_filter = (
         "category",
         "ecommerce",
@@ -240,6 +241,9 @@ class LogResource(resources.ModelResource):
         )
 
 
+from django.contrib.admin.filters import ChoicesFieldListFilter
+
+
 class LogForm(forms.ModelForm):
     class Meta:
         model = Log
@@ -248,6 +252,9 @@ class LogForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         pass
+
+
+from django.contrib import messages
 
 
 # Clase de filtros y busqueda de los prestamos
@@ -303,6 +310,9 @@ class LogyAdmin(ImportExportActionModelAdmin):
                 "dateOut",
             )
         return exclude
+
+
+from import_export.widgets import ForeignKeyWidget
 
 
 # Clase para export-import de boxes
@@ -522,6 +532,6 @@ admin.site.register(Speciality, SpecialityAdmin)
 
 # SACAR ESTE
 admin.site.register(TokenSignup, TokenAdmin)
-# admin.site.register(Notification)
+admin.site.register(Notification)
 admin.site.register(Budget, BudgetAdmin)
 admin.site.register(BudgetLog, BudgetLogAdmin)

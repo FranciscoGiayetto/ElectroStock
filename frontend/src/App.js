@@ -45,7 +45,7 @@ function App() {
   const user_id = user().user_id;
   const [userData, setUserData] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isUserProfessor, setIsUserProfessor] = useState(false);
+  const [isUserProfessor, setIsUserProfessor] = useState(null);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -112,6 +112,8 @@ function LayoutWrapper({ onSearch, searchQuery, isProfessor }) {
         <Route path="/carrito" element={<PrivateRoute><Carrito /></PrivateRoute>} />
         <Route path="/detalleProducto/:id" element={<PrivateRoute><DetalleProducto /></PrivateRoute>} />
         <Route path="/detalleCuenta" element={<PrivateRoute><DetalleCuenta /></PrivateRoute>} />
+        <Route path="/Prestamos" element={<PrivateRoute><Prestamos isProfessor={isProfessor} /></PrivateRoute>} />
+
         {isProfessor ? (
           <Route path="/presupuesto" element={<PrivateRoute><Presupuestos /></PrivateRoute>} />
         ) : null}

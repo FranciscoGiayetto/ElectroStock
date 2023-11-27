@@ -137,6 +137,7 @@ function Ecommerce({ allItems }) {
                         onPageChanged={setPage}
                       />
                     </div>
+                  
                     </Row>
                   </>
                 )}

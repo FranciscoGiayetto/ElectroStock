@@ -17,12 +17,6 @@ class TokenSerializer(serializers.ModelSerializer):
         fields = ["id", "name"]
 
 
-class NotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Notification
-        fields = "__all__"
-
-
 # Para ver y editar categorias
 class CategoriaSerializer(serializers.ModelSerializer):
     category = CategoriaPadreSerializer()
@@ -186,7 +180,6 @@ class LogSerializer(serializers.ModelSerializer):
     box = BoxSerializerPrueba()
     borrower = UsersSerializer()
     lender = UsersSerializer()
-    borrower = UsersSerializer()
 
     class Meta:
         model = models.Log
@@ -309,13 +302,15 @@ class BudgetSerializer(serializers.ModelSerializer):
         model = models.Budget
         fields = "__all__"
 
+
 class BudgetSerializer2(serializers.ModelSerializer):
-    speciality = serializers.PrimaryKeyRelatedField(queryset=models.Speciality.objects.all())
+    speciality = serializers.PrimaryKeyRelatedField(
+        queryset=models.Speciality.objects.all()
+    )
 
     class Meta:
         model = models.Budget
         fields = "__all__"
-
 
 
 class BudgetLogSerializer(serializers.ModelSerializer):
@@ -387,3 +382,42 @@ class ElementEcommerceSerializer2(serializers.ModelSerializer):
         data["current_stock"] = current_stock
 
         return data
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    user_sender = UsersSerializer()
+    user_revoker = groups = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        model = models.Notification
+        fields = "__all__"
+
+
+class OnlyPkLogSerializer(serializers.ModelSerializer):
+    box_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.Box.objects.all(), source="box", write_only=True
+    )
+    borrower_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.get_user_model().objects.all(),
+        source="borrower",
+        write_only=True,
+    )
+    lender_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.get_user_model().objects.all(), source="lender", write_only=True
+    )
+
+    class Meta:
+        model = models.Log
+        fields = (
+            "id",
+            "borrower",
+            "lender",
+            "status",
+            "quantity",
+            "observation",
+            "dateIn",
+            "dateOut",
+            "box_id",  # Agrega los campos write_only
+            "borrower_id",  # Agrega los campos write_only
+            "lender_id",  # Agrega los campos write_only
+        )

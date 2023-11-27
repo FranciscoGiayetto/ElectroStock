@@ -11,7 +11,7 @@ import {
   MDBRipple,
   MDBBtn, 
 } from 'mdb-react-ui-kit';
-const PrestamosCard = ({ status,image, cliente,component}) => {
+const PrestamosCard = ({ status,image, cliente,component,quantity}) => {
   return (
     <div className='prestamo-card'>
         <div className='img-container'>
@@ -56,6 +56,10 @@ const PrestamosCard = ({ status,image, cliente,component}) => {
 
                     <span>
                       Componente:{component}
+                      <br />
+                    </span>
+                    <span>
+                      Cantidad:{quantity}
                       <br />
                     </span>
                     <div>

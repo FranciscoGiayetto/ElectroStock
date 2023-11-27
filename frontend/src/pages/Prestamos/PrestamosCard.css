@@ -13,3 +13,8 @@
   margin-bottom: 0;
   height: 100%;
 }
+
+#modalBody{
+  height: 70vh;
+  overflow-y: auto;
+}

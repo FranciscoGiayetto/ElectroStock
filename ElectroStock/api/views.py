@@ -28,6 +28,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.db.models import Count, Q
 from collections import defaultdict
+from django.contrib.auth import get_user_model, get_user
+from django.contrib.auth.models import Group
 
 
 # View para tomar el stock actual segun el id que mandas por la url
@@ -159,6 +161,10 @@ def combinar_imagenes(
         img2 = Image.open(imagen2.lstrip("/")) if imagen2 else None
         img3 = Image.open(imagen3.lstrip("/")) if imagen3 else None
         img4 = Image.open(imagen4.lstrip("/")) if imagen4 else None
+        img1 = Image.open(imagen1.lstrip("/"))
+        img2 = Image.open(imagen2.lstrip("/")) if imagen2 else None
+        img3 = Image.open(imagen3.lstrip("/")) if imagen3 else None
+        img4 = Image.open(imagen4.lstrip("/")) if imagen4 else None
 
         # Obtener el tamaño de la imagen principal (img1)
         width, height = img1.size
@@ -166,11 +172,13 @@ def combinar_imagenes(
         # Si solo hay una imagen, ajusta la anchura de la nueva imagen
         if not img2 and not img3 and not img4:
             nueva_imagen = Image.new("RGB", (width, height))
+            nueva_imagen = Image.new("RGB", (width, height))
             nueva_imagen.paste(img1, (0, 0))
 
             # Guardar la nueva imagen en bytes
             ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
             print("Ruta de guardado:", ruta_guardado)
+            nueva_imagen.save(ruta_guardado, format="JPEG")
             nueva_imagen.save(ruta_guardado, format="JPEG")
 
             # Obtener el camino relativo
@@ -244,9 +252,105 @@ def obtener_imagenes_elementos(elementos):
     return imagenes
 
 
+from collections import defaultdict
+
+
 @api_view(["GET", "POST"])
 def AllPrestamos(request):
     if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.PEDIDO,
+            models.Log.Status.DESAPROBADO,
+            models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTOTARDIO,
+        ]
+
+        queryset = models.Log.objects.filter(status__in=valid_statuses)
+
+        if queryset.exists():
+            # Agrupar logs por usuario y luego por fecha
+            grouped_logs = defaultdict(lambda: defaultdict(list))
+
+            for log in queryset:
+                creation_date = (
+                    log.dateIn.strftime("%Y-%m-%dT%H:%M") if log.dateIn else None
+                )
+                log_data = LogSerializer(log).data
+                log_data["dateIn"] = creation_date
+                user_key = (
+                    log_data["borrower"]["username"]
+                    if log_data["borrower"]
+                    else "Sin Usuario"
+                )
+                grouped_logs[user_key][creation_date].append(log_data)
+
+            response_data = []
+
+            for user, date_logs in grouped_logs.items():
+                for creation_date, logs_data in date_logs.items():
+                    primer_log = logs_data[0]
+                    primer_log_prueba = models.Log.objects.get(
+                        id=primer_log.get("id", "")
+                    )
+
+                    dateIn_primer_log_prueba = (
+                        primer_log_prueba.dateIn.strftime("%Y-%m-%d %H:%M")
+                        if primer_log_prueba.dateIn
+                        else None
+                    )
+                    dateOut_primer_log = (
+                        primer_log.get("dateOut", "") if primer_log else None
+                    )
+
+                    imagen_primer_log = None
+                    if (
+                        primer_log_prueba.box
+                        and primer_log_prueba.box.element
+                        and primer_log_prueba.box.element.image
+                        and primer_log_prueba.box.element.image.file
+                    ):
+                        imagen_primer_log = primer_log_prueba.box.element.image.url
+
+                    count_logs = len(logs_data) if logs_data else 0
+
+                    response_data.append(
+                        {
+                            "dateOut": dateOut_primer_log,
+                            "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
+                            "usuario": primer_log["borrower"]["username"]
+                            if primer_log
+                            else None,
+                            "nombre": primer_log["borrower"]["first_name"]
+                            if primer_log
+                            else None,
+                            "apellido": primer_log["borrower"]["last_name"]
+                            if primer_log
+                            else None,
+                            "estado": primer_log["status"] if primer_log else None,
+                            "dateIn": dateIn_primer_log_prueba,
+                            "imagen": imagen_primer_log,
+                            "count": count_logs,
+                            "lista": logs_data,
+                        }
+                    )
+
+            return Response(response_data)
+        else:
+            return Response("No se encontraron logs para este usuario.")
+
+    if request.method == "POST":
+        # Realiza acciones necesarias para agregar elementos al carrito
+        # ...
+        return Response({"message": "Elemento agregado al carrito"})
+
+
+@api_view(["GET", "POST"])
+def AllPrestamos(request):
+    if request.method == "GET":
+        pagination_class = CustomPagination()
         valid_statuses = [
             models.Log.Status.APROBADO,
             models.Log.Status.PEDIDO,
@@ -298,6 +402,7 @@ def AllPrestamos(request):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"] if primer_log else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -315,7 +420,12 @@ def AllPrestamos(request):
                     }
                 )
 
-            return Response(response_data)
+            # Aplicar paginación
+            paginated_response = pagination_class.paginate_queryset(
+                response_data, request
+            )
+            return pagination_class.get_paginated_response(paginated_response)
+
         else:
             return Response("No se encontraron logs para este usuario.")
 
@@ -498,7 +608,7 @@ class UsersViewSet(viewsets.ModelViewSet):
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     permission_classes = [permissions.AllowAny]
-    serializer_class = LogSerializer
+    serializer_class = OnlyPkLogSerializer
 
 
 # View para los cursos
@@ -534,6 +644,12 @@ class SpecialityViewSet(viewsets.ModelViewSet):
     queryset = models.Speciality.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = SpecialitySerializer
+
+
+class NotificationViewSet(viewsets.ModelViewSet):
+    queryset = models.Notification.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = NotificationSerializer
 
 
 # View para tomar el stock actual segun el id que mandas por la url
@@ -643,7 +759,9 @@ def cantCarrito(request, user_id):
 @api_view(["GET", "POST"])
 def cantNotificaciones(request, user_id):
     if request.method == "GET":
-        queryset = models.Notification.objects.filter(user_revoker=user_id)
+        queryset = models.Notification.objects.filter(
+            user_revoker=user_id, status=models.Notification.NotificationStatus.UNREAD
+        )
 
         # Contar la cantidad de elementos en el carrito
         count = queryset.count()
@@ -965,16 +1083,37 @@ def elementos_por_categoria(request, category_id):
     if elementos.exists():
         # Paginar los elementos
         paginated_elements = pagination_class.paginate_queryset(elementos, request)
+    if elementos.exists():
+        # Paginar los elementos
+        paginated_elements = pagination_class.paginate_queryset(elementos, request)
 
         elementos_con_stock = []
+        elementos_con_stock = []
 
+        if paginated_elements is not None:
+            for elemento in paginated_elements:
+                element_id = elemento.id
         if paginated_elements is not None:
             for elemento in paginated_elements:
                 element_id = elemento.id
 
                 boxes = models.Box.objects.filter(element__id=element_id)
                 box_ids = [box.id for box in boxes]
+                boxes = models.Box.objects.filter(element__id=element_id)
+                box_ids = [box.id for box in boxes]
 
+                total_com = models.Log.objects.filter(
+                    box__id__in=box_ids, status="COM"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_ped = models.Log.objects.filter(
+                    box__id__in=box_ids, status="PED"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_rot = models.Log.objects.filter(
+                    box__id__in=box_ids, status="ROT"
+                ).aggregate(total=Sum("quantity"))["total"]
+                total_ap = models.Log.objects.filter(
+                    box__id__in=box_ids, status="AP"
+                ).aggregate(total=Sum("quantity"))["total"]
                 total_com = models.Log.objects.filter(
                     box__id__in=box_ids, status="COM"
                 ).aggregate(total=Sum("quantity"))["total"]
@@ -996,7 +1135,16 @@ def elementos_por_categoria(request, category_id):
                     total_ap = 0
                 if total_rot is None:
                     total_rot = 0
+                if total_com is None:
+                    total_com = 0
+                if total_ped is None:
+                    total_ped = 0
+                if total_ap is None:
+                    total_ap = 0
+                if total_rot is None:
+                    total_rot = 0
 
+                current_stock = total_com - total_ped - total_ap - total_rot
                 current_stock = total_com - total_ped - total_ap - total_rot
 
                 elemento_con_stock = {
@@ -1007,9 +1155,19 @@ def elementos_por_categoria(request, category_id):
                     "category": elemento.category,
                     "current_stock": current_stock,
                 }
+                elemento_con_stock = {
+                    "id": elemento.id,
+                    "name": elemento.name,
+                    "description": elemento.description,
+                    "image": elemento.image,
+                    "category": elemento.category,
+                    "current_stock": current_stock,
+                }
 
                 elementos_con_stock.append(elemento_con_stock)
+                elementos_con_stock.append(elemento_con_stock)
 
+        serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
         serializer = ElementEcommerceSerializer(elementos_con_stock, many=True)
 
         return pagination_class.get_paginated_response(serializer.data)
@@ -1077,6 +1235,11 @@ def elementos_por_categoria(request, category_id):
         else:
             # La categoría no tiene elementos ni categorías hijas con elementos, devolver respuesta vacía
             return Response([])
+
+
+from django.utils.dateparse import parse_datetime
+from dateutil.parser import parse as dateparse
+from pytz import timezone, utc
 
 
 @api_view(["GET", "PUT"])
@@ -1153,6 +1316,7 @@ def CambioAprobado(request, user_id, date_in):
 
                 # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
                 serializer = LogSerializer(logs_instances_to_approve, many=True)
+                create_notification_aprobado(user_id, date_in)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(
@@ -1236,7 +1400,7 @@ def CambioDesaprobado(request, user_id, date_in):
                     id__in=log_ids_to_approve
                 )
                 logs_instances_to_approve.update(status=models.Log.Status.DESAPROBADO)
-
+                create_notification_desaprobado(user_id, date_in)
                 # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
                 serializer = LogSerializer(logs_instances_to_approve, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
@@ -1249,6 +1413,28 @@ def CambioDesaprobado(request, user_id, date_in):
             return Response(
                 "No se encontraron logs para este usuario con status DESAPROBADO o PEDIDO."
             )
+
+
+@api_view(["GET", "POST", "PUT"])
+def notificacionesLeidasViewSet(request, user_id):
+    if request.method == "GET":
+        # Agregar código para manejar la solicitud GET si es necesario
+        queryset = models.Notification.objects.filter(user_revoker=user_id)
+        serializer = NotificationSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    if request.method == "PUT":
+        # Agregar código para manejar la solicitud PUT
+        notificaciones = models.Notification.objects.filter(
+            user_revoker=user_id, status=models.Notification.NotificationStatus.UNREAD
+        )
+        new_status = models.Notification.NotificationStatus.READ
+        for notificacion in notificaciones:
+            notificacion.status = new_status
+            notificacion.save()
+
+        serializer = NotificationSerializer(notificaciones, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(["GET", "POST", "PUT"])
@@ -1289,12 +1475,15 @@ def CambioLog(request, user_id):
         )
         new_status = models.Log.Status.PEDIDO
         new_dateout = request.data.get("dateout", None)
+        count = 0
         for log in logs_carrito:
+            count += 1
             log.status = new_status
             if new_dateout is not None:
                 log.dateOut = new_dateout
             log.save()
         serializer = LogSerializer(logs_carrito, many=True)
+        create_notification_pedido(user_id, count)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -1302,8 +1491,15 @@ def CambioLog(request, user_id):
 def NotificacionesAPIView(request, user_id):
     if request.method == "GET":
         queryset = models.Notification.objects.filter(user_revoker=user_id)
+        notifications = queryset.all()
 
-        serializer = NotificationSerializer(queryset, many=True)
+        # Formatear el timestamp en el formato deseado
+        formatted_notifications = []
+        for notification in notifications:
+            notification.timestamp = notification.timestamp.strftime("%Y-%m-%d %H:%M")
+            formatted_notifications.append(notification)
+
+        serializer = NotificationSerializer(formatted_notifications, many=True)
         return Response(serializer.data)
 
     if request.method == "POST":
@@ -1678,7 +1874,7 @@ def CambioDevuelto(request, user_id, date_in):
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
             grouped_logs = defaultdict(list)
-
+            creation_date = None
             for log in queryset:
                 creation_date = (
                     log.dateIn.strftime("%Y-%m-%d %H:%M") if log.dateIn else None
@@ -1689,7 +1885,9 @@ def CambioDevuelto(request, user_id, date_in):
 
             # Verificar si hay logs para la fecha proporcionada y cambiar su estado a APROBADO o DEVUELTOTARDIO
             logs_to_approve = grouped_logs.get(date_in, [])
-            print("creacion_date ", creation_date, "date_in ", date_in)
+            # rint("creacion_date ", creation_date, "date_in ", date_in)
+            logs_instances_to_approve = []
+            logs_instances_to_return_late = []
             if creation_date == date_in:
                 # Recopilar los IDs de los logs aprobados y vencidos
                 log_ids_to_approve = [
@@ -1709,13 +1907,20 @@ def CambioDevuelto(request, user_id, date_in):
                         id__in=log_ids_to_approve
                     )
                     logs_instances_to_approve.update(status=models.Log.Status.DEVUELTO)
-
+                    statusDevolucionTardia = False
+                    create_notification_devuelto(
+                        user_id, date_in, statusDevolucionTardia
+                    )
                 if log_ids_to_return_late:
                     logs_instances_to_return_late = models.Log.objects.filter(
                         id__in=log_ids_to_return_late
                     )
                     logs_instances_to_return_late.update(
                         status=models.Log.Status.DEVUELTOTARDIO
+                    )
+                    statusDevolucionTardia = True
+                    create_notification_devuelto(
+                        user_id, date_in, statusDevolucionTardia
                     )
 
                 # Aquí asumo que estás intentando serializar las instancias, no los datos serializados
@@ -1767,3 +1972,562 @@ def PendientesAPIView(request, user_id):
         return Response({"message": "Post completado"})
 
     return Response(status=405)
+
+
+# A PARTIR DE ACA COSAS DE NOTIFICACIONES Y PRESTAMOS
+# CambioAprobado
+def create_notification_aprobado(user, date_in):
+    notificacion = models.Notification.objects.create(
+        user_sender=None,
+        type_of_notification=models.Notification.NotificationType.APROBADO,
+        message=f"Tu solicitud de préstamo con fecha {date_in} ha sido aprobada.",
+    )
+    notificacion.user_revoker.add(user)
+    return notificacion
+
+
+#
+
+
+def create_notification_pedido(user_id, quantity):
+    user = models.CustomUser.objects.get(id=user_id)
+    profesor_group = Group.objects.get(name="Profesor")
+    detalles_pedido = (
+        f"Pedido Enviado de {user.username} :\n"
+        f"Cantidad de Elementos: {quantity}\n"
+        f"Observaciones"
+    )
+
+    notificacion = models.Notification.objects.create(
+        user_sender=user,
+        type_of_notification=models.Notification.NotificationType.PEDIDO,
+        message=detalles_pedido,
+    )
+    profesor_group_users = get_user_model().objects.filter(groups=profesor_group)
+    notificacion.user_revoker.add(*profesor_group_users)
+    return notificacion
+
+
+# CambioDesaprobado
+
+
+def create_notification_desaprobado(user, date_in):
+    notificacion = models.Notification.objects.create(
+        user_sender=None,
+        type_of_notification=models.Notification.NotificationType.DESAPROBADO,
+        message=f"Tu solicitud de préstamo con fecha {date_in} ha sido desaprobada.",
+    )
+    notificacion.user_revoker.add(user)
+    return notificacion
+
+
+# CambioDevuelto
+def create_notification_devuelto(user_id, dateIn, statusDevolucionTardia):
+    user = models.CustomUser.objects.get(id=user_id)
+    notificacion_prestador = models.Notification.objects.create(
+        user_sender=None,
+        type_of_notification=models.Notification.NotificationType.DEVUELTO,
+        message=f"Tu préstamo de la fecha {dateIn} ha sido devuelto con exito.",
+    )
+    notificacion_prestador.user_revoker.add(user)
+
+    profesor_group = Group.objects.get(name="Profesor")
+    if statusDevolucionTardia:
+        detalles_devuelto = (
+            f"Se devolvio El prestamo de {user.username} pedido en la fecha {dateIn}:\n"
+            "El pedido Se devolvio con demora"  # Descontar los dias para ver con cuantos dias de demora
+        )
+    else:
+        detalles_devuelto = (
+            f"Se devolvio El prestamo de {user.username} pedido en la fecha {dateIn}:\n"
+            "El pedido se devolvio en tiempo y forma"  # Descontar los dias para ver con cuantos dias de demora
+        )
+    notificacion_profesores = models.Notification.objects.create(
+        user_sender=user,
+        type_of_notification=models.Notification.NotificationType.DEVUELTO,
+        message=detalles_devuelto,
+    )
+    profesor_group_users = get_user_model().objects.filter(groups=profesor_group)
+    notificacion_profesores.user_revoker.add(*profesor_group_users)
+    return notificacion_profesores
+
+
+from PIL import Image
+from io import BytesIO
+from django.conf import settings
+import os
+import datetime
+
+BASE_DIR = settings.BASE_DIR
+carpeta_guardado = os.path.join(BASE_DIR, "img-prod/img-logs")
+
+
+def combinar_imagenes(
+    nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None
+):
+    try:
+        # Cargar las imágenes disponibles
+        img1 = Image.open(imagen1.lstrip("/"))
+        img2 = Image.open(imagen2.lstrip("/")) if imagen2 else None
+        img3 = Image.open(imagen3.lstrip("/")) if imagen3 else None
+        img4 = Image.open(imagen4.lstrip("/")) if imagen4 else None
+
+        # Obtener el tamaño de la imagen principal (img1)
+        width, height = img1.size
+
+        # Si solo hay una imagen, ajusta la anchura de la nueva imagen
+        if not img2 and not img3 and not img4:
+            nueva_imagen = Image.new("RGB", (width, height))
+            nueva_imagen.paste(img1, (0, 0))
+
+            # Guardar la nueva imagen en bytes
+            ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
+            print("Ruta de guardado:", ruta_guardado)
+            nueva_imagen.save(ruta_guardado, format="JPEG")
+
+            # Obtener el camino relativo
+            ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
+            print("Guardado exitoso.")
+            return ruta_relativa
+
+        # Si hay más de una imagen, procede como antes
+        nueva_imagen = Image.new("RGB", (width * 2, height * 2))
+        nueva_imagen.paste(img1, (0, 0))
+        if img2:
+            img2 = img2.resize((width, height))
+            nueva_imagen.paste(img2, (width, 0))
+        if img3 and img4:
+            nueva_imagen.paste(img3, (0, height))
+            nueva_imagen.paste(img4, (width, height))
+
+        # Guardar la nueva imagen en bytes
+        ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
+        print("Ruta de guardado:", ruta_guardado)
+        nueva_imagen.save(ruta_guardado, format="JPEG")
+
+        # Obtener el camino relativo
+        ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
+        print("Guardado exitoso.")
+
+        return ruta_relativa
+
+    except Exception as e:
+        print("Error al combinar imágenes:", str(e))
+        return None
+
+
+import os
+from django.conf import settings
+from django.core.files.storage import default_storage
+
+
+def obtener_imagen_primer_log(primer_log_prueba):
+    try:
+        if (
+            primer_log_prueba.box
+            and primer_log_prueba.box.element
+            and primer_log_prueba.box.element.image
+            and primer_log_prueba.box.element.image.file
+        ):
+            imagen_path = default_storage.path(
+                primer_log_prueba.box.element.image.file.name
+            )
+            print("Ruta de la imagen primer log:", imagen_path)
+            if default_storage.exists(primer_log_prueba.box.element.image.file.name):
+                print("La imagen existe.")
+
+                # Obtener el camino relativo
+                ruta_relativa = os.path.relpath(imagen_path, BASE_DIR)
+
+                return ruta_relativa
+            else:
+                print("La imagen NO existe.")
+    except FileNotFoundError:
+        print("Archivo no encontrado:", primer_log_prueba.box.element.image.file.name)
+    return None
+
+
+def obtener_imagenes_elementos(elementos):
+    imagenes = []
+    for elemento in elementos:
+        box = elemento["box"]
+        if "image" in box and box["image"]:
+            imagenes.append(box["image"])
+    return imagenes
+
+
+@api_view(["GET"])
+def FiltroStatusPrestamo(request, user_id, status):
+    pagination_class = CustomPagination()
+
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.PEDIDO,
+            models.Log.Status.DESAPROBADO,
+            models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTOTARDIO,
+        ]
+
+        if status not in valid_statuses:
+            return Response(f"El estado '{status}' no es válido.", status=400)
+
+        queryset = models.Log.objects.filter(lender=user_id, status=status)
+
+        if queryset.exists():
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
+
+            for log in queryset:
+                creation_date = (
+                    log.dateIn.strftime("%Y-%m-%dT%H:%M") if log.dateIn else None
+                )
+                log_data = LogSerializer(log).data
+                log_data["dateIn"] = creation_date
+                grouped_logs[creation_date].append(log_data)
+
+            response_data = []
+
+            for creation_date, logs_data in grouped_logs.items():
+                primer_log = logs_data[0]
+                primer_log_prueba = models.Log.objects.get(id=primer_log.get("id", ""))
+
+                dateIn_primer_log_prueba = (
+                    primer_log_prueba.dateIn.strftime("%Y-%m-%d %H:%M")
+                    if primer_log_prueba.dateIn
+                    else None
+                )
+                dateOut_primer_log = (
+                    primer_log.get("dateOut", "") if primer_log else None
+                )
+
+                imagen_primer_log = None
+                imagen_primer_log = obtener_imagen_primer_log(primer_log_prueba)
+                imagen_combinada = None
+                nombre_archivo = (
+                    f"imagen_combinada_{creation_date}_{datetime.datetime.now}.jpg"
+                )
+                print("ACA ", logs_data)
+                if imagen_primer_log:
+                    imagenes_elementos = obtener_imagenes_elementos(logs_data)
+                    imagenes_elementos_filtradas = [
+                        imagen
+                        for imagen in imagenes_elementos[:3]
+                        if imagen is not None
+                    ]
+                    imagen_combinada = combinar_imagenes(
+                        nombre_archivo, *imagenes_elementos_filtradas
+                    )
+
+                    primer_log["imagen_combinada"] = imagen_combinada
+
+                count_logs = len(logs_data) if logs_data else 0
+
+                response_data.append(
+                    {
+                        "dateOut": dateOut_primer_log,
+                        "usuario": primer_log["borrower"]["username"]
+                        if primer_log
+                        else None,
+                        "nombre": primer_log["borrower"]["first_name"]
+                        if primer_log
+                        else None,
+                        "apellido": primer_log["borrower"]["last_name"]
+                        if primer_log
+                        else None,
+                        "estado": primer_log["status"] if primer_log else None,
+                        "dateIn": dateIn_primer_log_prueba,
+                        "imagen": imagen_combinada,
+                        "count": count_logs,
+                        "lista": logs_data,
+                    }
+                )
+
+            # Aplicar paginación
+            paginated_response = pagination_class.paginate_queryset(
+                response_data, request
+            )
+            return pagination_class.get_paginated_response(paginated_response)
+
+        else:
+            return Response("No se encontraron logs para este usuario.")
+
+
+@api_view(["GET"])
+def FiltroDatePrestamo(request, user_id):
+    pagination_class = CustomPagination()
+
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.PEDIDO,
+            models.Log.Status.DESAPROBADO,
+            models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTOTARDIO,
+        ]
+
+        queryset = models.Log.objects.filter(
+            lender=user_id, status__in=valid_statuses
+        ).order_by("dateIn")
+
+        if queryset.exists():
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
+
+            for log in queryset:
+                creation_date = (
+                    log.dateIn.strftime("%Y-%m-%dT%H:%M") if log.dateIn else None
+                )
+                log_data = LogSerializer(log).data
+                log_data["dateIn"] = creation_date
+                grouped_logs[creation_date].append(log_data)
+
+            response_data = []
+
+            for creation_date, logs_data in grouped_logs.items():
+                primer_log = logs_data[0]
+                primer_log_prueba = models.Log.objects.get(id=primer_log.get("id", ""))
+
+                dateIn_primer_log_prueba = (
+                    primer_log_prueba.dateIn.strftime("%Y-%m-%d %H:%M")
+                    if primer_log_prueba.dateIn
+                    else None
+                )
+                dateOut_primer_log = (
+                    primer_log.get("dateOut", "") if primer_log else None
+                )
+
+                imagen_primer_log = None
+                imagen_primer_log = obtener_imagen_primer_log(primer_log_prueba)
+                imagen_combinada = None
+                nombre_archivo = (
+                    f"imagen_combinada_{creation_date}_{datetime.datetime.now}.jpg"
+                )
+                print("ACA ", logs_data)
+                if imagen_primer_log:
+                    imagenes_elementos = obtener_imagenes_elementos(logs_data)
+                    imagenes_elementos_filtradas = [
+                        imagen
+                        for imagen in imagenes_elementos[:3]
+                        if imagen is not None
+                    ]
+                    imagen_combinada = combinar_imagenes(
+                        nombre_archivo, *imagenes_elementos_filtradas
+                    )
+
+                    primer_log["imagen_combinada"] = imagen_combinada
+
+                count_logs = len(logs_data) if logs_data else 0
+
+                response_data.append(
+                    {
+                        "dateOut": dateOut_primer_log,
+                        "usuario": primer_log["borrower"]["username"]
+                        if primer_log
+                        else None,
+                        "nombre": primer_log["borrower"]["first_name"]
+                        if primer_log
+                        else None,
+                        "apellido": primer_log["borrower"]["last_name"]
+                        if primer_log
+                        else None,
+                        "estado": primer_log["status"] if primer_log else None,
+                        "dateIn": dateIn_primer_log_prueba,
+                        "imagen": imagen_combinada,
+                        "count": count_logs,
+                        "lista": logs_data,
+                    }
+                )
+
+            # Aplicar paginación
+            paginated_response = pagination_class.paginate_queryset(
+                response_data, request
+            )
+            return pagination_class.get_paginated_response(paginated_response)
+
+        else:
+            return Response("No se encontraron logs para este usuario.")
+
+
+@api_view(["GET"])
+def FiltroComponentesPrestamo(request, user_id):
+    pagination_class = CustomPagination()
+
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.PEDIDO,
+            models.Log.Status.DESAPROBADO,
+            models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTOTARDIO,
+        ]
+
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+
+        if queryset.exists():
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
+
+            for log in queryset:
+                creation_date = (
+                    log.dateIn.strftime("%Y-%m-%dT%H:%M") if log.dateIn else None
+                )
+                log_data = LogSerializer(log).data
+                log_data["dateIn"] = creation_date
+                grouped_logs[creation_date].append(log_data)
+
+            response_data = []
+
+            for creation_date, logs_data in grouped_logs.items():
+                primer_log = logs_data[0]
+                primer_log_prueba = models.Log.objects.get(id=primer_log.get("id", ""))
+
+                dateIn_primer_log_prueba = (
+                    primer_log_prueba.dateIn.strftime("%Y-%m-%d %H:%M")
+                    if primer_log_prueba.dateIn
+                    else None
+                )
+                dateOut_primer_log = (
+                    primer_log.get("dateOut", "") if primer_log else None
+                )
+
+                imagen_primer_log = None
+                imagen_primer_log = obtener_imagen_primer_log(primer_log_prueba)
+                imagen_combinada = None
+                nombre_archivo = (
+                    f"imagen_combinada_{creation_date}_{datetime.datetime.now}.jpg"
+                )
+                print("ACA ", logs_data)
+                if imagen_primer_log:
+                    imagenes_elementos = obtener_imagenes_elementos(logs_data)
+                    imagenes_elementos_filtradas = [
+                        imagen
+                        for imagen in imagenes_elementos[:3]
+                        if imagen is not None
+                    ]
+                    imagen_combinada = combinar_imagenes(
+                        nombre_archivo, *imagenes_elementos_filtradas
+                    )
+
+                    primer_log["imagen_combinada"] = imagen_combinada
+
+                count_logs = len(logs_data) if logs_data else 0
+
+                response_data.append(
+                    {
+                        "dateOut": dateOut_primer_log,
+                        "usuario": primer_log["borrower"]["username"]
+                        if primer_log
+                        else None,
+                        "nombre": primer_log["borrower"]["first_name"]
+                        if primer_log
+                        else None,
+                        "apellido": primer_log["borrower"]["last_name"]
+                        if primer_log
+                        else None,
+                        "estado": primer_log["status"] if primer_log else None,
+                        "dateIn": dateIn_primer_log_prueba,
+                        "imagen": imagen_combinada,
+                        "count": count_logs,
+                        "lista": logs_data,
+                    }
+                )
+            response_data = sorted(
+                response_data, key=lambda x: x["count"], reverse=True
+            )
+            # Aplicar paginación
+            paginated_response = pagination_class.paginate_queryset(
+                response_data, request
+            )
+            return pagination_class.get_paginated_response(paginated_response)
+
+        else:
+            return Response("No se encontraron logs para este usuario.")
+
+
+@api_view(["GET"])
+def PrestamosSinPaginacion(request, user_id):
+    if request.method == "GET":
+        valid_statuses = [
+            models.Log.Status.APROBADO,
+            models.Log.Status.PEDIDO,
+            models.Log.Status.DESAPROBADO,
+            models.Log.Status.VENCIDO,
+            models.Log.Status.DEVUELTOTARDIO,
+        ]
+
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+
+        if queryset.exists():
+            # Agrupar logs por fecha y hora de creación
+            grouped_logs = defaultdict(list)
+
+            for log in queryset:
+                creation_date = (
+                    log.dateIn.strftime("%Y-%m-%dT%H:%M") if log.dateIn else None
+                )
+                log_data = LogSerializer(log).data
+                log_data["dateIn"] = creation_date
+                grouped_logs[creation_date].append(log_data)
+
+            response_data = []
+
+            for creation_date, logs_data in grouped_logs.items():
+                primer_log = logs_data[0]
+                primer_log_prueba = models.Log.objects.get(id=primer_log.get("id", ""))
+
+                dateIn_primer_log_prueba = (
+                    primer_log_prueba.dateIn.strftime("%Y-%m-%d %H:%M")
+                    if primer_log_prueba.dateIn
+                    else None
+                )
+                dateOut_primer_log = (
+                    primer_log.get("dateOut", "") if primer_log else None
+                )
+
+                imagen_primer_log = None
+                imagen_primer_log = obtener_imagen_primer_log(primer_log_prueba)
+                imagen_combinada = None
+                nombre_archivo = (
+                    f"imagen_combinada_{creation_date}_{datetime.datetime.now}.jpg"
+                )
+                print("ACA ", logs_data)
+                if imagen_primer_log:
+                    imagenes_elementos = obtener_imagenes_elementos(logs_data)
+                    imagenes_elementos_filtradas = [
+                        imagen
+                        for imagen in imagenes_elementos[:3]
+                        if imagen is not None
+                    ]
+                    imagen_combinada = combinar_imagenes(
+                        nombre_archivo, *imagenes_elementos_filtradas
+                    )
+
+                    primer_log["imagen_combinada"] = imagen_combinada
+
+                count_logs = len(logs_data) if logs_data else 0
+
+                response_data.append(
+                    {
+                        "dateOut": dateOut_primer_log,
+                        "usuario": primer_log["borrower"]["username"]
+                        if primer_log
+                        else None,
+                        "nombre": primer_log["borrower"]["first_name"]
+                        if primer_log
+                        else None,
+                        "apellido": primer_log["borrower"]["last_name"]
+                        if primer_log
+                        else None,
+                        "estado": primer_log["status"] if primer_log else None,
+                        "dateIn": dateIn_primer_log_prueba,
+                        "imagen": imagen_combinada,
+                        "count": count_logs,
+                        "lista": logs_data,
+                    }
+                )
+
+            return Response(response_data)
+
+        else:
+            return Response("No se encontraron logs para este usuario.")
