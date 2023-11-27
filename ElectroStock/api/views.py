@@ -344,6 +344,7 @@ def AllPrestamos(request):
 @api_view(["GET", "POST"])
 def AllPrestamos(request):
     if request.method == "GET":
+        pagination_class = CustomPagination()
         valid_statuses = [
             models.Log.Status.APROBADO,
             models.Log.Status.PEDIDO,
@@ -413,7 +414,12 @@ def AllPrestamos(request):
                     }
                 )
 
-            return Response(response_data)
+            # Aplicar paginación
+            paginated_response = pagination_class.paginate_queryset(
+                response_data, request
+            )
+            return pagination_class.get_paginated_response(paginated_response)
+
         else:
             return Response("No se encontraron logs para este usuario.")
 
