@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useAxios from '../../utils/useAxios';
 import { Dropdown } from 'react-bootstrap';
 
-const OrdenarPorPrestamos = () => {
+const OrdenarPorPrestamos = ({ onOrderChange, onSelectedStatus }) => {
   const api = useAxios();
   const [options, setOptions] = useState([]);
 
@@ -10,6 +10,15 @@ const OrdenarPorPrestamos = () => {
     // Lógica para obtener opciones (si es necesario)
   }, []);
 
+  const handleOrderChange = (orderType) => {
+    // Lógica para manejar el cambio de orden
+    onOrderChange(orderType);
+  };
+
+  const handleStatusChange = (status) => {
+    // Lógica para manejar el cambio de orden
+    onSelectedStatus(status);
+  };
   return (
     <div className="word-list">
       <Dropdown>
@@ -21,8 +30,8 @@ const OrdenarPorPrestamos = () => {
           Ordenar por
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          <Dropdown.Item>Fecha</Dropdown.Item>
-          <Dropdown.Item>Componentes</Dropdown.Item>
+          <Dropdown.Item onClick={() => handleOrderChange('fecha')}>Fecha</Dropdown.Item>
+          <Dropdown.Item onClick={() => handleOrderChange('componentes')}>Componentes</Dropdown.Item>
           <Dropdown>
             <Dropdown.Toggle
               variant="black"
@@ -32,9 +41,9 @@ const OrdenarPorPrestamos = () => {
               Estado
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>Aprobado</Dropdown.Item>
-              <Dropdown.Item>Pendiente</Dropdown.Item>
-              <Dropdown.Item>Rechazado</Dropdown.Item>
+              <Dropdown.Item onClick={() => onSelectedStatus('AP')}>Aprobado</Dropdown.Item>
+              <Dropdown.Item onClick={() => onSelectedStatus('PED')}>Pendiente</Dropdown.Item>
+              <Dropdown.Item onClick={() => onSelectedStatus('REC')}>Rechazado</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Dropdown.Menu>
