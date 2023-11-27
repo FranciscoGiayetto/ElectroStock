@@ -151,16 +151,11 @@ import datetime
 BASE_DIR = settings.BASE_DIR
 carpeta_guardado = os.path.join(BASE_DIR, "img-prod/img-logs")
 
-
 def combinar_imagenes(
     nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None
 ):
     try:
         # Cargar las imágenes disponibles
-        img1 = Image.open(imagen1.lstrip("/"))
-        img2 = Image.open(imagen2.lstrip("/")) if imagen2 else None
-        img3 = Image.open(imagen3.lstrip("/")) if imagen3 else None
-        img4 = Image.open(imagen4.lstrip("/")) if imagen4 else None
         img1 = Image.open(imagen1.lstrip("/"))
         img2 = Image.open(imagen2.lstrip("/")) if imagen2 else None
         img3 = Image.open(imagen3.lstrip("/")) if imagen3 else None
@@ -210,6 +205,7 @@ def combinar_imagenes(
     except Exception as e:
         print("Error al combinar imágenes:", str(e))
         return None
+
 
 
 import os
