@@ -18,7 +18,7 @@ function Register() {
   const [specialitiesList, setSpecialitiesList] = useState([]);
   const [selectedSpecialities, setSelectedSpecialities] = useState([]);
   const [secretTokenField, setSecretTokenField] = useState('');
-  const secretToken = "genari";
+  const [apiTokens, setApiTokens] = useState([]);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   useEffect(() => {
@@ -29,6 +29,7 @@ function Register() {
 
   useEffect(() => {
     getSpecialities();
+    fetchApiTokens(); // Fetch tokens from the API when the component mounts
   }, []);
 
   const getSpecialities = () => {
@@ -49,6 +50,16 @@ function Register() {
     setSpecialitiesList(data);
   };
 
+  const fetchApiTokens = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/token/');
+      const tokens = await response.json();
+      setApiTokens(tokens);
+    } catch (error) {
+      console.error('Error fetching tokens:', error);
+    }
+  };
+
   const resetForm = () => {
     setUsername('');
     setPassword('');
@@ -60,7 +71,8 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (secretTokenField === secretToken) {
+    // Check if the entered token exists in the list of API tokens
+    if (apiTokens.some(apiToken => apiToken.name === secretTokenField)) {
       const { error } = await register(username, password, password2, email, selectedSpecialities);
       if (error) {
         alert(JSON.stringify(error));
@@ -104,7 +116,7 @@ function Register() {
                       onChange={(e) => setUsername(e.target.value)}
                       type="text"
                       placeholder="Nombre de usuario"
-                      className="input-style"
+                      className="input-styleado"
                     />
                   </Form.Group>
 
@@ -117,7 +129,7 @@ function Register() {
                       onChange={(e) => setEmail(e.target.value)}
                       type="text"
                       placeholder="ejemplo@gmail.com"
-                      className="input-style"
+                      className="input-styleado"
                     />
                   </Form.Group>
 
@@ -131,7 +143,7 @@ function Register() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Contraseña"
-                        className="input-style"
+                        className="input-styleado"
                       />
                     </div>
                   </Form.Group>
@@ -156,7 +168,7 @@ function Register() {
                         value={password2}
                         onChange={(e) => setPassword2(e.target.value)}
                         placeholder="Contraseña"
-                        className="input-style"
+                        className="input-styleado"
                       />
                     </div>
                   </Form.Group>
@@ -182,23 +194,23 @@ function Register() {
                       value={secretTokenField}
                       onChange={(e) => setSecretTokenField(e.target.value)}
                       placeholder="Token único proveído por el profesor"
-                      className="input-style"
+                      className="input-styleado"
                     />
                   </Form.Group>
 
                   <Form.Group controlId="formBasicSpecialities">
                     <Form.Label className='color'>Especialidad *</Form.Label>
                     {specialitiesList.map(speciality => (
-                      <div key={speciality.id} className="input-style custom-checkbox">
+                      <div key={speciality.id} className="input-styleado custom-checkbox">
                         <input
                           type="checkbox"
                           id={`speciality-${speciality.id}`}
                           value={speciality.id}
                           checked={selectedSpecialities.includes(speciality.id)}
                           onChange={() => handleSpecialityChange(speciality.id)}
-                          className="input-style-checkbox"
+                          className="input-styleado-checkbox"
                         />
-                        <label htmlFor={`speciality-${speciality.id}`} className="input-style-label">
+                        <label htmlFor={`speciality-${speciality.id}`} className="input-styleado-label">
                           {speciality.name}
                         </label>
                       </div>
