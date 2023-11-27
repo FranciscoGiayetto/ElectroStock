@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import useAxios from '../../utils/useAxios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import { DropdownButton, Dropdown } from 'react-bootstrap';
+import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import IconButton from '@mui/material/IconButton';
-
-
-
 
 const WordList = () => {
   const api = useAxios();
@@ -40,7 +38,6 @@ const WordList = () => {
       const response = await api.get(`/category/`);
       const data = response.data;
 
-      // Filter out the categories you want to display
       const filteredParentCategories = data.filter(
         (category) =>
           category.category === null &&
@@ -56,7 +53,7 @@ const WordList = () => {
 
       setParentCategories(filteredParentCategories);
       setChildrenCategories(formattedChildrenCategories);
-      // Initialize the category visibility state
+
       const initialCategoryVisibility = {};
       filteredParentCategories.forEach((category) => {
         initialCategoryVisibility[category.id] = false;
@@ -74,54 +71,48 @@ const WordList = () => {
 
   return (
     <div className="word-list">
-<ul style={{ paddingLeft: 0 }}>
-          {parentCategories.map((item) => (
-          <dl key={item.id}>
-  <div className="category-container">
-    <a
-      href={`/tienda/${item.name}`}
-      style={{
-        padding:0,
-        marginLeft: 0,
-        fontWeight: 'bold',
-        fontSize: '1.2rem',
-        color: 'black',
-        textDecoration: 'none',
-      }}
-    >
-      {capitalizeFirstLetter(item.name)}
-    </a>
-    <IconButton
-      onClick={() => toggleCategoryVisibility(item.id)}
-      aria-label={categoryVisibility[item.id] ? "Ocultar Categoría" : "Mostrar Categoría"}
-    >
-      {categoryVisibility[item.id] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-    </IconButton>
-  </div>
-  {categoryVisibility[item.id] && (
-    <ul>
-      {childrenCategories
-        .filter((child) => child.category.id === item.id)
-        .map((child) => (
-          <li key={child.id}>
-            <a
-              href={`/tienda/${child.name}`}
-              style={{
-                fontSize: '0.9rem',
-                color: 'black',
-                textDecoration: 'none',
-              }}
-            >
-              {capitalizeFirstLetter(child.name)}
-            </a>
-          </li>
-        ))}
-    </ul>
-  )}
-</dl>
-
-        ))}
-      </ul>
+      <Dropdown>
+        <Dropdown.Toggle
+          variant="black"
+          id="dropdown-filtros"
+          style={{ backgroundColor: 'white', color: 'black' }}
+        >
+          Filtros
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          {parentCategories.map((parentCategory) => (
+            <Dropdown key={parentCategory.id} style={{ backgroundColor: 'white' }}>
+              <Dropdown.Toggle
+                variant="black"
+                id={`dropdown-${parentCategory.id}`}
+                style={{ backgroundColor: 'white', color: 'black' }}
+              >
+                {capitalizeFirstLetter(parentCategory.name)}
+              </Dropdown.Toggle>
+  
+              <Dropdown.Menu style={{ backgroundColor: 'white' }}>
+                {childrenCategories
+                  .filter(
+                    (child) => child.category.id === parentCategory.id
+                  )
+                  .map((child) => (
+                    <Dropdown.Item
+                      key={child.id}
+                      href={`/tienda/${child.name}`}
+                      style={{
+                        textDecoration: 'none',
+                        color: 'black',
+                        backgroundColor: 'white',
+                      }}
+                    >
+                      {capitalizeFirstLetter(child.name)}
+                    </Dropdown.Item>
+                  ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
     </div>
   );
 };

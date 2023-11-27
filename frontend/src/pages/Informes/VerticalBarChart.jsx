@@ -63,7 +63,7 @@ if (Array.isArray(data)) {
     });
   }, [data]);
 
-  return <canvas id="verticalBar" ref={chartRef} style={{ width: '400px', height: '300px' }}></canvas>;
+  return <canvas id="verticalBar" ref={chartRef}></canvas>;
 };
 
 export default VerticalBarChart;

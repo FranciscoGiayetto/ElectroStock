@@ -1,15 +1,14 @@
 .container-bg {
-  width: 100%; 
+  max-width: 60%;
   height: auto;
-  margin: 3.125rem;
-  margin-top: 6.25rem;
+  margin: 3rem auto 0;
   border-radius: 0.625rem;
-  padding-top: 0.9375rem; 
-  padding-bottom: 1.25rem; 
+  padding-top: 0.9375rem;
+  padding-bottom: 1.25rem;
   background-color: white;
 }
 
-.btn-style{
+.btn-style {
   font-size: 0.938rem;
   background-color: #58A4B0;
   border: none;
@@ -17,11 +16,11 @@
   height: 2.5rem;
 }
 
-.btn-style:hover{
+.btn-style:hover {
   background-color: #528e97;
 }
 
-.date-style{
+.date-style {
   margin-right: 13rem;
   border-color: #58A4B0;
   border-radius: 0.3rem;
@@ -29,9 +28,58 @@
   padding: 0.3rem;
   cursor: text;
 }
-.text-center2{
+.siguiente-container {
+  margin-top: 1.8rem; /* Adjust the margin as needed */
+}
+
+.siguiente-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .date-style {
+    margin-right: 3rem;
+  }
+  .btn-style {
+    width: 7rem;
+  }
+  .container-bg {
+    max-width: 100%;
+    height: auto;
+    margin-top: 3rem;
+    border-radius: 0.625rem;
+    padding-top: 0.9375rem;
+    padding-bottom: 1.25rem;
+    background-color: white;
+  }
+  .siguiente-container {
+    margin-top: 1.8rem; /* Adjust the margin as needed */
+  }
+
+}
+
+@media (max-width: 575px) {
+  .date-style {
+    margin-right: 1rem;
+  }
+  .container-bg {
+    max-width: 100%;
+    height: auto;
+    margin-top: 2rem;
+    border-radius: 0.625rem;
+    padding-top: 0.9375rem;
+    padding-bottom: 1.25rem;
+    background-color: white;
+  }
+
+  
+
+.text-center2 {
   text-align: center;
   margin-top: 2rem;
   margin-bottom: 3rem;
   opacity: 50%;
+}
 }

@@ -3,7 +3,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, VideoCameraOutlined
 import { Layout, Menu } from 'antd';
 import AddModeratorRoundedIcon from '@mui/icons-material/AddModeratorRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-import { Badge } from 'antd';
+import {Dropdown, Badge } from 'antd';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
@@ -33,7 +33,11 @@ import useAxios from "../../utils/useAxios";
 import { useAuthStore } from '../../store/auth';
 import { cartEventEmitter } from '../../pages/DetalleProducto/DetalleProducto';
 import NotificationsDropdown from './NotificationsDropdown';
-
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> </link>
+</head>
 
 const { Header, Sider } = Layout;
 
@@ -58,8 +62,11 @@ const LayoutComponents = ({ onSearch, isProfessor }) => {
   const userData = user();
   const notificationsRef = useRef();
   const handleToggleNotifications = () => {
+    markNotificationsAsRead();
     setIsNotificationsOpen(!isNotificationsOpen);
   };
+
+
 
   useEffect(() => {
     getElement();
@@ -68,7 +75,42 @@ const LayoutComponents = ({ onSearch, isProfessor }) => {
     getNotificaciones();
   }, []);
 
+
+  useEffect(() => {
+    // ... (otras suscripciones y efectos)
+    
+    // Si el dropdown de notificaciones está abierto, marca las notificaciones como leídas
+    if (isNotificationsOpen) {
+      markNotificationsAsRead();
+    }
+  }, [isNotificationsOpen]);
  
+
+
+
+ 
+
+ const markNotificationsAsRead = async () => {
+    try {
+      // Realiza la solicitud al endpoint para marcar notificaciones como leídas
+      const response = await api.put(`/notificacionesLeidas/${userData.user_id}/`);
+      const data = await response.data;
+      console.log('Notificaciones marcadas como leídas:', data);
+
+      // Actualiza la cantidad de notificaciones leídas
+      getCantNotificaciones();
+    } catch (error) {
+      console.error('Error al marcar notificaciones como leídas:', error);
+    }
+  };
+  const handleNotificationsVisibleChange = (visible) => {
+    // La función handleNotificationsVisibleChange se ejecutará cuando el estado del dropdown cambie (abierto/cerrado)
+    if (!visible) {
+      // Si el dropdown está cerrado, ejecuta la función para marcar notificaciones como leídas
+      markNotificationsAsRead();
+    }
+  }
+
   useEffect(() => {
     // Suscríbete al evento del carrito para actualizar la cantidad del carrito
     const updateCart = () => {
@@ -114,9 +156,10 @@ async function downloadApp() {
   // Hide the install button.
   setIsReadyForInstall(false);
 }
-const isSmallScreen = useMediaQuery('(max-width: 1100px)');
-
-
+const isSmallScreen = useMediaQuery('(max-width: 950px)');
+const isSmallScreen4 = useMediaQuery('(max-width: 950px)');
+const isSmallScreen3 = useMediaQuery('(max-width: 950px)');
+const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
 
   const getElement = async () => {
     const proxyUrl = 'http://127.0.0.1:8000';
@@ -142,6 +185,15 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
    // console.log(searchQuery)  
   };
 
+  const menu = (
+    <Menu>
+      {/* Aquí renderizas el contenido del modal */}
+      <Menu.Item key="0">
+        <NotificationsDropdown notifications={notificaciones}    onClose={() => setIsNotificationsOpen(false)} />
+      </Menu.Item>
+    </Menu>
+  );
+   
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);
   };
@@ -202,6 +254,11 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
           <Menu.Item key="1" icon={<StoreRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/tienda' }}>
             Tienda
           </Menu.Item>
+          {isSmallScreen3 && (
+                <Menu.Item key="8" icon={<ShoppingCartOutlinedIcon  style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/carrito' }}>
+                Carrito
+              </Menu.Item>
+              )}
           <Menu.Item key="2" icon={<CachedRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/Prestamos' }}>
             Préstamo
           </Menu.Item>
@@ -221,82 +278,97 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
               Admin
             </Menu.Item>
                )}
-          <Menu.Divider />
-     
-          
-          <Menu.Item key="7" icon={<DownloadRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
-            Descargar App
-          </Menu.Item>
-          <Menu.Item key="6" icon={<LogoutRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/logout' }}>
-            Cerrar sesión
-          </Menu.Item>
+                
+              {isSmallScreen4 && (
+                <Menu.Item key="6" icon={<SettingsIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/detalleCuenta' }}>
+                Cuenta
+              </Menu.Item>
+              )}
+             
+           
+          <div className='last-elements-sidebar'>
+            <Menu.Divider className='divisorsaso'/>   
+            <Menu.Item key="7" icon={<DownloadRoundedIcon style={{ fontSize: '20px' }} />} onClick={downloadApp}>
+              Descargar App
+            </Menu.Item>
+            <Menu.Item key="6" icon={<LogoutRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = '/logout' }}>
+              Cerrar sesión
+            </Menu.Item>
+          </div>
         </Menu>
         )}
       </Sider>
 
       {/* NAVBAR */}
-              
-      <Header className='navbar'>
-          <Container fluid>
+      <Header >    
+        <Row>
+          <div className='navbar'>
+            <div className='botonesnav1'>
+              <Row> 
+                <Col>
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    className='button'
+                    onClick={handleToggleSidebar}
+                  >
+                    <MenuRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+                  </Button>
+                </Col>
+
+                {!isSmallScreen2 && (
+                  <Col>
+                    <a href="/">
+                      <img src={itsv} alt="itsv" className='logo-img' />
+                    </a>   
+                  </Col>
+                )}  
+              </Row>
+            </div>
+            <Col>
+              <form onSubmit={handleSearch}>                
+                <Autocomplete
+                  className="SearchVisit"      
+                  freeSolo
+                  options={myOptions}
+                  getOptionLabel={(option) => option}
+                  value={selectedOption}
+                  onChange={(event, newValue) => setSelectedOption(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      fullWidth
+                      className="SearchVisit"
+                      {...params}
+                      variant="outlined"
+                      name='searchBar'
+                      label="Buscar productos"
+                      InputLabelProps={{
+                        style: { color: 'rgba(235, 235, 235, 0.5)'}  
+                      }}
+                      InputProps={{
+                        style: { color: 'whitesmoke'}
+                      }}
+                    />
+                  )}
+                />
+              </form>
+            </Col>
+         
+          <div className='botonesnav'>
             <Row>
             <Col>
-              <Button
-                variant="primary"
-                type="submit"
-                className='button'
-                onClick={handleToggleSidebar}
-              >
-                <MenuRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-              </Button>
-            </Col>
-
-           
-          
-              {/* Image */}
-              <Col style={{ marginLeft:'1.5rem' }}>  
-              {!isSmallScreen && (
-              
-                <a href="/">
-                  <img src={itsv} alt="itsv" className='logo-img' />
-                </a>   
-              )}           
+                { (
+               <Tooltip title="Buscar" arrow placement="bottom">
+                         <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
+                           <SearchRoundedIcon />
+                         </Button>
+                       </Tooltip>
+                
+              )}
               </Col>
-              
-              {/* Searchbar */}
-              <Col >            
-              <form onSubmit={handleSearch} className={`div-form ${isSmallScreen ? 'search-small' : 'search-large'}`}>                
-                  <Autocomplete
-                      className={`search-input`}
-                    freeSolo
-                    options={myOptions}
-                    getOptionLabel={(option) => option}
-                    value={selectedOption}
-                    onChange={(event, newValue) => setSelectedOption(newValue)}
-                    renderInput={(params) => (
-                      <TextField
-                        className='search-input'
-                        {...params}
-                        variant="outlined"
-                        name='searchBar'
-                        label="Buscar productos"
-                        InputLabelProps={{
-                          style: { color: 'rgba(235, 235, 235, 0.5)'}  
-                        }}
-                      />
-
-                    )}
-                  />
-                  <Tooltip title="Buscar" arrow placement="bottom">
-                    <Button variant="primary" type="submit" className='button' style={{borderColor: '#2E5266', color: 'rgba(235, 235, 235, 0.5)' }}>
-                      <SearchRoundedIcon />
-                    </Button>
-                  </Tooltip>
-                </form> 
-              </Col>
-
-              {/* Buttons */}
-              <Col>
-                {!isSmallScreen && (
+            
+                  {!isSmallScreen3 && (
+                 <Col>  
                   <Tooltip title="Carrito" arrow placement="bottom">
                     <Button
                       variant="primary"
@@ -309,41 +381,52 @@ const isSmallScreen = useMediaQuery('(max-width: 1100px)');
                         <ShoppingCartOutlinedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
                       </Badge>
                     </Button>
-                  </Tooltip>
-                  
-                )}
-              </Col>
-
-              <Col style={{ marginLeft:'0'}}>
-              {!isSmallScreen && (
-                <Tooltip title="Notificaciones" arrow placement="bottom">
-                  <Button   ref={notificationsRef} variant="primary" type="submit" className='button' data-toggle="tooltip" data-placement="right" title="Notificaciones" onClick={handleToggleNotifications}>
-                    <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{backgroundColor:'#EE8F37'}}>
-                      <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
-                    </Badge>
-                  </Button>
-                </Tooltip>
+                  </Tooltip>            
+                </Col>
+                 )}
+          <Col>
+                { (
+          
+                   <Dropdown
+        overlay={menu}
+        trigger={['click']}
+        placement="bottomLeft"
+        onVisibleChange={handleNotificationsVisibleChange}
+      >
+        <Button ref={notificationsRef} variant="primary" className='button'>
+          <Badge count={parseInt(cantNotificaciones)} overflowCount={9} size='small' style={{ backgroundColor: '#EE8F37' }}>
+            <NotificationsRoundedIcon style={{ color: 'rgba(235, 235, 235, 0.5)' }} />
+          </Badge>
+        </Button>
+      </Dropdown>
+              
                 
               )}
               </Col>
-
-              <Col style={{ marginLeft:'0rem'}}>   
-              {!isSmallScreen && (
+              {!isSmallScreen4 && (
+          <Col>
+              
                 <Tooltip title="Configuración" arrow placement="bottom">
                   <Button variant="primary" type="submit" className='button'  data-toggle="tooltip" data-placement="right" title="Configuración" onClick={() => { window.location.href = '/detalleCuenta' }}>
                     <SettingsIcon  style={{ color: 'rgba(235, 235, 235, 0.5)' } } />
                   </Button>
                 </Tooltip>
-              )}
-              </Col>          
-            </Row>
-          </Container>
-          {isNotificationsOpen && (
+             
+          </Col>
+           )}
+             
+             </Row>
+
+         </div>
+
+          </div>
+        </Row>
+        {isNotificationsOpen && (
           <NotificationsDropdown referenceElement={notificationsRef.current} notifications={notificaciones} onClose={() => setIsNotificationsOpen(false)} />
         )}
-        </Header>
-      
-    </div>
+      </Header>
+    </div>       
+
   );
 };
 

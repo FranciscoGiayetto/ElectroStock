@@ -12,6 +12,9 @@ router.register("elementsEcommerce", ProductosEcommerceAPIView, "elementsEcommer
 router.register(
     "ecommercePaginacion", ecommercePaginacionAPIView, "ecommercePaginacion"
 )
+router.register(
+    "ecommercePaginacion", ecommercePaginacionAPIView, "ecommercePaginacion"
+)
 router.register("category", CategoriaViewSet, "category")
 router.register("users", UsersViewSet, "users")
 router.register("course", CourseViewSet, "course")
@@ -21,7 +24,7 @@ router.register("box", BoxViewSet, "box")
 router.register("especialidad", SpecialityViewSet, "especialidad")
 router.register("token", TokenViewSet, "token")
 router.register("log", LogViewSet, "log")
-#router.register("notification", NotificationViewSet, "notification")
+# router.register("notification", NotificationViewSet, "notification")
 
 
 urlpatterns = [
@@ -35,8 +38,22 @@ urlpatterns = [
         categories_por_especialidad,
         name="categories_por_especialidad",
     ),
+    path(
+        "elementos_por_especialidad/<str:nombre_especialidad>/",
+        boxes_por_especialidad,
+        name="elementos_por_especialidad",
+    ),
+    path(
+        "categories_por_especialidad/<str:nombre_especialidad>/",
+        categories_por_especialidad,
+        name="categories_por_especialidad",
+    ),
     path("logPost/<int:user_id>/", CambioLog, name="logPost"),
-    path("notificacionesLeidas/<int:user_id>/", notificacionesLeidasViewSet, name="notificacionesLeidas"),
+    path(
+        "notificacionesLeidas/<int:user_id>/",
+        notificacionesLeidasViewSet,
+        name="notificacionesLeidas",
+    ),
     path("usersFiltro/<str:name>/", UsersFiltros, name="users"),
     path(
         "desaprobadoPost/<int:user_id>/<str:date_in>/",
@@ -47,6 +64,7 @@ urlpatterns = [
     path("devueltoPost/<int:user_id>/<str:date_in>/", CambioDevuelto, name="devuelto"),
     path("budgetlog/<int:budget_id>/", BudgetLogViewSet, name="budgetlog"),
     path("budgetlog/create/", BudgetLogCreateView.as_view(), name="create-budget-log"),
+    path("budgetlog/create/", BudgetLogCreateView.as_view(), name="create-budget-log"),
     path("budget/", BudgetViewSet, name="budgetList"),
     path("cantCarrito/<int:user_id>/", cantCarrito, name="cantCarrito"),
     path(
@@ -54,7 +72,17 @@ urlpatterns = [
         cantNotificaciones,
         name="cantNotificaciones",
     ),
+    path(
+        "cantNotificaciones/<int:user_id>/",
+        cantNotificaciones,
+        name="cantNotificaciones",
+    ),
     path("budget/<int:budget_id>/", BudgetViewSet, name="budgetDetail"),
+    path(
+        "budgetSpeciality/<str:speciality_name>/",
+        BudgetSpecialityViewSet,
+        name="budgetSpeciality",
+    ),
     path(
         "budgetSpeciality/<str:speciality_name>/",
         BudgetSpecialityViewSet,

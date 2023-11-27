@@ -30,9 +30,9 @@ const DiaDemandado = ({ subtitle }) => {
 
   return (
     <Card className='customCard' style={{marginTop:'12px'}}>
-      <Card.Body>
+      <Card.Body style={{paddingTop:'9px'}}>
         <div className="d-flex align-items-center">
-          <div className="mr-3">
+        <div className="mr-3" style={{ marginRight:'5px'}}>
             <PollOutlinedIcon sx={{ fontSize: 40 }} style={{ alignSelf: 'center' }} />
           </div>
           <div>

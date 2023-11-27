@@ -21,9 +21,9 @@ const TasaAprobacion = ({ endpoint }) => {
                     <span className='icono-tasa'><AddTaskIcon></AddTaskIcon></span>
                     {approvalRate !== null ? `${approvalRate}%` : 'Cargando...'}
                 </ListGroup.Item>
-                <ListGroup.Item as="li" active>
-                    Tasa aprobación
-                </ListGroup.Item>
+                <ListGroup.Item as="li" className="white-text" style={{ color: 'white !important' }}>
+    Tasa aprobación
+</ListGroup.Item>
             </ListGroup>
         </div>
     );

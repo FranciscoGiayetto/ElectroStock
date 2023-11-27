@@ -66,7 +66,7 @@ const getNotificationIcon = (type) => {
 };
     
   return (
-    <div className="notifications-dropdown"  style={{ top: position.top, left: position.left }}>
+    <div className="notifications-dropdown"  style={{ top: position.top}}>
       <List
       dataSource={notifications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))}
       renderItem={(item) => (
@@ -74,7 +74,7 @@ const getNotificationIcon = (type) => {
           <div className='notificacionardas'>
             <List.Item.Meta
               avatar={<Avatar icon={getNotificationIcon(item.type_of_notification)} />}
-              title={<a href="#">{item.message}</a>}
+              title={<a href="/Prestamos">{item.message}</a>}
               description={<div>{formatTimestamp(item.timestamp)}</div>}
             />
   </div>

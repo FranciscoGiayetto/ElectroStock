@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db.models.signals import post_save
 
+
 # Creo el grupo alumno
 if not Group.objects.filter(name="Alumno").exists():
     alumno_group = Group.objects.create(name="Alumno")
@@ -83,14 +84,6 @@ class CustomUser(AbstractUser):
             notification.user_revoker.add(*users_in_groups)
 
         return notification
-
-
-from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, Permission
-from django.contrib.auth import get_user_model
-from django.utils import timezone
-
-# ... otros imports ...
 
 
 class Notification(models.Model):
@@ -216,6 +209,7 @@ class Location(models.Model):
 
 
 class TokenSignup(models.Model):
+    name = models.CharField(max_length=30, verbose_name="Nombre")
     name = models.CharField(max_length=30, verbose_name="Nombre")
 
     def __str__(self):
@@ -448,7 +442,9 @@ class BudgetLog(models.Model):
         COMPRADO = "COMPRADO", "Comprado"
         PENDIENTE = "PENDIENTE", "Pendiente"
 
-    name = models.CharField(max_length=30, verbose_name="Nombre", null=True, blank=True)
+    name = models.CharField(
+        max_length=255, verbose_name="Nombre", null=True, blank=True
+    )
     status = models.CharField(
         max_length=30,
         choices=Status.choices,

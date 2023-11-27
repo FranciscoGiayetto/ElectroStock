@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from ElectroStockApp import models
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Sum
 
 
 # Serializer para heredar de categorias
@@ -14,9 +15,6 @@ class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TokenSignup
         fields = ["id", "name"]
-
-
-
 
 
 # Para ver y editar categorias
@@ -115,9 +113,6 @@ class BoxSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-from django.core.exceptions import ObjectDoesNotExist
-
-
 class BoxSerializerPrueba(serializers.ModelSerializer):
     current_stock = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
@@ -185,7 +180,6 @@ class LogSerializer(serializers.ModelSerializer):
     box = BoxSerializerPrueba()
     borrower = UsersSerializer()
     lender = UsersSerializer()
-    borrower = UsersSerializer()
 
     class Meta:
         model = models.Log
@@ -264,11 +258,11 @@ class BorrowerStatisticsSerializer(serializers.Serializer):
 
 
 # Serializer para la estadistica de los dias con mayor prestamos
-class DateStatisticsSerializer(serializers.Serializer):
-    dateIn = serializers.DateField()
+class DateStatisticsSerializer(serializers.ModelSerializer):
     total_datein_logs = serializers.IntegerField()
 
     class Meta:
+        model = models.Log  # Asigna el modelo correcto aquí
         fields = ("dateIn", "total_datein_logs")
 
 
@@ -302,20 +296,21 @@ class LenderVencidosStatisticsSerializer(serializers.Serializer):
 
 
 class BudgetSerializer(serializers.ModelSerializer):
-    speciality = serializers.SerializerMethodField()
+    speciality = SpecialitySerializer()
 
     class Meta:
         model = models.Budget
         fields = "__all__"
 
-    def get_speciality(self, obj):
-        if isinstance(obj.speciality, int):
-            # Si speciality es un entero, devuelve ese entero
-            return obj.speciality
-        else:
-            # Si speciality es un objeto Speciality, devuelve un diccionario
-            speciality_serializer = SpecialitySerializer(obj.speciality)
-            return speciality_serializer.data
+
+class BudgetSerializer2(serializers.ModelSerializer):
+    speciality = serializers.PrimaryKeyRelatedField(
+        queryset=models.Speciality.objects.all()
+    )
+
+    class Meta:
+        model = models.Budget
+        fields = "__all__"
 
 
 class BudgetLogSerializer(serializers.ModelSerializer):
@@ -344,9 +339,6 @@ class BoxMasLogsRotostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Box
         fields = ("box_nombre", "cantidad_logs_rotos")
-
-
-from django.db.models import Sum
 
 
 class ElementEcommerceSerializer2(serializers.ModelSerializer):
@@ -391,9 +383,41 @@ class ElementEcommerceSerializer2(serializers.ModelSerializer):
 
         return data
 
+
 class NotificationSerializer(serializers.ModelSerializer):
-    user_sender= UsersSerializer()
-    user_revoker=groups = serializers.StringRelatedField(many=True)
+    user_sender = UsersSerializer()
+    user_revoker = groups = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = models.Notification
         fields = "__all__"
+
+
+class OnlyPkLogSerializer(serializers.ModelSerializer):
+    box_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.Box.objects.all(), source="box", write_only=True
+    )
+    borrower_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.get_user_model().objects.all(),
+        source="borrower",
+        write_only=True,
+    )
+    lender_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.get_user_model().objects.all(), source="lender", write_only=True
+    )
+
+    class Meta:
+        model = models.Log
+        fields = (
+            "id",
+            "borrower",
+            "lender",
+            "status",
+            "quantity",
+            "observation",
+            "dateIn",
+            "dateOut",
+            "box_id",  # Agrega los campos write_only
+            "borrower_id",  # Agrega los campos write_only
+            "lender_id",  # Agrega los campos write_only
+        )

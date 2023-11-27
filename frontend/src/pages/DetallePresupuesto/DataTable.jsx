@@ -7,12 +7,14 @@ import {
 import useAxios from '../../utils/useAxios.js';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { HiPlusCircle, HiPencil,HiOutlineXMark,HiMiniCheck } from "react-icons/hi2";
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ModalListItems from './ModalListItems'; 
 import "./DataTable2.css";
-
+import ModalDeleteConfirm from '../Presupuestos/ModalDeleteConfirm.jsx';
 import * as XLSX from 'xlsx';
+import ModalCompletadoConfirm from './ModalCompletadoConfirm.jsx';
 
 
 
@@ -27,7 +29,40 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [customName, setCustomName] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
- 
+  const [isModalDeleteConfirmOpen, setIsModalDeleteConfirmOpen] = useState(false);
+  const [isModalCompletadoConfirmOpen, setIsModalCompletadoConfirmOpen] = useState(false);
+  const navigate = useNavigate();
+
+
+
+  const closeModalDeleteConfirm = () => {
+    setIsModalDeleteConfirmOpen(false)
+  }
+
+  const changeModalCompletadoConfirm = () => {
+    setIsModalCompletadoConfirmOpen(!isModalCompletadoConfirmOpen)
+  }
+
+
+
+  const handleDeleteConfirm = async () => {
+    try {
+     // Inicia el Spinner
+
+      const response = await api.delete(`/budget/${presupuesto.budget_id}`);
+      let data = await response.data;
+      console.log(data)
+      navigate("/presupuesto")
+    } catch (error) {
+      console.error(error);
+   
+  };
+
+
+
+    setIsModalCompletadoConfirmOpen(false)
+  }
+
   const nameInputRef = useRef(null);
   useEffect(() => {
     try {
@@ -74,12 +109,14 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
 
 
   const getClassByEstado = (estado) => {
-    if (estado === "COMPRADO") {
-      return "table-success"; // Clase para colorear en verde
-    } else if (estado === "PENDIENTE") {
-      return "table-warning"; // Clase para colorear en naranja
+    if (budgetStatus === 'COMPLETADO') {
+      return ''; // Sin color si el presupuesto está completado
+    } else if (estado === 'COMPRADO') {
+      return 'table-success'; // Clase para colorear en verde
+    } else if (estado === 'PENDIENTE') {
+      return 'table-warning'; // Clase para colorear en naranja
     }
-    return ""; // Sin color si no es "COMPRADO" ni "PENDIENTE"
+    return ''; // Sin color si no es "COMPRADO" ni "PENDIENTE"
   };
   
 
@@ -155,15 +192,25 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
 
   const handleBudgetStatusChange = async () => {
     try {
-      const nuevoEstado = budgetStatus === 'PROGRESO' ? 'COMPLETADO' : 'PROGRESO';
-      setBudgetStatus(nuevoEstado);
-      await api.put(`/budget/${id}/`, { status: nuevoEstado });
+     
+      await api.put(`/budget/${id}/`);
 
+
+      const nuevoEstado =  'COMPLETADO' ;
+      const updatedBudgetLogs = budgetLogs.map((item) => ({
+        ...item,
+        status: nuevoEstado,
+      }));
+
+      setBudgetLogs(updatedBudgetLogs);
+      setBudgetStatus(nuevoEstado);
+
+      
       if (nuevoEstado === 'COMPLETADO') {
         // Cuando se completa el presupuesto, desactiva la edición de todos los elementos
         // y cambia su estado a "COMPRADO"
         setEditingRows({});
-       
+        setIsModalCompletadoConfirmOpen(false)
       }
     } catch (error) {
       console.error(error);
@@ -359,9 +406,6 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   };
   
   
-  
-  
-  
   return (
     <div>
       <MDBCard
@@ -374,11 +418,11 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
       >
         <MDBCardHeader className="text-white sub-blue-its">
         <div style={{ display: 'flex', alignItems: 'center' }}>
-    <div style={{ margin: '0 10px 0 0' }}>
+    <div style={{ margin: '0 10px 0 0' }} className='label-responsive'>
       Nombre del Presupuesto:
     </div>
     {isEditingBudgetName ? (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }} >
         <input
           className="form-control"
           ref={nameInputRef}
@@ -404,7 +448,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
     ) : (
       <div
         style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginLeft: '6px' }}
-        onDoubleClick={activateBudgetNameEditing}
+        onDoubleClick={activateBudgetNameEditing} className='nombre-responsive'
       >
         {budgetName}
         <HiPencil
@@ -412,7 +456,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           style={{ cursor: 'pointer', marginLeft: '1rem' }}
         />
         
-          <DeleteRoundedIcon style={{marginLeft:'15px'}}/>
+          <DeleteRoundedIcon onClick={() => setIsModalDeleteConfirmOpen(true)} style={{marginLeft:'1rem'}}/>
         
       </div>
     )}
@@ -420,22 +464,24 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
   data-toggle="tooltip"
   data-placement="right"
   title="Exportar"
-  style={{ marginLeft: '325px', cursor: 'pointer' }}
+  style={{ marginLeft: '15px', cursor: 'pointer' }}
   onClick={exportToExcel}
 />
 
             
-            
+            <div>
             <button
-              onClick={handleBudgetStatusChange}
-              className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'}`}
+              onClick={changeModalCompletadoConfirm}
+              className={`btn btn-sm ${budgetStatus === 'PROGRESO' ? 'btn-warning' : 'btn-success'} btn-resp`}
               style={{
-                marginLeft: 'auto'
+                marginLeft: '15px'
               }}
               data-toggle="tooltip" data-placement="top" title="Estado del presupuesto"
+              disabled={budgetStatus === 'COMPLETADO'}
             >
               {budgetStatus === 'PROGRESO' ? 'EN PROGRESO' : 'COMPLETADO'}
             </button>
+            </div>
           </div>
         </MDBCardHeader>
         <div className="text-center mb-3" style={{ paddingTop: '1rem' }}>
@@ -448,7 +494,7 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           />
           {!isAddingNewItem && budgetStatus !== 'COMPLETADO' && (
             <div className="hover-scale" onClick={handleNewItem}>
-              <HiPlusCircle style={{ fontSize: "2rem" }} />
+              <HiPlusCircle style={{ fontSize: "2rem", color:'#018195' }} />
             </div>
           )}
         </div>
@@ -468,13 +514,12 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           <tbody>
             {filteredPresupuesto.map((item, index) => (
               <tr key={item.id} className={getClassByEstado(item.status)}>
-                <td>{index + 1}</td>
-                <td>{renderNameField(item)}</td>
-                <td>
+                <td className='text-center'>{index + 1}</td>
+                <td className='text-center'>{renderNameField(item)}</td>
+                <td className='text-center'>
                   {editingRows[item.id] ? (
                     <input
                       type="number"
-                      style={{ maxWidth: "100px" }}
                       className="form-control"
                       value={editedValues[item.id]?.price || item.price}
                       onChange={(e) =>
@@ -486,12 +531,11 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     item.price
                   )}
                 </td>
-                <td>
+                <td className='text-center'>
                   {editingRows[item.id] ? (
                     <input
                       type="number"
                       className="form-control"
-                      style={{ maxWidth: "100px" }}
                       value={editedValues[item.id]?.quantity || item.quantity}
                       onChange={(e) =>
                         handleItemInputChange(item.id, "quantity", e.target.value)
@@ -502,35 +546,39 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     item.quantity
                   )}
                 </td>
-                <td className="d-none d-md-table-cell">{(item.quantity * parseFloat(item.price)).toFixed(2)}</td>
+                <td className="d-none d-md-table-cell text-center">{(item.quantity * parseFloat(item.price)).toFixed(2)}</td>
                 {budgetStatus !== 'COMPLETADO' && (
-                  <td>
+                  <td className='text-center'>
                     {editingRows[item.id] ? (
                       <button
                         onClick={() => handleItemSave(item.id)}
-                        className="btn btn-success btn-sm"
+                        className="btn btn-success btn-sm iconardos"
+                        style={{backgroundColor:'#3BB273', border:'none', color:'whitesmoke'}}
                       >
                         <HiMiniCheck></HiMiniCheck>
                       </button>
                     ) : (
                       <button
                         onClick={() => handleItemEdit(item.id)}
-                        className="btn btn-primary btn-sm sub-blue-its"
+                        className="btn btn-primary btn-sm sub-blue-its iconardos"
+                        style={{backgroundColor:'#018195', border:'none', color:'whitesmoke'}}
                       >
-                        <HiPencil></HiPencil>
+                        <HiPencil/>
                       </button>
                     )}
                     <button
                       onClick={() => handleItemDelete(item.id)}
                       className="btn btn-danger btn-sm ml-2"
                       disabled={budgetStatus === 'COMPLETADO'}
-                    >
+                      style={{marginLeft:'0.5rem', backgroundColor:'#FF5151', border:'none', color:'whitesmoke'}}
+                    > 
                       <HiOutlineXMark></HiOutlineXMark>
                     </button>
                     <button
                       onClick={() => handleItemCompra(item.id, item.status)}
                       className={`btn btn-sm ${item.status === 'COMPRADO' ? 'btn-success' : 'btn-warning'}`}
                       disabled={budgetStatus === 'COMPLETADO'}
+                      style={{marginLeft:'0.5rem'}}
                     >
                       {item.status === 'COMPRADO' ? 'COMPRADO' : 'PENDIENTE'}
                     </button>
@@ -540,12 +588,12 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
             ))}
             {isAddingNewItem && (
               <tr className="table-info">
-                <td>{budgetLogs.length + 1}</td>
-                <td style={{ display: "flex"}}>
+                <td className='text-center'>{budgetLogs.length + 1}</td>
+                <td className='text-center'>
                   <input
                     type="text"
                     className={`form-control ${isAddingNewItem && customName ? '' : 'disabled-input'}`}
-                    style={{ maxWidth: "200px", paddingRight: "1rem" }}
+
                     value={customName ? (editedValues['new']?.name || "") : selectedItem?.name}
                     onChange={(e) =>
                       handleItemInputChange('new', "name", e.target.value)
@@ -553,13 +601,12 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     disabled={!customName || budgetStatus === 'COMPLETADO'}
                   />
                   <button onClick={() => setIsModalOpen(true)} className="btn btn-sm">
-                    <HiPlusCircle style={{ fontSize: "1rem" }} />
+                    <AddCircleRoundedIcon style={{ fontSize: "1rem", color:'#018195' }} />
                   </button>
                 </td>
-                <td>
+                <td className='text-center'>
                   <input
                     type="number"
-                    style={{ maxWidth: "100px" }}
                     className="form-control"
                     value={editedValues['new']?.price || ""}
                     onChange={(e) =>
@@ -568,10 +615,9 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     disabled={budgetStatus === 'COMPLETADO'}
                   />
                 </td>
-                <td>
+                <td className='text-center'>
                   <input
                     type="number"
-                    style={{ maxWidth: "100px" }}
                     className="form-control"
                     value={editedValues['new']?.quantity || ""}
                     onChange={(e) =>
@@ -586,14 +632,16 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
                     <button
                       onClick={handleCancelNewItem}
                       className="btn btn-danger btn-sm"
+                      style={{backgroundColor:'#FF5151', border:'none'}}
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={handleConfirmNewItem}
                       className="btn btn-success btn-sm"
+                      style={{backgroundColor:'#3BB273', border:'none', marginLeft:'0.5rem'}}
                     >
-                      Confirmar nuevo log
+                      Confirmar
                     </button>
                   </td>
                 )}
@@ -602,10 +650,10 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           </tbody>
           <tfoot className="sticky-tfoot">
             <tr>
-              <td colSpan="3"></td>
+              <td colSpan="3" className='text-center'></td>
               <th>Total:</th>
-              <td>{calcularPrecioTotal()}</td>
-              <td></td>
+              <td className='text-center'>{calcularPrecioTotal()}</td>
+              <td className='text-center'></td>
             </tr>
           </tfoot>
         </Table>
@@ -618,7 +666,22 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
           onClose={handleModalClose}
         />
       )}
+      {isModalDeleteConfirmOpen && (
+        <ModalDeleteConfirm
+        onHandleDeleteConfirm={handleDeleteConfirm} // Sin función anónima
+        onClose={closeModalDeleteConfirm}
+        />
+      )}
+      {isModalCompletadoConfirmOpen && (
+        <ModalCompletadoConfirm
+        onHandleCompletadoConfirm={handleBudgetStatusChange} // Sin función anónima
+        onClose={changeModalCompletadoConfirm}
+        />
+      )}
     </div>
+  
+
+
   );
 };
 
