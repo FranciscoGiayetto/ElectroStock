@@ -16,7 +16,8 @@ import ModalDeleteConfirm from '../Presupuestos/ModalDeleteConfirm.jsx';
 import * as XLSX from 'xlsx';
 import ModalCompletadoConfirm from './ModalCompletadoConfirm.jsx';
 import { toast } from 'react-toastify';
-
+import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 
 
@@ -598,20 +599,27 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
               <tr className="table-info">
                 <td className='text-center'>{budgetLogs.length + 1}</td>
                 <td className='text-center'>
-                  <input
-                    type="text"
-                    className={`form-control ${isAddingNewItem && customName ? '' : 'disabled-input'}`}
-
-                    value={customName ? (editedValues['new']?.name || "") : selectedItem?.name}
-                    onChange={(e) =>
-                      handleItemInputChange('new', "name", e.target.value)
-                    }
-                    disabled={!customName || budgetStatus === 'COMPLETADO'}
-                  />
-                  <button onClick={() => setIsModalOpen(true)} className="btn btn-sm">
-                    <AddCircleRoundedIcon style={{ fontSize: "1rem", color:'#018195' }} />
-                  </button>
-                </td>
+                {isAddingNewItem && (
+                  
+                    <div>
+                      <input
+                        type="text"
+                        className={`form-control ${isAddingNewItem && customName ? '' : 'disabled-input'}`}
+                        value={customName ? (editedValues['new']?.name || "") : selectedItem?.name}
+                        onChange={(e) => handleItemInputChange('new', "name", e.target.value)}
+                        disabled={!customName || budgetStatus === 'COMPLETADO'}
+                      />
+                      <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip id={`tooltip-agregar-producto`}>Agrega un producto existente.</Tooltip>}>
+                  
+                      <button onClick={() => setIsModalOpen(true)} className="btn btn-sm">
+                        <AddCircleRoundedIcon style={{ fontSize: "1rem", color: '#018195' }} />
+                      </button></OverlayTrigger>
+                    </div>
+                  
+                )}
+              </td>
                 <td className='text-center'>
                   <input
                     type="number"

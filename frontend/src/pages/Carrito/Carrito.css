@@ -21,26 +21,24 @@
 }
 
 .date-style {
-  margin-right: 13rem;
+  margin-right: 0.5rem; /* Adjusted margin */
   border-color: #58A4B0;
   border-radius: 0.3rem;
   border-width: 0.1rem;
   padding: 0.3rem;
   cursor: text;
 }
-.siguiente-container {
-  margin-top: 1.8rem; /* Adjust the margin as needed */
-}
 
 .siguiente-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 1.8rem; /* Adjusted margin */
 }
 
 @media (max-width: 767px) {
   .date-style {
-    margin-right: 3rem;
+    margin-right: 0.5rem; /* Adjusted margin */
   }
   .btn-style {
     width: 7rem;
@@ -55,14 +53,13 @@
     background-color: white;
   }
   .siguiente-container {
-    margin-top: 1.8rem; /* Adjust the margin as needed */
+    margin-top: 1.8rem; /* Adjusted margin */
   }
-
 }
 
 @media (max-width: 575px) {
   .date-style {
-    margin-right: 1rem;
+    margin-right: 0.5rem; /* Adjusted margin */
   }
   .container-bg {
     max-width: 100%;
@@ -74,12 +71,10 @@
     background-color: white;
   }
 
-  
-
-.text-center2 {
-  text-align: center;
-  margin-top: 2rem;
-  margin-bottom: 3rem;
-  opacity: 50%;
-}
+  .text-center2 {
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+    opacity: 50%;
+  }
 }
