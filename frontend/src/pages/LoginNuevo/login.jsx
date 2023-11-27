@@ -74,7 +74,7 @@ const Login = () => {
                     name="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    type="text" placeholder="Nombre de usuario" className="input-style"/>
+                    type="text" placeholder="Nombre de usuario" className="input-styleado"/>
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -87,7 +87,7 @@ const Login = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Contraseña"
-                            className="input-style"
+                            className="input-styleado"
                         />
                     </div>
                   </Form.Group>
