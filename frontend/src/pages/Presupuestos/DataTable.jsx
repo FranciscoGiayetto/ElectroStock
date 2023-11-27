@@ -16,6 +16,8 @@ import ModalDeleteConfirm from './ModalDeleteConfirm';
 import './DataTable.css';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
+import { toast } from 'react-toastify';
+
 
 const DataTable = ({ presupuestos , specialties,setShouldRefresh}) => {
   let api = useAxios();
@@ -72,9 +74,10 @@ const DataTable = ({ presupuestos , specialties,setShouldRefresh}) => {
       let data = await response.data;
       console.log(data)
       setShouldRefresh(true);
+      toast.success('Presupuesto eliminado.', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
     } catch (error) {
       console.error(error);
-   
+      toast.error('Ha ocurrido un error...', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
   };
 
 
@@ -112,10 +115,11 @@ const DataTable = ({ presupuestos , specialties,setShouldRefresh}) => {
 
       // Realiza una acción de redirección a '/tienda' o ajusta según sea necesario
       navigate(`${newBudgetId}`);
+      toast.success('Presupuesto creado!', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
     } catch (error) {
       // En caso de error, muestra el mensaje de error en la consola
       console.error(error);
-
+      toast.error('Ha ocurrido un error...', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
       // Puedes manejar el error y mostrar un mensaje de error al usuario si es necesario
     }
   };

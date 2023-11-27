@@ -15,6 +15,8 @@ import "./DataTable2.css";
 import ModalDeleteConfirm from '../Presupuestos/ModalDeleteConfirm.jsx';
 import * as XLSX from 'xlsx';
 import ModalCompletadoConfirm from './ModalCompletadoConfirm.jsx';
+import { toast } from 'react-toastify';
+
 
 
 
@@ -294,8 +296,10 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
         setBudgetLogs([...budgetLogs, createdItem]);
         setIsAddingNewItem(false);
         setEditedValues({ ...editedValues, 'new': {} });
+        toast.success('Item agregado!', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
       } catch (error) {
         console.error(error);
+        toast.error('Ha ocurrido un error...', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
       }
     } else if (selectedItem) {
       // Caso de elemento seleccionado
@@ -325,8 +329,10 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
         setIsAddingNewItem(false);
         setCustomName(true);
         setEditedValues({ ...editedValues, 'new': {} });
+        toast.success('Item agregado!', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
       } catch (error) {
         console.error(error);
+        toast.error('Ha ocurrido un error...', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
       }
     }
     
@@ -339,8 +345,10 @@ const DataTable = ({ presupuesto,elements, onUpdate }) => {
     try {
       await api.delete(`/budgetlog/${log_id}`);
       onUpdate();
+      toast.success('Item eliminado.', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
     } catch (error) {
       console.error(error);
+      toast.error('Ha ocurrido un error...', { style:{marginTop:'3.5rem', marginBottom:'-2.5rem'} });
     }
   };
 
