@@ -2536,7 +2536,7 @@ def PrestamosSinPaginacion(request, user_id):
 
 
 @api_view(["GET", "POST"])
-def BuscadorPrestamosAPIView(request, user_id,search):
+def BuscadorPrestamosAPIView(request,search):
     pagination_class = CustomPagination()
 
     if request.method == "GET":
@@ -2549,7 +2549,7 @@ def BuscadorPrestamosAPIView(request, user_id,search):
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
-        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+        queryset = models.Log.objects.filter(status__in=valid_statuses)
 
         # Filtrar por término de búsqueda si se proporciona
         if search:
