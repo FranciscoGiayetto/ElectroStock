@@ -96,12 +96,6 @@ class ElementsViewSet(viewsets.ModelViewSet):
     serializer_class = ElementSerializer
 
 
-# Función para encriptar
-def encrypt(data):
-    key = Fernet.generate_key()
-    cipher_suite = Fernet(key)
-    encrypted_data = cipher_suite.encrypt(data.encode())
-    return encrypted_data
 
 
 class TokenViewSet(viewsets.ModelViewSet):
@@ -109,14 +103,7 @@ class TokenViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = TokenSerializer
 
-    def list(self, request):
-        queryset = self.get_queryset()
-        serializer = TokenSerializer(queryset, many=True)
-        serialized_data = json.dumps(
-            serializer.data
-        )  # Convertir los datos a una cadena de texto
-        encrypted_data = encrypt(serialized_data)
-        return Response(encrypted_data)
+
 
 
 class ProductosEcommerceAPIView(viewsets.ModelViewSet):
