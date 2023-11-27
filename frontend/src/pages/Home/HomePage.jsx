@@ -21,6 +21,7 @@ function HomePage() {
   const token = getCurrentToken();
   const userData = user();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [userDetails, setUserDetails] = useState({});
 
   useEffect(() => {
     const handleResize = () => {
@@ -35,7 +36,19 @@ function HomePage() {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/users/${userData.user_id}/`);
+        const userDataApi = await response.json();
+        setUserDetails(userDataApi);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
 
+    fetchUserData();
+  }, [userData.user_id]);
 
   // Rest of the code remains the same for larger screens
   return (
@@ -43,7 +56,7 @@ function HomePage() {
       <Row className='align-items-center justify-content-center'>
         <Col md={12}>
           <div className='margenasos'>
-            <h1>Bienvenido {userData.username}!</h1>
+            <h1>Bienvenido {userDetails.first_name} {userDetails.last_name}!</h1>
             <div className="square border border-1 border-dark rounded-pill text-center" style={{ width: "150px" }}>
               <ClockPage />
             </div>
