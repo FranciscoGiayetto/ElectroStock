@@ -18,7 +18,7 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { TextField } from "@mui/material";  
 import Button from 'react-bootstrap/Button';
 import InputAdornment from '@mui/material/InputAdornment';
-
+import Pagination from '../../components/pagination/Paginacion';
 
 
 
@@ -38,6 +38,14 @@ const Prestamos = ({ isProfessor }) => {
   const user_id = userData.user_id;
   const [showWordListPrestamos, setShowWordListPrestamos] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(1);
+  const pageSize = 10; // Number of cards per page
+
+  useEffect(() => {
+    getPrestamos();
+  }, [page]);
+
 
   const handleApproval = async (dateIn, packageUserId) => {
     try {
@@ -164,21 +172,23 @@ const Prestamos = ({ isProfessor }) => {
       let endpoint;
       console.log(isProfessor)
     if (isProfessor) {
-      endpoint = '/allPrestamos';
+      endpoint = `/allPrestamos/?page=${page}`;
       console.log("isProfessor") // Endpoint for professors
     } else {
       console.log("isnotProfessor") // Endpoint for professors
 
-      endpoint = `/prestamosHistorial/${user_id}`; // Endpoint for regular users
+      endpoint = `/prestamosHistorial/${user_id}/?page=${page}`; // Endpoint for regular users
     }
       const response = await api.get(endpoint);
+      
       console.log("DATAAA",response.data); // Verify the response from the API
       if (response.data === "No se encontraron logs para este usuario.") {
         // Manejar el caso cuando no hay logs
         setData([]);
       } else {
         const data = response.data;
-        setData(data);
+        setCount(data.count);
+        setData(data.results);
       }
   
       setIsLoading(false);
@@ -263,12 +273,26 @@ const Prestamos = ({ isProfessor }) => {
               ) : (
                 <p className='d-flex justify-content-center'>No hay préstamos disponibles.</p>
               )}
+              
             </div>
           </Row>
+        
 
-
-
+     
+                    <div className="d-flex justify-content-center mt-4">
+                      hola
+                      <Pagination
+                        totalRecords={count}
+                        pageLimit={pageSize}
+                        pageNeighbours={1}
+                        currentPage={page}
+                        onPageChanged={setPage}
+                      />
+                    </div>
+                    
+                   
           <Row>
+            
       {isModalOpen && (
         <ModalDetallePrestamo
         onHandleApproval={() => handleApproval(selectedPackage.dateIn , selectedPackage.id_user)}
