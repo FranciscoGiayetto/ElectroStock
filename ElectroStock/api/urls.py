@@ -81,6 +81,7 @@ urlpatterns = [
         name="filtroCategoria",
     ),
     path("filtroStatusPrestamos/<str:status>/<int:user_id>/", FiltroStatusPrestamo, name="FiltroPrestamosStatus"),
+    path("filtroStatusPrestamos/<str:status>/", FiltroStatusPrestamo, name="FiltroPrestamosStatusSinUserID"),
     path("filtroDatePrestamos/<int:user_id>/", FiltroDatePrestamo, name="FiltroPrestamosDate"),
     path("PrestamosAgrupadosSinPaginacion/<int:user_id>/", PrestamosSinPaginacion, name="FiltroPrestamosDate"),
     path("filtroComponentesPrestamos/<int:user_id>/", FiltroComponentesPrestamo, name="FiltroPrestamosComponentes"),

@@ -1826,7 +1826,7 @@ def obtener_imagenes_elementos(elementos):
 
 
 @api_view(["GET"])
-def FiltroStatusPrestamo(request, user_id,status):
+def FiltroStatusPrestamo(request,status, user_id=None):
     pagination_class = CustomPagination()
 
     if request.method == "GET":
@@ -1840,8 +1840,10 @@ def FiltroStatusPrestamo(request, user_id,status):
 
         if status not in valid_statuses:
             return Response(f"El estado '{status}' no es válido.", status=400)
-
-        queryset = models.Log.objects.filter(lender=user_id, status=status)
+        if user_id:
+            queryset = models.Log.objects.filter(lender=user_id, status=status)
+        else:
+            queryset = models.Log.objects.filter(status=status)
 
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
