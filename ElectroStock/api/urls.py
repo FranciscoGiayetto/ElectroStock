@@ -116,6 +116,7 @@ urlpatterns = [
     path("pendientes/<int:user_id>/", PrestamoPendientesAPIView, name="pendientes"),
     path("logCantidad/<int:log_id>/", update_log_quantity, name="logCantidad"),
     path("notificaciones/<int:user_id>/", NotificacionesAPIView, name="notificaciones"),
+    path("buscadorPrestamo/<int:user_id>/<str:search>/", BuscadorPrestamosAPIView, name="buscadorPrestamo"),
     path(
         "estadisticas/maspedido/",
         MostRequestedElementView.as_view(),
