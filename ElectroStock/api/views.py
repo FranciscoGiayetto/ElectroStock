@@ -148,10 +148,6 @@ def combinar_imagenes(
         img2 = Image.open(imagen2.lstrip("/")) if imagen2 else None
         img3 = Image.open(imagen3.lstrip("/")) if imagen3 else None
         img4 = Image.open(imagen4.lstrip("/")) if imagen4 else None
-        img1 = Image.open(imagen1.lstrip("/"))
-        img2 = Image.open(imagen2.lstrip("/")) if imagen2 else None
-        img3 = Image.open(imagen3.lstrip("/")) if imagen3 else None
-        img4 = Image.open(imagen4.lstrip("/")) if imagen4 else None
 
         # Obtener el tamaño de la imagen principal (img1)
         width, height = img1.size
