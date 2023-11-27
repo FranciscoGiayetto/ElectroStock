@@ -43,7 +43,8 @@ const Prestamos = ({ isProfessor }) => {
   const pageSize = 10; // Number of cards per page
 
   useEffect(() => {
-    getPrestamos();
+    if (isProfessor){
+    getPrestamos();}
   }, [page]);
 
 
@@ -186,9 +187,10 @@ const Prestamos = ({ isProfessor }) => {
         // Manejar el caso cuando no hay logs
         setData([]);
       } else {
-        const data = response.data;
+        const data = response.data.results;
         setCount(data.count);
-        setData(data.results);
+        console.log(data)
+        setData(data);
       }
   
       setIsLoading(false);
