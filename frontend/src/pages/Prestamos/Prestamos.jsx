@@ -34,7 +34,10 @@ const Prestamos = ({ isProfessor }) => {
   const api = useAxios();
   const [data, setData] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState(null); // State to store selected package
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [fetchEndpoint, setFetchEndpoint] = useState(""); // State to control modal visibility
+  const [searchTerm, setSearchTerm] = useState(""); // State to control modal visibility
+  const [finalSearchTerm, setFinalSearchTerm] = useState(""); // State to control modal visibility
   const user_id = userData.user_id;
   const [showWordListPrestamos, setShowWordListPrestamos] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,6 +50,11 @@ const Prestamos = ({ isProfessor }) => {
     getPrestamos();}
   }, [page]);
 
+
+  useEffect(() => {
+    if (isProfessor){
+    getPrestamos();}
+  }, [finalSearchTerm]);
 
   const handleApproval = async (dateIn, packageUserId) => {
     try {
@@ -63,6 +71,14 @@ const Prestamos = ({ isProfessor }) => {
       setIsLoading(false);
 
     }
+  };
+
+
+  const handleSearch = (searchTerm) => {
+    setFinalSearchTerm(searchTerm);
+    setPage(1); // Reinicia la página a 1 al realizar una nueva búsqueda
+    // Realiza la búsqueda llamando a getPrestamos
+    getPrestamos();
   };
 
   const HandleDevolution = async (dateIn, packageUserId) => {
@@ -167,21 +183,42 @@ const Prestamos = ({ isProfessor }) => {
     }
   }, [isProfessor]);
   
+  useEffect(() => {
+    if (isProfessor !== null) {
+      
+      getPrestamos();
+    }
+  }, []);
+  
 
   const getPrestamos = async () => {
     try {
       let endpoint;
       console.log(isProfessor)
-    if (isProfessor) {
+      
+    
+      
+      if (finalSearchTerm === "" || searchTerm === ""|| !finalSearchTerm){
+        if (isProfessor) {
+        console.log(finalSearchTerm)
       endpoint = `/allPrestamos/?page=${page}`;
+      setFetchEndpoint(endpoint)
       console.log("isProfessor") // Endpoint for professors
     } else {
       console.log("isnotProfessor") // Endpoint for professors
 
       endpoint = `/prestamosHistorial/${user_id}/?page=${page}`; // Endpoint for regular users
+      setFetchEndpoint(endpoint)
     }
-      const response = await api.get(endpoint);
+    }
+    else{
+      if (isProfessor) {
+      console.log( searchTerm)
+    endpoint = `/buscadorPrestamo/${searchTerm}/?page=${page}`;
       
+      }
+    }
+    const response = await api.get(endpoint);
       console.log("DATAAA",response.data); // Verify the response from the API
       if (response.data === "No se encontraron logs para este usuario.") {
         // Manejar el caso cuando no hay logs
@@ -233,24 +270,26 @@ const Prestamos = ({ isProfessor }) => {
 </Col>
 
 <Col>
-  <div className="d-flex align-items-center mt-4">
-    <TextField
-      fullWidth
-      id="SearchVisit"
-      variant="outlined"
-      label="Buscar"
-      className="SearchVisit"
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <Button variant="outline-secondary">
-              <SearchRoundedIcon />
-            </Button>
-          </InputAdornment>
-        ),
-      }}
-    />
-  </div>
+<div className="d-flex align-items-center mt-4">
+        <TextField
+          fullWidth
+          id="SearchVisit"
+          variant="outlined"
+          label="Buscar"
+          className="SearchVisit"
+          inputProps={{ value: searchTerm }}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Button variant="outline-secondary" onClick={handleSearch}>
+                  <SearchRoundedIcon />
+                </Button>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </div>
 </Col>
       
           </Row>
