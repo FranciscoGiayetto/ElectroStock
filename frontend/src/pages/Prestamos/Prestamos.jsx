@@ -39,10 +39,16 @@ const Prestamos = ({ isProfessor }) => {
   const [selectedStatus, setSelectedStatus] = useState("");
 
   useEffect(() => {
-    if (isProfessor) {
+    if (isProfessor !== null) {
       getPrestamos();
     }
   }, [page, finalSearchTerm, selectedStatus]);
+
+  useEffect(() => {
+    if (isProfessor !== null) {
+      getPrestamos();
+    }
+  }, [isProfessor]);
 
   const handleStatusFilter = async () => {
     try {
@@ -58,6 +64,7 @@ const Prestamos = ({ isProfessor }) => {
     }
   };
   const handleStatusChange = (status) => {
+    setSearchTerm("")
     setSelectedStatus(status);
     // Puedes realizar alguna acción adicional aquí si es necesario
   };
@@ -82,6 +89,7 @@ const Prestamos = ({ isProfessor }) => {
   };
 
   const handleSearch = () => {
+    setSelectedStatus("")
     setFinalSearchTerm(searchTerm);
     setPage(1);
     getPrestamos();
@@ -153,7 +161,7 @@ const Prestamos = ({ isProfessor }) => {
   const getPrestamos = async () => {
     try {
       let endpoint;
-      if (finalSearchTerm === "" || searchTerm === "" || !finalSearchTerm) {
+      if ((finalSearchTerm === "" || searchTerm === "" || !finalSearchTerm)&&(selectedStatus === "")) {
         if (isProfessor) {
           endpoint = `/allPrestamos/?page=${page}`;
         } else {
@@ -167,7 +175,12 @@ const Prestamos = ({ isProfessor }) => {
 
       // Aquí puedes agregar la lógica para ordenar según el estado seleccionado
       if (selectedStatus) {
-        endpoint = `/filtroStatusPrestamos/${selectedStatus}/?page=${page}`;
+        if (isProfessor) {
+          endpoint = `/filtroStatusPrestamos/${selectedStatus}/?page=${page}`;
+
+        }
+        else{
+        endpoint = `/filtroStatusPrestamos/${selectedStatus}/${userData.user_id}/?page=${page}`;}
       }
 
       const response = await api.get(endpoint);
@@ -206,13 +219,14 @@ const Prestamos = ({ isProfessor }) => {
       <Container>
         <Col>
           {/* Search Bar */}
+          
           <Row className="col-md-12">
             <Col md="auto">
               <div className="mr-12 mt-4">
                 <OrdenarPorPrestamos onOrderChange={handleOrderChange} onSelectedStatus={handleStatusChange} />
               </div>
             </Col>
-
+            {isProfessor ===true ?(
             <Col>
               <div className="d-flex align-items-center mt-4">
                 <TextField
@@ -226,7 +240,7 @@ const Prestamos = ({ isProfessor }) => {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Button variant="outline-secondary" onClick={() => getPrestamos()}>
+                        <Button variant="outline-secondary" onClick={() => handleSearch()}>
                           <SearchRoundedIcon />
                         </Button>
                       </InputAdornment>
@@ -235,7 +249,9 @@ const Prestamos = ({ isProfessor }) => {
                 />
               </div>
             </Col>
+            ):null}
           </Row>
+          
           {/* Prestamos Cards */}
           <Row className="mt-4">
             <div>

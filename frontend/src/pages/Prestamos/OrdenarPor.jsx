@@ -43,7 +43,9 @@ const OrdenarPorPrestamos = ({ onOrderChange, onSelectedStatus }) => {
             <Dropdown.Menu>
               <Dropdown.Item onClick={() => onSelectedStatus('AP')}>Aprobado</Dropdown.Item>
               <Dropdown.Item onClick={() => onSelectedStatus('PED')}>Pendiente</Dropdown.Item>
-              <Dropdown.Item onClick={() => onSelectedStatus('REC')}>Rechazado</Dropdown.Item>
+              <Dropdown.Item onClick={() => onSelectedStatus('VEN')}>Vencido</Dropdown.Item>
+              <Dropdown.Item onClick={() => onSelectedStatus('DEV')}>Devuelto</Dropdown.Item>
+              <Dropdown.Item onClick={() => onSelectedStatus('TAR')}>Devuelto Tardio</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Dropdown.Menu>
