@@ -104,6 +104,7 @@ function Pagination(props) {
 
   return (
     <nav>
+      
       {renderPagination()}
     </nav>
   );
