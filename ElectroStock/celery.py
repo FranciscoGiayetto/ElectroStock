@@ -19,9 +19,5 @@ app.autodiscover_tasks()
 
 @app.task(bind=True, ignore_result=True)
 def debug_task(self):
-<<<<<<< HEAD:ElectroStock/celery.py
-    print(f'Request: {self.request!r}')
-=======
     print(f'Request: {self.request!r}')
 
->>>>>>> Develop:ElectroStock/ElectroStock/celery.py
