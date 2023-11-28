@@ -12,4 +12,4 @@ RUN python manage.py migrate || echo "Migration failed"
 
 EXPOSE 8000
 
-CMD ["gunicorn","ElectroStock.wsgi:ElectroStock"]
+CMD ["gunicorn","ElectroStock.wsgi:app"]
