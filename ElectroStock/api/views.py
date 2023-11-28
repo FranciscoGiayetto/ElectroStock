@@ -138,46 +138,31 @@ import datetime
 BASE_DIR = settings.BASE_DIR
 carpeta_guardado = os.path.join(BASE_DIR, "img-prod/img-logs")
 
-
-def combinar_imagenes(
-    nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None
-):
+def combinar_imagenes(nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None):
     try:
         # Cargar las imágenes disponibles
         img1 = Image.open(imagen1.lstrip("/"))
         img2 = Image.open(imagen2.lstrip("/")) if imagen2 else None
         img3 = Image.open(imagen3.lstrip("/")) if imagen3 else None
         img4 = Image.open(imagen4.lstrip("/")) if imagen4 else None
-
+        print('imagen 1', img1,'imagen 2', img2,'imagen 3', img3,'imagen 4', img4)
         # Obtener el tamaño de la imagen principal (img1)
         width, height = img1.size
 
-        # Si solo hay una imagen, ajusta la anchura de la nueva imagen
-        if not img2 and not img3 and not img4:
-            nueva_imagen = Image.new("RGB", (width, height))
+        # Ajustar el tamaño de la nueva imagen según la cantidad de imágenes
+        if img2 and img3 and img4:
+            nueva_imagen = Image.new("RGB", (width * 2, height * 2))
+            nueva_imagen.paste(img1, (0, 0))
+            nueva_imagen.paste(img2.resize((width, height)), (width, 0))
+            nueva_imagen.paste(img3.resize((width, height)), (0, height))
+            nueva_imagen.paste(img4.resize((width, height)), (width, height))
+        elif img2:
+            nueva_imagen = Image.new("RGB", (width * 2, height))
+            nueva_imagen.paste(img1, (0, 0))
+            nueva_imagen.paste(img2.resize((width, height)), (width, 0))
+        else:
             nueva_imagen = Image.new("RGB", (width, height))
             nueva_imagen.paste(img1, (0, 0))
-
-            # Guardar la nueva imagen en bytes
-            ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
-            print("Ruta de guardado:", ruta_guardado)
-            nueva_imagen.save(ruta_guardado, format="JPEG")
-            nueva_imagen.save(ruta_guardado, format="JPEG")
-
-            # Obtener el camino relativo
-            ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
-            print("Guardado exitoso.")
-            return ruta_relativa
-
-        # Si hay más de una imagen, ajusta el tamaño de la nueva imagen
-        nueva_imagen = Image.new("RGB", (width * 2, height))
-        nueva_imagen.paste(img1, (0, 0))
-        if img2:
-            img2 = img2.resize((width, height))
-            nueva_imagen.paste(img2, (width, 0))
-        if img3 and img4:
-            nueva_imagen.paste(img3, (0, height))
-            nueva_imagen.paste(img4, (width, height))
 
         # Guardar la nueva imagen en bytes
         ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
@@ -193,7 +178,6 @@ def combinar_imagenes(
     except Exception as e:
         print("Error al combinar imágenes:", str(e))
         return None
-
 
 import os
 from django.conf import settings
@@ -232,6 +216,7 @@ def obtener_imagenes_elementos(elementos):
         box = elemento["box"]
         if "image" in box and box["image"]:
             imagenes.append(box["image"])
+            print(box["image"])
     return imagenes
 
 
@@ -467,12 +452,12 @@ def PrestamoVerAPIView(request, user_id):
                 nombre_archivo = (
                     f"imagen_combinada_{creation_date}_{datetime.datetime.now}.jpg"
                 )
-                print("ACA ", logs_data)
+                # print("ACA ", logs_data)
                 if imagen_primer_log:
                     imagenes_elementos = obtener_imagenes_elementos(logs_data)
                     imagenes_elementos_filtradas = [
                         imagen
-                        for imagen in imagenes_elementos[:3]
+                        for imagen in imagenes_elementos[:4]
                         if imagen is not None
                     ]
                     imagen_combinada = combinar_imagenes(
@@ -2038,108 +2023,8 @@ def create_notification_devuelto(user_id, dateIn, statusDevolucionTardia):
     return notificacion_profesores
 
 
-from PIL import Image
-from io import BytesIO
-from django.conf import settings
-import os
-import datetime
-
-BASE_DIR = settings.BASE_DIR
-carpeta_guardado = os.path.join(BASE_DIR, "img-prod/img-logs")
 
 
-def combinar_imagenes(
-    nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None
-):
-    try:
-        # Cargar las imágenes disponibles
-        img1 = Image.open(imagen1.lstrip("/"))
-        img2 = Image.open(imagen2.lstrip("/")) if imagen2 else None
-        img3 = Image.open(imagen3.lstrip("/")) if imagen3 else None
-        img4 = Image.open(imagen4.lstrip("/")) if imagen4 else None
-
-        # Obtener el tamaño de la imagen principal (img1)
-        width, height = img1.size
-
-        # Si solo hay una imagen, ajusta la anchura de la nueva imagen
-        if not img2 and not img3 and not img4:
-            nueva_imagen = Image.new("RGB", (width, height))
-            nueva_imagen.paste(img1, (0, 0))
-
-            # Guardar la nueva imagen en bytes
-            ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
-            print("Ruta de guardado:", ruta_guardado)
-            nueva_imagen.save(ruta_guardado, format="JPEG")
-
-            # Obtener el camino relativo
-            ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
-            print("Guardado exitoso.")
-            return ruta_relativa
-
-        # Si hay más de una imagen, procede como antes
-        nueva_imagen = Image.new("RGB", (width * 2, height * 2))
-        nueva_imagen.paste(img1, (0, 0))
-        if img2:
-            img2 = img2.resize((width, height))
-            nueva_imagen.paste(img2, (width, 0))
-        if img3 and img4:
-            nueva_imagen.paste(img3, (0, height))
-            nueva_imagen.paste(img4, (width, height))
-
-        # Guardar la nueva imagen en bytes
-        ruta_guardado = os.path.join(carpeta_guardado, nombre_archivo)
-        print("Ruta de guardado:", ruta_guardado)
-        nueva_imagen.save(ruta_guardado, format="JPEG")
-
-        # Obtener el camino relativo
-        ruta_relativa = os.path.relpath(ruta_guardado, BASE_DIR)
-        print("Guardado exitoso.")
-
-        return ruta_relativa
-
-    except Exception as e:
-        print("Error al combinar imágenes:", str(e))
-        return None
-
-
-import os
-from django.conf import settings
-from django.core.files.storage import default_storage
-
-
-def obtener_imagen_primer_log(primer_log_prueba):
-    try:
-        if (
-            primer_log_prueba.box
-            and primer_log_prueba.box.element
-            and primer_log_prueba.box.element.image
-            and primer_log_prueba.box.element.image.file
-        ):
-            imagen_path = default_storage.path(
-                primer_log_prueba.box.element.image.file.name
-            )
-            print("Ruta de la imagen primer log:", imagen_path)
-            if default_storage.exists(primer_log_prueba.box.element.image.file.name):
-                print("La imagen existe.")
-
-                # Obtener el camino relativo
-                ruta_relativa = os.path.relpath(imagen_path, BASE_DIR)
-
-                return ruta_relativa
-            else:
-                print("La imagen NO existe.")
-    except FileNotFoundError:
-        print("Archivo no encontrado:", primer_log_prueba.box.element.image.file.name)
-    return None
-
-
-def obtener_imagenes_elementos(elementos):
-    imagenes = []
-    for elemento in elementos:
-        box = elemento["box"]
-        if "image" in box and box["image"]:
-            imagenes.append(box["image"])
-    return imagenes
 
 
 @api_view(["GET"])
@@ -2201,7 +2086,7 @@ def FiltroStatusPrestamo(request, status, user_id=None):
                     imagenes_elementos = obtener_imagenes_elementos(logs_data)
                     imagenes_elementos_filtradas = [
                         imagen
-                        for imagen in imagenes_elementos[:3]
+                        for imagen in imagenes_elementos[:4]
                         if imagen is not None
                     ]
                     imagen_combinada = combinar_imagenes(
@@ -2300,7 +2185,7 @@ def FiltroDatePrestamo(request):
                     imagenes_elementos = obtener_imagenes_elementos(logs_data)
                     imagenes_elementos_filtradas = [
                         imagen
-                        for imagen in imagenes_elementos[:3]
+                        for imagen in imagenes_elementos[:4]
                         if imagen is not None
                     ]
                     imagen_combinada = combinar_imagenes(
@@ -2397,7 +2282,7 @@ def FiltroComponentesPrestamo(request):
                     imagenes_elementos = obtener_imagenes_elementos(logs_data)
                     imagenes_elementos_filtradas = [
                         imagen
-                        for imagen in imagenes_elementos[:3]
+                        for imagen in imagenes_elementos[:4]
                         if imagen is not None
                     ]
                     imagen_combinada = combinar_imagenes(
@@ -2494,7 +2379,7 @@ def PrestamosSinPaginacion(request):
                     imagenes_elementos = obtener_imagenes_elementos(logs_data)
                     imagenes_elementos_filtradas = [
                         imagen
-                        for imagen in imagenes_elementos[:3]
+                        for imagen in imagenes_elementos[:4]
                         if imagen is not None
                     ]
                     imagen_combinada = combinar_imagenes(
@@ -2597,7 +2482,7 @@ def BuscadorPrestamosAPIView(request, search):
                     imagenes_elementos = obtener_imagenes_elementos(logs_data)
                     imagenes_elementos_filtradas = [
                         imagen
-                        for imagen in imagenes_elementos[:3]
+                        for imagen in imagenes_elementos[:4]
                         if imagen is not None
                     ]
                     imagen_combinada = combinar_imagenes(
