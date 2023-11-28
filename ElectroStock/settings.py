@@ -92,6 +92,9 @@ DATABASES = {
     "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
 }
 
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': 'Backups'}
+
 #aca le digo a django que use de usuario la clase personalizada
 AUTH_USER_MODEL = 'ElectroStockApp.CustomUser'
 
@@ -141,25 +144,6 @@ JAZZMIN_SETTINGS = {
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
     "site_header": "Villada",
-
-    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    #"site_brand": "Villada",
-
-    # Logo to use for your site, must be present in static files, used for brand on top left
-    #"site_logo": "",
-    
-
-    # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    #"login_logo": "",
-
-    # Logo to use for login form in dark themes (defaults to login_logo)
-    #"login_logo_dark": None,
-
-    # CSS classes that are applied to the logo above
-    #"site_logo_classes": "img-circle",
-
-    # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    #"site_icon": "",
 
     # Welcome text on the login screen
     "welcome_sign": "BIENVENIDO ",
@@ -313,6 +297,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+        #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+        #'PAGE_SIZE': 10  # Cantidad de elementos por página
 }
 
 
@@ -349,6 +335,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=100000),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
 
 
 
@@ -390,6 +377,10 @@ CELERY_BEAT_SCHEDULE = {
     'assign_next_year_course': {
         'task': 'ElectroStockApp.task.assign_next_year_course',
         'schedule': timedelta(days=365),  # Ejecutar cada 1 año
+    },
+    'backup-task': {
+        'task': 'ElectroStockApp.task.backup_database',
+        'schedule': timedelta(days=7),  # Ejecuta la tarea todos los días a la medianoche
     },
 }
 
