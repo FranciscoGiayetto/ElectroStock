@@ -2252,7 +2252,7 @@ def FiltroStatusPrestamo(request,status, user_id=None):
 
 
 @api_view(["GET"])
-def FiltroDatePrestamo(request, user_id):
+def FiltroDatePrestamo(request):
     pagination_class = CustomPagination()
 
     if request.method == "GET":
@@ -2265,9 +2265,9 @@ def FiltroDatePrestamo(request, user_id):
         ]
 
         queryset = models.Log.objects.filter(
-            lender=user_id, status__in=valid_statuses
+             status__in=valid_statuses
         ).order_by("dateIn")
-
+            
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
             grouped_logs = defaultdict(list)
@@ -2348,7 +2348,7 @@ def FiltroDatePrestamo(request, user_id):
 
 
 @api_view(["GET"])
-def FiltroComponentesPrestamo(request, user_id):
+def FiltroComponentesPrestamo(request):
     pagination_class = CustomPagination()
 
     if request.method == "GET":
@@ -2360,7 +2360,7 @@ def FiltroComponentesPrestamo(request, user_id):
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
-        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+        queryset = models.Log.objects.filter(status__in=valid_statuses)
 
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
@@ -2444,7 +2444,7 @@ def FiltroComponentesPrestamo(request, user_id):
 
 
 @api_view(["GET"])
-def PrestamosSinPaginacion(request, user_id):
+def PrestamosSinPaginacion(request):
     if request.method == "GET":
         valid_statuses = [
             models.Log.Status.APROBADO,
@@ -2454,7 +2454,7 @@ def PrestamosSinPaginacion(request, user_id):
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
-        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+        queryset = models.Log.objects.filter(status__in=valid_statuses)
 
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
