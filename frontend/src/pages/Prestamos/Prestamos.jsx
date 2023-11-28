@@ -161,7 +161,7 @@ const Prestamos = ({ isProfessor }) => {
   const getPrestamos = async () => {
     try {
       let endpoint;
-      if ((finalSearchTerm === "" || searchTerm === "" || !finalSearchTerm)&&(selectedStatus === "")) {
+      if ((finalSearchTerm === "" || searchTerm === "" || !finalSearchTerm )&&(selectedStatus === "")) {
         if (isProfessor) {
           endpoint = `/allPrestamos/?page=${page}`;
         } else {
@@ -212,102 +212,101 @@ const Prestamos = ({ isProfessor }) => {
 
   return (
     <div className="tratandodecentrar">
-      {isLoading && (
-        <div className="d-flex justify-content-center align-items-center vh-100">
-          <Spinner animation="border" role="status"></Spinner>
-        </div>
-      )}
-      <Container>
-        <Col>
-          {/* Search Bar */}
-          
-          <Row className="col-md-12">
-            <Col md="auto">
-              <div className="mr-12 mt-4">
-                <OrdenarPorPrestamos onOrderChange={handleOrderChange} onSelectedStatus={handleStatusChange} />
-              </div>
-            </Col>
-            {isProfessor ===true ?(
-            <Col>
-              <div className="d-flex align-items-center mt-4">
-                <TextField
-                  fullWidth
-                  id="SearchVisit"
-                  variant="outlined"
-                  label="Buscar"
-                  className="SearchVisit"
-                  inputProps={{ value: searchTerm }}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Button variant="outline-secondary" onClick={() => handleSearch()}>
-                          <SearchRoundedIcon />
-                        </Button>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
-            </Col>
-            ):null}
-          </Row>
-          
-          {/* Prestamos Cards */}
-          <Row className="mt-4">
-            <div>
-              {data.length > 0 ? (
-                data.map((prestamo, index) => (
-                  <PrestamosCardPackage
-                    onClick={() => openModal(prestamo)}
-                    key={index}
-                    image={prestamo.imagen}
-                    status={prestamo.estado}
-                    name={prestamo.nombre}
-                    dateIn={prestamo.dateIn}
-                    dateOut={prestamo.dateOut}
-                    count={prestamo.count}
-                    lista={prestamo.lista}
-                    user_id={prestamo.id_user}
-                  />
-                ))
-              ) : (
-                <p className='d-flex justify-content-center'>No hay préstamos disponibles.</p>
+      {!isLoading ? (
+        <Container>
+          <Col>
+            {/* Search Bar */}
+            <Row className="col-md-12">
+              <Col md="auto">
+                <div className="mr-12 mt-4">
+                  <OrdenarPorPrestamos onOrderChange={handleOrderChange} onSelectedStatus={handleStatusChange} />
+                </div>
+              </Col>
+              {isProfessor === true && (
+                <Col>
+                  <div className="d-flex align-items-center mt-4">
+                    <TextField
+                      fullWidth
+                      id="SearchVisit"
+                      variant="outlined"
+                      label="Buscar Por Nombre De Alumno o Username"
+                      className="SearchVisit"
+                      inputProps={{ value: searchTerm }}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Button variant="outline-secondary" onClick={() => handleSearch()}>
+                              <SearchRoundedIcon />
+                            </Button>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </div>
+                </Col>
               )}
-            </div>
-          </Row>
-
-          <div className="d-flex justify-content-center mt-4">
-            <Pagination
-              totalRecords={count}
-              pageLimit={pageSize}
-              pageNeighbours={1}
-              currentPage={page}
-              onPageChanged={setPage}
-            />
-          </div>
-
-          <Row>
-            {isModalOpen && (
-              <ModalDetallePrestamo
-                onHandleApproval={() => handleApproval(selectedPackage.dateIn, selectedPackage.id_user)}
-                onHandleRejection={() => handleRejection(selectedPackage.dateIn, selectedPackage.id_user)}
-                onHandleDevolution={() => HandleDevolution(selectedPackage.dateIn, selectedPackage.id_user)}
-                onHandleDestruction={(selectedCards, quantityInputs) =>
-                  HandleDestruction(selectedPackage, selectedCards, quantityInputs)
-                }
-                dateOut={selectedPackage.dateOut}
-                lista={selectedPackage.lista}
-                onClose={closeModal}
-                isProfessor={isProfessor}
-                status={selectedPackage.estado}
+            </Row>
+            
+            {/* Prestamos Cards */}
+            <Row className="mt-4">
+              <div>
+                {data.length > 0 ? (
+                  data.map((prestamo, index) => (
+                    <PrestamosCardPackage
+                      onClick={() => openModal(prestamo)}
+                      key={index}
+                      image={prestamo.imagen}
+                      status={prestamo.estado}
+                      name={prestamo.nombre}
+                      dateIn={prestamo.dateIn}
+                      dateOut={prestamo.dateOut}
+                      count={prestamo.count}
+                      lista={prestamo.lista}
+                      user_id={prestamo.id_user}
+                    />
+                  ))
+                ) : (
+                  <p className='d-flex justify-content-center'>No hay préstamos disponibles.</p>
+                )}
+              </div>
+            </Row>
+  
+            <div className="d-flex justify-content-center mt-4">
+              <Pagination
+                totalRecords={count}
+                pageLimit={pageSize}
+                pageNeighbours={1}
+                currentPage={page}
+                onPageChanged={setPage}
               />
-            )}
-          </Row>
-        </Col>
-      </Container>
+            </div>
+  
+            <Row>
+              {isModalOpen && (
+                <ModalDetallePrestamo
+                  onHandleApproval={() => handleApproval(selectedPackage.dateIn, selectedPackage.id_user)}
+                  onHandleRejection={() => handleRejection(selectedPackage.dateIn, selectedPackage.id_user)}
+                  onHandleDevolution={() => HandleDevolution(selectedPackage.dateIn, selectedPackage.id_user)}
+                  onHandleDestruction={(selectedCards, quantityInputs) =>
+                    HandleDestruction(selectedPackage, selectedCards, quantityInputs)
+                  }
+                  dateOut={selectedPackage.dateOut}
+                  lista={selectedPackage.lista}
+                  onClose={closeModal}
+                  isProfessor={isProfessor}
+                  status={selectedPackage.estado}
+                />
+              )}
+            </Row>
+          </Col>
+        </Container>
+      ):( <div className="d-flex justify-content-center align-items-center vh-100">
+      <Spinner animation="border" role="status"></Spinner>
+    </div>)}
     </div>
   );
+  
 };
 
 export default Prestamos;
