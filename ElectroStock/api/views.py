@@ -151,6 +151,7 @@ import datetime
 BASE_DIR = settings.BASE_DIR
 carpeta_guardado = os.path.join(BASE_DIR, "img-prod/img-logs")
 
+
 def combinar_imagenes(
     nombre_archivo, imagen1, imagen2=None, imagen3=None, imagen4=None
 ):
@@ -205,7 +206,6 @@ def combinar_imagenes(
     except Exception as e:
         print("Error al combinar imágenes:", str(e))
         return None
-
 
 
 import os
@@ -499,6 +499,9 @@ def PrestamoVerAPIView(request, user_id):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -2153,7 +2156,7 @@ def obtener_imagenes_elementos(elementos):
 
 
 @api_view(["GET"])
-def FiltroStatusPrestamo(request,status, user_id=None):
+def FiltroStatusPrestamo(request, status, user_id=None):
     pagination_class = CustomPagination()
 
     if request.method == "GET":
@@ -2163,6 +2166,7 @@ def FiltroStatusPrestamo(request,status, user_id=None):
             models.Log.Status.DESAPROBADO,
             models.Log.Status.VENCIDO,
             models.Log.Status.DEVUELTOTARDIO,
+            models.Log.Status.DEVUELTO,
         ]
 
         if status not in valid_statuses:
@@ -2224,6 +2228,9 @@ def FiltroStatusPrestamo(request,status, user_id=None):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -2320,6 +2327,9 @@ def FiltroDatePrestamo(request):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -2414,6 +2424,9 @@ def FiltroComponentesPrestamo(request):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -2508,6 +2521,9 @@ def PrestamosSinPaginacion(request):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -2532,7 +2548,7 @@ def PrestamosSinPaginacion(request):
 
 
 @api_view(["GET", "POST"])
-def BuscadorPrestamosAPIView(request,search):
+def BuscadorPrestamosAPIView(request, search):
     pagination_class = CustomPagination()
 
     if request.method == "GET":
@@ -2550,12 +2566,12 @@ def BuscadorPrestamosAPIView(request,search):
         # Filtrar por término de búsqueda si se proporciona
         if search:
             queryset = queryset.filter(
-                Q(borrower__username__icontains=search) |
-                Q(borrower__first_name__icontains=search) |
-                Q(borrower__last_name__icontains=search) |
-                Q(status__icontains=search)
+                Q(borrower__username__icontains=search)
+                | Q(borrower__first_name__icontains=search)
+                | Q(borrower__last_name__icontains=search)
+                | Q(status__icontains=search)
             )
-            
+
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
             grouped_logs = defaultdict(list)
@@ -2608,6 +2624,9 @@ def BuscadorPrestamosAPIView(request,search):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,

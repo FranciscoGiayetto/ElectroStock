@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 
 function Pagination(props) {
   const {
-    totalRecords = null,
-    pageLimit = 30,
-    pageNeighbours = 0,
-    onPageChanged
+    totalRecords, // Establecer un valor predeterminado en caso de que totalRecords sea null
+    pageLimit,
+    pageNeighbours,
+    onPageChanged,
   } = props;
 
-  const totalPages = Math.ceil(totalRecords / pageLimit);
+  const totalPages = Math.ceil(totalRecords / pageLimit) || 1; // Usar 1 si totalRecords es falsy
+
+
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const gotoPage = (page) => {
@@ -62,8 +65,11 @@ function Pagination(props) {
     return range(1, totalPages);
   };
 
+
   const renderPagination = () => {
-    if (!totalRecords || totalPages === 1) return null;
+    console.log("totalRecords:", totalRecords);
+    console.log("totalPages:", totalPages);
+    if (!totalRecords || totalPages === 1) return console.log("PUTOo");
 
     const pages = getPageNumbers();
 
