@@ -188,7 +188,8 @@ const Prestamos = ({ isProfessor }) => {
         setData([]);
       } else {
         const data = response.data.results;
-        setCount(data.count);
+        setCount(response.data.count);
+       
         setData(data);
       }
 

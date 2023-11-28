@@ -499,6 +499,9 @@ def PrestamoVerAPIView(request, user_id):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -2225,6 +2228,9 @@ def FiltroStatusPrestamo(request, status, user_id=None):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -2321,6 +2327,9 @@ def FiltroDatePrestamo(request, user_id):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -2415,6 +2424,9 @@ def FiltroComponentesPrestamo(request, user_id):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -2509,6 +2521,9 @@ def PrestamosSinPaginacion(request, user_id):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
@@ -2609,6 +2624,9 @@ def BuscadorPrestamosAPIView(request, search):
                 response_data.append(
                     {
                         "dateOut": dateOut_primer_log,
+                        "id_user": primer_log["borrower"]["id"]
+                            if primer_log
+                            else None,
                         "usuario": primer_log["borrower"]["username"]
                         if primer_log
                         else None,
