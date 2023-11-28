@@ -62,7 +62,7 @@ MIDDLEWARE = [
 ]
 FRONTEND_URL = 'http://localhost:3000'
 
-CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1','http://127.0.0.1:3000', 'https://electrostock-dev.fl0.io']
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1','http://127.0.0.1:3000', 'https://electrostock-dev.fl0.io','equal-division.railway.internal']
 
 ROOT_URLCONF = "ElectroStock.urls"
 
