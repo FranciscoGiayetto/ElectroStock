@@ -85,25 +85,28 @@ const handleConfirmDestruction = () => {
           />
         </div>
         {isProfessor === true ? (
-          <div style={{ paddingLeft: '10%' }} className="d-flex flex-column flex-sm-row align-items-sm-center">
-            
-            {status === 'PED' ? (
-              <>
-                <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" onClick={onHandleApproval}>
-          <CheckRoundedIcon/>Confirmar
-        </button>
-        <button className="btn btn-danger me-sm-2 mb-2 mb-sm-0" onClick={onHandleRejection}>
-          <CloseRoundedIcon/>Rechazar
-        </button>
-              </>
-            ) : (
-              <>
-                <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" onClick={onHandleDevolution}>  <CheckRoundedIcon/>Se Devolvio</button>
-                <button className="btn btn-danger me-sm-2 mb-2 mb-sm-0" onClick={handleAverioButtonClick}><CloseRoundedIcon/>Se Averio</button>
-              </>
-            )}
-          </div>
-        ) : (null)}
+        <div style={{ paddingLeft: '10%' }} className="d-flex flex-column flex-sm-row align-items-sm-center">
+          {status === 'PED' ? (
+            <>
+              <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" onClick={onHandleApproval}>
+                <CheckRoundedIcon /> Confirmar
+              </button>
+              <button className="btn btn-danger me-sm-2 mb-2 mb-sm-0" onClick={onHandleRejection}>
+                <CloseRoundedIcon /> Rechazar
+              </button>
+            </>
+          ) : status === 'AP' ? (
+            <>
+              <button className="btn btn-success me-sm-2 mb-2 mb-sm-0" onClick={onHandleDevolution}>
+                <CheckRoundedIcon /> Se Devolvió
+              </button>
+              <button className="btn btn-danger me-sm-2 mb-2 mb-sm-0" onClick={handleAverioButtonClick}>
+                <CloseRoundedIcon /> Se Averió
+              </button>
+            </>
+          ) : null}
+        </div>
+      ) : null}
       </Modal.Header>
       <Modal.Body id="modalBody">
         <ul style={{ listStyleType: 'none', padding: 0 }}>
