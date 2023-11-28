@@ -405,16 +405,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "dateOut",
-<<<<<<< HEAD:ElectroStockApp/migrations/0001_initial.py
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name="Fecha de devolucion"
-=======
                     models.DateField(
                         blank=True,
                         help_text="No es necesario si se carga como comprado",
                         null=True,
                         verbose_name="Fecha de devolucion",
->>>>>>> Develop:ElectroStock/ElectroStockApp/migrations/0001_initial.py
                     ),
                 ),
                 (
@@ -501,30 +496,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("name", models.CharField(max_length=30, verbose_name="Nombre")),
-<<<<<<< HEAD:ElectroStockApp/migrations/0001_initial.py
-                (
-                    "description",
-                    models.TextField(blank=True, null=True, verbose_name="Descripcion"),
-                ),
-                (
-                    "price_usd",
-                    models.DecimalField(
-                        blank=True,
-                        decimal_places=2,
-                        help_text="Ingrese el precio en dolares",
-                        max_digits=10,
-                        null=True,
-                        verbose_name="Precio",
-                    ),
-                ),
-                (
-                    "image",
-                    models.ImageField(
-                        blank=True, upload_to="img-prod/", verbose_name="Foto"
-                    ),
-                ),
-                (
-=======
                 (
                     "description",
                     models.TextField(blank=True, null=True, verbose_name="Descripcion"),
@@ -536,7 +507,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
->>>>>>> Develop:ElectroStock/ElectroStockApp/migrations/0001_initial.py
                     "ecommerce",
                     models.BooleanField(default=True, verbose_name="Prestable"),
                 ),
