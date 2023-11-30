@@ -101,7 +101,7 @@ function Carrito() {
           await api.put(`/logCantidad/${item.id}/`, updateData);
 
           try {
-            const response = await api.put(`/logPost/${userData.user_id}/`, { dateOut: dateInputData });
+            const response = await api.put(`/logPost/${userData.user_id}/`, { dateout: dateInputData });
             console.log(response.data.response);
             navigate('/');
 
