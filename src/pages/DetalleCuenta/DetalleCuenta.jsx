@@ -28,7 +28,7 @@ function DetalleCuenta() {
   const getUser = async () => {
     try {
       setLoading(true); // Inicia el Spinner
-      const response = await api.get(`http://127.0.0.1:8000/api/users/${id}/`);
+      const response = await api.get(`https://stock-villada-admin-production.up.railway.app/api/users/${id}/`);
       let data = await response.data;
       console.log(data);
       setElement(data);

@@ -104,7 +104,7 @@ export default function CardMyData(props) {
             <td scope='col'>**********</td>
             <td scope='col'>
               <Tooltip title="Editar" arrow placement="right">
-                <LaunchRoundedIcon onClick={() => { window.location.href = 'http://127.0.0.1:8000/auth/accounts/password_reset' }} style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} />
+                <LaunchRoundedIcon onClick={() => { window.location.href = 'https://stock-villada-admin-production.up.railway.app/auth/accounts/password_reset' }} style={{ color: '#2E5266', cursor: 'pointer', fontSize: '0.938rem' }} />
               </Tooltip>
             </td>
           </tr>

@@ -162,7 +162,7 @@ const isSmallScreen3 = useMediaQuery('(max-width: 950px)');
 const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
 
   const getElement = async () => {
-    const proxyUrl = 'http://127.0.0.1:8000';
+    const proxyUrl = 'https://stock-villada-admin-production.up.railway.app';
     let response = await fetch(`${proxyUrl}/api/elementsEcommerce/`);
     let data = await response.json();
     let uniqueOptions = new Set();
@@ -274,7 +274,7 @@ const isSmallScreen2 = useMediaQuery('(max-width: 950px)');
               </Menu.Item>
             )}
             {isProfessor && (
-            <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'http://127.0.0.1:8000/admin' }}>
+            <Menu.Item key="5" icon={<AddModeratorRoundedIcon style={{ fontSize: '20px' }} />} onClick={() => { window.location.href = 'https://stock-villada-admin-production.up.railway.app/admin' }}>
               Admin
             </Menu.Item>
                )}

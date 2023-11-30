@@ -52,7 +52,7 @@ function Register() {
 
   const fetchApiTokens = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/token/');
+      const response = await fetch('https://stock-villada-admin-production.up.railway.app/api/token/');
       const tokens = await response.json();
       setApiTokens(tokens);
     } catch (error) {

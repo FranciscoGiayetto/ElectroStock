@@ -39,7 +39,7 @@ function HomePage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/users/${userData.user_id}/`);
+        const response = await fetch(`https://stock-villada-admin-production.up.railway.app/api/users/${userData.user_id}/`);
         const userDataApi = await response.json();
         setUserDetails(userDataApi);
       } catch (error) {

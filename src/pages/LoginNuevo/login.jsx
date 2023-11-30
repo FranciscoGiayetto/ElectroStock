@@ -103,7 +103,7 @@ const Login = () => {
                     </div>
 
                   <div className='text-center' style={{marginTop:'0.5rem', marginBottom:'1rem'}}>
-                    <Link href='http://127.0.0.1:8000/auth/accounts/password_reset' style={{color:' #2E5266'}} > ¿Olvidaste tu contraseña? </Link>
+                    <Link href='https://stock-villada-admin-production.up.railway.app/auth/accounts/password_reset' style={{color:' #2E5266'}} > ¿Olvidaste tu contraseña? </Link>
                   </div>
                   
                   <div className='text-center'>
