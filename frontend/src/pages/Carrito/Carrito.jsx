@@ -104,7 +104,7 @@ function Carrito() {
             const response = await api.put(`/logPost/${userData.user_id}/`, { dateOut: dateInputData });
             console.log(response.data.response);
             navigate('/');
-            toast.success('Préstamo solicitado!', { style: { marginTop: '3.5rem', marginBottom: '-2.5rem' } });
+
           } catch (error) {
             console.log(error);
             toast.warning('Ha ocurrido un error...', { style: { marginTop: '3.5rem', marginBottom: '-2.5rem' } });
@@ -112,11 +112,13 @@ function Carrito() {
 
           console.log('Actualizaciones exitosas');
           navigate('/');
+
         } catch (error) {
           console.error('Error al actualizar registros:', error);
-          toast.warning('No hay stock disponible', { style: { marginTop: '3.5rem', marginBottom: '-2.5rem' } });
+
         }
       }
+      toast.success('Préstamo solicitado!', { style: { marginTop: '3.5rem', marginBottom: '-2.5rem' } });
     } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       toast.warning('No hay stock disponible', { style: { marginTop: '3.5rem', marginBottom: '-2.5rem' } });
