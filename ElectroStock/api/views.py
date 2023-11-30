@@ -239,7 +239,7 @@ def AllPrestamos(request):
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
-        queryset = models.Log.objects.filter(status__in=valid_statuses)
+        queryset = models.Log.objects.filter(status__in=valid_statuses).order_by("-dateIn")
 
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
@@ -341,7 +341,7 @@ def PrestamoVerAPIView(request, user_id):
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
-        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses).order_by("-dateIn")
 
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
@@ -435,7 +435,7 @@ def PrestamoPendientesAPIView(request, user_id):
             models.Log.Status.PEDIDO,
         ]
 
-        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses)
+        queryset = models.Log.objects.filter(lender=user_id, status__in=valid_statuses).order_by("-dateIn")
 
         serializer = LogSerializer(queryset, many=True)
         return Response(serializer.data)
@@ -1968,9 +1968,9 @@ def FiltroStatusPrestamo(request, status, user_id=None):
         if status not in valid_statuses:
             return Response(f"El estado '{status}' no es válido.", status=400)
         if user_id:
-            queryset = models.Log.objects.filter(lender=user_id, status=status)
+            queryset = models.Log.objects.filter(lender=user_id, status=status).order_by("-dateIn")
         else:
-            queryset = models.Log.objects.filter(status=status)
+            queryset = models.Log.objects.filter(status=status).order_by("-dateIn")
 
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
@@ -2166,7 +2166,7 @@ def FiltroComponentesPrestamo(request):
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
-        queryset = models.Log.objects.filter(status__in=valid_statuses)
+        queryset = models.Log.objects.filter(status__in=valid_statuses).order_by("-dateIn")
 
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
@@ -2263,7 +2263,7 @@ def PrestamosSinPaginacion(request):
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
-        queryset = models.Log.objects.filter(status__in=valid_statuses)
+        queryset = models.Log.objects.filter(status__in=valid_statuses).order_by("-dateIn")
 
         if queryset.exists():
             # Agrupar logs por fecha y hora de creación
@@ -2357,7 +2357,7 @@ def BuscadorPrestamosAPIView(request, search):
             models.Log.Status.DEVUELTOTARDIO,
         ]
 
-        queryset = models.Log.objects.filter(status__in=valid_statuses)
+        queryset = models.Log.objects.filter(status__in=valid_statuses).order_by("-dateIn")
 
         # Filtrar por término de búsqueda si se proporciona
         if search:
