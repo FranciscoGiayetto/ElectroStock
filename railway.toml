@@ -1,0 +1,6 @@
+# railway.toml
+
+[frontend]
+framework = "create-react-app"
+command = "npm run build"
+distDirectory = "build"
