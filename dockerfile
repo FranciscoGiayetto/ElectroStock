@@ -20,8 +20,8 @@ FROM alpine:3.17
 
 WORKDIR /app
 
-COPY --from=build /frontend/build ./
-COPY --from=build /frontend/Caddyfile ./
+COPY --from=build /frontend/build /app/build
+COPY --from=build /frontend/Caddyfile /app
 COPY --from=build /usr/sbin/caddy /usr/sbin/caddy
 
 EXPOSE 3000
