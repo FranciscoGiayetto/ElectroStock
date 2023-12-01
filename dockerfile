@@ -1,7 +1,5 @@
 FROM node:18-alpine3.17 AS build
 
-RUN apk add --no-cache caddy --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
-
 ENV NODE_ENV=production
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 ENV NPM_CONFIG_FUND=false
@@ -22,7 +20,8 @@ WORKDIR /app
 
 COPY --from=build /frontend/build /app/build
 COPY --from=build /frontend/Caddyfile /app
-COPY --from=build /usr/sbin/caddy /usr/sbin/caddy
+
+COPY --from=caddy:2.7.5 /usr/bin/caddy /usr/bin/caddy
 
 EXPOSE 3000
 
