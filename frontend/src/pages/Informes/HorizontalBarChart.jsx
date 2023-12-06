@@ -13,8 +13,8 @@ const HorizontalBarChart = ({ data }) => {
 
     const actualData = data || defaultData;
 
-    const labels = actualData.labels;
-    const values = actualData.values;
+    const lenderUsernames = actualData.map(item => item.lender__username);
+    const vencidosCounts = actualData.map(item => item.vencidos_count);
 
     const ctx = chartRef.current.getContext('2d');
 
@@ -26,21 +26,13 @@ const HorizontalBarChart = ({ data }) => {
     chartInstance.current = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: labels,
+        labels: lenderUsernames,
         datasets: [
           {
-            label: 'My First Dataset',
-            data: values,
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(255, 205, 86, 0.2)',
-            ],
-            borderColor: [
-              'rgb(255, 99, 132)',
-              'rgb(255, 159, 64)',
-              'rgb(255, 205, 86)',
-            ],
+            label: 'Vencidos Count',
+            data: vencidosCounts,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 1,
           },
         ],
