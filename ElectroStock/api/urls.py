@@ -66,6 +66,7 @@ urlpatterns = [
     path("budgetlog/create/", BudgetLogCreateView.as_view(), name="create-budget-log"),
     path("budgetlog/create/", BudgetLogCreateView.as_view(), name="create-budget-log"),
     path("budget/", BudgetViewSet, name="budgetList"),
+    path("budget/<int:budget_id>/update_name/", update_budget_name),
     path("cantCarrito/<int:user_id>/", cantCarrito, name="cantCarrito"),
     path(
         "cantNotificaciones/<int:user_id>/",
@@ -108,15 +109,35 @@ urlpatterns = [
         elementos_por_categoria,
         name="filtroCategoria",
     ),
-    path("filtroStatusPrestamos/<str:status>/<int:user_id>/", FiltroStatusPrestamo, name="FiltroPrestamosStatus"),
-    path("filtroStatusPrestamos/<str:status>/", FiltroStatusPrestamo, name="FiltroPrestamosStatusSinUserID"),
+    path(
+        "filtroStatusPrestamos/<str:status>/<int:user_id>/",
+        FiltroStatusPrestamo,
+        name="FiltroPrestamosStatus",
+    ),
+    path(
+        "filtroStatusPrestamos/<str:status>/",
+        FiltroStatusPrestamo,
+        name="FiltroPrestamosStatusSinUserID",
+    ),
     path("filtroDatePrestamos", FiltroDatePrestamo, name="FiltroPrestamosDate"),
-    path("PrestamosAgrupadosSinPaginacion", PrestamosSinPaginacion, name="FiltroPrestamosDate"),
-    path("filtroComponentesPrestamos", FiltroComponentesPrestamo, name="FiltroPrestamosComponentes"),
+    path(
+        "PrestamosAgrupadosSinPaginacion",
+        PrestamosSinPaginacion,
+        name="FiltroPrestamosDate",
+    ),
+    path(
+        "filtroComponentesPrestamos",
+        FiltroComponentesPrestamo,
+        name="FiltroPrestamosComponentes",
+    ),
     path("pendientes/<int:user_id>/", PrestamoPendientesAPIView, name="pendientes"),
     path("logCantidad/<int:log_id>/", update_log_quantity, name="logCantidad"),
     path("notificaciones/<int:user_id>/", NotificacionesAPIView, name="notificaciones"),
-    path("buscadorPrestamo/<str:search>/", BuscadorPrestamosAPIView, name="buscadorPrestamo"),
+    path(
+        "buscadorPrestamo/<str:search>/",
+        BuscadorPrestamosAPIView,
+        name="buscadorPrestamo",
+    ),
     path(
         "estadisticas/maspedido/",
         MostRequestedElementView.as_view(),

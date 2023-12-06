@@ -1529,6 +1529,20 @@ def BudgetSpecialityViewSet(request, speciality_name):
 
     return Response(status=405)
 
+@api_view(["PUT"])
+def update_budget_name(request, budget_id=None):
+    try:
+        # Obtén el presupuesto actual
+        budget = models.Budget.objects.get(id=budget_id)
+
+        # Actualiza el nombre del presupuesto
+        new_name = request.data.get('name', '')
+        budget.name = new_name
+        budget.save()
+
+        return Response({"message": f"Nombre del presupuesto actualizado a {new_name}"})
+    except models.Budget.DoesNotExist:
+        return Response({"error": "Presupuesto no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(["GET", "POST", "DELETE", "PUT"])
 def BudgetViewSet(request, budget_id=None):
